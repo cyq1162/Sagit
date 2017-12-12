@@ -7,6 +7,7 @@
 //
 
 #import "STUITextField.h"
+#import "STUIView.h"
 #import "objc/runtime.h"
 
 @implementation UITextField(ST)

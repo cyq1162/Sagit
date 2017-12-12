@@ -7,7 +7,7 @@
 //
 
 #import "STUITextView.h"
-
+#import "STUIView.h"
 #import "objc/runtime.h"
 
 //@interface UITextView()

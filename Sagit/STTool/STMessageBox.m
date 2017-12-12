@@ -9,6 +9,7 @@
 #import "STMessageBox.h"
 #import "MBProgressHUD.h"
 #import "STCategory.h"
+#import "STDefineUI.h"
 @interface STMessageBox ()<MBProgressHUDDelegate>
 {
     MBProgressHUD *HUD;

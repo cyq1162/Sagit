@@ -7,6 +7,7 @@
 //
 
 #import "STUILabel.h"
+#import "STDefineUI.h"
 
 @implementation UILabel(ST)
 -(UILabel*)textColor:(UIColor*)color
