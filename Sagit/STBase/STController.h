@@ -22,8 +22,8 @@
 //如果没有对应的View，[子类重写]
 -(void)initUI;
 
--(NSString*)uiValue:(NSString*)name;
--(void)uiValue:(NSString*)name value:(NSString*)value;
+-(NSString*)stValue:(NSString*)name;
+-(void)stValue:(NSString*)name value:(NSString*)value;
 //验证文本枉的值是否填写或格式是否错误
 -(BOOL)isMatch:(NSString*)tipMsg uiName:(NSString*)name;
 -(BOOL)isMatch:(NSString*)tipMsg uiName:(NSString*)name regex:(NSString*)pattern;

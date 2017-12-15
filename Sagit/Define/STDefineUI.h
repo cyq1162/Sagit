@@ -42,9 +42,6 @@
 //空屏
 #define STEmptyRect CGRectMake(0,0,0,0)
 
-//#define STRectMake(x,y,width,height) CGRectMake(floor(x*Xpt),floor(y*Ypt),floor(width*Xpt),floor(height*Ypt))
-//#define STSizeMake(width,height) CGSizeMake(floor(width*Xpt),floor(height*Ypt))
-//#define STPointMake(x,y) CGPointMake(floor(x*Xpt),floor(y*Ypt))
 
 #define STRectMake(x,y,width,height) CGRectMake(x*Xpt,y*Ypt,width*Xpt,height*Ypt)
 #define STSizeMake(width,height) CGSizeMake(width*Xpt,height*Ypt)

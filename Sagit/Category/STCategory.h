@@ -16,6 +16,7 @@
 
 //UI
 #import "STUIView.h"
+#import "STUIViewAutoLayout.h"
 #import "STUITextView.h"
 #import "STUITextField.h"
 #import "STUIViewController.h"

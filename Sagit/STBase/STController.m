@@ -61,7 +61,7 @@
 }
 -(BOOL)isMatch:(NSString*)tipMsg uiName:(NSString*)name regex:(NSString*)pattern
 {
-    return [self isMatch:tipMsg v:[self uiValue:name] regex:pattern];
+    return [self isMatch:tipMsg v:[self stValue:name] regex:pattern];
 }
 -(BOOL)isMatch:(NSString*)tipMsg v:(NSString*)value regex:(NSString*)pattern
 {
@@ -110,21 +110,21 @@
 //-(void)setData:(NSString *)key v:(NSString *)value{
 //    [_data setObject:value forKey:key];
 //}
--(void)uiValue:(NSString*)name value:(NSString *)value
+-(void)stValue:(NSString*)name value:(NSString *)value
 {
     UIView *ui=self.UIList[name];
     if(ui!=nil)
     {
-        [ui stringValue:value];
+        [ui stValue:value];
     }
 }
 //get set ui view....
--(NSString*)uiValue:(NSString*)name
+-(NSString*)stValue:(NSString*)name
 {
     UIView *ui=self.UIList[name];
     if(ui!=nil)
     {
-        return ui.stringValue;
+        return ui.stValue;
     }
     return nil;
 }
@@ -135,7 +135,7 @@
 
 
 -(void)open:(UIView*)ui{
-    NSString* name=ui.Name;
+    NSString* name=ui.name;
     if(name!=nil)
     {
         if(![name hasSuffix:@"Controller"])

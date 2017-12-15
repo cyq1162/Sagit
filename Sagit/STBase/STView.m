@@ -13,8 +13,8 @@
 @interface STView()
 
 //当前编辑的文本框 
-@property (nonatomic,retain) UIView *EditingTextUI;
-@property (nonatomic,assign) CGFloat KeyboardHeight;
+@property (nonatomic,retain) UIView *editingTextUI;
+@property (nonatomic,assign) CGFloat keyboardHeight;
 @property (nonatomic,retain) NSLock *lock;
 @end
 @implementation STView
@@ -26,7 +26,7 @@
 }
 -(void)regEvent{
     if(self.lock==nil){self.lock=[NSLock new];}
-    if(self.UITextList!=nil && self.IsStartTextChageEvent)
+    if(self.UITextList!=nil && self.isStartTextChageEvent)
     {
         //注册键盘回收事件
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(resignKeyboard)];
@@ -51,7 +51,7 @@
                                                      name:UIKeyboardWillShowNotification
                                                    object:nil];
     }
-    if(self.IsStartRotateEvent)
+    if(self.isStartRotateEvent)
     {
         //手机旋转通知
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -67,32 +67,32 @@
     {
         [self.lock lock];
         self.OriginFrame=self.frame;
-        self.KeyboardHeight=0;//高度变更了。
+        self.keyboardHeight=0;//高度变更了。
         [self refleshLayout];
         [self.lock unlock];
     }
 }
 -(void)setKeyboardHeightValue:(NSNotification*)notify
 {
-    if(self.KeyboardHeight<=0)
+    if(self.keyboardHeight<=0)
     {
         NSDictionary *info = [notify userInfo];
         CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];//键盘的frame
-        self.KeyboardHeight=keyboardRect.size.height;
+        self.keyboardHeight=keyboardRect.size.height;
     }
 }
 -(void)moveTextView
 {
     //NSLog(@"frame:%@",NSStringFromCGRect( self.OriginFrame ));
 
-    if(self.KeyboardHeight>0 && self.EditingTextUI!=nil && [self.EditingTextUI isFirstResponder]
+    if(self.keyboardHeight>0 && self.editingTextUI!=nil && [self.editingTextUI isFirstResponder]
        && CGPointEqualToPoint(CGPointZero, self.OriginFrame.origin))
     {
         
-        if(self.EditingTextUI.stAbsY*Ypt+self.EditingTextUI.frame.size.height+self.KeyboardHeight>STScreeHeightPt)
+        if(self.editingTextUI.stAbsY*Ypt+self.editingTextUI.frame.size.height+self.keyboardHeight>STScreeHeightPt)
         {
             CGRect frame=self.frame;
-            frame.origin.y-=self.KeyboardHeight;
+            frame.origin.y-=self.keyboardHeight;
             [self moveTo:frame];
         }
     }
@@ -103,14 +103,14 @@
     
 }
 -(void)resignKeyboard{
-    if(self.EditingTextUI!=nil)
+    if(self.editingTextUI!=nil)
     {
-        if([self.EditingTextUI isFirstResponder])
+        if([self.editingTextUI isFirstResponder])
         {
-            [self.EditingTextUI resignFirstResponder];
+            [self.editingTextUI resignFirstResponder];
         }
         [self backToOrigin];
-        self.EditingTextUI=nil;
+        self.editingTextUI=nil;
     }
 }
 //UITextView
@@ -185,7 +185,7 @@
 -(void)onTextClick:(NSNotification*)notify{
     
     [self resignKeyboard];//取消其它可能的键盘事件
-    self.EditingTextUI =notify.object;//设置被点击的对象
+    self.editingTextUI =notify.object;//设置被点击的对象
     [self moveTextView];
 }
 //初始化[子类重写该方法]
@@ -213,7 +213,7 @@
         UIView *ui=self.UIList[key];
         if(ui!=nil)
         {
-            [ui stringValue:data[key]];
+            [ui stValue:data[key]];
         }
     }
 }
@@ -227,9 +227,9 @@
     NSMutableDictionary *formData=[NSMutableDictionary new];
     for (NSString*key in self.UIList) {
         UIView *ui=self.UIList[key];
-        if([ui IsFormUI] && (superView==nil || ui.superview==superView))
+        if([ui isFormUI] && (superView==nil || ui.superview==superView))
         {
-            [formData setObject:[ui stringValue] forKey:key];
+            [formData setObject:[ui stValue] forKey:key];
         }
     }
     return formData;

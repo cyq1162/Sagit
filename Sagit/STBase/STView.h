@@ -17,9 +17,9 @@
 //存档文本框的列表
 @property (nonatomic,retain) NSMutableArray *UITextList;
 //开启针对文本的高度自适应、键盘遮档事件
-@property (nonatomic,assign) BOOL IsStartTextChageEvent;
+@property (nonatomic,assign) BOOL isStartTextChageEvent;
 //是否开启手机旋转刷新布局功能。
-@property (nonatomic,assign) BOOL IsStartRotateEvent;
+@property (nonatomic,assign) BOOL isStartRotateEvent;
 
 -(void)initView;
 //初始化[子类重写]

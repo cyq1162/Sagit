@@ -11,29 +11,29 @@
 #import "STDefineUI.h"
 @implementation UIButton (ST)
 
-static char ActionTag;
-
-- (void)addAction:(onAction)block {
-    objc_setAssociatedObject(self, &ActionTag, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)addClick:(onAction)block {
-    
-    [self addAction:block forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)addAction:(onAction)block forControlEvents:(UIControlEvents)controlEvents {
-    objc_setAssociatedObject(self, &ActionTag, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    [self addTarget:self action:@selector(action:) forControlEvents:controlEvents];
-}
-
-- (void)action:(id)sender {
-    onAction blockAction = (onAction)objc_getAssociatedObject(self, &ActionTag);
-    if (blockAction) {
-        blockAction(self);
-    }
-}
+//static char ActionTag;
+//
+//- (void)addAction:(onAction)block {
+//    objc_setAssociatedObject(self, &ActionTag, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+//    [self addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
+//}
+//
+//- (void)addClick:(onAction)block {
+//    
+//    [self addAction:block forControlEvents:UIControlEventTouchUpInside];
+//}
+//
+//- (void)addAction:(onAction)block forControlEvents:(UIControlEvents)controlEvents {
+//    objc_setAssociatedObject(self, &ActionTag, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+//    [self addTarget:self action:@selector(action:) forControlEvents:controlEvents];
+//}
+//
+//- (void)action:(id)sender {
+//    onAction blockAction = (onAction)objc_getAssociatedObject(self, &ActionTag);
+//    if (blockAction) {
+//        blockAction(self);
+//    }
+//}
 //复盖UIView的方法。
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event {
     CGRect bounds = self.bounds;
@@ -46,11 +46,32 @@ static char ActionTag;
 #pragma mark 扩展系统属性
 -(UIButton*)backgroundImage:(NSString*)imgName
 {
-    return [self backgroundImage:imgName forState:UIControlStateNormal];
+    [self setBackgroundImage:STImage(imgName) forState:UIControlStateNormal];
+    return self;
 }
 -(UIButton*)backgroundImage:(NSString*)imgName forState:(UIControlState)state
 {
     [self setBackgroundImage:STImage(imgName) forState:state];
+    return self;
+}
+-(UIButton*)image:(NSString*)imgName
+{
+    [self setImage:STImage(imgName) forState:UIControlStateNormal];
+    return self;
+}
+-(UIButton*)image:(NSString*)imgName forState:(UIControlState)state
+{
+    [self setImage:imgName forState:state];
+    return self;
+}
+-(UIButton*)title:(NSString*)title
+{
+    [self setTitle:title forState:UIControlStateNormal];
+    return self;
+}
+-(UIButton*)title:(NSString*)title forState:(UIControlState)state
+{
+    [self setTitle:title forState:state];
     return self;
 }
 -(UIButton*)titleColor:(UIColor*)color

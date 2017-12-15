@@ -1,6 +1,6 @@
 platform :ios, '8.0'
 
-target ’Sagit’ do
+target ’这里的名称改为项目名称如：SagitDemo’ do
   pod 'AFNetworking', '~> 3.1.0’
   pod 'MBProgressHUD', '~> 1.0.0'
   pod 'JSONModel', '~> 1.7.0'
