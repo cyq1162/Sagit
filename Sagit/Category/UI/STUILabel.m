@@ -10,9 +10,9 @@
 #import "STDefineUI.h"
 
 @implementation UILabel(ST)
--(UILabel*)textColor:(UIColor*)color
+-(UILabel*)textColor:(id)colorOrHex
 {
-    self.textColor=color;
+    self.textColor=[self toColor:colorOrHex];
     return self;
 }
 -(UILabel*)textAlignment:(NSTextAlignment)align

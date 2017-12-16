@@ -34,6 +34,21 @@ static NSInteger xyNone=-99999;
     return self;
 }
 #pragma mark [相对布局方法] RelativeLayout
+-(UIView*)getViewBy:(id)ui
+{
+    if([ui isKindOfClass:[NSString class]])
+    {
+        if(self.STView!=nil && [self.STView.UIList has:(NSString*)ui])
+        {
+            return self.STView.UIList[(NSString*)ui];
+        }
+    }
+    else if([ui isKindOfClass:[UIView class]])
+    {
+        return (UIView*)ui;
+    }
+    return self;
+}
 //如果当前没设置frame，则用指定的frame，返回新的frame，避免改变原来的行为
 -(CGRect)checkFrameIsEmptyOrFull:(CGRect)uiFrame
 {
@@ -65,12 +80,13 @@ static NSInteger xyNone=-99999;
     return ui.frame;
 }
 //在右边
--(UIView*)onRight:(UIView*)ui x:(CGFloat)x
+-(UIView*)onRight:(id)uiOrName x:(CGFloat)x
 {
-    return [self onRight:ui x:x y:0];
+    return [self onRight:uiOrName x:x y:0];
 }
--(UIView*)onRight:(UIView*)ui x:(CGFloat)x y:(CGFloat)y
+-(UIView*)onRight:(id)uiOrName x:(CGFloat)x y:(CGFloat)y
 {
+    UIView *ui=[self getViewBy:uiOrName];
     [self addTracer:ui method:@"onRight" v1:x v2:y v3:0 v4:0 location:0 xyFlag:0];
     CGRect uiFrame=[self getUIFrame:ui];
     CGRect frame=[self checkFrameIsEmptyOrFull:uiFrame];
@@ -89,13 +105,14 @@ static NSInteger xyNone=-99999;
     return self;
 }
 //在左边
--(UIView*)onLeft:(UIView*)ui x:(CGFloat)x
+-(UIView*)onLeft:(id)uiOrName x:(CGFloat)x
 {
-    return [self onLeft:ui x:x y:0];
+    return [self onLeft:uiOrName x:x y:0];
     
 }
--(UIView*)onLeft:(UIView*)ui x:(CGFloat)x y:(CGFloat)y
+-(UIView*)onLeft:(id)uiOrName x:(CGFloat)x y:(CGFloat)y
 {
+    UIView *ui=[self getViewBy:uiOrName];
     [self addTracer:ui method:@"onLeft" v1:x v2:y v3:0 v4:0 location:0 xyFlag:0];
     
     CGRect uiFrame=[self getUIFrame:ui];
@@ -116,12 +133,13 @@ static NSInteger xyNone=-99999;
     return self;
 }
 //在上边
--(UIView*)onTop:(UIView*)ui y:(CGFloat)y
+-(UIView*)onTop:(id)uiOrName y:(CGFloat)y
 {
-    return [self onTop:ui y:y x:0];
+    return [self onTop:uiOrName y:y x:0];
 }
--(UIView*)onTop:(UIView*)ui y:(CGFloat)y x:(CGFloat)x
+-(UIView*)onTop:(id)uiOrName y:(CGFloat)y x:(CGFloat)x
 {
+    UIView *ui=[self getViewBy:uiOrName];
     [self addTracer:ui method:@"onTop" v1:y v2:x v3:0 v4:0 location:0 xyFlag:0];
     CGRect uiFrame=[self getUIFrame:ui];
     CGRect frame=[self checkFrameIsEmptyOrFull:uiFrame];
@@ -141,12 +159,13 @@ static NSInteger xyNone=-99999;
     return self;
 }
 //在下边
--(UIView *)onBottom:(UIView*)ui y:(CGFloat)y
+-(UIView *)onBottom:(id)uiOrName y:(CGFloat)y
 {
-    return [self onBottom:ui y:y x:0];
+    return [self onBottom:uiOrName y:y x:0];
 }
--(UIView *)onBottom:(UIView*)ui y:(CGFloat)y x:(CGFloat)x
+-(UIView *)onBottom:(id)uiOrName y:(CGFloat)y x:(CGFloat)x
 {
+    UIView *ui=[self getViewBy:uiOrName];
     [self addTracer:ui method:@"onBottom" v1:y v2:x v3:0 v4:0 location:0 xyFlag:0];
     CGRect uiFrame=[self getUIFrame:ui];
     CGRect frame=[self checkFrameIsEmptyOrFull:uiFrame];

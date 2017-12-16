@@ -372,32 +372,40 @@ static char clickEventChar='e';
 
 -(UIButton*)addButton:(NSString*)name
 {
-    return [self addButton:name title:nil imgName:nil buttonType:0];
+    return [self addButton:name title:nil font:0 imgName:nil buttonType:0];
 }
 -(UIButton*)addButton:(NSString*)name imgName:(NSString*)imgName
 {
-    return [self addButton:name title:nil imgName:imgName buttonType:0];
+    return [self addButton:name title:nil font:0 imgName:imgName buttonType:0];
 }
 -(UIButton*)addButton:(NSString*)name imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType
 {
-    return [self addButton:name title:nil imgName:imgName buttonType:buttonType];
+    return [self addButton:name title:nil font:0 imgName:imgName buttonType:buttonType];
 }
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title
 {
-    return [self addButton:name title:title imgName:nil buttonType:0];
+    return [self addButton:name title:title font:0 imgName:nil buttonType:0];
 }
--(UIButton*)addButton:(NSString*)name title:(NSString*)title buttonType:(UIButtonType)buttonType
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px
 {
-    return [self addButton:name title:title imgName:nil buttonType:buttonType];
+    return [self addButton:name title:title font:px imgName:nil buttonType:0];
+}
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px buttonType:(UIButtonType)buttonType
+{
+    return [self addButton:name title:title font:px imgName:nil buttonType:buttonType];
 }
 //此方法不对外开放。
--(UIButton*)addButton:(NSString*)name title:(NSString*)title imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType
 {
     UIButton *ui=[UIButton buttonWithType:buttonType];
     if(title!=nil)
     {
         [ui setTitle:title forState:UIControlStateNormal];
         ui.titleLabel.textAlignment=NSTextAlignmentCenter;
+        if(px>0)
+        {
+            [ui titleFont:px];
+        }
         [ui.titleLabel sizeToFit];
         [ui width:ui.titleLabel.stWidth height:ui.titleLabel.stHeight];
     }
@@ -571,6 +579,14 @@ static char clickEventChar='e';
         return sel;
     }
     return nil;
+}
+-(UIColor*)toColor:(id)hexOrColor
+{
+    if([hexOrColor isKindOfClass:([NSString class])])
+    {
+        return STHexColor(hexOrColor);
+    }
+    return (UIColor*)hexOrColor;
 }
 #pragma mark 扩展系统属性
 -(UIView*)frame:(CGRect)frame

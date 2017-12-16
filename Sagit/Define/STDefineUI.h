@@ -57,6 +57,9 @@
 #define STFont(px) [UIFont systemFontOfSize:px*Ypt]
 
 #pragma mark 颜色
+//颜色
+#define STHexColor(color) [UIColor hex:color]
+
 #define ColorBlack [UIColor blackColor]      // 0.0 white
 #define ColorBlue [UIColor blueColor]
 #define ColorDarkGray [UIColor darkGrayColor]

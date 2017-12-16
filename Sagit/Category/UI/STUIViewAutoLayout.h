@@ -20,14 +20,14 @@
 
 -(CGSize)superSize;
 #pragma mark [相对布局方法] RelativeLayout
--(UIView*)onRight:(UIView*)ui x:(CGFloat)x;
--(UIView*)onRight:(UIView*)ui x:(CGFloat)x y:(CGFloat)y;
--(UIView*)onLeft:(UIView*)ui x:(CGFloat)x;
--(UIView*)onLeft:(UIView*)ui x:(CGFloat)x y:(CGFloat)y;
--(UIView*)onTop:(UIView*)ui y:(CGFloat)y;
--(UIView*)onTop:(UIView*)ui y:(CGFloat)y x:(CGFloat)x;
--(UIView *)onBottom:(UIView*)ui y:(CGFloat)y;
--(UIView *)onBottom:(UIView*)ui y:(CGFloat)y x:(CGFloat)x;
+-(UIView*)onRight:(id)uiOrName x:(CGFloat)x;
+-(UIView*)onRight:(id)uiOrName x:(CGFloat)x y:(CGFloat)y;
+-(UIView*)onLeft:(id)uiOrName x:(CGFloat)x;
+-(UIView*)onLeft:(id)uiOrName x:(CGFloat)x y:(CGFloat)y;
+-(UIView*)onTop:(id)uiOrName y:(CGFloat)y;
+-(UIView*)onTop:(id)uiOrName y:(CGFloat)y x:(CGFloat)x;
+-(UIView *)onBottom:(id)uiOrName y:(CGFloat)y;
+-(UIView *)onBottom:(id)uiOrName y:(CGFloat)y x:(CGFloat)x;
 -(UIView*)relate:(XYLocation)location v:(CGFloat)value;
 -(UIView*)relate:(XYLocation)location v:(CGFloat)value v2:(CGFloat)value2;
 -(UIView*)relate:(XYLocation)location v:(CGFloat)value v2:(CGFloat)value2 v3:(CGFloat)value3;

@@ -74,14 +74,14 @@
     [self setTitle:title forState:state];
     return self;
 }
--(UIButton*)titleColor:(UIColor*)color
+-(UIButton*)titleColor:(id)colorOrHex
 {
-    [self titleColor:color forState:UIControlStateNormal];
+    [self titleColor:colorOrHex forState:UIControlStateNormal];
     return self;
 }
--(UIButton*)titleColor:(UIColor*)color forState:(UIControlState)state
+-(UIButton*)titleColor:(id)colorOrHex forState:(UIControlState)state
 {
-    [self setTitleColor:color forState:state];
+    [self setTitleColor:[self toColor:colorOrHex] forState:state];
     return self;
 }
 -(UIButton*)titleFont:(NSInteger)px

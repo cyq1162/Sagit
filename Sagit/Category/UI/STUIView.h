@@ -58,8 +58,9 @@ typedef void(^onClick)(UIView *view);
 -(UIButton*)addButton:(NSString*)name imgName:(NSString*)imgName;
 -(UIButton*)addButton:(NSString*)name imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType;
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title buttonType:(UIButtonType)buttonType;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType;
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px;
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px buttonType:(UIButtonType)buttonType;
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSUInteger)px imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType;
 -(UIView*)addLine:(UIColor*)color;
 -(UIScrollView*)addScrollView:(NSString*)name;
 -(UIScrollView *)addScrollView:(NSString*)name imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION;
@@ -74,6 +75,7 @@ typedef void(^onClick)(UIView *view);
 #pragma mark 扩展系统事件
 -(UIView*)click:(NSString*)event;
 - (UIView*)addClick:(onClick)block;
+-(UIColor*)toColor:(id)hexOrColor;
 #pragma mark 扩展系统属性
 -(UIView*)frame:(CGRect) frame;
 -(UIView*)backgroundColor:(UIColor*)backgroundColor;

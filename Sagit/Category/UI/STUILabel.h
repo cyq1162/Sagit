@@ -11,7 +11,7 @@
 
 @interface UILabel(ST)
 #pragma mark 扩展系统属性
--(UILabel*)textColor:(UIColor*)color;
+-(UILabel*)textColor:(id)colorOrHex;
 -(UILabel*)textAlignment:(NSTextAlignment)align;
 -(UILabel*)font:(NSInteger)px;
 @end

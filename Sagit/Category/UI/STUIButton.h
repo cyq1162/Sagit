@@ -22,8 +22,8 @@
 -(UIButton*)image:(NSString*)imgName forState:(UIControlState)state;
 -(UIButton*)title:(NSString*)title;
 -(UIButton*)title:(NSString*)title forState:(UIControlState)state;
--(UIButton*)titleColor:(UIColor*)color;
--(UIButton*)titleColor:(UIColor*)color forState:(UIControlState)state;
+-(UIButton*)titleColor:(id)colorOrHex;
+-(UIButton*)titleColor:(id)colorOrHex forState:(UIControlState)state;
 -(UIButton*)titleFont:(NSInteger)px;
 //-(UIButton*)buttonType:(UIButtonType)type;
 @end
