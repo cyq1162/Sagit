@@ -223,7 +223,6 @@ static char clickEventChar='e';
 -(UIView*)addUIView:(NSString*)name
 {
     UIView *ui=[[UIView alloc] initWithFrame:STEmptyRect];
-    [ui width:2 height:2];
     [self addView:ui name:name];
     return ui;
 }
@@ -257,31 +256,38 @@ static char clickEventChar='e';
     return ui;
 }
 
--(UILabel*)addLabel:(NSString*)text name:(NSString*)name
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px
 {
     UILabel *ui = [[UILabel alloc] initWithFrame:STEmptyRect];
-    ui.text = text;
-    [self addView:ui name:name];
-    [ui sizeToFit];
-    return ui;
-}
--(UILabel*)addLabel:(NSString*)text
-{
-    return [self addLabel:text name:nil];
-}
--(UIImageView*)addImageView:(NSString*)imgName
-{
-    UIImageView *ui = [[UIImageView alloc] initWithFrame:STEmptyRect];
-    if(imgName!=nil)
+    if(text!=nil)
     {
-        UIImage *image=[UIImage imageNamed:imgName];
-        [ui setImage:image];
-        [ui width:image.size.width*Xpx height:image.size.height*Ypx];
+        ui.text = text;
     }
-    [self addView:ui name:nil];
+    if(px>0)
+    {
+        [ui font:px];
+    }
+    [ui sizeToFit];
+    [self addView:ui name:name];
     return ui;
 }
--(UIImageView*)addImageView:(NSString*)imgName xyFlag:(XYFlag)xyFlag
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text
+{
+    return [self addLabel:name text:text font:0];
+}
+-(UILabel*)addLabel:(NSString*)name
+{
+    return [self addLabel:name text:nil font:0];
+}
+-(UIImageView*)addImageView:(NSString*)name
+{
+    return [self addImageView:name imgName:nil xyFlag:XY];
+}
+-(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName
+{
+    return [self addImageView:name imgName:imgName xyFlag:XY];
+}
+-(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName xyFlag:(XYFlag)xyFlag
 {
     CGRect frame=self.frame;
     if([self isKindOfClass:[UIScrollView class]])//计算ImageView的位置和UIScrollView的contentSize
@@ -295,18 +301,22 @@ static char clickEventChar='e';
             scroll.showsHorizontalScrollIndicator=NO;
             size.width=size.width+frame.size.width;
         }
-        else
+        else if(xyFlag==Y)
         {
             scroll.showsVerticalScrollIndicator=NO;
             frame.origin.y=frame.size.height*(count);
             size.height=size.height+frame.size.height;
-            
         }
         scroll.contentSize=size;
     }
     UIImageView *ui = [[UIImageView alloc] initWithFrame:frame];
-    [ui setImage:[UIImage imageNamed:imgName]];
-    [self addView:ui name:nil];
+    if(imgName!=nil)
+    {
+        UIImage *image=[UIImage imageNamed:imgName];
+        [ui setImage:image];
+        [ui width:image.size.width*Xpx height:image.size.height*Ypx];
+    }
+    [self addView:ui name:name];
     return ui;
 }
 -(UITextField*)addTextField:(NSString*)name
@@ -415,13 +425,8 @@ static char clickEventChar='e';
     [self addView:ui name:nil];
     return ui;
 }
--(UIView*)addRectangle
-{
-    UIView *ui = [[UIView alloc] initWithFrame:STEmptyRect];
-    [self addView:ui name:nil];
-    return ui;
-}
--(UIScrollView *)addScrollView
+
+-(UIScrollView *)addScrollView:(NSString*)name
 {
     UIScrollView *ui=[[UIScrollView alloc] initWithFrame:STFullRect];
     //设置边缘不弹跳
@@ -434,18 +439,18 @@ static char clickEventChar='e';
     [self addView:ui name:nil];
     return ui;
 }
--(UIScrollView *)addScrollView:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION
+-(UIScrollView *)addScrollView:(NSString*)name imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION
 {
-    UIScrollView *ui=[self addScrollView];
+    UIScrollView *ui=[self addScrollView:name];
     if(imgName)
     {
         va_list args;
         va_start(args, imgName);
-        [ui addImageView:imgName xyFlag:X];//内部会重设contentSize属性
+        [ui addImageView:nil imgName:imgName xyFlag:X];//内部会重设contentSize属性
         NSString *otherImgName;
         
         while ((otherImgName = va_arg(args, NSString *))) {
-            [ui addImageView:otherImgName xyFlag:X];
+            [ui addImageView:nil imgName:otherImgName xyFlag:X];
         }
         va_end(args);
     }

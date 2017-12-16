@@ -43,11 +43,12 @@ typedef void(^onClick)(UIView *view);
 -(UIButton *)addSlider:(NSString *)name;
 -(UIButton *)addProgress:(NSString *)name;
 
--(UILabel*)addLabel:(NSString*)text;
--(UILabel*)addLabel:(NSString*)text name:(NSString*)name;
-
--(UIImageView*)addImageView:(NSString*)imgName;
--(UIImageView*)addImageView:(NSString*)imgName xyFlag:(XYFlag)xyFlag;
+-(UILabel*)addLabel:(NSString*)name;
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text;
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px;
+-(UIImageView*)addImageView:(NSString*)name;
+-(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName;
+-(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName xyFlag:(XYFlag)xyFlag;
 
 -(UITextField*)addTextField:(NSString*)name;
 -(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder;
@@ -60,9 +61,8 @@ typedef void(^onClick)(UIView *view);
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title buttonType:(UIButtonType)buttonType;
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType;
 -(UIView*)addLine:(UIColor*)color;
--(UIView*)addRectangle;
--(UIScrollView*)addScrollView;
--(UIScrollView *)addScrollView:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION;
+-(UIScrollView*)addScrollView:(NSString*)name;
+-(UIScrollView *)addScrollView:(NSString*)name imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION;
 
 -(UIView*)lastSubView;
 -(UIView*)firstSubView;
