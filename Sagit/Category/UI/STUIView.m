@@ -426,11 +426,11 @@ static char clickEventChar='e';
     [self addView:ui name:name];
     return ui;
 }
--(UIView*)addLine:(id)colorOrHex
+-(UIView*)addLine:name color:(id)colorOrHex
 {
     UIView *ui = [[UIView alloc] initWithFrame:STEmptyRect];
     [ui backgroundColor:colorOrHex];
-    [self addView:ui name:nil];
+    [self addView:ui name:name];
     return ui;
 }
 

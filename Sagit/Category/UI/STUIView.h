@@ -60,8 +60,8 @@ typedef void(^onClick)(UIView *view);
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title;
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px;
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px buttonType:(UIButtonType)buttonType;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSUInteger)px imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType;
--(UIView*)addLine:(id)colorOrHex;
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType;
+-(UIView*)addLine:name color:(id)colorOrHex;
 -(UIScrollView*)addScrollView:(NSString*)name;
 -(UIScrollView *)addScrollView:(NSString*)name imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION;
 
