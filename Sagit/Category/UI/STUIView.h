@@ -61,7 +61,7 @@ typedef void(^onClick)(UIView *view);
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px;
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px buttonType:(UIButtonType)buttonType;
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSUInteger)px imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType;
--(UIView*)addLine:(UIColor*)color;
+-(UIView*)addLine:(id)colorOrHex;
 -(UIScrollView*)addScrollView:(NSString*)name;
 -(UIScrollView *)addScrollView:(NSString*)name imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION;
 
@@ -78,7 +78,7 @@ typedef void(^onClick)(UIView *view);
 -(UIColor*)toColor:(id)hexOrColor;
 #pragma mark 扩展系统属性
 -(UIView*)frame:(CGRect) frame;
--(UIView*)backgroundColor:(UIColor*)backgroundColor;
+-(UIView*)backgroundColor:(id)colorOrHex;
 -(UIView*)clipsToBounds:(BOOL)value;
 @end
 

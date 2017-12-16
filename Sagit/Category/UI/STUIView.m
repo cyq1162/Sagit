@@ -426,10 +426,10 @@ static char clickEventChar='e';
     [self addView:ui name:name];
     return ui;
 }
--(UIView*)addLine:(UIColor*)color
+-(UIView*)addLine:(id)colorOrHex
 {
     UIView *ui = [[UIView alloc] initWithFrame:STEmptyRect];
-    ui.backgroundColor = color;
+    [ui backgroundColor:colorOrHex];
     [self addView:ui name:nil];
     return ui;
 }
@@ -598,8 +598,8 @@ static char clickEventChar='e';
     self.frame=frame;
     return self;
 }
--(UIView*)backgroundColor:(UIColor*)backgroundColor{
-    self.backgroundColor=backgroundColor;
+-(UIView*)backgroundColor:(id)colorOrHex{
+    self.backgroundColor=[self toColor:colorOrHex];
     return self;
 }
 -(UIView*)clipsToBounds:(BOOL)value
