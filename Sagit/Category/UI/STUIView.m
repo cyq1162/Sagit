@@ -290,6 +290,7 @@ static char clickEventChar='e';
 -(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName xyFlag:(XYFlag)xyFlag
 {
     CGRect frame=self.frame;
+    NSInteger tagIndex=0;
     if([self isKindOfClass:[UIScrollView class]])//计算ImageView的位置和UIScrollView的contentSize
     {
         UIScrollView *scroll= (UIScrollView*)self;
@@ -308,8 +309,10 @@ static char clickEventChar='e';
             size.height=size.height+frame.size.height;
         }
         scroll.contentSize=size;
+        tagIndex=scroll.subviews.count;
     }
     UIImageView *ui = [[UIImageView alloc] initWithFrame:frame];
+    ui.tag=tagIndex;//设置tag，方便后续点击事件通过索引找到对应的UI
     if(imgName!=nil)
     {
         UIImage *image=[UIImage imageNamed:imgName];
