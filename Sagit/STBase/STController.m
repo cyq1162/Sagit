@@ -30,6 +30,7 @@
     }
     else
     {
+        self.view=[[STView alloc] initWithController:self];//将view换成STView
         [self initUI];
     }
 }
