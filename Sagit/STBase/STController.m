@@ -134,10 +134,15 @@
 
 
 
--(void)open:(UIView*)ui{
-    NSString* name=ui.name;
+-(void)open:(UITapGestureRecognizer*)recognizer{
+    NSString* name=recognizer.accessibilityValue;
+    if(name==nil)
+    {
+        name=recognizer.view.name;
+    }
     if(name!=nil)
     {
+        
         if(![name hasSuffix:@"Controller"])
         {
             name=[name append:@"Controller"];

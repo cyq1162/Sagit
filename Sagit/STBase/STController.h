@@ -39,7 +39,7 @@
 -(NSMutableDictionary*)formData:(id)superView;
 
 
--(void)open:(UIView*)ui;
+-(void)open:(UITapGestureRecognizer*)recognizer;
 
 -(void)asRoot:(RootViewControllerType) rootType;
 @end

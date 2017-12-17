@@ -517,6 +517,14 @@ static char clickEventChar='e';
         if(sel!=nil)
         {
             UITapGestureRecognizer *click = [[UITapGestureRecognizer alloc] initWithTarget:self.STController action:sel];
+            if(self.name==nil)
+            {
+                self.name=event;
+            }
+            else if(![self.name isEqualToString:event])
+            {
+                click.accessibilityValue=event;//借一个属性用用。
+            }
             [self addGestureRecognizer:click];
         }
     }
