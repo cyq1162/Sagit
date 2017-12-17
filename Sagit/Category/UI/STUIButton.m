@@ -7,7 +7,7 @@
 //
 
 #import "STUIButton.h"
-#import <objc/runtime.h>
+//#import <objc/runtime.h>
 #import "STDefineUI.h"
 @implementation UIButton (ST)
 

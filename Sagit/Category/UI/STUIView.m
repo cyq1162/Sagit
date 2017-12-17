@@ -595,7 +595,7 @@ static char clickEventChar='e';
 {
     if([hexOrColor isKindOfClass:([NSString class])])
     {
-        return STHexColor(hexOrColor);
+        return STColor(hexOrColor);
     }
     return (UIColor*)hexOrColor;
 }
