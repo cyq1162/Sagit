@@ -17,7 +17,7 @@ typedef NS_ENUM(NSUInteger,RootViewControllerType)  {
 };
 
 typedef NS_ENUM(NSUInteger,XYFlag)  {
-    XY=0,
+    XYNone=0,
     X=1,
     Y=2
 };

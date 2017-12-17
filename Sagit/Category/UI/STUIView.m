@@ -281,11 +281,11 @@ static char clickEventChar='e';
 }
 -(UIImageView*)addImageView:(NSString*)name
 {
-    return [self addImageView:name imgName:nil xyFlag:XY];
+    return [self addImageView:name imgName:nil xyFlag:XYNone];
 }
 -(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName
 {
-    return [self addImageView:name imgName:imgName xyFlag:XY];
+    return [self addImageView:name imgName:imgName xyFlag:XYNone];
 }
 -(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName xyFlag:(XYFlag)xyFlag
 {
@@ -355,7 +355,7 @@ static char clickEventChar='e';
     //键盘return样式变成发送
     ui.returnKeyType = UIReturnKeySend;
     
-    ui.font = [UIFont systemFontOfSize:14];
+    ui.font =STFont(28);// [UIFont systemFontOfSize:14];
     //    ui.layer.borderColor = [[[UIColor lightGrayColor] colorWithAlphaComponent:0.4] CGColor];
     //加下面一句话的目的是，是为了调整光标的位置，让光标出现在UITextView的正中间
     //ui.textContainerInset = UIEdgeInsetsMake(10,0, 0, 0);
@@ -363,8 +363,8 @@ static char clickEventChar='e';
     {
         [view.UITextList addObject:ui];
     }
-    [ui setIsFormUI:YES];
-    [ui sizeToFit];
+    [ui isFormUI:YES];
+    //[ui sizeToFit];
     [self addView:ui name:name];
     return ui;
     
@@ -447,18 +447,18 @@ static char clickEventChar='e';
     [self addView:ui name:nil];
     return ui;
 }
--(UIScrollView *)addScrollView:(NSString*)name imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION
+-(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION
 {
     UIScrollView *ui=[self addScrollView:name];
     if(imgName)
     {
         va_list args;
         va_start(args, imgName);
-        [ui addImageView:nil imgName:imgName xyFlag:X];//内部会重设contentSize属性
+        [ui addImageView:nil imgName:imgName xyFlag:direction];//内部会重设contentSize属性
         NSString *otherImgName;
         
         while ((otherImgName = va_arg(args, NSString *))) {
-            [ui addImageView:nil imgName:otherImgName xyFlag:X];
+            [ui addImageView:nil imgName:otherImgName xyFlag:direction];
         }
         va_end(args);
     }
