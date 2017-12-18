@@ -166,7 +166,7 @@
     
 
 }
-
+//将当前视图设置为根视图
 -(void)asRoot:(RootViewControllerType)rootViewControllerType{
     
     UIViewController *controller=self;
@@ -176,15 +176,11 @@
     }
     [self setRoot:controller];
 }
-////拦截右侧返回事件。
-//- (void)didMoveToParentViewController:(UIViewController*)parent
-//{
-//    if(!parent){
-//        [self setStateAfterSTPop];
-//    }
-//    [super didMoveToParentViewController:parent];
-//
-//}
+//项目需要重写时，此方法留给具体项目重写。
+- (void)stPush:(UIViewController *)viewController
+{
+    [self stPush:viewController title:nil imgName:nil];
+}
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if (textField.maxLength>0 && range.location >=textField.maxLength) {
         return NO;

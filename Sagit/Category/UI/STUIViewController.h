@@ -12,7 +12,7 @@
 @interface UIViewController(ST)
 - (UIViewController*)setRoot:(UIViewController *)rootViewController;
 //自定义导航的工具条为自己的图标或文字
-- (void)stPush:(UIViewController *)viewController;
+
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title;
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title imgName:(NSString *)imgName;
 - (void)stPop;

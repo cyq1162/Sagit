@@ -35,11 +35,7 @@
     //                    animations:animation
     //                    completion:nil];
 }
-//项目需要重写时，此方法留给具体项目重写。
-- (void)stPush:(UIViewController *)viewController
-{
-    [self stPush:viewController title:nil imgName:nil];
-}
+
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title
 {
     [self stPush:viewController title:title imgName:nil];

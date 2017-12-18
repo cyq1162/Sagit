@@ -40,6 +40,7 @@
 
 
 -(void)open:(UITapGestureRecognizer*)recognizer;
-
 -(void)asRoot:(RootViewControllerType) rootType;
+//这里只定义一个（用于被业务系统复盖、其它总的定义在UIViewController中）
+- (void)stPush:(UIViewController *)viewController;
 @end
