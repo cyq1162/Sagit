@@ -16,14 +16,14 @@
 -(BOOL)isFloat;
 -(NSString*)append:(NSString*)string;
 -(NSString*)replace:(NSString*)a with:(NSString*)b;
--(NSString *)replace:(NSString *)a with:(NSString *)b isCase:(BOOL)isCase;
+-(NSString *)replace:(NSString *)a with:(NSString *)b ignoreCase:(BOOL)ignoreCase;
 -(NSArray<NSString*>*)split:(NSString*)separator;
 -(NSString*)toUpper;
 -(NSString*)toLower;
 -(BOOL)startWith:(NSString*)value;
 -(BOOL)endWith:(NSString*)value;
 -(BOOL)contains:(NSString*)value;
--(BOOL)contains:(NSString*)value isCase:(BOOL)isCase;
+-(BOOL)contains:(NSString*)value ignoreCase:(BOOL)ignoreCase;
 -(BOOL)isEmpty;
 +(BOOL)isNilOrEmpty:(NSString*)value;
 +(NSString*)toString:(id)value;
@@ -31,7 +31,7 @@
 
 
 -(NSInteger)indexOf:(NSString*)searchString;
--(NSInteger)indexOf:(NSString*)searchString isCase:(BOOL)isCase;
+-(NSInteger)indexOf:(NSString*)searchString ignoreCase:(BOOL)ignoreCase;
 -(NSString*)firstCharUpper;
 -(NSString*)firstCharLower;
 @end

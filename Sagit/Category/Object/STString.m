@@ -39,13 +39,13 @@
 }
 -(NSString *)replace:(NSString *)a with:(NSString *)b
 {
-    return [self replace:a with:b isCase:NO];
+    return [self replace:a with:b ignoreCase:NO];
 }
--(NSString *)replace:(NSString *)a with:(NSString *)b isCase:(BOOL)isCase
+-(NSString *)replace:(NSString *)a with:(NSString *)b ignoreCase:(BOOL)ignoreCase
 {
     if(a==nil){return self;}
     if(b==nil){b=@"";}
-    if(!isCase)
+    if(!ignoreCase)
     {
         return [self stringByReplacingOccurrencesOfString:a withString:b];
     }
@@ -61,7 +61,7 @@
 -(BOOL)startWith:(NSString *)value{return [self hasPrefix:value];}
 -(BOOL)endWith:(NSString *)value{return [self hasSuffix:value];}
 -(BOOL)contains:(NSString *)value{return [self containsString:value];}
--(BOOL)contains:(NSString *)value isCase:(BOOL)isCase{return [self indexOf:value isCase:isCase]>=0;}
+-(BOOL)contains:(NSString *)value ignoreCase:(BOOL)ignoreCase{return [self indexOf:value ignoreCase:ignoreCase]>=0;}
 -(BOOL)isEmpty{return [self isEqualToString:@""];}
 +(BOOL)isNilOrEmpty:(NSString*)value{return value==nil || [value isEmpty];}
 +(NSString *)toString:(id)value{return [NSString stringWithFormat:@"%@",value];}
@@ -72,12 +72,12 @@
 
 -(NSInteger)indexOf:(NSString*)searchString
 {
-    return [self indexOf:searchString isCase:NO];
+    return [self indexOf:searchString ignoreCase:NO];
 }
--(NSInteger)indexOf:(NSString*)searchString isCase:(BOOL)isCase
+-(NSInteger)indexOf:(NSString*)searchString ignoreCase:(BOOL)ignoreCase
 {
     NSRange rnd=NSMakeRange(-1, 0);
-    if(!isCase)
+    if(!ignoreCase)
     {
         rnd=[self rangeOfString:searchString];
     }
