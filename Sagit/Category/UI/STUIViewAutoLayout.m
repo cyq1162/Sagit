@@ -276,7 +276,7 @@ static NSInteger xyNone=-99999;
     
     CGSize superSize=[self superSize];
     CGRect frame=STRectCopy(self.frame);
-    frame.origin=CGPointZero;//归零处理
+    //frame.origin=CGPointZero;//归零处理 后来没想通为什么要归零，只能去掉。
     if(left!=xyNone && right!=xyNone)
     {
         frame.size.width=superSize.width-left*Xpt-right*Xpt;

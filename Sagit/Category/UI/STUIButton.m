@@ -89,9 +89,9 @@
     self.titleLabel.font=STFont(px);
     return self;
 }
-//-(UIButton*)buttonType:(UIButtonType)type
-//{
-//    self.buttonType=type;
-//    return self;
-//}
+-(UIButton*)adjustsImageWhenHighlighted:(BOOL)yesNo
+{
+    self.adjustsImageWhenHighlighted=yesNo;
+    return self;
+}
 @end

@@ -49,6 +49,7 @@
 
 #define STRectCopy(frame) CGRectMake(frame.origin.x,frame.origin.y, frame.size.width, frame.size.height);
 
+#define STPreView self.lastSubView.preView
 //原始图片大小，不需要转
 //#define UIEdgeInsetsMake(top, left, bottom, right) UIEdgeInsetsMake(top*Ypt, left*Xpt, bottom*Ypt, right*Xpt)
 //(770,100)

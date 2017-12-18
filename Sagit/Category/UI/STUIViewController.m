@@ -87,6 +87,7 @@
         //打开右滑返回交互。 (已通过重写NavigationController扩展处理了)
         self.navigationController.interactivePopGestureRecognizer.delegate=(id)self.navigationController;
     //}
+    [self.view needNavigationBar:!self.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -97,7 +98,10 @@
         //如果上级就是根视图，就隐藏，否则仍显示
         if(self.navigationController.viewControllers.count==1)
         {
-            self.navigationController.navigationBar.hidden=YES;
+            if(![self.navigationController.viewControllers[0].view needNavigationBar])
+            {
+                self.navigationController.navigationBar.hidden=YES;
+            }
             //显示返回导航工具条，如果是滑动的话，View会自动归位，但自定义事件返回，不归位（所以在自定义事件中也设置一下次）
         }
 //        if(![self isKindOfClass:[STController class]])//如果不是STController

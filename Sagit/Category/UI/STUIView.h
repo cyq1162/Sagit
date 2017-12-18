@@ -34,6 +34,10 @@ typedef void(^onClick)(UIView *view);
 - (UIView*)nextView;
 - (UIView*)nextView:(UIView*)view;
 - (UIView*)setNextView:(UIView*)view;
+//为每个UI增加一个可以存档临时值的字典
+-(NSMutableDictionary<NSString*,id>*)keyValue;
+-(UIView*)keyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
+-(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
 
 
 -(void)addView:(UIView *)view name:(NSString*)name;
@@ -80,6 +84,10 @@ typedef void(^onClick)(UIView *view);
 -(UIView*)frame:(CGRect) frame;
 -(UIView*)backgroundColor:(id)colorOrHex;
 -(UIView*)clipsToBounds:(BOOL)value;
+//将圆角半私设为1半。
+-(UIView*)layerCornerRadiusToHalf;
+-(UIView*)needNavigationBar:(BOOL)yesNo;
+-(BOOL)needNavigationBar;
 @end
 
 

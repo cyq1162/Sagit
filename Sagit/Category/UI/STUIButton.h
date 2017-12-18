@@ -25,5 +25,6 @@
 -(UIButton*)titleColor:(id)colorOrHex;
 -(UIButton*)titleColor:(id)colorOrHex forState:(UIControlState)state;
 -(UIButton*)titleFont:(NSInteger)px;
+-(UIButton*)adjustsImageWhenHighlighted:(BOOL)yesNo;
 //-(UIButton*)buttonType:(UIButtonType)type;
 @end

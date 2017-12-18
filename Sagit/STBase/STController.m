@@ -154,7 +154,14 @@
             STController *controller=[class new];
             if(self.navigationController!=nil)
             {
-                [self stPush:controller title:nil imgName:nil];
+                NSString*title=nil;
+                NSString*imgName=nil;
+                if(recognizer.view!=nil && recognizer.view.keyValue!=nil)
+                {
+                    title=recognizer.view.keyValue[@"leftNavTitle"];
+                    imgName=recognizer.view.keyValue[@"leftNavImage"];
+                }
+                [self stPush:controller title:title imgName:imgName];
                 //[self.navigationController pushViewController:controller animated:YES];
             }
             else
@@ -173,6 +180,8 @@
     if(rootViewControllerType==RootViewNavigationType)
     {
         controller = [[UINavigationController alloc]initWithRootViewController:self];
+        self.navigationController.navigationBar.hidden=!self.view.needNavigationBar;
+        
     }
     [self setRoot:controller];
 }

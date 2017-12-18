@@ -17,10 +17,8 @@ static char namaChar='n';
 static char isformUIChar='f';
 static char preViewChar='p';
 static char nextViewChar='e';
-
-
 static char clickEventChar='e';
-
+static char keyValueChar='k';
 
 // Name
 - (NSString*)name{
@@ -70,7 +68,20 @@ static char clickEventChar='e';
     return self;
 }
 
-
+-(NSMutableDictionary<NSString*,id>*)keyValue
+{
+    return (NSMutableDictionary<NSString*,id>*)objc_getAssociatedObject(self, &keyValueChar);
+}
+-(UIView*)keyValue:(NSMutableDictionary<NSString*,id>*)keyValue
+{
+    [self setKeyValue:keyValue];
+    return self;
+}
+-(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue
+{
+    objc_setAssociatedObject(self, &keyValueChar, keyValue,OBJC_ASSOCIATION_RETAIN);
+    return self;
+}
 
 
 -(BOOL)isSTView
@@ -418,15 +429,15 @@ static char clickEventChar='e';
         [ui setImage:img forState:UIControlStateNormal];
         [ui width:img.size.width*Xpx height:img.size.height*Ypx];
     }
-//    if(name!=nil)
-//    {
-//        [self click:name];
-////        SEL sel=[self getSel:name];
-////        if(sel!=nil)
-////        {
-////            [ui addTarget:self.STController action:sel forControlEvents:UIControlEventTouchUpInside];
-////        }
-//    }
+    //    if(name!=nil)
+    //    {
+    //        [self click:name];
+    ////        SEL sel=[self getSel:name];
+    ////        if(sel!=nil)
+    ////        {
+    ////            [ui addTarget:self.STController action:sel forControlEvents:UIControlEventTouchUpInside];
+    ////        }
+    //    }
     [self addView:ui name:name];
     if(name!=nil)
     {
@@ -570,21 +581,26 @@ static char clickEventChar='e';
         isEvent=[controller respondsToSelector:sel];
         if(!isEvent && ![event endWith:@"Click"] && ![event endWith:@":"] && ![event endWith:@"Controller"])
         {
-            sel=NSSelectorFromString([event append:@"Click"]);
+            sel=NSSelectorFromString([event append:@":"]);
             isEvent=[controller respondsToSelector:sel];
             if(!isEvent)
             {
-                sel=NSSelectorFromString([event append:@"Click:"]);
+                sel=NSSelectorFromString([event append:@"Click"]);
                 isEvent=[controller respondsToSelector:sel];
                 if(!isEvent)
                 {
-                    Class class= NSClassFromString([event append:@"Controller"]);
-                    if(class!=nil)
+                    sel=NSSelectorFromString([event append:@"Click:"]);
+                    isEvent=[controller respondsToSelector:sel];
+                    if(!isEvent)
                     {
-                        sel=NSSelectorFromString(@"open:");
-                        isEvent=YES;
+                        Class class= NSClassFromString([event append:@"Controller"]);
+                        if(class!=nil)
+                        {
+                            sel=NSSelectorFromString(@"open:");
+                            isEvent=YES;
+                        }
+                        
                     }
-                    
                 }
             }
         }
@@ -621,6 +637,28 @@ static char clickEventChar='e';
 -(UIView*)clipsToBounds:(BOOL)value
 {
     self.clipsToBounds=value;
+    return self;
+}
+-(UIButton*)layerCornerRadiusToHalf
+{
+    self.layer.cornerRadius=self.frame.size.width/2;
+    return self;
+}
+-(BOOL)needNavigationBar
+{
+    if(self.keyValue!=nil && self.keyValue[@"needNavigationBar"]!=nil)
+    {
+        return [self.keyValue[@"needNavigationBar"] isEqualToString:@"1"];
+    }
+    return NO;
+}
+-(UIView*)needNavigationBar:(BOOL)yesNo
+{
+    if(self.keyValue==nil)
+    {
+        self.keyValue=[NSMutableDictionary new];
+    }
+    [self.keyValue set:@"needNavigationBar" value:yesNo?@"1":@"0"];
     return self;
 }
 @end
