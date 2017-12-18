@@ -137,7 +137,7 @@
 
 -(void)open:(UITapGestureRecognizer*)recognizer{
     NSString* name=recognizer.accessibilityValue;
-    if(name==nil)
+    if(name==nil && recognizer.view!=nil)
     {
         name=recognizer.view.name;
     }
@@ -154,7 +154,8 @@
             STController *controller=[class new];
             if(self.navigationController!=nil)
             {
-                [self.navigationController pushViewController:controller animated:YES];
+                [self stPush:controller title:nil imgName:nil];
+                //[self.navigationController pushViewController:controller animated:YES];
             }
             else
             {
@@ -175,14 +176,15 @@
     }
     [self setRoot:controller];
 }
-//+(void)setRoot:(UIViewController *)rootController{
-//
-//    [UIApplication sharedApplication].keyWindow.rootViewController = rootController;
-////    AppDelegate *delegate= (AppDelegate*)[UIApplication sharedApplication].delegate;
-////    delegate.window.rootViewController=rootController;
+////拦截右侧返回事件。
+//- (void)didMoveToParentViewController:(UIViewController*)parent
+//{
+//    if(!parent){
+//        [self setStateAfterSTPop];
+//    }
+//    [super didMoveToParentViewController:parent];
 //
 //}
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if (textField.maxLength>0 && range.location >=textField.maxLength) {
         return NO;

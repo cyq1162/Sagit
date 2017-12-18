@@ -16,4 +16,6 @@
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title;
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title imgName:(NSString *)imgName;
 - (void)stPop;
+//系统方法，对外不调用
+//-(void)setStateAfterSTPop;
 @end

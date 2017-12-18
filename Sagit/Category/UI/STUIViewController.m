@@ -49,7 +49,7 @@
     // || ([NSString isNilOrEmpty:imgName] && [NSString isNilOrEmpty:title])
     if(self.navigationController==nil){return;}
     self.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
-    self.navigationController.navigationBar.translucent=NO;//让默认View在导般之前。
+    self.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。
     
     
     
@@ -86,24 +86,44 @@
             
         }
     }
-    //打开右滑返回交互。
-    self.navigationController.interactivePopGestureRecognizer.delegate=(id)self.navigationController;
+//    if([self isKindOfClass:[STController class]])//因为STController可以拦截系统滑动返回的事件做进一步处理，所以打开交互
+//    {
+        //打开右滑返回交互。 (已通过重写NavigationController扩展处理了)
+        self.navigationController.interactivePopGestureRecognizer.delegate=(id)self.navigationController;
+    //}
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)stPop {
     if(self.navigationController!=nil)
     {
-        if([self.navigationController.navigationBar.lastSubView isKindOfClass:[UIButton class]])
-        {
-            [self.navigationController.navigationBar.lastSubView height:0];//取消自定义复盖的UIButton
-        }
-        //如果上级就是根视图，就隐藏，否则仍显示
-        if(self.navigationController.viewControllers.count==2)
-        {
-            self.navigationController.navigationBar.hidden=YES;//显示返回导航工具条。
-        }
         [self.navigationController popViewControllerAnimated:YES];
+        //如果上级就是根视图，就隐藏，否则仍显示
+        if(self.navigationController.viewControllers.count==1)
+        {
+            self.navigationController.navigationBar.hidden=YES;
+            //显示返回导航工具条，如果是滑动的话，View会自动归位，但自定义事件返回，不归位（所以在自定义事件中也设置一下次）
+        }
+//        if(![self isKindOfClass:[STController class]])//如果不是STController
+//        {
+//            //右滑已禁止的情况下，在这里设置状态。
+//            [self setStateAfterSTPop];
+//        }
     }
 }
+//-(void)setStateAfterSTPop
+//{
+//    if(self.navigationController!=nil)
+//    {
+////        if([self.navigationController.navigationBar.lastSubView isKindOfClass:[UIButton class]])
+////        {
+////            [self.navigationController.navigationBar.lastSubView height:0];//取消自定义复盖的UIButton
+////        }
+////        //如果上级就是根视图，就隐藏，否则仍显示
+////        if(self.navigationController.viewControllers.count==1)
+////        {
+////            self.navigationController.navigationBar.hidden=YES;//显示返回导航工具条。
+////        }
+//    }
+//}
 @end

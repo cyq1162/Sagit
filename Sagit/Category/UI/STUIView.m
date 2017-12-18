@@ -418,15 +418,20 @@ static char clickEventChar='e';
         [ui setImage:img forState:UIControlStateNormal];
         [ui width:img.size.width*Xpx height:img.size.height*Ypx];
     }
+//    if(name!=nil)
+//    {
+//        [self click:name];
+////        SEL sel=[self getSel:name];
+////        if(sel!=nil)
+////        {
+////            [ui addTarget:self.STController action:sel forControlEvents:UIControlEventTouchUpInside];
+////        }
+//    }
+    [self addView:ui name:name];
     if(name!=nil)
     {
-        SEL sel=[self getSel:name];
-        if(sel!=nil)
-        {
-            [ui addTarget:self.STController action:sel forControlEvents:UIControlEventTouchUpInside];
-        }
+        [ui click:name];//加入控件后，才找的到STController
     }
-    [self addView:ui name:name];
     return ui;
 }
 -(UIView*)addLine:name color:(id)colorOrHex
