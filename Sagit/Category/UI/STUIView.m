@@ -654,11 +654,19 @@ static char keyValueChar='k';
 }
 -(UIView*)needNavigationBar:(BOOL)yesNo
 {
+    return [self needNavigationBar:yesNo setNavBar:NO];
+}
+-(UIView*)needNavigationBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar
+{
     if(self.keyValue==nil)
     {
         self.keyValue=[NSMutableDictionary new];
     }
     [self.keyValue set:@"needNavigationBar" value:yesNo?@"1":@"0"];
+    if(setNavBar && self.STController!=nil && self.STController.navigationController!=nil)
+    {
+        self.STController.navigationController.navigationBar.hidden=!yesNo;
+    }
     return self;
 }
 @end

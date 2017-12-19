@@ -8,14 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "STEnum.h"
 
 @interface UIViewController(ST)
-- (UIViewController*)setRoot:(UIViewController *)rootViewController;
+//- (UIViewController*)setRoot:(UIViewController *)rootViewController;
 //自定义导航的工具条为自己的图标或文字
 
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title;
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title imgName:(NSString *)imgName;
 - (void)stPop;
+-(UIViewController*)asRoot;
+-(UIViewController*)asRoot:(RootViewControllerType) rootType;
 //系统方法，对外不调用
 //-(void)setStateAfterSTPop;
 @end

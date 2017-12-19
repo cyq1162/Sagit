@@ -173,18 +173,7 @@
     
 
 }
-//将当前视图设置为根视图
--(void)asRoot:(RootViewControllerType)rootViewControllerType{
-    
-    UIViewController *controller=self;
-    if(rootViewControllerType==RootViewNavigationType)
-    {
-        controller = [[UINavigationController alloc]initWithRootViewController:self];
-        self.navigationController.navigationBar.hidden=!self.view.needNavigationBar;
-        
-    }
-    [self setRoot:controller];
-}
+
 //项目需要重写时，此方法留给具体项目重写。
 - (void)stPush:(UIViewController *)viewController
 {

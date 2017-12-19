@@ -9,10 +9,9 @@
 #import "STUIViewController.h"
 
 @implementation UIViewController(ST)
-- (UIViewController*)setRoot:(UIViewController *)rootViewController {
+- (UIViewController*)asRoot {
     
-    [UIApplication sharedApplication].delegate.window.rootViewController=rootViewController;
-    return self;
+    return [self asRoot:RootViewDefaultType];
     //return;
     //    AppDelegate *delegate= (AppDelegate*)[UIApplication sharedApplication].delegate;
     //    delegate.window.rootViewController=rootController;
@@ -35,7 +34,18 @@
     //                    animations:animation
     //                    completion:nil];
 }
-
+//将当前视图设置为根视图
+-(UIViewController*)asRoot:(RootViewControllerType)rootViewControllerType{
+    
+    UIViewController *controller=self;
+    if(rootViewControllerType==RootViewNavigationType)
+    {
+        controller = [[UINavigationController alloc]initWithRootViewController:self];
+        //self.navigationController.navigationBar.hidden=!self.view.needNavigationBar;
+    }
+    [UIApplication sharedApplication].delegate.window.rootViewController=controller;
+    return self;
+}
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title
 {
     [self stPush:viewController title:title imgName:nil];
@@ -44,10 +54,9 @@
 {
     // || ([NSString isNilOrEmpty:imgName] && [NSString isNilOrEmpty:title])
     if(self.navigationController==nil){return;}
+    [self.view needNavigationBar:!self.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
     self.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
     self.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。
-    
-    
     
     if (self.navigationController.viewControllers.count != 0)
     {
@@ -87,29 +96,33 @@
         //打开右滑返回交互。 (已通过重写NavigationController扩展处理了)
         self.navigationController.interactivePopGestureRecognizer.delegate=(id)self.navigationController;
     //}
-    [self.view needNavigationBar:!self.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
+    
     [self.navigationController pushViewController:viewController animated:YES];
+    //return self;
 }
 
 - (void)stPop {
     if(self.navigationController!=nil)
     {
-        [self.navigationController popViewControllerAnimated:YES];
+        
         //如果上级就是根视图，就隐藏，否则仍显示
-        if(self.navigationController.viewControllers.count==1)
+        if(self.navigationController.viewControllers.count==2)
         {
-            if(![self.navigationController.viewControllers[0].view needNavigationBar])
-            {
-                self.navigationController.navigationBar.hidden=YES;
-            }
+            
+//            if(![self.navigationController.viewControllers[0].view needNavigationBar])
+//            {
+                self.navigationController.navigationBar.hidden=![self.navigationController.viewControllers[0].view needNavigationBar];
+            //}
             //显示返回导航工具条，如果是滑动的话，View会自动归位，但自定义事件返回，不归位（所以在自定义事件中也设置一下次）
         }
+        [self.navigationController popViewControllerAnimated:YES];
 //        if(![self isKindOfClass:[STController class]])//如果不是STController
 //        {
 //            //右滑已禁止的情况下，在这里设置状态。
 //            [self setStateAfterSTPop];
 //        }
     }
+   // return self;
 }
 //-(void)setStateAfterSTPop
 //{
