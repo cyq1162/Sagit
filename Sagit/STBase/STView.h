@@ -21,6 +21,9 @@
 //是否开启手机旋转刷新布局功能。
 @property (nonatomic,assign) BOOL isStartRotateEvent;
 
+//最后一个被添加的UI(作用是为定义的STLastView系列做准备)
+//-(UIView*) lastView;
+
 -(void)initView;
 //初始化[子类重写]
 -(void)initUI;

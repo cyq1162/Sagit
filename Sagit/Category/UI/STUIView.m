@@ -70,7 +70,14 @@ static char keyValueChar='k';
 
 -(NSMutableDictionary<NSString*,id>*)keyValue
 {
-    return (NSMutableDictionary<NSString*,id>*)objc_getAssociatedObject(self, &keyValueChar);
+    
+   NSMutableDictionary<NSString*,id> *kv= (NSMutableDictionary<NSString*,id>*)objc_getAssociatedObject(self, &keyValueChar);
+    if(kv==nil)
+    {
+        kv=[NSMutableDictionary new];
+        [self setKeyValue:kv];
+    }
+    return kv;
 }
 -(UIView*)keyValue:(NSMutableDictionary<NSString*,id>*)keyValue
 {
@@ -91,6 +98,15 @@ static char keyValueChar='k';
 -(BOOL)isOnSTView
 {
     return self.superview!=nil && [self.superview isSTView];
+}
+-(UIView*)baseView
+{
+    UIView *view=[self superview];
+    if(view!=nil)
+    {
+        return [view baseView];
+    }
+    return self;
 }
 -(STView*)STView
 {
@@ -196,6 +212,16 @@ static char keyValueChar='k';
 }
 
 #pragma mark addUIView
+-(UIView*)lastAddView
+{
+    UIView *lastAddView=[self baseView].keyValue[@"lastAddView"];
+    
+    if(lastAddView==nil)
+    {
+        lastAddView= [self lastSubView];
+    }
+    return lastAddView;
+}
 -(UIView *)lastSubView
 {
     if(self.subviews.count>0)
@@ -229,6 +255,7 @@ static char keyValueChar='k';
         lastView.NextView=view;
         view.PreView=lastView;
     }
+    [[self baseView].keyValue set:@"lastAddView" value:view];
     [self addSubview:view];
 }
 -(UIView*)addUIView:(NSString*)name
@@ -237,14 +264,14 @@ static char keyValueChar='k';
     [self addView:ui name:name];
     return ui;
 }
--(UIButton *)addSwitch:(NSString *)name
+-(UISwitch *)addSwitch:(NSString *)name
 {
     UISwitch *ui=[[UISwitch alloc] initWithFrame:STEmptyRect];
     [self addView:ui name:name];
     [ui setIsFormUI:YES];
     return ui;
 }
--(UIButton *)addStepper:(NSString *)name
+-(UIStepper *)addStepper:(NSString *)name
 {
     UIStepper *ui=[[UIStepper alloc] initWithFrame:STEmptyRect];
     [self addView:ui name:name];
@@ -252,14 +279,14 @@ static char keyValueChar='k';
     
     return ui;
 }
--(UIButton *)addSlider:(NSString *)name
+-(UISlider *)addSlider:(NSString *)name
 {
     UISlider *ui=[[UISlider alloc] initWithFrame:STEmptyRect];
     [self addView:ui name:name];
     [ui setIsFormUI:YES];
     return ui;
 }
--(UIButton *)addProgress:(NSString *)name
+-(UIProgressView *)addProgress:(NSString *)name
 {
     UIProgressView *ui=[[UIProgressView alloc] initWithFrame:STEmptyRect];
     [self addView:ui name:name];
@@ -423,7 +450,7 @@ static char keyValueChar='k';
         [ui.titleLabel sizeToFit];
         [ui width:ui.titleLabel.stWidth height:ui.titleLabel.stHeight];
     }
-    if(imgName!=nil)
+    else if(imgName!=nil)
     {
         UIImage *img=[UIImage imageNamed:imgName];
         [ui setImage:img forState:UIControlStateNormal];
@@ -614,6 +641,10 @@ static char keyValueChar='k';
 }
 -(UIColor*)toColor:(id)hexOrColor
 {
+    return [UIView toColor:hexOrColor];
+}
++(UIColor*)toColor:(id)hexOrColor
+{
     if([hexOrColor isKindOfClass:([NSString class])])
     {
         return STColor(hexOrColor);
@@ -646,7 +677,7 @@ static char keyValueChar='k';
 }
 -(BOOL)needNavigationBar
 {
-    if(self.keyValue!=nil && self.keyValue[@"needNavigationBar"]!=nil)
+    if(self.keyValue[@"needNavigationBar"]!=nil)
     {
         return [self.keyValue[@"needNavigationBar"] isEqualToString:@"1"];
     }
@@ -658,10 +689,6 @@ static char keyValueChar='k';
 }
 -(UIView*)needNavigationBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar
 {
-    if(self.keyValue==nil)
-    {
-        self.keyValue=[NSMutableDictionary new];
-    }
     [self.keyValue set:@"needNavigationBar" value:yesNo?@"1":@"0"];
     if(setNavBar && self.STController!=nil && self.STController.navigationController!=nil)
     {

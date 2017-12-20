@@ -42,10 +42,10 @@ typedef void(^onClick)(UIView *view);
 
 -(void)addView:(UIView *)view name:(NSString*)name;
 -(UIView*)addUIView:(NSString*)name;
--(UIButton*)addSwitch:(NSString*)name;
--(UIButton *)addStepper:(NSString *)name;
--(UIButton *)addSlider:(NSString *)name;
--(UIButton *)addProgress:(NSString *)name;
+-(UISwitch*)addSwitch:(NSString*)name;
+-(UIStepper *)addStepper:(NSString *)name;
+-(UISlider *)addSlider:(NSString *)name;
+-(UIProgressView *)addProgress:(NSString *)name;
 
 -(UILabel*)addLabel:(NSString*)name;
 -(UILabel*)addLabel:(NSString*)name text:(NSString*)text;
@@ -69,6 +69,8 @@ typedef void(^onClick)(UIView *view);
 -(UIScrollView*)addScrollView:(NSString*)name;
 -(UIScrollView *)addScrollView:(NSString*)name direction:(XYFlag)direction imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION;
 
+//最后一个被添加的控件，有可能是某个控件的子控件
+-(UIView*)lastAddView;
 -(UIView*)lastSubView;
 -(UIView*)firstSubView;
 -(UIView*)stretch;
@@ -80,6 +82,7 @@ typedef void(^onClick)(UIView *view);
 -(UIView*)click:(NSString*)event;
 - (UIView*)addClick:(onClick)block;
 -(UIColor*)toColor:(id)hexOrColor;
++(UIColor*)toColor:(id)hexOrColor;
 #pragma mark 扩展系统属性
 -(UIView*)frame:(CGRect) frame;
 -(UIView*)backgroundColor:(id)colorOrHex;

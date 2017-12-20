@@ -25,4 +25,9 @@
     self.font=STFont(px);
     return self;
 }
+-(UILabel*)numberOfLines:(NSInteger)value
+{
+    self.numberOfLines=value;
+    return self;
+}
 @end

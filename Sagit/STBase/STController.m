@@ -18,7 +18,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //_data=[NSMutableDictionary new];
+    [self loadUI];
+    
+}
+-(void)loadUI{
     //获取当前的类名
     NSString* className= NSStringFromClass([self class]);
     NSString* viewClassName=[className replace:@"Controller" with:@"View"];
@@ -156,7 +159,7 @@
             {
                 NSString*title=nil;
                 NSString*imgName=nil;
-                if(recognizer.view!=nil && recognizer.view.keyValue!=nil)
+                if(recognizer.view!=nil && recognizer.view.keyValue.count>0)
                 {
                     title=recognizer.view.keyValue[@"leftNavTitle"];
                     imgName=recognizer.view.keyValue[@"leftNavImage"];

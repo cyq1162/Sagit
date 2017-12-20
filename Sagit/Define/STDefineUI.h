@@ -49,7 +49,20 @@
 
 #define STRectCopy(frame) CGRectMake(frame.origin.x,frame.origin.y, frame.size.width, frame.size.height);
 
-#define STPreView self.lastSubView.preView
+//上一个UI控件的简写
+#define STPreView self.lastAddView.preView
+#define STLastView self.lastAddView
+#define STLastButton (UIButton*)STLastView
+#define STLastTextField (UITextField*)STLastView
+#define STLastTextView (UITextView*)STLastView
+#define STLastImageView (UIImageView*)STLastView
+#define STLastLabel (UILabel*)STLastView
+#define STLastSwitch (UISwitch*)STLastView
+#define STLastStepper (UIStepper*)STLastView
+#define STLastSlider (UISlider*)STLastView
+#define STLastProgressView (UIProgressView*)STLastView
+#define STLastTableView (UITableView*)STLastView
+
 //原始图片大小，不需要转
 //#define UIEdgeInsetsMake(top, left, bottom, right) UIEdgeInsetsMake(top*Ypt, left*Xpt, bottom*Ypt, right*Xpt)
 //(770,100)
@@ -79,5 +92,5 @@
 
 //图片
 #define STImage(name) [UIImage imageNamed:name]
-
+#define STImageOriginal(name) [[UIImage imageNamed:name] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 #endif /* STDefineUI_h */

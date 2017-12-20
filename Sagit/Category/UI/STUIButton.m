@@ -94,4 +94,18 @@
     self.adjustsImageWhenHighlighted=yesNo;
     return self;
 }
+-(UIButton*)stWidthToFit
+{
+    UILabel *label=self.titleLabel;
+    CGFloat labelWidth=label.stWidth;
+    if(label.text.length>0)
+    {
+        CGSize size=[self.titleLabel.text sizeWithFont:label.font maxSize:self.frame.size];
+        //计算文字的长度
+        labelWidth=MAX(labelWidth, size.width*Xpx);
+    }
+    CGFloat width=MAX(labelWidth+label.stX, self.imageView.stX+self.imageView.stWidth);
+    [self width:width];
+    return self;
+}
 @end

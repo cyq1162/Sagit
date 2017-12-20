@@ -38,7 +38,7 @@
 -(NSMutableDictionary*)formData;
 -(NSMutableDictionary*)formData:(id)superView;
 
-
+//跳转到其它页面
 -(void)open:(UITapGestureRecognizer*)recognizer;
 
 //这里只定义一个（用于被业务系统复盖、其它总的定义在UIViewController中）

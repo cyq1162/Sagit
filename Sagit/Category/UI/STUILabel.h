@@ -14,4 +14,5 @@
 -(UILabel*)textColor:(id)colorOrHex;
 -(UILabel*)textAlignment:(NSTextAlignment)align;
 -(UILabel*)font:(NSInteger)px;
+-(UILabel*)numberOfLines:(NSInteger)value;
 @end

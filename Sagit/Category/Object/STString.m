@@ -111,4 +111,35 @@
     }
     return self;
 }
+/*
+ txt:label或button的title
+ font:字体大小
+ size:允许最大size
+ */
+
+-(CGSize) sizeWithFont:font maxSize:(CGSize)maxSize
+{
+    
+    CGSize _size;
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_6_1
+    
+    NSDictionary *attribute = @{NSFontAttributeName: font};
+    
+    NSStringDrawingOptions options = NSStringDrawingTruncatesLastVisibleLine |
+    
+    NSStringDrawingUsesLineFragmentOrigin |
+    
+    NSStringDrawingUsesFontLeading;
+    
+    _size = [self boundingRectWithSize:maxSize options: options attributes:attribute context:nil].size;
+    
+#else
+    
+    _size = [txt sizeWithFont:font constrainedToSize:maxSize];
+    
+#endif
+    
+    return _size;
+    
+}
 @end

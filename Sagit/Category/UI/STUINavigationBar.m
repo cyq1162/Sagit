@@ -8,65 +8,67 @@
 
 #import "STUINavigationBar.h"
 #import "STDefineUI.h"
-@implementation UINavigationController (ST)
-- (void)navigationBar:(UINavigationBar *)navigationBar didPopItem:(UINavigationItem *)item
-{
-    if(navigationBar!=nil && [navigationBar.lastSubView isKindOfClass:[UIButton class]])
-    {
-        [navigationBar.lastSubView height:0];//取消自定义复盖的UIButton
-    }
-    //如果上级就是根视图，就隐藏，否则仍显示
-    if(self.viewControllers!=nil && self.viewControllers.count==1 && self.navigationBar!=nil)
-    {
-        if(![self.viewControllers[0].view needNavigationBar])
-        {
-            self.navigationBar.hidden=YES;
-        }
-        //显示返回导航工具条，如果是滑动的话，View会自动归位，但自定义事件返回，不归位（所以在自定义事件中也设置一下次）
-    }
-}
-//- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item
-//{
-//    NSLog(@"should...");
-//    long count=self.viewControllers.count;
-//    return YES;
-//}
-@end
+
 
 @implementation UINavigationBar (ST)
 
++(UINavigationBarSetting*)globalSetting
+{
+    return [UINavigationBarSetting new];
+}
+@end
+
+@implementation UINavigationBarSetting
 #pragma mark 扩展系统属性
--(UINavigationBar*)tintColor:(id)colorOrHex
+-(UINavigationBarSetting*)tintColor:(id)colorOrHex
 {
-    self.tintColor=[self toColor:(colorOrHex)];
+    [UINavigationBar appearance].tintColor=[UIView toColor:(colorOrHex)];
     return self;
 }
--(UINavigationBar*)barTintColor:(id)colorOrHex
+-(UINavigationBarSetting*)barTintColor:(id)colorOrHex
 {
-    self.barTintColor=[self toColor:(colorOrHex)];
+    [UINavigationBar appearance].barTintColor=[UIView toColor:(colorOrHex)];
     return self;
 }
--(UINavigationBar*)backgroundImage:(NSString*)imgName
+-(UINavigationBarSetting*)backgroundImage:(NSString*)imgName
+{
+    return [self backgroundImage:imgName stretch:NO];
+}
+-(UINavigationBarSetting*)backgroundImage:(NSString*)imgName stretch:(BOOL)stretch
+{
+    UIImage *img=nil;
+    if([NSString isNilOrEmpty:imgName])
+    {
+        img=[UIImage new];
+    }
+    else
+    {
+        img=STImage(imgName);
+    }
+    if(stretch)
+    {
+        img=[img resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeStretch];
+    }
+    [[UINavigationBar appearance] setBackgroundImage:img forBarMetrics:UIBarMetricsDefault];
+    return self;
+}
+-(UINavigationBarSetting*)shadowImage:(NSString*)imgName
 {
     if([NSString isNilOrEmpty:imgName])
     {
-        [self setBackgroundImage: [[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+        [[UINavigationBar appearance] setShadowImage: [[UIImage alloc] init]];
     }
-    else{[self setBackgroundImage:STImage(imgName) forBarMetrics:UIBarMetricsDefault];}
+    else{[[UINavigationBar appearance] setShadowImage:STImage(imgName)];}
     return self;
 }
--(UINavigationBar*)shadowImage:(NSString*)imgName
+-(UINavigationBarSetting*)titleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)dic
 {
-    if([NSString isNilOrEmpty:imgName])
-    {
-        [self setShadowImage: [[UIImage alloc] init]];
-    }
-    else{[self setShadowImage:STImage(imgName)];}
+    [[UINavigationBar appearance] setTitleTextAttributes:dic];
     return self;
 }
--(UINavigationBar*)titleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)dic
+-(UINavigationBarSetting*)translucent:(BOOL)yesNo
 {
-    [self setTitleTextAttributes:dic];
+    [UINavigationBar appearance].translucent=yesNo;
     return self;
 }
 @end

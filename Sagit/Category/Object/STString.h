@@ -34,4 +34,6 @@
 -(NSInteger)indexOf:(NSString*)searchString ignoreCase:(BOOL)ignoreCase;
 -(NSString*)firstCharUpper;
 -(NSString*)firstCharLower;
+
+-(CGSize)sizeWithFont:font maxSize:(CGSize)maxSize;
 @end
