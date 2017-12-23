@@ -13,7 +13,8 @@
 @interface UIViewController(ST)
 //- (UIViewController*)setRoot:(UIViewController *)rootViewController;
 //自定义导航的工具条为自己的图标或文字
-
+//上一个Push来的页面
+-(UIViewController*)preController;
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title;
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title imgName:(NSString *)imgName;
 - (void)stPop;
@@ -21,6 +22,10 @@
 -(UIViewController*)asRoot:(RootViewControllerType) rootType;
 //系统方法，对外不调用
 //-(void)setStateAfterSTPop;
+#pragma mark 共用接口
+//子类重写
+-(void)reloadData;
+-(void)reloadData:(NSString*)para;
 #pragma mark for TabBar 属性扩展
 -(UIViewController*)tabTitle:(NSString*)title;
 -(UIViewController*)tabImage:(NSString*)imgName;
@@ -28,4 +33,5 @@
 -(UIViewController*)tabBadgeValue:(NSString*)value;
 -(UIViewController*)tabBadgeColor:(id)colorOrHex;
 -(UINavigationController*)toUINavigationController;
+
 @end

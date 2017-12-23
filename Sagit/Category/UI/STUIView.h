@@ -15,78 +15,41 @@ typedef void(^onClick)(UIView *view);
 @interface UIView(ST)
 
 -(STController*)STController;
--(STView*)STView;
+-(STView*)stView;
+-(UIView*)baseView;
 -(BOOL)isSTView;
 -(BOOL)isOnSTView;
 
 - (NSString*)name;
 - (UIView*)name:(NSString *)name;
-- (UIView*)setName:(NSString *)name;
-
 -(NSString*)stValue;
 -(UIView*)stValue:(NSString*)value;
-- (BOOL)isFormUI;
-- (UIView*)isFormUI:(BOOL)yesNo;
-- (UIView*)setIsFormUI:(BOOL)yesNo;
-- (UIView*)preView;
-- (UIView*)preView:(UIView*)view;
-- (UIView*)setPreView:(UIView*)view;
-- (UIView*)nextView;
-- (UIView*)nextView:(UIView*)view;
-- (UIView*)setNextView:(UIView*)view;
+
+
 //为每个UI增加一个可以存档临时值的字典
 -(NSMutableDictionary<NSString*,id>*)keyValue;
+-(id)key:(NSString*)key;
+-(UIView*)key:(NSString*)key value:(id)value;
 -(UIView*)keyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
 -(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
 
-
--(void)addView:(UIView *)view name:(NSString*)name;
--(UIView*)addUIView:(NSString*)name;
--(UISwitch*)addSwitch:(NSString*)name;
--(UIStepper *)addStepper:(NSString *)name;
--(UISlider *)addSlider:(NSString *)name;
--(UIProgressView *)addProgress:(NSString *)name;
-
--(UILabel*)addLabel:(NSString*)name;
--(UILabel*)addLabel:(NSString*)name text:(NSString*)text;
--(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px;
--(UIImageView*)addImageView:(NSString*)name;
--(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName;
--(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName xyFlag:(XYFlag)xyFlag;
-
--(UITextField*)addTextField:(NSString*)name;
--(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder;
--(UITextView*)addTextView:(NSString*)name;
-
--(UIButton*)addButton:(NSString*)name;
--(UIButton*)addButton:(NSString*)name imgName:(NSString*)imgName;
--(UIButton*)addButton:(NSString*)name imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px buttonType:(UIButtonType)buttonType;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType;
--(UIView*)addLine:name color:(id)colorOrHex;
--(UIScrollView*)addScrollView:(NSString*)name;
--(UIScrollView *)addScrollView:(NSString*)name direction:(XYFlag)direction imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION;
-
-//最后一个被添加的控件，有可能是某个控件的子控件
--(UIView*)lastAddView;
--(UIView*)lastSubView;
--(UIView*)firstSubView;
--(UIView*)stretch;
--(UIView*)stretch:(CGFloat)x;
--(UIView*)stretch:(CGFloat)x y:(CGFloat)y;
-
-
+#pragma mark 共用接口
+//子类重写
+-(void)reloadData;
+-(void)reloadData:(NSString*)para;
 #pragma mark 扩展系统事件
 -(UIView*)click:(NSString*)event;
+-(UIView*)click:(NSString *)event target:(UIViewController*)target;
 - (UIView*)addClick:(onClick)block;
 -(UIColor*)toColor:(id)hexOrColor;
 +(UIColor*)toColor:(id)hexOrColor;
 #pragma mark 扩展系统属性
 -(UIView*)frame:(CGRect) frame;
+-(UIView*)hidden:(BOOL)yesNo;
 -(UIView*)backgroundColor:(id)colorOrHex;
 -(UIView*)clipsToBounds:(BOOL)value;
+-(UIView*)tag:(NSInteger)tag;
+-(UIView*)alpha:(NSInteger)value;
 //将圆角半私设为1半。
 -(UIView*)layerCornerRadiusToHalf;
 -(UIView*)needNavigationBar:(BOOL)yesNo;

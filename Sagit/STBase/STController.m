@@ -39,6 +39,10 @@
 }
 //空方法（保留给子类复盖）
 -(void)initUI{}
+-(NSMutableDictionary*)UIList
+{
+    return self.stView.UIList;
+}
 -(STMessageBox *)box
 {
     if(_box==nil)
@@ -70,7 +74,7 @@
 -(BOOL)isMatch:(NSString*)tipMsg v:(NSString*)value regex:(NSString*)pattern
 {
     if([NSString isNilOrEmpty:tipMsg]){return NO;}
-        
+    
     NSArray<NSString*> *items=[tipMsg split:@","];
     NSString *tip=items.firstObject;
     if([NSString isNilOrEmpty:value])
@@ -139,8 +143,9 @@
 
 
 -(void)open:(UITapGestureRecognizer*)recognizer{
-    NSString* name=recognizer.accessibilityValue;
-    if(name==nil && recognizer.view!=nil)
+    if(recognizer.view==nil){return;}
+    NSString* name=[recognizer.view key:@"click"];
+    if(name==nil)
     {
         name=recognizer.view.name;
     }
@@ -161,8 +166,8 @@
                 NSString*imgName=nil;
                 if(recognizer.view!=nil && recognizer.view.keyValue.count>0)
                 {
-                    title=recognizer.view.keyValue[@"leftNavTitle"];
-                    imgName=recognizer.view.keyValue[@"leftNavImage"];
+                    title=[recognizer.view key:@"leftNavTitle"];
+                    imgName=[recognizer.view key:@"leftNavImage"];
                 }
                 [self stPush:controller title:title imgName:imgName];
                 //[self.navigationController pushViewController:controller animated:YES];
@@ -174,7 +179,7 @@
         }
     }
     
-
+    
 }
 
 //项目需要重写时，此方法留给具体项目重写。
@@ -202,4 +207,69 @@
 }
 
 
+#pragma mark - 数据源方法
+// 返回行数
+- (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return ((STTable*)tableView).tableSource.count;
+}
+
+// 设置cell
+- (UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    STTableCell *cell=[STTableCell reuseCell:tableView index:indexPath];
+    STTable *table=(STTable*)tableView;
+    if(table.addCell)
+    {
+        if(table.tableSource.count>indexPath.row)
+        {
+            cell.cellSource=table.tableSource[indexPath.row];
+        }
+        table.addCell(cell);
+    }
+    
+    return cell;
+}
+
+#pragma mark - 代理方法
+/**
+ *  设置行高
+ */
+//- (CGFloat)tableView:(nonnull UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+//    return 100;
+////    STTableCell *cell=[tableView dequeueReusableCellWithIdentifier:@"STTableCell" forIndexPath:indexPath];
+////    if(cell!=nil)
+////    {
+////        return cell.frame.size.height;
+////    }
+////    return 0;
+//}
+-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 100;
+}
+// 添加每组的组头
+//- (UIView *)tableView:(nonnull UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+//    return nil;
+//}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return tableView.tableHeaderView.frame.size.height;
+}
+// 返回每组的组尾
+//- (UIView *)tableView:(nonnull UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+//    return nil;
+//}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return tableView.tableFooterView.frame.size.height;
+}
+// 选中某行cell时会调用
+- (void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    // NSLog(@"选中didSelectRowAtIndexPath row = %ld", indexPath.row);
+}
+//
+//// 取消选中某行cell会调用 (当我选中第0行的时候，如果现在要改为选中第1行 - 》会先取消选中第0行，然后调用选中第1行的操作)
+- (void)tableView:(nonnull UITableView *)tableView didDeselectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    
+    // NSLog(@"取消选中 didDeselectRowAtIndexPath row = %ld ", indexPath.row);
+}
 @end

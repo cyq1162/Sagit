@@ -10,6 +10,11 @@
 #import "STDefineUI.h"
 
 @implementation UILabel(ST)
+-(UILabel*)text:(NSString*)text
+{
+    self.text=text;
+    return self;
+}
 -(UILabel*)textColor:(id)colorOrHex
 {
     self.textColor=[self toColor:colorOrHex];

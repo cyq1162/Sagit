@@ -57,4 +57,8 @@
 -(UIView*)refleshLayout;
 -(UIView*)refleshLayout:(BOOL)withWidthHeight;
 -(UIView*)stSizeToFit;
+
+-(UIView*)stretch;
+-(UIView*)stretch:(CGFloat)x;
+-(UIView*)stretch:(CGFloat)x y:(CGFloat)y;
 @end

@@ -9,6 +9,18 @@
 #import "STUIViewController.h"
 
 @implementation UIViewController(ST)
+-(UIViewController *)preController
+{
+    if(self.navigationController!=nil)
+    {
+        NSInteger count=self.navigationController.viewControllers.count;
+        if(count>1)
+        {
+            return self.navigationController.viewControllers[count-2];
+        }
+    }
+    return self;
+}
 - (UIViewController*)asRoot {
     
     return [self asRoot:RootViewDefaultType];
@@ -96,7 +108,6 @@
         //打开右滑返回交互。 (已通过重写NavigationController扩展处理了)
         self.navigationController.interactivePopGestureRecognizer.delegate=(id)self.navigationController;
     //}
-    
     [self.navigationController pushViewController:viewController animated:YES];
     //return self;
 }
@@ -147,6 +158,10 @@
  NewsViewC.tabBarItem.selectedImage            = STImageOriginal(@"menu_icon_3_selected");// imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
  UINavigationController *nav3                  = [[UINavigationController alloc]initWithRootViewController:NewsViewC];
  */
+#pragma mark 共用接口
+//子类重写
+-(void)reloadData{}
+-(void)reloadData:(NSString*)para{}
 #pragma mark for TabBar 属性扩展
 -(UIViewController*)tabTitle:(NSString*)title
 {

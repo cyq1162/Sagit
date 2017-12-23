@@ -6,6 +6,7 @@
 //  Copyright © 2017-2027年. All rights reserved.
 //
 
+#import "STUITableView.h"
 #ifndef STDefineUI_h
 #define STDefineUI_h
 
@@ -52,16 +53,30 @@
 //上一个UI控件的简写
 #define STPreView self.lastAddView.preView
 #define STLastView self.lastAddView
-#define STLastButton (UIButton*)STLastView
-#define STLastTextField (UITextField*)STLastView
-#define STLastTextView (UITextView*)STLastView
-#define STLastImageView (UIImageView*)STLastView
-#define STLastLabel (UILabel*)STLastView
-#define STLastSwitch (UISwitch*)STLastView
-#define STLastStepper (UIStepper*)STLastView
-#define STLastSlider (UISlider*)STLastView
-#define STLastProgressView (UIProgressView*)STLastView
-#define STLastTableView (UITableView*)STLastView
+#define STLastButton ((UIButton*)STLastView)
+#define STLastTextField ((UITextField*)STLastView)
+#define STLastTextView ((UITextView*)STLastView)
+#define STLastImageView ((UIImageView*)STLastView)
+#define STLastLabel ((UILabel*)STLastView)
+#define STLastSwitch ((UISwitch*)STLastView)
+#define STLastStepper ((UIStepper*)STLastView)
+#define STLastSlider ((UISlider*)STLastView)
+#define STLastProgressView ((UIProgressView*)STLastView)
+#define STLastTableView ((UITableView*)STLastView)
+#define STLastTable ((STTable*)STLastView)
+//获取控件
+#define STSTView(name)    ((STView*)self.stView.UIList[name])
+#define STButton(name) ((UIButton*)self.stView.UIList[name])
+#define STTextField(name) ((UITextField*)self.stView.UIList[name])
+#define STTextView(name) ((UITextView*)self.stView.UIList[name])
+#define STImageView(name) ((UIImageView*)self.stView.UIList[name])
+#define STLabel(name) ((UILabel*)self.stView.UIList[name])
+#define STSwitch(name) ((UISwitch*)self.stView.UIList[name])
+#define STStepper(name) ((UIStepper*)self.stView.UIList[name])
+#define STSlider(name) ((UISlider*)self.stView.UIList[name])
+#define STProgressView(name) ((UIProgressView*)self.stView.UIList[name])
+#define STTableView(name) ((UITableView*)self.stView.UIList[name])
+#define STSTTable(name) ((STTable*)self.stView.UIList[name])
 
 //原始图片大小，不需要转
 //#define UIEdgeInsetsMake(top, left, bottom, right) UIEdgeInsetsMake(top*Ypt, left*Xpt, bottom*Ypt, right*Xpt)
@@ -91,6 +106,6 @@
 #define ColorClear [UIColor clearColor]
 
 //图片
-#define STImage(name) [UIImage imageNamed:name]
-#define STImageOriginal(name) [[UIImage imageNamed:name] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+#define STImage(imgName) [UIImage imageNamed:imgName]
+#define STImageOriginal(imgName) [[UIImage imageNamed:imgName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 #endif /* STDefineUI_h */

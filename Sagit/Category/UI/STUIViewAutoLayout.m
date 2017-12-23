@@ -38,9 +38,11 @@ static NSInteger xyNone=-99999;
 {
     if([ui isKindOfClass:[NSString class]])
     {
-        if(self.STView!=nil && [self.STView.UIList has:(NSString*)ui])
+        STView *vi=self.stView;
+        NSDictionary *dic=self.stView.UIList;
+        if(self.stView!=nil && [self.stView.UIList has:(NSString*)ui])
         {
-            return self.STView.UIList[(NSString*)ui];
+            return self.stView.UIList[(NSString*)ui];
         }
     }
     else if([ui isKindOfClass:[UIView class]])
@@ -523,5 +525,47 @@ static NSInteger xyNone=-99999;
         [self sizeToFit];
     }
     return self;
+}
+-(UIView*)stretch
+{
+    return [self stretch:0 y:0];
+}
+-(UIView*)stretch:(CGFloat)x
+{
+    return [self stretch:x y:0];
+}
+-(UIView*)stretch:(CGFloat)x y:(CGFloat)y
+{
+    if([self isKindOfClass:[UIImageView class]])
+    {
+        UIImageView *me=(UIImageView*)self;
+        if(me.image!=nil)
+        {
+            CGFloat left,right,top,bottom;
+            if(x==0){left=right=me.image.size.width/2;}
+            else
+            {
+                left=x*Xpt;
+                right=me.image.size.width-left-2*Xpt;
+            }
+            if(y==0)
+            {
+                top=bottom=me.image.size.height/2;
+            }
+            else
+            {
+                top=y*Ypt;
+                bottom=me.image.size.height-top-2*Ypt;
+            }
+            
+            
+            // 设置端盖的值
+            UIEdgeInsets edgeInsets = UIEdgeInsetsMake(top, left, bottom, right);
+            // 拉伸图片
+            me.image = [me.image resizableImageWithCapInsets:edgeInsets resizingMode:UIImageResizingModeStretch];
+        }
+    }
+    return self;
+    
 }
 @end

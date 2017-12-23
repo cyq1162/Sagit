@@ -27,6 +27,7 @@
 -(void)initView;
 //初始化[子类重写]
 -(void)initUI;
+
 -(instancetype)initWithController:(STController*)controller;
 -(void)loadData:(NSDictionary*)data;
 -(NSMutableDictionary*)formData;

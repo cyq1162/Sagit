@@ -191,7 +191,13 @@
 }
 //初始化[子类重写该方法]
 -(void)initUI{}
-
+-(void)reloadData{}
+//- (instancetype)init
+//{
+//    self = [super init];
+//    [self initView];
+//    return self;
+//}
 - (instancetype)initWithController:(STController*)controller
 {
     self = [super init];
@@ -199,14 +205,26 @@
         self.frame = controller.view.bounds;//事件问题
         self.OriginFrame=self.frame;
         self.backgroundColor=[UIColor whiteColor];//卡的问题
-        
-        self.UIList=[NSMutableDictionary new];
-        self.UITextList=[NSMutableArray new];
-        
-        controller.UIList=self.UIList;
         self.Controller=controller;
     }
-    return [self init];
+    return self;
+}
+//延时加载
+-(NSMutableDictionary*)UIList
+{
+    if(_UIList==nil)
+    {
+        _UIList=[NSMutableDictionary new];
+    }
+    return _UIList;
+}
+-(NSMutableArray*)UITextList
+{
+    if(_UITextList==nil)
+    {
+        _UITextList=[NSMutableArray new];
+    }
+    return _UITextList;
 }
 -(void)loadData:(NSDictionary*)data
 {

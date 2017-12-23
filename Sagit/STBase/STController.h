@@ -12,7 +12,7 @@
 #import "STEnum.h"
 
 @class STView;
-@interface STController : UIViewController<UITextFieldDelegate,UITextViewDelegate>
+@interface STController : UIViewController<UITextFieldDelegate,UITextViewDelegate,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong) STView* stView;
 @property (nonatomic,retain) STHttp *http;
 @property (nonatomic,retain) STMessageBox *box;
