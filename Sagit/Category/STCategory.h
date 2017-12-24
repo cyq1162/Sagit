@@ -27,9 +27,9 @@
 #import "STUITableViewCell.h"
 
 //New UI
-
-#import "STTable.h"
-#import "STTableCell.h"
+//
+//#import "STTable.h"
+//#import "STTableCell.h"
 
 //Controller
 #import "STUIViewController.h"

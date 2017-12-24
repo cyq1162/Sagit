@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STTable.h"
+//#import "STTable.h"
 @interface UIView (STUIViewAddUI)
 
 #pragma mark UI属性
@@ -57,6 +57,6 @@
 
 -(UITableView*)addTableView:(NSString*)name;
 -(UITableView*)addTableView:(NSString*)name style:(UITableViewStyle)style;
--(STTable*)addTable:(NSString*)name;
--(STTable*)addTable:(NSString*)name style:(UITableViewStyle)style;
+//-(STTable*)addTable:(NSString*)name;
+//-(STTable*)addTable:(NSString*)name style:(UITableViewStyle)style;
 @end

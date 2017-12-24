@@ -396,18 +396,18 @@
     [self addView:ui name:name];
     return ui;
 }
--(STTable*)addTable:(NSString*)name
-{
-    return [self addTable:name style:UITableViewStylePlain];
-}
--(STTable*)addTable:(NSString*)name style:(UITableViewStyle)style
-{
-    STTable *ui=[[STTable alloc] initWithFrame:STFullRect style:style];
-    ui.delegate=(id)self.STController;
-    ui.dataSource=(id)self.STController;
-   // self register
-    [ui registerClass:[STTableCell class] forCellReuseIdentifier:@"STTableCell"];
-    [self addView:ui name:name];
-    return ui;
-}
+//-(STTable*)addTable:(NSString*)name
+//{
+//    return [self addTable:name style:UITableViewStylePlain];
+//}
+//-(STTable*)addTable:(NSString*)name style:(UITableViewStyle)style
+//{
+//    STTable *ui=[[STTable alloc] initWithFrame:STFullRect style:style];
+//    ui.delegate=(id)self.STController;
+//    ui.dataSource=(id)self.STController;
+//   // self register
+//    [ui registerClass:[STTableCell class] forCellReuseIdentifier:@"STTableCell"];
+//    [self addView:ui name:name];
+//    return ui;
+//}
 @end

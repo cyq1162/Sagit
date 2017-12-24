@@ -21,7 +21,7 @@
 
 //如果没有对应的View，[子类重写]
 -(void)initUI;
-
+-(void)loadData;
 -(NSString*)stValue:(NSString*)name;
 -(void)stValue:(NSString*)name value:(NSString*)value;
 //验证文本枉的值是否填写或格式是否错误
@@ -34,6 +34,7 @@
 
 //-(id)data:(NSString*)key;
 //-(void)setData:(NSString*)key v:(NSString*)value;
+
 -(void)loadData:(NSDictionary*)data;
 -(NSMutableDictionary*)formData;
 -(NSMutableDictionary*)formData:(id)superView;

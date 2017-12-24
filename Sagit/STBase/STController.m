@@ -19,7 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self loadUI];
-    
+    [self loadData];
 }
 -(void)loadUI{
     //获取当前的类名
@@ -38,6 +38,7 @@
     }
 }
 //空方法（保留给子类复盖）
+-(void)loadData{}
 -(void)initUI{}
 -(NSMutableDictionary*)UIList
 {
@@ -210,41 +211,58 @@
 #pragma mark - 数据源方法
 // 返回行数
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return ((STTable*)tableView).tableSource.count;
+    return tableView.source.count;
 }
 
 // 设置cell
 - (UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-    STTableCell *cell=[STTableCell reuseCell:tableView index:indexPath];
-    STTable *table=(STTable*)tableView;
-    if(table.addCell)
+    UITableViewCell *cell=[UITableViewCell reuseCell:tableView index:indexPath];
+    if(tableView.addCell)
     {
-        if(table.tableSource.count>indexPath.row)
+        if(tableView.source.count>indexPath.row)
         {
-            cell.cellSource=table.tableSource[indexPath.row];
+            cell.source=tableView.source[indexPath.row];
         }
-        table.addCell(cell);
+        //默认设置
+        [cell width:1 height:88];//IOS的默认高度
+        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;//右边有小箭头
+        cell.selectionStyle=UITableViewCellSeparatorStyleNone;//选中无状态
+        tableView.addCell(cell,indexPath);
     }
     
     return cell;
 }
-
+//tableview 加载完成可以调用的方法--因为tableview的cell高度不定，所以在加载完成以后重新计算高度
+-(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.row == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row)
+    {
+        //end of loading
+        if(tableView.autoHeight)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [tableView height:(tableView.contentSize.height-1)*Ypx];//去掉最后一条线的高度
+            });
+        }
+    }
+}
 #pragma mark - 代理方法
 /**
  *  设置行高
  */
-//- (CGFloat)tableView:(nonnull UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-//    return 100;
-////    STTableCell *cell=[tableView dequeueReusableCellWithIdentifier:@"STTableCell" forIndexPath:indexPath];
-////    if(cell!=nil)
-////    {
-////        return cell.frame.size.height;
-////    }
-////    return 0;
-//}
+- (CGFloat)tableView:(nonnull UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"STTableCell"];
+    if(cell!=nil)
+    {
+        return cell.frame.size.height;
+    }
+    return 88*Ypt;
+}
+//这个方法存在时：estimatedHeightForRowAtIndexPath=>cellForRowAtIndexPath=>heightForRowAtIndexPath
+//这方法不存在时：heightForRowAtIndexPath=》cellForRowAtIndexPath 这样会死循环
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 100;
+    return 88*Ypt;
 }
 // 添加每组的组头
 //- (UIView *)tableView:(nonnull UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
@@ -263,13 +281,13 @@
     return tableView.tableFooterView.frame.size.height;
 }
 // 选中某行cell时会调用
-- (void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-    // NSLog(@"选中didSelectRowAtIndexPath row = %ld", indexPath.row);
-}
+//- (void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+//    // NSLog(@"选中didSelectRowAtIndexPath row = %ld", indexPath.row);
+//}
+////
+////// 取消选中某行cell会调用 (当我选中第0行的时候，如果现在要改为选中第1行 - 》会先取消选中第0行，然后调用选中第1行的操作)
+//- (void)tableView:(nonnull UITableView *)tableView didDeselectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
 //
-//// 取消选中某行cell会调用 (当我选中第0行的时候，如果现在要改为选中第1行 - 》会先取消选中第0行，然后调用选中第1行的操作)
-- (void)tableView:(nonnull UITableView *)tableView didDeselectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-    
-    // NSLog(@"取消选中 didDeselectRowAtIndexPath row = %ld ", indexPath.row);
-}
+//    // NSLog(@"取消选中 didDeselectRowAtIndexPath row = %ld ", indexPath.row);
+//}
 @end

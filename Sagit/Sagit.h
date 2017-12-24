@@ -19,6 +19,7 @@
 #import "STMessageBox.h"
 #import "STHttp.h"
 #import "STController.h"
+#import "STTabController.h"
 #import "STView.h"
 
 #endif /* STFramework_h */

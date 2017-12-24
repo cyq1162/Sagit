@@ -350,24 +350,56 @@ static char keyValueChar='k';
     self.layer.cornerRadius=self.frame.size.width/2;
     return self;
 }
--(BOOL)needNavigationBar
+
+#pragma mark 扩展导航栏事件
+-(BOOL)needNavBar
 {
-    if(self.keyValue[@"needNavigationBar"]!=nil)
+    if(self.keyValue[@"needNavBar"]!=nil)
     {
-        return [self.keyValue[@"needNavigationBar"] isEqualToString:@"1"];
+        return [self.keyValue[@"needNavBar"] isEqualToString:@"1"];
+    }
+    if(self.STController!=nil && self.STController.navigationController!=nil)
+    {
+        return !self.STController.navigationController.navigationBar.hidden;
     }
     return NO;
 }
--(UIView*)needNavigationBar:(BOOL)yesNo
+-(UIView*)needNavBar:(BOOL)yesNo
 {
-    return [self needNavigationBar:yesNo setNavBar:NO];
+    return [self needNavBar:yesNo setNavBar:NO];
 }
--(UIView*)needNavigationBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar
+-(UIView*)needNavBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar
 {
-    [self.keyValue set:@"needNavigationBar" value:yesNo?@"1":@"0"];
+    [self.keyValue set:@"needNavBar" value:yesNo?@"1":@"0"];
     if(setNavBar && self.STController!=nil && self.STController.navigationController!=nil)
     {
         self.STController.navigationController.navigationBar.hidden=!yesNo;
+    }
+    return self;
+}
+
+-(BOOL)needTabBar
+{
+    if(self.keyValue[@"needTabBar"]!=nil)
+    {
+        return [self.keyValue[@"needTabBar"] isEqualToString:@"1"];
+    }
+    if(self.STController!=nil && self.STController.tabBarController!=nil)
+    {
+        return !self.STController.tabBarController.tabBar.hidden;
+    }
+    return NO;
+}
+-(UIView*)needTabBar:(BOOL)yesNo
+{
+    return [self needTabBar:yesNo setTabBar:NO];
+}
+-(UIView*)needTabBar:(BOOL)yesNo setTabBar:(BOOL)setTabBar
+{
+    [self.keyValue set:@"needTabBar" value:yesNo?@"1":@"0"];
+    if(setTabBar && self.STController!=nil && self.STController.tabBarController!=nil)
+    {
+        self.STController.tabBarController.tabBar.hidden=!yesNo;
     }
     return self;
 }

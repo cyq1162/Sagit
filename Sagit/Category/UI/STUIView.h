@@ -52,9 +52,15 @@ typedef void(^onClick)(UIView *view);
 -(UIView*)alpha:(NSInteger)value;
 //将圆角半私设为1半。
 -(UIView*)layerCornerRadiusToHalf;
--(UIView*)needNavigationBar:(BOOL)yesNo;
--(UIView*)needNavigationBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar;
--(BOOL)needNavigationBar;
+
+#pragma mark 扩展导航栏事件
+-(UIView*)needNavBar:(BOOL)yesNo;
+-(UIView*)needNavBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar;
+-(BOOL)needNavBar;
+
+-(UIView*)needTabBar:(BOOL)yesNo;
+-(UIView*)needTabBar:(BOOL)yesNo setTabBar:(BOOL)setTabBar;
+-(BOOL)needTabBar;
 @end
 
 

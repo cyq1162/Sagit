@@ -38,8 +38,8 @@ static NSInteger xyNone=-99999;
 {
     if([ui isKindOfClass:[NSString class]])
     {
-        STView *vi=self.stView;
-        NSDictionary *dic=self.stView.UIList;
+        //STView *vi=self.stView;
+        //NSDictionary *dic=self.stView.UIList;
         if(self.stView!=nil && [self.stView.UIList has:(NSString*)ui])
         {
             return self.stView.UIList[(NSString*)ui];
@@ -52,9 +52,9 @@ static NSInteger xyNone=-99999;
     return self;
 }
 //如果当前没设置frame，则用指定的frame，返回新的frame，避免改变原来的行为
--(CGRect)checkFrameIsEmptyOrFull:(CGRect)uiFrame
+-(CGRect)checkFrameIsEmpty:(CGRect)uiFrame
 {
-    if(CGRectEqualToRect(self.frame, STEmptyRect) || CGRectEqualToRect(self.frame, STFullRect))
+    if(CGRectEqualToRect(self.frame, STEmptyRect))// || CGRectEqualToRect(self.frame, STFullRect))
     {
         return STRectCopy(uiFrame);
     }
@@ -91,7 +91,7 @@ static NSInteger xyNone=-99999;
     UIView *ui=[self getViewBy:uiOrName];
     [self addTracer:ui method:@"onRight" v1:x v2:y v3:0 v4:0 location:0 xyFlag:0];
     CGRect uiFrame=[self getUIFrame:ui];
-    CGRect frame=[self checkFrameIsEmptyOrFull:uiFrame];
+    CGRect frame=[self checkFrameIsEmpty:uiFrame];
     
     //检测是否有onLeft规则，若有，调整宽度
     if([self.LayoutTracer has:@"onLeft"])
@@ -118,7 +118,7 @@ static NSInteger xyNone=-99999;
     [self addTracer:ui method:@"onLeft" v1:x v2:y v3:0 v4:0 location:0 xyFlag:0];
     
     CGRect uiFrame=[self getUIFrame:ui];
-    CGRect frame=[self checkFrameIsEmptyOrFull:uiFrame];
+    CGRect frame=[self checkFrameIsEmpty:uiFrame];
     
     //检测是否有onRight规则，若有，调整宽度
     if([self.LayoutTracer has:@"onRight"])
@@ -144,7 +144,7 @@ static NSInteger xyNone=-99999;
     UIView *ui=[self getViewBy:uiOrName];
     [self addTracer:ui method:@"onTop" v1:y v2:x v3:0 v4:0 location:0 xyFlag:0];
     CGRect uiFrame=[self getUIFrame:ui];
-    CGRect frame=[self checkFrameIsEmptyOrFull:uiFrame];
+    CGRect frame=[self checkFrameIsEmpty:uiFrame];
     
     //检测是否有onBottom规则，若有，调整高度
     if([self.LayoutTracer has:@"onBottom"])
@@ -170,7 +170,7 @@ static NSInteger xyNone=-99999;
     UIView *ui=[self getViewBy:uiOrName];
     [self addTracer:ui method:@"onBottom" v1:y v2:x v3:0 v4:0 location:0 xyFlag:0];
     CGRect uiFrame=[self getUIFrame:ui];
-    CGRect frame=[self checkFrameIsEmptyOrFull:uiFrame];
+    CGRect frame=[self checkFrameIsEmpty:uiFrame];
     //检测是否有onTop规则，若有，调整高度
     if([self.LayoutTracer has:@"onTop"])
     {

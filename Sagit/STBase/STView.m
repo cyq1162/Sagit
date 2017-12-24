@@ -191,13 +191,27 @@
 }
 //初始化[子类重写该方法]
 -(void)initUI{}
--(void)reloadData{}
-//- (instancetype)init
-//{
-//    self = [super init];
-//    [self initView];
-//    return self;
-//}
+-(void)reloadData
+{
+    //触发子控件事件
+    for (NSString *key in self.UIList)
+    {
+        if([self.UIList[key] isKindOfClass:[STView class]])
+        {
+            [self.UIList[key] reloadData];
+        }
+    }
+}
+-(UIView *)firstView:(NSString *)className
+{
+    for (NSString *key in self.UIList) {
+        if([NSStringFromClass([self.UIList[key] class]) isEqualToString:className])
+        {
+            return self.UIList[key];
+        }
+    }
+    return nil;
+}
 - (instancetype)initWithController:(STController*)controller
 {
     self = [super init];

@@ -66,7 +66,12 @@
 {
     // || ([NSString isNilOrEmpty:imgName] && [NSString isNilOrEmpty:title])
     if(self.navigationController==nil){return;}
-    [self.view needNavigationBar:!self.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
+    [self.view needNavBar:!self.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
+    if(self.tabBarController!=nil)
+    {
+        [self.view needTabBar:!self.tabBarController.tabBar.hidden];
+        self.tabBarController.tabBar.hidden=YES;
+    }
     self.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
     self.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。
     
@@ -117,14 +122,21 @@
     {
         
         //如果上级就是根视图，就隐藏，否则仍显示
-        if(self.navigationController.viewControllers.count==2)
+//        if(self.navigationController.viewControllers.count==2)
+//        {
+//
+////            if(![self.navigationController.viewControllers[0].view needNavigationBar])
+////            {
+//                self.navigationController.navigationBar.hidden=![self.navigationController.viewControllers[0].view needNavBar];
+//            //}
+//            //显示返回导航工具条，如果是滑动的话，View会自动归位，但自定义事件返回，不归位（所以在自定义事件中也设置一下次）
+//        }
+        NSInteger count=self.navigationController.viewControllers.count;
+        UIView *preView=self.navigationController.viewControllers[count-2].view;
+        self.navigationController.navigationBar.hidden=![preView needNavBar];
+        if(self.tabBarController!=nil)
         {
-            
-//            if(![self.navigationController.viewControllers[0].view needNavigationBar])
-//            {
-                self.navigationController.navigationBar.hidden=![self.navigationController.viewControllers[0].view needNavigationBar];
-            //}
-            //显示返回导航工具条，如果是滑动的话，View会自动归位，但自定义事件返回，不归位（所以在自定义事件中也设置一下次）
+            self.tabBarController.tabBar.hidden=![preView needTabBar];
         }
         [self.navigationController popViewControllerAnimated:YES];
 //        if(![self isKindOfClass:[STController class]])//如果不是STController

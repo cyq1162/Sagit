@@ -63,7 +63,7 @@
 #define STLastSlider ((UISlider*)STLastView)
 #define STLastProgressView ((UIProgressView*)STLastView)
 #define STLastTableView ((UITableView*)STLastView)
-#define STLastTable ((STTable*)STLastView)
+//#define STLastTable ((STTable*)STLastView)
 //获取控件
 #define STSTView(name)    ((STView*)self.stView.UIList[name])
 #define STButton(name) ((UIButton*)self.stView.UIList[name])
@@ -76,7 +76,8 @@
 #define STSlider(name) ((UISlider*)self.stView.UIList[name])
 #define STProgressView(name) ((UIProgressView*)self.stView.UIList[name])
 #define STTableView(name) ((UITableView*)self.stView.UIList[name])
-#define STSTTable(name) ((STTable*)self.stView.UIList[name])
+#define STFirstTable ((UITableView*)[self.stView firstView:@"UITableView"])
+//#define STSTTable(name) ((STTable*)self.stView.UIList[name])
 
 //原始图片大小，不需要转
 //#define UIEdgeInsetsMake(top, left, bottom, right) UIEdgeInsetsMake(top*Ypt, left*Xpt, bottom*Ypt, right*Xpt)
