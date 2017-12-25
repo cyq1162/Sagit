@@ -20,8 +20,9 @@
 @property (nonatomic,retain) NSMutableDictionary *UIList;
 
 //如果没有对应的View，[子类重写]
+-(void)onInit;
 -(void)initUI;
--(void)loadData;
+-(void)initData;
 -(NSString*)stValue:(NSString*)name;
 -(void)stValue:(NSString*)name value:(NSString*)value;
 //验证文本枉的值是否填写或格式是否错误

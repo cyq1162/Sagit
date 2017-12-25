@@ -118,7 +118,7 @@
     if([view isSTView])//子控件STView
     {
         view.stView.Controller=self.STController;
-        [view.stView initView];//这里才初始化（可以让事件在指定Controller后再绑定）
+        [view.stView loadUI];//这里才初始化（可以让事件在指定Controller后再绑定）
     }
     [self addSubview:view];
     return view;

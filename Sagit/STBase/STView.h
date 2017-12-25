@@ -24,9 +24,10 @@
 //最后一个被添加的UI(作用是为定义的STLastView系列做准备)
 //-(UIView*) lastView;
 
--(void)initView;
+-(void)loadUI;
 //初始化[子类重写]
 -(void)initUI;
+-(void)initData;
 -(UIView*)firstView:(NSString*)className;
 -(instancetype)initWithController:(STController*)controller;
 -(void)loadData:(NSDictionary*)data;

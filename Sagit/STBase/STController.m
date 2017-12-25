@@ -16,6 +16,13 @@
 
 @implementation STController
 
+-(instancetype)init
+{
+    self=[super init];
+    //初始化全局设置，必须要在UI初始之前。
+    [self onInit];
+    return self;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self loadUI];
@@ -29,17 +36,31 @@
     if(viewClass!=nil)//view
     {
         self.view=self.stView=[[viewClass alloc] initWithController:self];
-        [self.stView initView];
+        [self.stView loadUI];
     }
     else
     {
-        self.view=[[STView alloc] initWithController:self];//将view换成STView
+        self.view=self.stView=[[STView alloc] initWithController:self];//将view换成STView
         [self initUI];
     }
+    
 }
 //空方法（保留给子类复盖）
--(void)loadData{}
+-(void)loadData
+{
+    [self initData];
+    [self.stView initData];
+    
+}
+//在UI加载之前处理的
+-(void)onInit{}
+//加载UI时处理的
 -(void)initUI{}
+//加载UI后处理的
+-(void)initData
+{
+    
+}
 -(NSMutableDictionary*)UIList
 {
     return self.stView.UIList;

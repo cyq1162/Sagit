@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface STTabController : UITabBarController
-
+-(void)onInit;
+-(void)initUI;
+-(void)initData;
 @end

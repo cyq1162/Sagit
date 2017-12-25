@@ -39,8 +39,6 @@
 -(void)reloadData;
 -(void)reloadData:(NSString*)para;
 
-
-
 #pragma mark 扩展系统属性
 
 -(UIColor*)toColor:(id)hexOrColor;

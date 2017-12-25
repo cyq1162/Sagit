@@ -51,8 +51,8 @@
 #define STRectCopy(frame) CGRectMake(frame.origin.x,frame.origin.y, frame.size.width, frame.size.height);
 
 //上一个UI控件的简写
-#define STPreView self.lastAddView.preView
-#define STLastView self.lastAddView
+#define STPreView self.stView.lastAddView.preView
+#define STLastView self.stView.lastAddView
 #define STLastButton ((UIButton*)STLastView)
 #define STLastTextField ((UITextField*)STLastView)
 #define STLastTextView ((UITextView*)STLastView)

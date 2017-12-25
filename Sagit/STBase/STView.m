@@ -20,8 +20,8 @@
 @end
 @implementation STView
 
-//
--(void)initView{
+//这个方法可以重写，如果想在这里搞点事情的话
+-(void)loadUI{
     [self initUI];
     [self regEvent];
 }
@@ -191,6 +191,7 @@
 }
 //初始化[子类重写该方法]
 -(void)initUI{}
+-(void)initData{}
 -(void)reloadData
 {
     //触发子控件事件
@@ -212,13 +213,19 @@
     }
     return nil;
 }
-- (instancetype)initWithController:(STController*)controller
+-(instancetype)init
 {
     self = [super init];
-    if (self && controller) {
-        self.frame = controller.view.bounds;//事件问题
-        self.OriginFrame=self.frame;
-        self.backgroundColor=[UIColor whiteColor];//卡的问题
+    self.frame=STFullRect;
+    self.backgroundColor=[UIColor whiteColor];//卡的问题
+    self.OriginFrame=self.frame;
+    return self;
+}
+- (instancetype)initWithController:(STController*)controller
+{
+    self=[self init];
+    if (controller) {
+        //self.frame = controller.view.bounds;//事件问题
         self.Controller=controller;
     }
     return self;
