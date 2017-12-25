@@ -17,9 +17,9 @@
 -(UINavigationBarSetting*)tintColor:(id)colorOrHex;
 //背景色
 -(UINavigationBarSetting*)barTintColor:(id)colorOrHex;
--(UINavigationBarSetting*)backgroundImage:(NSString*)imgName;
--(UINavigationBarSetting*)backgroundImage:(NSString*)imgName stretch:(BOOL)stretch;
--(UINavigationBarSetting*)shadowImage:(NSString*)imgName;
+-(UINavigationBarSetting*)backgroundImage:(id)img;
+-(UINavigationBarSetting*)backgroundImage:(id)img stretch:(BOOL)stretch;
+-(UINavigationBarSetting*)shadowImage:(id)img;
 -(UINavigationBarSetting*)titleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)dic;
 -(UINavigationBarSetting*)translucent:(BOOL)yesNo;
 @end

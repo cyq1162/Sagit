@@ -105,7 +105,7 @@
         STView *stView=[self stView];
         if(stView!=nil)
         {
-            [stView.UIList setObject:view forKey:name];
+            [stView.UIList set:name value:view];
         }
     }
     if(self.subviews.count>0)//非第一个控件
@@ -325,19 +325,10 @@
     }
     else if(imgName!=nil)
     {
-        UIImage *img=[UIImage imageNamed:imgName];
+        UIImage *img=[self toImage:imgName];
         [ui setImage:img forState:UIControlStateNormal];
         [ui width:img.size.width*Xpx height:img.size.height*Ypx];
     }
-    //    if(name!=nil)
-    //    {
-    //        [self click:name];
-    ////        SEL sel=[self getSel:name];
-    ////        if(sel!=nil)
-    ////        {
-    ////            [ui addTarget:self.STController action:sel forControlEvents:UIControlEventTouchUpInside];
-    ////        }
-    //    }
     [self addView:ui name:name];
     if(name!=nil)
     {

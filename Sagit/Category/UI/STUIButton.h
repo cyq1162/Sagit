@@ -16,10 +16,10 @@
 //- (void)addAction:(onAction)block forControlEvents:(UIControlEvents)controlEvents;
 
 #pragma mark 扩展系统属性
--(UIButton*)backgroundImage:(NSString*)imgName;
--(UIButton*)backgroundImage:(NSString*)imgName forState:(UIControlState)state;
--(UIButton*)image:(NSString*)imgName;
--(UIButton*)image:(NSString*)imgName forState:(UIControlState)state;
+-(UIButton*)backgroundImage:(id)img;
+-(UIButton*)backgroundImage:(id)img forState:(UIControlState)state;
+-(UIButton*)image:(id)img;
+-(UIButton*)image:(id)img forState:(UIControlState)state;
 -(UIButton*)title:(NSString*)title;
 -(UIButton*)title:(NSString*)title forState:(UIControlState)state;
 -(UIButton*)titleColor:(id)colorOrHex;

@@ -143,16 +143,11 @@
 
 
 
--(void)open:(UITapGestureRecognizer*)recognizer{
-    if(recognizer.view==nil){return;}
-    NSString* name=[recognizer.view key:@"click"];
-    if(name==nil)
-    {
-        name=recognizer.view.name;
-    }
+-(void)open:(UIView*)view{
+    if(view==nil){return;}
+    NSString* name=[view key:@"clickSel"];
     if(name!=nil)
     {
-        
         if(![name hasSuffix:@"Controller"])
         {
             name=[name append:@"Controller"];
@@ -163,15 +158,9 @@
             STController *controller=[class new];
             if(self.navigationController!=nil)
             {
-                NSString*title=nil;
-                NSString*imgName=nil;
-                if(recognizer.view!=nil && recognizer.view.keyValue.count>0)
-                {
-                    title=[recognizer.view key:@"leftNavTitle"];
-                    imgName=[recognizer.view key:@"leftNavImage"];
-                }
+                NSString*title=[view key:@"leftNavTitle"];
+                NSString*imgName=[view key:@"leftNavImage"];
                 [self stPush:controller title:title imgName:imgName];
-                //[self.navigationController pushViewController:controller animated:YES];
             }
             else
             {
@@ -179,8 +168,6 @@
             }
         }
     }
-    
-    
 }
 
 //项目需要重写时，此方法留给具体项目重写。
@@ -225,6 +212,8 @@
         }
         //默认设置
         [cell width:1 height:88];//IOS的默认高度
+        //cell.
+       // UITableViewCellStyleDefault
         cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;//右边有小箭头
         cell.selectionStyle=UITableViewCellSeparatorStyleNone;//选中无状态
         tableView.addCell(cell,indexPath);

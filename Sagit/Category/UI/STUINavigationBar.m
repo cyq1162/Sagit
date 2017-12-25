@@ -30,35 +30,35 @@
     [UINavigationBar appearance].barTintColor=[UIView toColor:(colorOrHex)];
     return self;
 }
--(UINavigationBarSetting*)backgroundImage:(NSString*)imgName
+-(UINavigationBarSetting*)backgroundImage:(id)img
 {
-    return [self backgroundImage:imgName stretch:NO];
+    return [self backgroundImage:img stretch:NO];
 }
--(UINavigationBarSetting*)backgroundImage:(NSString*)imgName stretch:(BOOL)stretch
+-(UINavigationBarSetting*)backgroundImage:(id)img stretch:(BOOL)stretch
 {
-    UIImage *img=nil;
-    if([NSString isNilOrEmpty:imgName])
+    UIImage *uiImg=nil;
+    if(img==nil)
     {
-        img=[UIImage new];
+        uiImg=[UIImage new];
     }
     else
     {
-        img=STImage(imgName);
+        uiImg=[UIView toImage:img];
     }
     if(stretch)
     {
-        img=[img resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeStretch];
+        uiImg=[uiImg resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeStretch];
     }
-    [[UINavigationBar appearance] setBackgroundImage:img forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundImage:uiImg forBarMetrics:UIBarMetricsDefault];
     return self;
 }
--(UINavigationBarSetting*)shadowImage:(NSString*)imgName
+-(UINavigationBarSetting*)shadowImage:(id)img
 {
-    if([NSString isNilOrEmpty:imgName])
+    if(img==nil)
     {
         [[UINavigationBar appearance] setShadowImage: [[UIImage alloc] init]];
     }
-    else{[[UINavigationBar appearance] setShadowImage:STImage(imgName)];}
+    else{[[UINavigationBar appearance] setShadowImage:[UIView toImage:img]];}
     return self;
 }
 -(UINavigationBarSetting*)titleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)dic

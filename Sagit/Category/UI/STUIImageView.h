@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface UIImageView(ST)
-
+-(UIImageView*)longPressSave:(BOOL)yesNo;
+-(UIImageView*)save;
 @end

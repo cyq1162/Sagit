@@ -10,8 +10,8 @@
 #import <UIKit/UIKit.h>
 #import "STController.h"
 #import "STView.h"
-//可以附加的点击事件
-typedef void(^onClick)(UIView *view);
+
+
 @interface UIView(ST)
 
 -(STController*)STController;
@@ -30,20 +30,24 @@ typedef void(^onClick)(UIView *view);
 -(NSMutableDictionary<NSString*,id>*)keyValue;
 -(id)key:(NSString*)key;
 -(UIView*)key:(NSString*)key value:(id)value;
--(UIView*)keyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
--(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
+//避免外部赋值，破坏系统内部预设的值。
+//-(UIView*)keyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
+//-(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
 
 #pragma mark 共用接口
 //子类重写
 -(void)reloadData;
 -(void)reloadData:(NSString*)para;
-#pragma mark 扩展系统事件
--(UIView*)click:(NSString*)event;
--(UIView*)click:(NSString *)event target:(UIViewController*)target;
-- (UIView*)addClick:(onClick)block;
+
+
+
+#pragma mark 扩展系统属性
+
 -(UIColor*)toColor:(id)hexOrColor;
 +(UIColor*)toColor:(id)hexOrColor;
-#pragma mark 扩展系统属性
+-(UIImage*)toImage:(id)imgOrName;
++(UIImage*)toImage:(id)imgOrName;
+
 -(UIView*)frame:(CGRect) frame;
 -(UIView*)hidden:(BOOL)yesNo;
 -(UIView*)backgroundColor:(id)colorOrHex;

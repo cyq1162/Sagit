@@ -11,7 +11,7 @@
 
 
 @implementation UIView(ST)
-static char clickEventChar='e';
+
 static char keyValueChar='k';
 
 // Name
@@ -45,7 +45,7 @@ static char keyValueChar='k';
 -(NSMutableDictionary<NSString*,id>*)keyValue
 {
     
-   NSMutableDictionary<NSString*,id> *kv= (NSMutableDictionary<NSString*,id>*)objc_getAssociatedObject(self, &keyValueChar);
+    NSMutableDictionary<NSString*,id> *kv= (NSMutableDictionary<NSString*,id>*)objc_getAssociatedObject(self, &keyValueChar);
     if(kv==nil)
     {
         kv=[NSMutableDictionary<NSString*,id> new];
@@ -188,117 +188,9 @@ static char keyValueChar='k';
 //子类重写
 -(void)reloadData{}
 -(void)reloadData:(NSString*)para{}
-#pragma mark 扩展系统事件
--(UIView*)click:(NSString *)event
-{
-    return [self click:event target:nil];
-}
--(UIView*)click:(NSString *)event target:(UIViewController*)target
-{
-    if(![NSString isNilOrEmpty:event])
-    {
-//        if(self.STController==nil)
-//        {
-//            //延时加载绑定事件（考虑在子控件的情况）
-//            NSMutableDictionary *clicks= [self.baseView key:@"clicks"];
-//            if(clicks==nil)
-//            {
-//                clicks=[NSMutableDictionary new];
-//                [self.baseView key:@"clicks" value:clicks];
-//            }
-//            event=[[event append:@"-"] append:[@(clicks.count) stringValue]];
-//            [clicks set:event value:self];//先存档，在加载STView再检测存档重新绑定
-//            return self;
-//        }
-        if(target==nil)
-        {
-            target=self.STController;
-        }
-        SEL sel=[self getSel:event controller:target];
-        if(sel!=nil)
-        {
-            UITapGestureRecognizer *click = [[UITapGestureRecognizer alloc] initWithTarget:target action:sel];
-            if(self.name==nil)
-            {
-                [self name:event];
-            }
-            else if(![self.name isEqualToString:event])
-            {
-                [self key:@"click" value:event];
-                //click.accessibilityValue=event;//借一个属性用用。
-            }
-            [self addGestureRecognizer:click];
-        }
-    }
-    return self;
-}
--(UIView*)addClick:(onClick)block
-{
-    if(block!=nil)
-    {
-        self.userInteractionEnabled=YES;
-        objc_setAssociatedObject(self, &clickEventChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        UITapGestureRecognizer *click = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickEvent:)];
-        [self addGestureRecognizer:click];
-    }
-    return self;
-}
--(void)onClickEvent:(UITapGestureRecognizer *)gesture {
-    onClick clickEvent = (onClick)objc_getAssociatedObject(self, &clickEventChar);
-    if (clickEvent) {
-        clickEvent(gesture.view);
-    }
-}
--(SEL*)getSel:(NSString*)event controller:(UIViewController*)controller
-{
-    if(controller==nil)
-    {
-        controller=self.STController;
-    }
-    //STController *controller=self.STController;
-    if(controller==nil)
-    {
-        return nil;
-    }
-    SEL sel=nil;
-    BOOL isEvent=NO;
-    if(event!=nil)
-    {
-        sel=NSSelectorFromString(event);
-        isEvent=[controller respondsToSelector:sel];
-        if(!isEvent && ![event endWith:@"Click"] && ![event endWith:@":"] && ![event endWith:@"Controller"])
-        {
-            sel=NSSelectorFromString([event append:@":"]);
-            isEvent=[controller respondsToSelector:sel];
-            if(!isEvent)
-            {
-                sel=NSSelectorFromString([event append:@"Click"]);
-                isEvent=[controller respondsToSelector:sel];
-                if(!isEvent)
-                {
-                    sel=NSSelectorFromString([event append:@"Click:"]);
-                    isEvent=[controller respondsToSelector:sel];
-                    if(!isEvent)
-                    {
-                        Class class= NSClassFromString([event append:@"Controller"]);
-                        if(class!=nil)
-                        {
-                            sel=NSSelectorFromString(@"open:");
-                            isEvent=YES;
-                        }
-                        
-                    }
-                }
-            }
-        }
-    }
-    if(isEvent)
-    {
-        self.userInteractionEnabled=YES;
-        return sel;
-    }
-    return nil;
-}
+
+#pragma mark 扩展系统属性
+
 -(UIColor*)toColor:(id)hexOrColor
 {
     return [UIView toColor:hexOrColor];
@@ -311,7 +203,23 @@ static char keyValueChar='k';
     }
     return (UIColor*)hexOrColor;
 }
-#pragma mark 扩展系统属性
+-(UIImage*)toImage:(id)imgOrName
+{
+    return [UIView toImage:imgOrName];
+}
++(UIImage*)toImage:(id)imgOrName
+{
+    if([imgOrName isKindOfClass:[NSData class]])
+    {
+        return [UIImage imageWithData:imgOrName];
+    }
+    else if([imgOrName isKindOfClass:[UIImage class]])
+    {
+        return imgOrName;
+    }
+    return STImage(imgOrName);
+}
+
 -(UIView*)frame:(CGRect)frame
 {
     frame.origin.x=roundf(frame.origin.x);

@@ -44,24 +44,26 @@
 //    return CGRectContainsPoint(bounds, point);
 //}
 #pragma mark 扩展系统属性
--(UIButton*)backgroundImage:(NSString*)imgName
+-(UIButton*)backgroundImage:(id)img
 {
-    [self setBackgroundImage:STImage(imgName) forState:UIControlStateNormal];
+    [self backgroundImage:img forState:UIControlStateNormal];
     return self;
 }
--(UIButton*)backgroundImage:(NSString*)imgName forState:(UIControlState)state
+-(UIButton*)backgroundImage:(id)img forState:(UIControlState)state
 {
-    [self setBackgroundImage:STImage(imgName) forState:state];
+    [self setBackgroundImage:[self toImage:img] forState:state];
     return self;
 }
--(UIButton*)image:(NSString*)imgName
+-(UIButton*)image:(id)img
 {
-    [self setImage:STImage(imgName) forState:UIControlStateNormal];
+    [self image:img forState:UIControlStateNormal];
     return self;
 }
--(UIButton*)image:(NSString*)imgName forState:(UIControlState)state
+-(UIButton*)image:(id)img forState:(UIControlState)state
 {
-    [self setImage:imgName forState:state];
+
+    [self setImage:[self toImage:img] forState:state];
+
     return self;
 }
 -(UIButton*)title:(NSString*)title
@@ -96,6 +98,7 @@
 }
 -(UIButton*)stWidthToFit
 {
+    [self layoutIfNeeded];//Button setImage 后，Lable的坐标不是即时移动的。
     UILabel *label=self.titleLabel;
     CGFloat labelWidth=label.stWidth;
     if(label.text.length>0)
