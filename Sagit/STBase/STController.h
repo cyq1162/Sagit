@@ -41,8 +41,10 @@
 -(NSMutableDictionary*)formData:(id)superView;
 
 //跳转到其它页面
--(void)open:(UITapGestureRecognizer*)recognizer;
+-(void)redirect:(UITapGestureRecognizer*)recognizer;
 
 //这里只定义一个（用于被业务系统复盖、其它总的定义在UIViewController中）
 - (void)stPush:(UIViewController *)viewController;
+- (void)stPush:(UIViewController *)viewController title:(NSString *)title;
+-(void)onRightNavBarClick:(UIView*)view;
 @end

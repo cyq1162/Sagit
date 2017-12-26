@@ -9,6 +9,51 @@
 #import "STUIViewController.h"
 
 @implementation UIViewController(ST)
+
+#pragma mark keyvalue
+static char keyValueChar='k';
+-(id)key:(NSString *)key
+{
+    return self.keyValue[key];
+}
+-(UIView*)key:(NSString *)key value:(id)value
+{
+    if(![self.keyValue isKindOfClass:[NSMutableDictionary class]])
+    {
+        NSMutableDictionary<NSString*,id> *kv=[NSMutableDictionary<NSString*,id> new];
+        for (NSString *key in self.keyValue.allKeys) {
+            [kv set:key value:self.keyValue[key]];
+        }
+        [self keyValue:nil];
+        [self keyValue:kv];
+    }
+    [self.keyValue set:key value:value];
+    return self;
+}
+-(NSMutableDictionary<NSString*,id>*)keyValue
+{
+    
+    NSMutableDictionary<NSString*,id> *kv= (NSMutableDictionary<NSString*,id>*)objc_getAssociatedObject(self, &keyValueChar);
+    if(kv==nil)
+    {
+        kv=[NSMutableDictionary<NSString*,id> new];
+        [self setKeyValue:kv];
+    }
+    return kv;
+}
+-(UIView*)keyValue:(NSMutableDictionary<NSString*,id>*)keyValue
+{
+    [self setKeyValue:keyValue];
+    return self;
+}
+-(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue
+{
+    objc_setAssociatedObject(self, &keyValueChar, keyValue,OBJC_ASSOCIATION_RETAIN);
+    return self;
+}
+
+#pragma mark 设置为默认的根视图
+//获取上一个（父）控制器
 -(UIViewController *)preController
 {
     if(self.navigationController!=nil)
@@ -21,30 +66,10 @@
     }
     return self;
 }
+
 - (UIViewController*)asRoot {
     
     return [self asRoot:RootViewDefaultType];
-    //return;
-    //    AppDelegate *delegate= (AppDelegate*)[UIApplication sharedApplication].delegate;
-    //    delegate.window.rootViewController=rootController;
-    
-    
-    //    typedef void (^Animation)(void);
-    //    UIWindow* window = [UIApplication sharedApplication].keyWindow;
-    //
-    //    rootViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //    Animation animation = ^{
-    //        BOOL oldState = [UIView areAnimationsEnabled];
-    //        [UIView setAnimationsEnabled:NO];
-    //        [UIApplication sharedApplication].keyWindow.rootViewController = rootViewController;
-    //        [UIView setAnimationsEnabled:oldState];
-    //    };
-    //
-    //    [UIView transitionWithView:window
-    //                      duration:0.5f
-    //                       options:UIViewAnimationOptionTransitionCrossDissolve
-    //                    animations:animation
-    //                    completion:nil];
 }
 //将当前视图设置为根视图
 -(UIViewController*)asRoot:(RootViewControllerType)rootViewControllerType{
@@ -53,38 +78,47 @@
     if(rootViewControllerType==RootViewNavigationType)
     {
         controller = [[UINavigationController alloc]initWithRootViewController:self];
-        //self.navigationController.navigationBar.hidden=!self.view.needNavigationBar;
     }
     [UIApplication sharedApplication].delegate.window.rootViewController=controller;
     return self;
 }
-- (void)stPush:(UIViewController *)viewController title:(NSString *)title
+
+#pragma mark 导航栏功能
+
+- (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName
 {
-    [self stPush:viewController title:title imgName:nil];
-}
-- (void)stPush:(UIViewController *)viewController title:(NSString *)title imgName:(NSString *)imgName
-{
-    // || ([NSString isNilOrEmpty:imgName] && [NSString isNilOrEmpty:title])
     if(self.navigationController==nil){return;}
-    [self.view needNavBar:!self.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
-    if(self.tabBarController!=nil)
+    [self block:@"存档最后的Tab栏状态，用于检测是否还原。" on:^(UIView *view)
     {
-        [self.view needTabBar:!self.tabBarController.tabBar.hidden];
-        self.tabBarController.tabBar.hidden=YES;
-    }
-    self.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
-    self.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。
-    
+        if(self.tabBarController!=nil)//存档最后的Tab栏状态，用于检测是否还原。
+        {
+            [self.view needTabBar:!self.tabBarController.tabBar.hidden];
+            self.tabBarController.tabBar.hidden=YES;
+        }
+    }];
+    [self block:@"存档最后的Nav栏状态，用于检测是否还原。" on:^(UIView *view)
+     {
+         [self.view needNavBar:!self.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
+         self.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
+         self.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。
+     }];
+
     if (self.navigationController.viewControllers.count != 0)
     {
+        if(!title){title=[viewController key:STNavLeftTitle];}
+        if(!imgOrName){imgOrName=[viewController key:STNavLeftImage];}
+        //处理标题：
+        [viewController title:[viewController key:STNavTitle]];
+        [viewController rightNav:[viewController key:STNavRightTitle] img:[viewController key:STNavRightImage]];
+        //右导航功能按钮
         if (title)
         {
             viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:viewController action:@selector(stPop)];
         }
-        else if(imgName)
+        else if(imgOrName)
         {
             viewController.navigationItem.leftBarButtonItem =
-            [[UIBarButtonItem alloc] initWithImage:STImage(imgName) style:UIBarButtonItemStyleDone target:viewController action:@selector(stPop)];
+            [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:viewController action:@selector(stPop)];
         }
         else
         {
@@ -108,29 +142,14 @@
             
         }
     }
-//    if([self isKindOfClass:[STController class]])//因为STController可以拦截系统滑动返回的事件做进一步处理，所以打开交互
-//    {
-        //打开右滑返回交互。 (已通过重写NavigationController扩展处理了)
-        self.navigationController.interactivePopGestureRecognizer.delegate=(id)self.navigationController;
-    //}
+
+    self.navigationController.interactivePopGestureRecognizer.delegate=(id)self.navigationController;
     [self.navigationController pushViewController:viewController animated:YES];
-    //return self;
 }
 
 - (void)stPop {
     if(self.navigationController!=nil)
     {
-        
-        //如果上级就是根视图，就隐藏，否则仍显示
-//        if(self.navigationController.viewControllers.count==2)
-//        {
-//
-////            if(![self.navigationController.viewControllers[0].view needNavigationBar])
-////            {
-//                self.navigationController.navigationBar.hidden=![self.navigationController.viewControllers[0].view needNavBar];
-//            //}
-//            //显示返回导航工具条，如果是滑动的话，View会自动归位，但自定义事件返回，不归位（所以在自定义事件中也设置一下次）
-//        }
         NSInteger count=self.navigationController.viewControllers.count;
         UIView *preView=self.navigationController.viewControllers[count-2].view;
         self.navigationController.navigationBar.hidden=![preView needNavBar];
@@ -139,42 +158,50 @@
             self.tabBarController.tabBar.hidden=![preView needTabBar];
         }
         [self.navigationController popViewControllerAnimated:YES];
-//        if(![self isKindOfClass:[STController class]])//如果不是STController
-//        {
-//            //右滑已禁止的情况下，在这里设置状态。
-//            [self setStateAfterSTPop];
-//        }
     }
-   // return self;
 }
-//-(void)setStateAfterSTPop
-//{
-//    if(self.navigationController!=nil)
-//    {
-////        if([self.navigationController.navigationBar.lastSubView isKindOfClass:[UIButton class]])
-////        {
-////            [self.navigationController.navigationBar.lastSubView height:0];//取消自定义复盖的UIButton
-////        }
-////        //如果上级就是根视图，就隐藏，否则仍显示
-////        if(self.navigationController.viewControllers.count==1)
-////        {
-////            self.navigationController.navigationBar.hidden=YES;//显示返回导航工具条。
-////        }
-//    }
-//}
-/*
- NewsController *NewsViewC                     = [[NewsController alloc]init];
- NewsViewC.tabBarItem.title                    = @"消息";
- 
- NewsViewC.tabBarItem.image                    = STImageOriginal(@"menu_icon_3_normal-");// imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
- NewsViewC.tabBarItem.selectedImage            = STImageOriginal(@"menu_icon_3_selected");// imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
- UINavigationController *nav3                  = [[UINavigationController alloc]initWithRootViewController:NewsViewC];
- */
+-(UIViewController*)rightNav:(NSString*)title img:(id)imgOrName
+{
+    if(self.navigationItem==nil){return self;}
+    if(title)
+    {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(onRightNavBarClick:)];
+    }
+    else if(imgOrName)
+    {
+        self.navigationItem.leftBarButtonItem =
+        [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(onRightNavBarClick:)];
+    }
+    else
+    {
+        self.navigationItem.leftBarButtonItem=[UIBarButtonItem new];
+    }
+    return self;
+}
+-(void)onRightNavBarClick:(UIView*)view
+{
+    
+}
 #pragma mark 共用接口
 //子类重写
 -(void)reloadData{}
 -(void)reloadData:(NSString*)para{}
+
+#pragma mark 代码说明块
+-(void)block:(NSString*)description on:(onDescription)descBlock
+{
+    if(descBlock!=nil)
+    {
+        descBlock(self);
+    }
+}
+
 #pragma mark for TabBar 属性扩展
+-(UIViewController*)title:(NSString*)title
+{
+    self.title=title;
+    return self;
+}
 -(UIViewController*)tabTitle:(NSString*)title
 {
     self.tabBarItem.title=title;

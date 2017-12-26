@@ -14,7 +14,18 @@
 }
 -(void)set:(NSString*)key value:(id)value
 {
-    [self setObject:value forKey:key];
+    if(value!=nil)
+    {
+        [self setObject:value forKey:key];
+    }
+    else
+    {
+        [self remove:key];
+    }
+}
+-(void)remove:(NSString*)key
+{
+    [self removeObjectForKey:key];
 }
 -(NSString*)toJson
 {

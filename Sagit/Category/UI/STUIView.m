@@ -12,18 +12,8 @@
 
 @implementation UIView(ST)
 
+#pragma mark keyvalue
 static char keyValueChar='k';
-
-// Name
-- (NSString*)name{
-    return [self key:@"name"];
-}
-- (UIView*)name:(NSString *)name
-{
-    return [self key:@"name" value:name];
-}
-
-
 -(id)key:(NSString *)key
 {
     return self.keyValue[key];
@@ -64,6 +54,14 @@ static char keyValueChar='k';
     return self;
 }
 
+// Name
+- (NSString*)name{
+    return [self key:@"name"];
+}
+- (UIView*)name:(NSString *)name
+{
+    return [self key:@"name" value:name];
+}
 
 -(BOOL)isSTView
 {
@@ -73,6 +71,7 @@ static char keyValueChar='k';
 {
     return self.superview!=nil && [self.superview isSTView];
 }
+
 -(UIView*)baseView
 {
     UIView *view=[self superview];

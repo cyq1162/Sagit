@@ -12,7 +12,7 @@
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)
 typedef  void(^onClick)(UIView *view);
 typedef  void(^onLongPress)(UIView *view);
-
+typedef  void(^onDescription)(UIView *view);
 #pragma mark 扩展系统事件
 //触发事件
 -(UIView*)click;
@@ -26,4 +26,7 @@ typedef  void(^onLongPress)(UIView *view);
 -(UIView*)longPress:(NSString*)event;
 -(UIView*)longPress:(NSString *)event target:(UIViewController*)target;
 -(UIView*)addLongPress:(onLongPress)block;
+
+#pragma mark 增加描述
+-(void)block:(NSString*)description on:(onDescription)descBlock;
 @end

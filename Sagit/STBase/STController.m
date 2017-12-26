@@ -11,9 +11,6 @@
 #import "STCategory.h"
 #import <objc/runtime.h>
 
-@interface STController()
-@end
-
 @implementation STController
 
 -(instancetype)init
@@ -134,12 +131,6 @@
     }
     return result;
 }
-//-(NSString *)data:(NSString *)key{
-//    return _data[key];
-//}
-//-(void)setData:(NSString *)key v:(NSString *)value{
-//    [_data setObject:value forKey:key];
-//}
 -(void)stValue:(NSString*)name value:(NSString *)value
 {
     UIView *ui=self.UIList[name];
@@ -164,7 +155,7 @@
 
 
 
--(void)open:(UIView*)view{
+-(void)redirect:(UIView*)view{
     if(view==nil){return;}
     NSString* name=[view key:@"clickSel"];
     if(name!=nil)
@@ -179,9 +170,8 @@
             STController *controller=[class new];
             if(self.navigationController!=nil)
             {
-                NSString*title=[view key:@"leftNavTitle"];
-                NSString*imgName=[view key:@"leftNavImage"];
-                [self stPush:controller title:title imgName:imgName];
+                [controller key:STNavConfig value:[view key:STNavConfig]];
+                [self stPush:controller];
             }
             else
             {
@@ -194,7 +184,11 @@
 //项目需要重写时，此方法留给具体项目重写。
 - (void)stPush:(UIViewController *)viewController
 {
-    [self stPush:viewController title:nil imgName:nil];
+    [self stPush:viewController title:nil img:nil];
+}
+- (void)stPush:(UIViewController *)viewController title:(NSString *)title
+{
+    [self stPush:viewController title:title img:nil];
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if (textField.maxLength>0 && range.location >=textField.maxLength) {

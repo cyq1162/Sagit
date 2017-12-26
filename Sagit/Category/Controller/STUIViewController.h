@@ -11,22 +11,32 @@
 #import "STEnum.h"
 
 @interface UIViewController(ST)
-//- (UIViewController*)setRoot:(UIViewController *)rootViewController;
-//自定义导航的工具条为自己的图标或文字
 //上一个Push来的页面
 -(UIViewController*)preController;
-- (void)stPush:(UIViewController *)viewController title:(NSString *)title;
-- (void)stPush:(UIViewController *)viewController title:(NSString *)title imgName:(NSString *)imgName;
-- (void)stPop;
 -(UIViewController*)asRoot;
 -(UIViewController*)asRoot:(RootViewControllerType) rootType;
-//系统方法，对外不调用
-//-(void)setStateAfterSTPop;
+
+#pragma mark keyvalue
+//为每个UI增加一个可以存档临时值的字典
+-(NSMutableDictionary<NSString*,id>*)keyValue;
+-(id)key:(NSString*)key;
+-(UIView*)key:(NSString*)key value:(id)value;
+
+#pragma mark 代码说明块
+typedef  void(^onDescription)(UIView *view);
+-(void)block:(NSString*)description on:(onDescription)descBlock;
+#pragma mark 导航栏功能
+- (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName;
+- (void)stPop;
+//简单设置右侧导航栏功能
+-(UIViewController*)rightNav:(NSString*)title img:(id)imgOrName;
+-(void)onRightNavBarClick:(UIView*)view;
 #pragma mark 共用接口
 //子类重写
 -(void)reloadData;
 -(void)reloadData:(NSString*)para;
 #pragma mark for TabBar 属性扩展
+-(UIViewController*)title:(NSString*)title;
 -(UIViewController*)tabTitle:(NSString*)title;
 -(UIViewController*)tabImage:(NSString*)imgName;
 -(UIViewController*)tabSelectedImage:(NSString*)imgName;

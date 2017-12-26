@@ -13,7 +13,6 @@
 
 
 @interface UIView(ST)
-
 -(STController*)STController;
 -(STView*)stView;
 -(UIView*)baseView;
@@ -25,7 +24,7 @@
 -(NSString*)stValue;
 -(UIView*)stValue:(NSString*)value;
 
-
+#pragma mark keyvalue
 //为每个UI增加一个可以存档临时值的字典
 -(NSMutableDictionary<NSString*,id>*)keyValue;
 -(id)key:(NSString*)key;

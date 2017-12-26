@@ -194,7 +194,7 @@ static char longPressChar='p';
                         Class class= NSClassFromString([event append:@"Controller"]);
                         if(class!=nil)
                         {
-                            sel=NSSelectorFromString(@"open:");
+                            sel=NSSelectorFromString(@"redirect:");
                             isEvent=YES;
                         }
                         
@@ -266,5 +266,14 @@ static char longPressChar='p';
         
     }
     return self;
+}
+#pragma mark 增加描述
+//用于格式化增加描述的方法
+-(void)block:(NSString *)description on:(onDescription)descBlock
+{
+    if(descBlock!=nil)
+    {
+        descBlock(self);
+    }
 }
 @end

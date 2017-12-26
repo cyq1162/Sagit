@@ -6,7 +6,7 @@
 //  Copyright © 2017-2027年. All rights reserved.
 //
 
-#import "STUITableView.h"
+//#import "STUITableView.h"
 #ifndef STDefineUI_h
 #define STDefineUI_h
 
@@ -105,6 +105,15 @@
 #define ColorPurple [UIColor purpleColor]
 #define ColorBrown [UIColor brownColor]
 #define ColorClear [UIColor clearColor]
+
+
+//导航栏的参数
+#define STNavConfig @"STNavConfig"
+#define STNavLeftTitle @"STNavLeftTitle"
+#define STNavLeftImage @"STNavLeftImage"
+#define STNavTitle @"STNavTitle"
+#define STNavRightTitle @"STNavRightTitle"
+#define STNavRightImage @"STNavRightImage"
 
 //图片
 #define STImage(imgName) [UIImage imageNamed:imgName]
