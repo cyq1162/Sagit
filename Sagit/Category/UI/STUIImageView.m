@@ -9,7 +9,19 @@
 #import "STUIImageView.h"
 #import "STMessageBox.h"
 @implementation UIImageView(ST)
-
+-(UIImageView *)corner:(BOOL)yesNo
+{
+    [self clipsToBounds:yesNo];
+    if(yesNo)
+    {
+        [self layerCornerRadiusToHalf];
+    }
+    else
+    {
+        self.layer.cornerRadius=0;
+    }
+    return self;
+}
 -(UIImageView *)longPressSave:(BOOL)yesNo
 {
     if(yesNo)

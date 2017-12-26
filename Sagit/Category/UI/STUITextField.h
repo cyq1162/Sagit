@@ -11,7 +11,9 @@
 
 @interface UITextField(ST)
 #pragma mark 自定义追加属系统
+//!文本指定的最大长度(超过这个长度则无法再输入内容)
 -(NSInteger)maxLength;
+//!对文本指定最大长度(超过这个长度则无法再输入内容)
 - (UITextField*)maxLength:(NSInteger)length;
 - (UITextField*)setMaxLength:(NSInteger)length;
 

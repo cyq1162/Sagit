@@ -54,5 +54,21 @@
     }
     return json;
 }
-
+//!把格式化的JSON格式的字符串转换成字典
++ (NSDictionary *)dictionaryWithJson:(NSString *)json {
+    if (json == nil) {
+        return nil;
+    }
+    
+    NSData *jsonData = [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingMutableContainers
+                                                          error:&err];
+    if(err) {
+        NSLog(@"json解析失败：%@",err);
+        return nil;
+    }
+    return dic;
+}
 @end

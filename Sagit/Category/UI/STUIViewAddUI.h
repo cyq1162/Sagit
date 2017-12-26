@@ -11,15 +11,23 @@
 @interface UIView (STUIViewAddUI)
 
 #pragma mark UI属性
-//最后一个被添加的控件，有可能是某个控件的子控件
+//!当前UI下最后一次被添加的UI
 -(UIView*)lastAddView;
+//!当前UI的最后一个子UI
 -(UIView*)lastSubView;
+//!当前UI的第一个子UI
 -(UIView*)firstSubView;
+//!当前UI的前一个UI
 - (UIView*)preView;
+//!设置当前UI的前一个UI
 - (UIView*)preView:(UIView*)view;
+//!当前UI的下一个UI
 - (UIView*)nextView;
+//!设置当前UI的下一个UI
 - (UIView*)nextView:(UIView*)view;
+//!当前UI是否表单UI【如果是，可以通过self.formData 取值】
 - (BOOL)isFormUI;
+//!设置当前UI是否表单UI
 - (UIView*)isFormUI:(BOOL)yesNo;
 
 #pragma mark 添置UI
@@ -57,6 +65,4 @@
 
 -(UITableView*)addTableView:(NSString*)name;
 -(UITableView*)addTableView:(NSString*)name style:(UITableViewStyle)style;
-//-(STTable*)addTable:(NSString*)name;
-//-(STTable*)addTable:(NSString*)name style:(UITableViewStyle)style;
 @end

@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface UIImageView(ST)
+//!长按时提示用户保存图片
 -(UIImageView*)longPressSave:(BOOL)yesNo;
+//!执行保存图片事件
 -(UIImageView*)save;
+//!设置图片是否圆角
+-(UIImageView*)corner:(BOOL)yesNo;
 @end

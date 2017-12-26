@@ -14,6 +14,7 @@
 static char keyValueChar='k';
 -(id)key:(NSString *)key
 {
+   // [self asRoot:RootViewTabBarType];
     return self.keyValue[key];
 }
 -(UIView*)key:(NSString *)key value:(id)value

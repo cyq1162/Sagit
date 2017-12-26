@@ -149,7 +149,7 @@
     }
     return nil;
 }
--(void)loadData:(NSDictionary*)data{[self.stView loadData:data];}
+-(void)setToAll:(id)data{[self.stView setToAll:data];}
 -(NSMutableDictionary*)formData{return [self.stView formData:nil];}
 -(NSMutableDictionary*)formData:(id)superView{return [self.stView formData:superView];}
 

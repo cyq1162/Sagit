@@ -247,8 +247,23 @@
     }
     return _UITextList;
 }
--(void)loadData:(NSDictionary*)data
+-(void)setToAll:(id)data
 {
+    NSDictionary *dic;
+    if([data isKindOfClass:[NSDictionary class]])
+    {
+        dic=data;
+    }
+    else if([data isKindOfClass:[NSString class]])
+    {
+        dic=[NSDictionary dictionaryWithJson:data];
+    }
+    else if([data isKindOfClass:[STModelBase class]])
+    {
+        STModelBase *base=data;
+        dic=[base toDictionary];
+    }
+    if(dic==nil){return;}
     for (NSString*key in data) {
         UIView *ui=self.UIList[key];
         if(ui!=nil)
@@ -261,7 +276,7 @@
 {
     return [self formData:nil];
 }
-//获取当前窗体的表单数据
+//!获取当前窗体的表单数据
 -(NSMutableDictionary *)formData:(id)superView
 {
     NSMutableDictionary *formData=[NSMutableDictionary new];

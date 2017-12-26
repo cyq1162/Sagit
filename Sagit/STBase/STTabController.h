@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface STTabController : UITabBarController
+//!事件在UI初始化之前执行
 -(void)onInit;
+//!UI初始化
 -(void)initUI;
+//!事件在UI初始化之后执行
 -(void)initData;
 @end

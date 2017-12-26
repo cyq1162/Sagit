@@ -13,22 +13,6 @@ typedef void (^Complete)();
 typedef void (^Executive)();
 @interface STMessageBox : NSObject
 + (STMessageBox*)share;
-//-(void)showWaitViewInView:(UIView*)view//添加在要展示的view
-//                animation:(BOOL)animated//显示时是否添加动画
-//                 withText:(NSString*)text//要展示的文本
-//          withDetailsText:(NSString *)detailsText//需要展示的第二行小文字，如果不需要则填nil
-//             withDuration:(CGFloat)duration//弹出动画时间
-//           hideWhenFinish:(BOOL)hideWhenFinish;//展示后是否自动移除
-//-(void)showWaitViewWithIcon:(UIView*)view//添加在要展示的view
-//                   withText:(NSString*)text//要展示的文本
-//                       icon:(NSString*)icon;//展示图片
-//- (void)showWhileExecuting:(UIView*)view//添加在要展示的view
-//                  withText:(NSString*)text//要展示的文本
-//       whileExecutingBlock:(dispatch_block_t)block complete:(Complete)complete;//展示期间需要执行的内容
-//-(void)showWithCustomView:(UIView*)view gifName:(NSString*)gifName;//显示自定义的View,gif动画
-//-(void)showCustomViewText:(NSString*)text;//在自定义View上显示文本。必需和showWithCustomView一起用。
-//-(void)hiddenView;
-//- (void)showLoadingViewOnView:(UIView *)view text:(NSString *)text;//菊花加载
 
 #pragma AlertView
 -(void)prompt:(NSString*)text;

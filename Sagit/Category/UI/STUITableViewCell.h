@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface UITableViewCell(ST)
+//!获取Cell的数据源
 @property (nonatomic,strong) NSMutableDictionary<NSString*,id> *source;
+//!设置Cell的数据源
 -(UITableViewCell *)source:(NSMutableDictionary<NSString*,id> *)dataSource;
-//创建或复用Cell
+//!创建或复用Cell
 + (instancetype)reuseCell:(UITableView *)tableView index:(NSIndexPath *)index;
 @end

@@ -111,12 +111,12 @@
     }
     return self;
 }
-/*
+/**
+ 获取字符串的大小
  txt:label或button的title
  font:字体大小
  size:允许最大size
  */
-
 -(CGSize) sizeWithFont:font maxSize:(CGSize)maxSize
 {
     

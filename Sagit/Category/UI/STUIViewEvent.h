@@ -14,19 +14,25 @@ typedef  void(^onClick)(UIView *view);
 typedef  void(^onLongPress)(UIView *view);
 typedef  void(^onDescription)(UIView *view);
 #pragma mark 扩展系统事件
-//触发事件
+//!执行点击事件
 -(UIView*)click;
-//绑定事件
+//!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name）
 -(UIView*)click:(NSString*)event;
+//!绑定事件 并指定target
 -(UIView*)click:(NSString *)event target:(UIViewController*)target;
+//!绑定事件 用代码块的形式
 - (UIView*)addClick:(onClick)block;
-//触发事件
+
+//!执行长按事件
 -(UIView*)longPress;
-//绑定事件
+//!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name）
 -(UIView*)longPress:(NSString*)event;
+//!绑定事件 并指定target
 -(UIView*)longPress:(NSString *)event target:(UIViewController*)target;
+//!绑定事件 用代码块的形式
 -(UIView*)addLongPress:(onLongPress)block;
 
 #pragma mark 增加描述
+//!提供一个代码块，方便代码规范 description处可以写代码块的说明文字
 -(void)block:(NSString*)description on:(onDescription)descBlock;
 @end

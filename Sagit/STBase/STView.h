@@ -10,27 +10,30 @@
 #import "STController.h"
 
 @interface STView : UIView
-//所对应的Controller
+//!所对应的Controller
 @property (nonatomic,retain) STController *Controller;
-//所有name的控件
+//!所有name的控件的集合
 @property (nonatomic,retain)NSMutableDictionary *UIList;
-//存档文本框的列表
+//!存档文本框的列表
 @property (nonatomic,retain) NSMutableArray *UITextList;
-//开启针对文本的高度自适应、键盘遮档事件
+//!开启针对文本的高度自适应、键盘遮档事件
 @property (nonatomic,assign) BOOL isStartTextChageEvent;
-//是否开启手机旋转刷新布局功能。
+//!是否开启手机旋转刷新布局功能。
 @property (nonatomic,assign) BOOL isStartRotateEvent;
-
-//最后一个被添加的UI(作用是为定义的STLastView系列做准备)
-//-(UIView*) lastView;
-
--(void)loadUI;
-//初始化[子类重写]
--(void)initUI;
--(void)initData;
--(UIView*)firstView:(NSString*)className;
+//!初始化
 -(instancetype)initWithController:(STController*)controller;
--(void)loadData:(NSDictionary*)data;
+//!加载UI（系统内部调用）
+-(void)loadUI;
+//!UI初始化
+-(void)initUI;
+//!事件在UI初始化之后执行
+-(void)initData;
+//!根据类名，获取第一个UI
+-(UIView*)firstView:(NSString*)className;
+//!将指定的数据批量赋值到所有的UI中：data可以是字典、是json，是实体等
+-(void)setToAll:(id)data;
+//!从UIList中遍历获取属性isFormUI的表单数据列表
 -(NSMutableDictionary*)formData;
+//!从UIList中遍历获取属性isFormUI的表单数据列表 superView ：指定一个父，不指定则为根视图
 -(NSMutableDictionary*)formData:(id)superView;
 @end

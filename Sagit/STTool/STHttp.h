@@ -33,5 +33,5 @@ typedef void(^Error)(NSString *errMsg);
 
 + (instancetype)share;
 + (instancetype)shareWithLoading;
--(void)networkState;
+//-(void)networkState;
 @end
