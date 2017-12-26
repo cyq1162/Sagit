@@ -11,6 +11,7 @@
 @interface NSMutableDictionary(ST)
 -(BOOL)has:(NSString*)key;
 -(void)set:(NSString*)key value:(id)value;
+-(void)remove:(NSString*)key;
 -(NSString*)toJson;
 @end
 

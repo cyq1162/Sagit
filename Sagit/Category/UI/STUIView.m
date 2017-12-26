@@ -121,10 +121,10 @@ static char keyValueChar='k';
     {
         ((UIButton*)self).titleLabel.text=value;
     }
-    //    else if([self isMemberOfClass:[UISegmentedControl class]])
-    //    {
-    //        ((UISegmentedControl*)self).selectedSegmentIndex=[value intValue];
-    //    }
+        else if([self isMemberOfClass:[UIImageView class]])
+        {
+            [((UIImageView*)self) url:value];
+        }
     else if([self isMemberOfClass:[UISlider class]])
     {
         ((UISlider*)self).value=[value floatValue];
@@ -180,6 +180,10 @@ static char keyValueChar='k';
     else if([self isMemberOfClass:[UIStepper class]])
     {
         return [@(((UIStepper*)self).value) stringValue];
+    }
+    else if([self isMemberOfClass:[UIImageView class]])
+    {
+        return [((UIImageView*)self) url];
     }
     return  nil;
 }
