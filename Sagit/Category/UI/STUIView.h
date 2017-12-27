@@ -61,7 +61,7 @@
 -(UIView*)backgroundColor:(id)colorOrHex;
 -(UIView*)clipsToBounds:(BOOL)value;
 -(UIView*)tag:(NSInteger)tag;
--(UIView*)alpha:(NSInteger)value;
+-(UIView*)alpha:(CGFloat)value;
 //!将圆角半径设为宽度的一半
 -(UIView*)layerCornerRadiusToHalf;
 

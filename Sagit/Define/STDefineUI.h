@@ -63,7 +63,7 @@
 #define STLastSlider ((UISlider*)STLastView)
 #define STLastProgressView ((UIProgressView*)STLastView)
 #define STLastTableView ((UITableView*)STLastView)
-//#define STLastTable ((STTable*)STLastView)
+
 //获取控件
 #define STSTView(name)    ((STView*)self.stView.UIList[name])
 #define STButton(name) ((UIButton*)self.stView.UIList[name])

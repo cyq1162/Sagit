@@ -111,4 +111,26 @@
     [self width:width];
     return self;
 }
+-(UIButton *)showTime:(NSInteger)second
+{
+    if(second>0)
+    {
+        NSString*title=self.currentTitle;
+        [self enabled:NO];
+        __block NSInteger s=second;
+        [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+            [self title:[[@(s)stringValue] append:@"s"]];
+            s--;
+            if(s==-1)//==0的话到2s就恢复了，也不解为什么少了1。
+            {
+                [self title:title];
+                [self enabled:YES];
+                [timer invalidate];
+                timer=nil;
+                
+            }
+        }];
+    }
+    return self;
+}
 @end

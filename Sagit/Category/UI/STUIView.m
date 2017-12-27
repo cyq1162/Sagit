@@ -251,7 +251,7 @@ static char keyValueChar='k';
     self.tag=tag;
     return self;
 }
--(UIView*)alpha:(NSInteger)value
+-(UIView*)alpha:(CGFloat)value
 {
     self.alpha=value;
     return self;

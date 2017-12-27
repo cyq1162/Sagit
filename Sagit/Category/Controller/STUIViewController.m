@@ -112,9 +112,16 @@ static char keyValueChar='k';
         [viewController title:[viewController key:STNavTitle]];
         [viewController rightNav:[viewController key:STNavRightTitle] img:[viewController key:STNavRightImage]];
         //右导航功能按钮
-        if (title)
+        if (title!=nil)
         {
+            if([title isEqualToString:@""])
+            {
+                viewController.navigationItem.leftBarButtonItem = [UIBarButtonItem new];
+            }
+            else
+            {
             viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:viewController action:@selector(stPop)];
+            }
         }
         else if(imgOrName)
         {

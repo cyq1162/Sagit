@@ -1,14 +1,22 @@
 //
-//  STUIImageView.m
-//  IT恋
-//
-//  Created by 陈裕强 on 2017/12/24.
-//  Copyright © 2017年. All rights reserved.
+//  开源：https://github.com/cyq1162/Sagit
+//  作者：陈裕强 create on 2017/12/12.
+//  博客：(昵称：路过秋天） http://www.cnblogs.com/cyq1162/
+//  起源：IT恋、IT连 创业App http://www.itlinks.cn
+//  Copyright © 2017-2027年. All rights reserved.
 //
 
 #import "STUIImageView.h"
 #import "STMessageBox.h"
+#import <objc/runtime.h>
+
 @implementation UIImageView(ST)
+
+static char pickChar='p';
+-(void)setPickBlock:(OnPick)block
+{
+    objc_setAssociatedObject(self, &pickChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
 -(UIImageView *)corner:(BOOL)yesNo
 {
     [self clipsToBounds:yesNo];
@@ -70,7 +78,7 @@
     [self key:@"url" value:url];
     if(![url startWith:@"http"])
     {
-       return [self image:url];
+        return [self image:url];
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSData * data = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
@@ -90,6 +98,34 @@
     });
     return self;
 }
+
+-(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo
+{
+    return [self pick:pick edit:yesNo maxKb:256];
+}
+-(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo maxKb:(NSInteger)maxKb
+{
+    if(pick==nil){return self;}
+    [self key:@"maxKb" value:[@(maxKb) stringValue]];
+    [self setPickBlock:pick];
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.delegate = (id)self;
+    picker.allowsEditing = yesNo;
+    [self.STController presentViewController:picker animated:YES completion:nil];
+    return self;
+}
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    UIImage *image = info[picker.allowsEditing?UIImagePickerControllerEditedImage:UIImagePickerControllerOriginalImage];
+    NSData *data = [image compress:[[self key:@"maxKb"] intValue]];//[ITTool compressImage:image toByte:250000];
+    OnPick event = (OnPick)objc_getAssociatedObject(self, &pickChar);
+    if(event)
+    {
+        event(data,picker,info);
+    }
+}
+
 #pragma mark 扩展属性
 -(UIImageView *)image:(id)imgOrName
 {
@@ -97,6 +133,9 @@
     return self;
 }
 @end
+
+
+
 @implementation UIImage(ST)
 
 -(NSData*)compress:(NSInteger)maxKb

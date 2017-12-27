@@ -26,6 +26,8 @@
 -(UIButton*)titleColor:(id)colorOrHex forState:(UIControlState)state;
 -(UIButton*)titleFont:(NSInteger)px;
 -(UIButton*)adjustsImageWhenHighlighted:(BOOL)yesNo;
+//!当button在动态设置文字或图片之后，宽度自适应
 -(UIButton*)stWidthToFit;
-
+//!显示Ns的倒计时状态
+-(UIButton*)showTime:(NSInteger)second;
 @end
