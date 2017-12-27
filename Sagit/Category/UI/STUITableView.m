@@ -84,14 +84,16 @@
 }
 -(UITableView*)afterDelCell:(NSIndexPath*)indexPath
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
+   // dispatch_async(dispatch_get_main_queue(), ^{
         [self.source removeObjectAtIndex:indexPath.row];
         [self deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         if(self.autoHeight)
         {
             [self height:(self.contentSize.height-1)*Ypx];
         }
-    });
+        return self;
+   // });
+    
 }
 #pragma mark 属性扩展
 -(UITableView*)scrollEnabled:(BOOL)yesNo
