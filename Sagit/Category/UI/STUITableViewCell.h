@@ -15,4 +15,11 @@
 -(UITableViewCell *)source:(NSMutableDictionary<NSString*,id> *)dataSource;
 //!创建或复用Cell
 + (instancetype)reuseCell:(UITableView *)tableView index:(NSIndexPath *)index;
+//!获取当前所在的table
+-(UITableView*)table;
+
+//!获取是否允许删除属性
+-(BOOL)allowDelete;
+//!设置是否允许删除
+-(UITableView*)allowDelete:(BOOL)yesNo;
 @end

@@ -67,7 +67,15 @@ static char pickChar='p';
 {
     return [self url:url maxKb:256];
 }
+-(UIImageView *)url:(NSString *)url default:(id)imgOrName
+{
+    return [self url:url maxKb:256 default:imgOrName];
+}
 -(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress
+{
+    return [self url:url maxKb:compress default:nil];
+}
+-(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress default:(id)imgOrName
 {
     if([NSString isNilOrEmpty:url])
     {
@@ -79,6 +87,10 @@ static char pickChar='p';
     if(![url startWith:@"http"])
     {
         return [self image:url];
+    }
+    if(imgOrName)
+    {
+        self.image=[self toImage:imgOrName];
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSData * data = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
@@ -125,7 +137,34 @@ static char pickChar='p';
         event(data,picker,info);
     }
 }
-
+-(UIImageView *)cutSize:(CGSize)maxSize
+{
+    //[self width:maxSize.width height:maxSize.height];
+    UIImage *image=self.image;
+    if (image.size.width < maxSize.width && image.size.height < maxSize.height) return image;
+    CGFloat imageW = image.size.width;
+    CGFloat imageH = image.size.height;
+    CGFloat k = 0.0f;
+    CGSize size = CGSizeMake(maxSize.width, maxSize.height);
+    if (image.size.width > maxSize.width)
+    {
+        k = image.size.width / maxSize.width;
+        imageH = image.size.height / k;
+        size = CGSizeMake(maxSize.width, imageH);
+    }
+    if (imageH > maxSize.height) {
+        k = image.size.height / maxSize.height;
+        imageW = image.size.width / k;
+        size = CGSizeMake(imageW, maxSize.height);
+    }
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndPDFContext();
+    self.image=image;
+    
+    return self;
+}
 #pragma mark 扩展属性
 -(UIImageView *)image:(id)imgOrName
 {
@@ -162,29 +201,5 @@ static char pickChar='p';
     }
     return data;
 }
--(UIImage *)reSize:(CGSize)maxSize
-{
-    UIImage *image=self;
-    if (image.size.width < maxSize.width && image.size.height < maxSize.height) return image;
-    CGFloat imageW = image.size.width;
-    CGFloat imageH = image.size.height;
-    CGFloat k = 0.0f;
-    CGSize size = CGSizeMake(maxSize.width, maxSize.height);
-    if (image.size.width > maxSize.width)
-    {
-        k = image.size.width / maxSize.width;
-        imageH = image.size.height / k;
-        size = CGSizeMake(maxSize.width, imageH);
-    }
-    if (imageH > maxSize.height) {
-        k = image.size.height / maxSize.height;
-        imageW = image.size.width / k;
-        size = CGSizeMake(imageW, maxSize.height);
-    }
-    UIGraphicsBeginImageContext(size);
-    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-    image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndPDFContext();
-    return image;
-}
+
 @end

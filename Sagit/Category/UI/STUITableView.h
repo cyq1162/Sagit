@@ -12,8 +12,11 @@
 
 #pragma mark 核心扩展
 typedef void(^AddCell)(UITableViewCell *cell,NSIndexPath *indexPath);
+typedef BOOL(^DelCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 //!用于为Table追加每一行的Cell
 @property (nonatomic,copy) AddCell addCell;
+//!用于为Table移除行的Cell
+@property (nonatomic,copy) DelCell delCell;
 //!获取Table的数据源
 @property (nonatomic,strong) NSMutableArray<id> *source;
 //!设置Table的数据源
@@ -22,7 +25,17 @@ typedef void(^AddCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 -(BOOL)autoHeight;
 //!设置是否自动控制Table的高度
 -(UITableView*)autoHeight:(BOOL)yesNo;
-
+//!获取默认的UITableViewCellStyle
+-(UITableViewCellStyle)cellStyle;
+//!设置默认的UITableViewCellStyle
+-(UITableView*)cellStyle:(UITableViewCellStyle)style;
+//!获取是否允许删除属性
+-(BOOL)allowDelete;
+//!设置是否允许删除
+-(UITableView*)allowDelete:(BOOL)yesNo;
+//!移除数据源和数据行
+-(UITableView*)afterDelCell:(NSIndexPath*)indexPath;
 #pragma mark 扩展属性
 -(UITableView*)scrollEnabled:(BOOL)yesNo;
+
 @end

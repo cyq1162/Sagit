@@ -241,11 +241,12 @@
 {
     if(indexPath.row == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row)
     {
+        //cell.separatorInset = UIEdgeInsetsMake(0, STScreeWidthPt , 0, 0);//去掉最后一条线的
         //end of loading
         if(tableView.autoHeight)
         {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [tableView height:(tableView.contentSize.height-1)*Ypx];//去掉最后一条线的高度
+                [tableView height:(tableView.contentSize.height-1)*Ypx];
             });
         }
     }
@@ -255,7 +256,7 @@
  *  设置行高
  */
 - (CGFloat)tableView:(nonnull UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"STTableCell"];
+    UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
     if(cell!=nil)
     {
         return cell.frame.size.height;
@@ -294,4 +295,30 @@
 //
 //    // NSLog(@"取消选中 didDeselectRowAtIndexPath row = %ld ", indexPath.row);
 //}
+#pragma mark 编辑删除
+//先要设Cell可编辑
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
+    if(cell!=nil)
+    {
+        return cell.allowDelete;
+    }
+    return tableView.allowDelete;
+}
+//定义编辑样式
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
+//点击删除
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
+    if(editingStyle==UITableViewCellEditingStyleDelete && tableView.delCell)
+    {
+        if(tableView.delCell(cell, indexPath))
+        {
+            [tableView afterDelCell:indexPath];
+        }
+    }
+}
 @end

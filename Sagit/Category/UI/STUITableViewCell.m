@@ -15,9 +15,14 @@
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"TableViewCell"];
     if(cell==nil)
     {
-        cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TableViewCell"];
+        cell=[[UITableViewCell alloc] initWithStyle:tableView.cellStyle reuseIdentifier:@"TableViewCell"];
+        [cell key:@"table" value:tableView];
     }
     return cell;
+}
+-(UITableView *)table
+{
+    return [self key:@"table"];
 }
 -(NSMutableDictionary<NSString *,id> *)source
 {
@@ -32,10 +37,17 @@
     [self key:@"source" value:dataSource];
     return self;
 }
-//
-//-(NSMutableDictionary<NSString *,id> *)cellSource
-//{
-//    if(_cellSource==nil){_cellSource=[NSMutableDictionary new];}
-//    return _cellSource;
-//}
+-(BOOL)allowDelete
+{
+    if([self key:@"allowDelete"]==nil)
+    {
+        return self.table.allowDelete;
+    }
+    return [[self key:@"allowDelete"] isEqualToString:@"1"];
+}
+-(UITableView *)allowDelete:(BOOL)yesNo
+{
+    [self key:@"allowDelete" value:yesNo?@"1":@"0"];
+    return self;
+}
 @end

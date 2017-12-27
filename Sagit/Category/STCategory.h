@@ -8,6 +8,7 @@
 
 //Object
 #import "STString.h"
+#import "STArray.h"
 #import "STDictionary.h"
 #import "STDate.h"
 #import "STNumber.h"

@@ -17,6 +17,10 @@
 }
 -(void)setSource:(NSMutableArray<id> *)source
 {
+    if(self.allowDelete && ![source isKindOfClass:[NSMutableArray class]])
+    {
+        source=[source toNSMutableArray];
+    }
     [self source:source];
 }
 -(UITableView *)source:(NSMutableArray<id> *)dataSource
@@ -32,6 +36,14 @@
 {
     [self key:@"addCell" value:addCell];
 }
+-(DelCell)delCell
+{
+    return [self key:@"delCell"];
+}
+-(void)setDelCell:(DelCell)delCell
+{
+    [self key:@"delCell" value:delCell];
+}
 
 -(BOOL)autoHeight
 {
@@ -46,6 +58,40 @@
     [self.keyValue set:@"autoHeight" value:yesNo?@"1":@"0"];
     if(yesNo){[self scrollEnabled:NO];}//自动计算高度时，滚动条默认没必要存在。
     return self;
+}
+-(UITableViewCellStyle)cellStyle
+{
+    NSString* style=[self key:@"cellStyle"];
+    if(style==nil)
+    {
+        return UITableViewCellStyleDefault;
+    }
+    return (UITableViewCellStyle)[style intValue];
+}
+-(UITableView *)cellStyle:(UITableViewCellStyle)style
+{
+    [self key:@"cellStyle" value:[@(style) stringValue]];
+    return self;
+}
+-(BOOL)allowDelete
+{
+    return [self key:@"allowDelete"]!=nil && [[self key:@"allowDelete"] isEqualToString:@"1"];
+}
+-(UITableView *)allowDelete:(BOOL)yesNo
+{
+    [self key:@"allowDelete" value:yesNo?@"1":@"0"];
+    return self;
+}
+-(UITableView*)afterDelCell:(NSIndexPath*)indexPath
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.source removeObjectAtIndex:indexPath.row];
+        [self deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        if(self.autoHeight)
+        {
+            [self height:(self.contentSize.height-1)*Ypx];
+        }
+    });
 }
 #pragma mark 属性扩展
 -(UITableView*)scrollEnabled:(BOOL)yesNo
