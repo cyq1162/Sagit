@@ -224,6 +224,7 @@
         if(tableView.source.count>indexPath.row)
         {
             cell.source=tableView.source[indexPath.row];
+            [cell firstValue:cell.source.firstObject];
         }
         //默认设置
         [cell width:1 height:88];//IOS的默认高度
@@ -309,6 +310,10 @@
 //定义编辑样式
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewCellEditingStyleDelete;
+}
+//设置进入编辑状态时，Cell不会缩进
+- (BOOL)tableView: (UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
 }
 //点击删除
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

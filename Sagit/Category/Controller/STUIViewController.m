@@ -109,7 +109,10 @@ static char keyValueChar='k';
         if(!title){title=[viewController key:STNavLeftTitle];}
         if(!imgOrName){imgOrName=[viewController key:STNavLeftImage];}
         //处理标题：
-        [viewController title:[viewController key:STNavTitle]];
+        if(!viewController.title)
+        {
+            [viewController title:[viewController key:STNavTitle]];
+        }
         [viewController rightNav:[viewController key:STNavRightTitle] img:[viewController key:STNavRightImage]];
         //右导航功能按钮
         if (title!=nil)

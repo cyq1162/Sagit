@@ -15,6 +15,7 @@
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"TableViewCell"];
     if(cell==nil)
     {
+        //[[cell.imageView width:80 height:80] clipsToBounds:YES];//默认大小
         cell=[[UITableViewCell alloc] initWithStyle:tableView.cellStyle reuseIdentifier:@"TableViewCell"];
         [cell key:@"table" value:tableView];
     }
@@ -48,6 +49,15 @@
 -(UITableView *)allowDelete:(BOOL)yesNo
 {
     [self key:@"allowDelete" value:yesNo?@"1":@"0"];
+    return self;
+}
+-(NSString *)firstValue
+{
+    return [self key:@"firstValue"];
+}
+-(UITableViewCell *)firstValue:(NSString *)value
+{
+    [self key:@"firstValue" value:value];
     return self;
 }
 @end

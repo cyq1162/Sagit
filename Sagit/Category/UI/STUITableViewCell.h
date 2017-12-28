@@ -22,4 +22,8 @@
 -(BOOL)allowDelete;
 //!设置是否允许删除
 -(UITableView*)allowDelete:(BOOL)yesNo;
+//!数据源中的第一个字段，系统自动设置
+-(NSString*)firstValue;
+-(UITableViewCell*)firstValue:(NSString*)value;
+
 @end

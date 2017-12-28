@@ -16,6 +16,7 @@
 @end
 
 @interface NSDictionary(ST)
+-(id)firstObject;
 -(BOOL)has:(NSString*)key;
 -(NSString*)toJson;
 //!把格式化的JSON格式的字符串转换成字典

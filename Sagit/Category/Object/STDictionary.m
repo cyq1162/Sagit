@@ -41,6 +41,17 @@
 @end
 @implementation NSDictionary(ST)
 
+-(id)firstObject
+{
+    if(self.count>0)
+    {
+        for (NSString* key in self) {
+            return self[key];
+        }
+    }
+    return nil;
+}
+
 -(BOOL)has:(NSString*)key{
     return self[key]!=nil;
 }

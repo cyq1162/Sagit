@@ -21,6 +21,9 @@ typedef BOOL(^DelCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 @property (nonatomic,strong) NSMutableArray<id> *source;
 //!设置Table的数据源
 -(UITableView*)source:(NSMutableArray<id> *)dataSource;
+
+
+
 //!是否自动控制Table的高度
 -(BOOL)autoHeight;
 //!设置是否自动控制Table的高度

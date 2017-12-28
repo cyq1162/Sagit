@@ -86,7 +86,7 @@
 {
    // dispatch_async(dispatch_get_main_queue(), ^{
         [self.source removeObjectAtIndex:indexPath.row];
-        [self deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         if(self.autoHeight)
         {
             [self height:(self.contentSize.height-1)*Ypx];
