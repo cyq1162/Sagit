@@ -127,7 +127,7 @@
         textView.tag=textView.contentSize.height-frame.size.height;//用于ContentSize的高和文本框的差值
         if(textView.maxHeight==0)
         {
-            textView.MaxHeight=floorf(textView.font.lineHeight)*6;
+            [textView maxHeight:floorf(textView.font.lineHeight)*6];
         }
         return;
     }

@@ -15,9 +15,14 @@
 -(NSInteger)maxLength;
 //!对文本指定最大长度(超过这个长度则无法再输入内容)
 - (UITextField*)maxLength:(NSInteger)length;
-- (UITextField*)setMaxLength:(NSInteger)length;
+//- (UITextField*)setMaxLength:(NSInteger)length;
 
 #pragma mark 扩展系统属性
 -(UITextField*)keyboardType:(UIKeyboardType)value;
 -(UITextField*)secureTextEntry:(BOOL)value;
+-(UITextField*)text:(NSString*)text;
+-(UITextField*)font:(NSInteger)px;
+-(UITextField*)textColor:(id)colorOrHex;
+-(UITextField*)textAlignment:(NSTextAlignment)value;
+-(UITextField*)placeholder:(NSString*)text;
 @end

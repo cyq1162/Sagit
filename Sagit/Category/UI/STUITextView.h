@@ -15,14 +15,22 @@
 //文字框最多能输入的长度
 -(NSInteger)maxLength;
 - (UITextView*)maxLength:(NSInteger)length;
-- (UITextView*)setMaxLength:(NSInteger)length;
+//- (UITextView*)setMaxLength:(NSInteger)length;
+
 //文字框最大的高度
 - (CGFloat)maxHeight;
-- (UITextView*)setMaxHeight:(CGFloat)pxValue;
+- (UITextView*)maxHeight:(CGFloat)px;
 
 #pragma mark 扩展系统属性
--(UITextField*)keyboardType:(UIKeyboardType)value;
--(UITextField*)secureTextEntry:(BOOL)value;
+-(UITextView*)keyboardType:(UIKeyboardType)value;
+-(UITextView*)secureTextEntry:(BOOL)value;
+-(UITextView*)text:(NSString*)text;
+-(UITextView*)font:(NSInteger)px;
+-(UITextView*)textColor:(id)colorOrHex;
+-(UITextView*)textAlignment:(NSTextAlignment)value;
+//!自定义扩展
+-(UITextView*)placeholder;
+-(UITextView*)placeholder:(NSString*)text;
 @end
 
 

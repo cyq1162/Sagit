@@ -8,34 +8,62 @@
 
 #import "STUITextField.h"
 #import "STUIView.h"
-#import "objc/runtime.h"
 
 @implementation UITextField(ST)
+
 #pragma mark 自定义追加属系统
-static char textFieldMaxLength='m';
-- (NSInteger)maxLength{
-    return [objc_getAssociatedObject(self, &textFieldMaxLength) integerValue];
+- (NSInteger)maxLength
+{
+    NSString *max=[self key:@"maxLength"];
+    if(max)
+    {
+        return [max intValue];
+    }
+    return 0;
 }
 - (UITextField*)maxLength:(NSInteger)length{
-    return [self setMaxLength:length];
-}
-- (UITextField*)setMaxLength:(NSInteger)length{
-    objc_setAssociatedObject(self, &textFieldMaxLength, [@(length) stringValue],OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [self key:@"maxLength" value:[@(length) stringValue]];
     if(self.STController!=nil)
     {
         self.delegate=self.STController;
     }
     return self;
+
 }
 #pragma mark 扩展系统属性
--(UITextField*)keyboardType:(UIKeyboardType)value
+-(UITextField*)keyboardType:(UIKeyboardType)type
 {
-    self.keyboardType=value;
+    self.keyboardType=type;
     return self;
 }
--(UITextField*)secureTextEntry:(BOOL)value
+-(UITextField*)secureTextEntry:(BOOL)yesNo
 {
-    self.secureTextEntry=value;
+    self.secureTextEntry=yesNo;
+    return self;
+}
+-(UITextField*)text:(NSString*)text
+{
+    self.text=text;
+    return self;
+}
+-(UITextField*)font:(NSInteger)px
+{
+    self.font=STFont(px);
+    return self;
+}
+-(UITextField*)textColor:(id)colorOrHex
+{
+    self.textColor=[self toColor:colorOrHex];
+    return self;
+}
+-(UITextField*)textAlignment:(NSTextAlignment)value
+{
+    self.textAlignment=value;
+    return self;
+}
+-(UITextField*)placeholder:(NSString*)text
+{
+    self.placeholder=text;
     return self;
 }
 @end

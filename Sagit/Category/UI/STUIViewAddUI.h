@@ -56,7 +56,12 @@
 
 -(UITextField*)addTextField:(NSString*)name;
 -(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder;
+-(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px;
+-(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex;
 -(UITextView*)addTextView:(NSString*)name;
+-(UITextView*)addTextView:(NSString*)name placeholder:(NSString*)placeholder;
+-(UITextView*)addTextView:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px;
+-(UITextView*)addTextView:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex;
 
 -(UIButton*)addButton:(NSString*)name;
 -(UIButton*)addButton:(NSString*)name imgName:(NSString*)imgName;

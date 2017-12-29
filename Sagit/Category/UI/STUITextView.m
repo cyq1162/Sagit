@@ -8,64 +8,125 @@
 
 #import "STUITextView.h"
 #import "STUIView.h"
-#import "objc/runtime.h"
+//#import "objc/runtime.h"
 
 //@interface UITextView()
 //@property (nonatomic,assign) NSInteger MaxLength;
 //@property (nonatomic,assign) CGFloat MaxHeight;
 //@end
-
 @implementation UITextView(ST)
+
 #pragma mark 自定义追加属系统
-static char maxLengthChar='l';
-- (NSInteger)maxLength{
-    return [objc_getAssociatedObject(self, &maxLengthChar) integerValue];
+- (NSInteger)maxLength
+{
+    NSString *max=[self key:@"maxLength"];
+    if(max)
+    {
+        return [max intValue];
+    }
+    return 0;
 }
-- (UITextView*)maxLength:(NSInteger)length{
-    return [self setMaxLength:length];
+- (UITextField*)maxLength:(NSInteger)length{
+    [self key:@"maxLength" value:[@(length) stringValue]];
+    if(self.STController!=nil)
+    {
+        self.delegate=self.STController;
+    }
+    return self;
+    
 }
-- (UITextView*)setMaxLength:(NSInteger)length{
-    objc_setAssociatedObject(self, &maxLengthChar, [@(length) stringValue],OBJC_ASSOCIATION_COPY_NONATOMIC);
+
+- (CGFloat)maxHeight
+{
+    NSString *max=[self key:@"maxHeight"];
+    if(max)
+    {
+        return [max floatValue];
+    }
+    return 0;
+}
+-(UITextView *)maxHeight:(CGFloat)px
+{
+    [self key:@"maxHeight" value:[@(px) stringValue]];
     if(self.STController!=nil)
     {
         self.delegate=self.STController;
     }
     return self;
 }
-
-static char maxHeightChar='n';
-- (CGFloat)maxHeight{
-    return [objc_getAssociatedObject(self, &maxHeightChar) floatValue];
-}
-- (UITextView*)maxHeight:(NSInteger)length{
-    return [self setMaxLength:length];
-}
-- (UITextView*)setMaxHeight:(CGFloat)pxValue{
-    objc_setAssociatedObject(self, &maxHeightChar, [@(pxValue) stringValue],OBJC_ASSOCIATION_COPY_NONATOMIC);
-    if(self.STController!=nil)
-    {
-        self.delegate=self.STController;
-    }
-    return self;
-}
-
 #pragma mark 扩展系统属性
--(UITextField*)keyboardType:(UIKeyboardType)value
+-(UITextView*)keyboardType:(UIKeyboardType)value
 {
     self.keyboardType=value;
     return self;
 }
--(UITextField*)secureTextEntry:(BOOL)value
+-(UITextView*)secureTextEntry:(BOOL)value
 {
     self.secureTextEntry=value;
     return self;
 }
+-(UITextView*)text:(NSString*)text
+{
+    self.text=text;
+    return self;
+}
+-(UITextView*)font:(NSInteger)px
+{
+    self.font=STFont(px);
+    return self;
+}
+-(UITextView*)textColor:(id)colorOrHex
+{
+    self.textColor=[self toColor:colorOrHex];
+    return self;
+}
+-(UITextView*)textAlignment:(NSTextAlignment)value
+{
+    self.textAlignment=value;
+    return self;
+}
+-(UITextView*)placeholder
+{
+    return  [self key:@"placeholder"];
+}
+-(UITextView*)placeholder:(NSString*)text
+{
+    if([self key:@"placeholder"]==nil)
+    {
+        UILabel *placeholer=[[self addLabel:nil text:text] relate:LeftTop v:10 v2:10];
+        [placeholer textColor:@"#cccccc"];
+        placeholer.font=self.font;
+        [self key:@"placeholderLabel" value:placeholer];
+    }
+    [self key:@"placeholder" value:text];
+    self.delegate = (id)self;
+    return self;
+}
+- (void)textViewDidChange:(UITextView *)textView
+{
+    
+    UILabel *label=[textView key:@"placeholderLabel"];
+    if(label!=nil)
+    {
+        label.alpha=textView.hasText?0:1;
+    }
+}
+
+//- (void)textViewDidEndEditing:(UITextView *)textView
+//{
+//    if(self.hasText){
+//        textView.text = @"我是placeholder";
+//        textView.textColor = [UIColor grayColor];
+//    }
+//}
+//- (void)textViewDidBeginEditing:(UITextView *)textView
+//{
+//    if([textView.text isEqualToString:@"我是placeholder"]){
+//        textView.text=@"";
+//        textView.textColor=[UIColor blackColor];
+//    }
+//}
 
 @end
-
-//@interface UITextField()
-//@property (nonatomic,assign) NSInteger MaxLength;
-//@end
-
 
 

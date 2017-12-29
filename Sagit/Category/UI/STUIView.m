@@ -248,6 +248,11 @@ static char keyValueChar='k';
     self.layer.cornerRadius=self.frame.size.width/2;
     return self;
 }
+-(UIView*)layerCornerRadius:(CGFloat)px
+{
+    self.layer.cornerRadius=px*Xpt;
+    return self;
+}
 -(UIView*)corner:(BOOL)yesNo
 {
     [self clipsToBounds:yesNo];

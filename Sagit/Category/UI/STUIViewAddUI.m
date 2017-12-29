@@ -242,18 +242,32 @@
 }
 -(UITextField*)addTextField:(NSString*)name
 {
-    return [self addTextField:name placeholder:nil];
+    return [self addTextField:name placeholder:nil font:0 color:nil];
 }
 -(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder
 {
+    return [self addTextField:name placeholder:placeholder font:0 color:nil];
+}
+-(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px
+{
+    return [self addTextField:name placeholder:placeholder font:px color:nil];
+}
+-(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex
+{
     UITextField *ui = [[UITextField alloc] initWithFrame:STEmptyRect];
-    //    ui.layer.borderColor = [UIColor lightGrayColor].CGColor; // set color as you want.
-    //    ui.layer.borderWidth = 1.0; // set borderWidth as you want.
+    if(px>0)
+    {
+        [ui font:px];
+    }
     if(placeholder!=nil)
     {
-        ui.placeholder=placeholder;
+        [ui placeholder:placeholder];
     }
-    STView *view=[self stView];//追加到UITextFieldList中
+    if(colorOrHex)
+    {
+        [ui textColor:colorOrHex];
+    }
+    STView *view=[self stView];
     if(view!=nil)
     {
         [view.UITextList addObject:ui];
@@ -264,28 +278,46 @@
 }
 -(UITextView *)addTextView:(NSString *)name
 {
+    return [self addTextView:name placeholder:nil font:0 color:nil];
+}
+-(UITextView *)addTextView:(NSString *)name placeholder:(NSString*)placeholder
+{
+    return [self addTextView:name placeholder:placeholder font:0 color:nil];
+}
+-(UITextView *)addTextView:(NSString *)name placeholder:(NSString*)placeholder font:(NSInteger)px
+{
+    return [self addTextView:name placeholder:placeholder font:px color:nil];
+}
+-(UITextView *)addTextView:(NSString *)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex
+{
     UITextView* ui=[[UITextView alloc] initWithFrame:STEmptyRect];
-    STView *view=[self stView];//追加到UITextFieldList中
-    //    ui.scrollEnabled = NO;
-    //    ui.scrollsToTop = NO;
-    ui.layer.cornerRadius = 4;
-    ui.layer.borderWidth = 1;
-    //当textview的字符串为0时发送（rerurn）键无效
-    ui.enablesReturnKeyAutomatically = YES;
-    ui.keyboardType = UIKeyboardTypeDefault;
-    //键盘return样式变成发送
-    ui.returnKeyType = UIReturnKeySend;
-    
-    ui.font =STFont(28);// [UIFont systemFontOfSize:14];
-    //    ui.layer.borderColor = [[[UIColor lightGrayColor] colorWithAlphaComponent:0.4] CGColor];
-    //加下面一句话的目的是，是为了调整光标的位置，让光标出现在UITextView的正中间
-    //ui.textContainerInset = UIEdgeInsetsMake(10,0, 0, 0);
+    if(px>0)
+    {
+        [ui font:px];
+    }
+    if(placeholder!=nil)
+    {
+        [ui placeholder:placeholder];
+    }
+    if(colorOrHex)
+    {
+        [ui textColor:colorOrHex];
+    }
+    STView *view=[self stView];
     if(view!=nil)
     {
         [view.UITextList addObject:ui];
     }
+//    ui.layer.cornerRadius = 4;
+//    ui.layer.borderWidth = 1;
+    //当textview的字符串为0时发送（rerurn）键无效
+//    ui.enablesReturnKeyAutomatically = YES;
+//    ui.keyboardType = UIKeyboardTypeDefault;
+
+    //    ui.layer.borderColor = [[[UIColor lightGrayColor] colorWithAlphaComponent:0.4] CGColor];
+    //加下面一句话的目的是，是为了调整光标的位置，让光标出现在UITextView的正中间
+    //ui.textContainerInset = UIEdgeInsetsMake(10,0, 0, 0);
     [ui isFormUI:YES];
-    //[ui sizeToFit];
     [self addView:ui name:name];
     return ui;
     
