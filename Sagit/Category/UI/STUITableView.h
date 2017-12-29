@@ -11,12 +11,12 @@
 @interface UITableView(ST)
 
 #pragma mark 核心扩展
-typedef void(^AddCell)(UITableViewCell *cell,NSIndexPath *indexPath);
-typedef BOOL(^DelCell)(UITableViewCell *cell,NSIndexPath *indexPath);
+typedef void(^AddTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
+typedef BOOL(^DelTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 //!用于为Table追加每一行的Cell
-@property (nonatomic,copy) AddCell addCell;
+@property (nonatomic,copy) AddTableCell addCell;
 //!用于为Table移除行的Cell
-@property (nonatomic,copy) DelCell delCell;
+@property (nonatomic,copy) DelTableCell delCell;
 //!获取Table的数据源
 @property (nonatomic,strong) NSMutableArray<id> *source;
 //!设置Table的数据源

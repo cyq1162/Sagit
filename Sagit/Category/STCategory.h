@@ -27,6 +27,8 @@
 #import "STUINavigationBar.h"
 #import "STUITableView.h"
 #import "STUITableViewCell.h"
+#import "STUICollectionView.h"
+#import "STUICollectionViewCell.h"
 #import "STUIImageView.h"
 #import "STUIControl.h"
 

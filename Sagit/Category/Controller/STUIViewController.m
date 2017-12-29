@@ -7,6 +7,7 @@
 //
 
 #import "STUIViewController.h"
+#import <objc/runtime.h>
 
 @implementation UIViewController(ST)
 
@@ -14,20 +15,10 @@
 static char keyValueChar='k';
 -(id)key:(NSString *)key
 {
-   // [self asRoot:RootViewTabBarType];
     return self.keyValue[key];
 }
 -(UIView*)key:(NSString *)key value:(id)value
 {
-    if(![self.keyValue isKindOfClass:[NSMutableDictionary class]])
-    {
-        NSMutableDictionary<NSString*,id> *kv=[NSMutableDictionary<NSString*,id> new];
-        for (NSString *key in self.keyValue.allKeys) {
-            [kv set:key value:self.keyValue[key]];
-        }
-        [self keyValue:nil];
-        [self keyValue:kv];
-    }
     [self.keyValue set:key value:value];
     return self;
 }
@@ -41,11 +32,6 @@ static char keyValueChar='k';
         [self setKeyValue:kv];
     }
     return kv;
-}
--(UIView*)keyValue:(NSMutableDictionary<NSString*,id>*)keyValue
-{
-    [self setKeyValue:keyValue];
-    return self;
 }
 -(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue
 {

@@ -66,7 +66,7 @@
 #define STLastSlider ((UISlider*)STLastView)
 #define STLastProgressView ((UIProgressView*)STLastView)
 #define STLastTableView ((UITableView*)STLastView)
-
+#define STLastCollectoinView ((UICollectionView*)STLastView)
 //获取控件
 #define STUIView(name)    [sagit find:name]
 #define STSTView(name)    ((STView*)STUIView(name))
@@ -80,8 +80,9 @@
 #define STSlider(name) ((UISlider*)STUIView(name))
 #define STProgressView(name) ((UIProgressView*)STUIView(name))
 #define STTableView(name) ((UITableView*)STUIView(name))
+#define STCollectionView(name) ((UICollectionView*)STUIView(name))
 #define STFirstTable ((UITableView*)[sagit firstView:@"UITableView"])
-
+#define STFirstCollection ((UICollectionView*)[sagit firstView:@"UICollectionView"])
 
 //原始图片大小，不需要转
 //#define UIEdgeInsetsMake(top, left, bottom, right) UIEdgeInsetsMake(top*Ypt, left*Xpt, bottom*Ypt, right*Xpt)
@@ -109,7 +110,8 @@
 #define ColorPurple [UIColor purpleColor]
 #define ColorBrown [UIColor brownColor]
 #define ColorClear [UIColor clearColor]
-
+#define ColorRGB(r, g, b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1.0]
+#define ColorRandom ColorRGB(arc4random_uniform(256), arc4random_uniform(256), arc4random_uniform(256))
 
 //导航栏的参数
 #define STNavConfig @"STNavConfig"

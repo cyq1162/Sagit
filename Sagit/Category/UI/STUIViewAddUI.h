@@ -71,4 +71,6 @@
 
 -(UITableView*)addTableView:(NSString*)name;
 -(UITableView*)addTableView:(NSString*)name style:(UITableViewStyle)style;
+-(UICollectionView*)addCollectionView:(NSString*)name;
+-(UICollectionView*)addCollectionView:(NSString*)name layout:(UICollectionViewLayout*)layout;
 @end

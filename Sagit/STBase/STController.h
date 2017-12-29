@@ -12,7 +12,7 @@
 #import "STEnum.h"
 
 @class STView;
-@interface STController : UIViewController<UITextFieldDelegate,UITextViewDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface STController : UIViewController<UITextFieldDelegate,UITextViewDelegate,UITableViewDelegate,UITableViewDataSource,UICollectionViewDelegate,UICollectionViewDataSource>
 //!当前控制器的STView根视图
 @property (nonatomic,strong) STView* stView;
 //!用于发起http请求

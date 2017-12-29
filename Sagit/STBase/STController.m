@@ -190,6 +190,14 @@
 {
     [self stPush:viewController title:title img:nil];
 }
+
+-(void)dealloc
+{
+    _http=nil;
+    _box=nil;
+}
+
+#pragma mark TextFiled、TextView 协议实现
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if (textField.maxLength>0 && range.location >=textField.maxLength) {
         return NO;
@@ -203,14 +211,8 @@
     }
     return YES;
 }
--(void)dealloc
-{
-    _http=nil;
-    _box=nil;
-}
 
-
-#pragma mark - 数据源方法
+#pragma mark - UITableView 协议实现
 // 返回行数
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return tableView.source.count;
@@ -252,10 +254,7 @@
         }
     }
 }
-#pragma mark - 代理方法
-/**
- *  设置行高
- */
+
 - (CGFloat)tableView:(nonnull UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
     UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
     if(cell!=nil)
@@ -296,7 +295,7 @@
 //
 //    // NSLog(@"取消选中 didDeselectRowAtIndexPath row = %ld ", indexPath.row);
 //}
-#pragma mark 编辑删除
+#pragma mark UITableView 编辑删除
 //先要设Cell可编辑
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -326,4 +325,51 @@
         }
     }
 }
+
+#pragma mark - UICollectionView 协议实现
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
+}
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return collectionView.source.count;
+}
+//!控制方块的大小
+-(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell *cell=[collectionView cellForItemAtIndexPath:indexPath];
+    if(cell!=nil)
+    {
+        return cell.frame.size;
+    }
+    return  CGSizeMake(100, 100);
+}
+///* 设置方块视图和边界的上下左右间距 */
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+//                        layout:(UICollectionViewLayout*)collectionViewLayout
+//        insetForSectionAtIndex:(NSInteger)section;
+//{
+//    collectionView.collectionViewLayout;
+//    UICollectionViewCell *cell=[collectionView cellForItemAtIndexPath:indexPath];
+//    if(cell!=nil)
+//    {
+//        return cell.frame.size;
+//    }
+//    return  UIEdgeInsetsMake(10, 10, 10, 10);
+//}
+-(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell *cell=[UICollectionViewCell reuseCell:collectionView index:indexPath];
+    if(collectionView.addCell)
+    {
+        if(collectionView.source.count>indexPath.row)
+        {
+            cell.source=collectionView.source[indexPath.row];
+            [cell firstValue:cell.source.firstObject];
+        }
+        //默认设置
+        collectionView.addCell(cell,indexPath);
+    }
+    return cell;
+}
+
 @end

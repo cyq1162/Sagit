@@ -394,4 +394,18 @@
     [self addView:ui name:name];
     return ui;
 }
+-(UICollectionView*)addCollectionView:(NSString*)name
+{
+    return [self addCollectionView:name layout:[UICollectionViewFlowLayout new]];
+}
+-(UICollectionView*)addCollectionView:(NSString*)name layout:(UICollectionViewLayout*)layout
+{
+    UICollectionView *ui=[[UICollectionView alloc] initWithFrame:STFullRect collectionViewLayout:layout];
+    [ui registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"UICollectionViewCell"];
+    ui.delegate=(id)self.STController;
+    ui.dataSource=(id)self.STController;
+    [self addView:ui name:name];
+    
+    return ui;
+}
 @end
