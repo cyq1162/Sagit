@@ -75,31 +75,35 @@ static char keyValueChar='k';
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName
 {
     if(self.navigationController==nil){return;}
-    [self block:@"存档最后的Tab栏状态，用于检测是否还原。" on:^(UIView *view)
+    [self block:@"存档最后的Tab栏状态，用于检测是否还原。" on:^(UIViewController *controller)
     {
-        if(self.tabBarController!=nil)//存档最后的Tab栏状态，用于检测是否还原。
+        if(controller.tabBarController!=nil)//存档最后的Tab栏状态，用于检测是否还原。
         {
-            [self.view needTabBar:!self.tabBarController.tabBar.hidden];
-            self.tabBarController.tabBar.hidden=YES;
+            [controller.view needTabBar:!self.tabBarController.tabBar.hidden];
+            controller.tabBarController.tabBar.hidden=YES;
         }
     }];
-    [self block:@"存档最后的Nav栏状态，用于检测是否还原。" on:^(UIView *view)
+    [self block:@"存档最后的Nav栏状态，用于检测是否还原。" on:^(UIViewController *controller)
      {
-         [self.view needNavBar:!self.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
-         self.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
-         self.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。
+         [controller.view needNavBar:!controller.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
+         controller.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
+         controller.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。
      }];
 
     if (self.navigationController.viewControllers.count != 0)
     {
-        if(!title){title=[viewController key:STNavLeftTitle];}
-        if(!imgOrName){imgOrName=[viewController key:STNavLeftImage];}
-        //处理标题：
-        if(!viewController.title)
+        NSDictionary *dic=[viewController key:STNavConfig];
+        if(dic!=nil)
         {
-            [viewController title:[viewController key:STNavTitle]];
+            if(!title){title=dic[STNavLeftTitle];}
+            if(!imgOrName){imgOrName=dic[STNavLeftImage];}
+            //处理标题：
+            if(!viewController.title)
+            {
+                [viewController title:dic[STNavTitle]];
+            }
+            [viewController rightNav:dic[STNavRightTitle] img:dic[STNavRightImage]];
         }
-        [viewController rightNav:[viewController key:STNavRightTitle] img:[viewController key:STNavRightImage]];
         //右导航功能按钮
         if (title!=nil)
         {
@@ -185,11 +189,12 @@ static char keyValueChar='k';
 -(void)reloadData:(NSString*)para{}
 
 #pragma mark 代码说明块
--(void)block:(NSString*)description on:(onDescription)descBlock
+-(void)block:(NSString*)description on:(ControllerDescription)descBlock
 {
     if(descBlock!=nil)
     {
-        descBlock(self);
+        STWeakSelf;
+        descBlock(this);
     }
 }
 

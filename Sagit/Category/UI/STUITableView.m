@@ -56,7 +56,10 @@
 -(UITableView *)autoHeight:(BOOL)yesNo
 {
     [self.keyValue set:@"autoHeight" value:yesNo?@"1":@"0"];
-    if(yesNo){[self scrollEnabled:NO];}//自动计算高度时，滚动条默认没必要存在。
+    if(yesNo){
+       // [self height:0];//先置为0,避免没有数据时全屏空白
+        [self scrollEnabled:NO];//自动计算高度时，滚动条默认没必要存在。
+    }
     return self;
 }
 -(UITableViewCellStyle)cellStyle

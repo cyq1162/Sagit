@@ -28,7 +28,8 @@ static char longPressChar='p';
         onClick event = (onClick)objc_getAssociatedObject(self, &clickChar);
         if(event)
         {
-            event(view);
+            STWeakObj(view);
+            event(viewWeak);
         }
     }
     else if([eventType isEqualToString:@"longPress"])
@@ -36,7 +37,8 @@ static char longPressChar='p';
         onLongPress event = (onLongPress)objc_getAssociatedObject(self, &longPressChar);
         if(event)
         {
-            event(view);
+            STWeakObj(view);
+            event(viewWeak);
         }
     }
 }
@@ -269,11 +271,12 @@ static char longPressChar='p';
 }
 #pragma mark 增加描述
 //用于格式化增加描述的方法
--(void)block:(NSString *)description on:(onDescription)descBlock
+-(void)block:(NSString *)description on:(ViewDescription)descBlock
 {
     if(descBlock!=nil)
     {
-        descBlock(self);
+        STWeakSelf;
+        descBlock(this);
     }
 }
 @end

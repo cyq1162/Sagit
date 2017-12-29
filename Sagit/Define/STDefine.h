@@ -23,7 +23,7 @@
 #define STNew(className) [NSClassFromString(className) new]
 
 //block块中用的引用
-#define STWeakThis __weak typeof(self) this = self;
+#define STWeakSelf __weak typeof(self) selfWeak = self;__weak typeof(selfWeak) this = selfWeak;
 #define STWeakObj(o) __weak typeof(o) o##Weak = o;
 #define STStrongObj(o) __strong typeof(o) o = o##Weak;
 #endif /* Constants_h */

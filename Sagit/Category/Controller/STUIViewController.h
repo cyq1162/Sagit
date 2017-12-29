@@ -29,9 +29,9 @@
 -(UIView*)key:(NSString*)key value:(id)value;
 
 #pragma mark 代码说明块
-typedef  void(^onDescription)(UIView *view);
+typedef void(^ControllerDescription)(UIViewController *controller);
 //!提供一个代码块，方便代码规范 description处可以写代码块的说明文字
--(void)block:(NSString*)description on:(onDescription)descBlock;
+-(void)block:(NSString*)description on:(ControllerDescription)descBlock;
 #pragma mark 导航栏功能
 //!压入视图并显示下一个页面（通过此方法跳转视图，系统会自动控制导航栏和Tab栏的显示与隐藏，以及滑动返回事件）
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName;

@@ -215,7 +215,9 @@
 #pragma mark - UITableView 协议实现
 // 返回行数
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return tableView.source.count;
+    NSInteger count=tableView.source.count;
+    tableView.separatorStyle=count>0?UITableViewCellSeparatorStyleSingleLine:UITableViewCellSeparatorStyleNone;
+    return count;
 }
 
 // 设置cell
@@ -248,9 +250,10 @@
         //end of loading
         if(tableView.autoHeight)
         {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [tableView height:(tableView.contentSize.height-1)*Ypx];
-            });
+            [tableView height:(tableView.contentSize.height-1)*Ypx];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//
+//            });
         }
     }
 }
