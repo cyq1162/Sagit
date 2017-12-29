@@ -289,6 +289,19 @@
     }
     return formData;
 }
+-(UIView *)find:(id)name
+{
+    if(name==nil){return nil;}
+    if([name isKindOfClass:[NSString class]])
+    {
+        return self.UIList[name];
+    }
+    else if([name isKindOfClass:[UIView class]])
+    {
+        return name;
+    }
+    return nil;
+}
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];//在视图控制器消除时，移除键盘事件的通知
 }

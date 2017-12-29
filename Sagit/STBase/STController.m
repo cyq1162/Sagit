@@ -78,15 +78,15 @@
     }
     return _http;
 }
--(BOOL)isMatch:(NSString*)tipMsg v:(NSString*)value
+//-(BOOL)isMatch:(NSString*)tipMsg v:(NSString*)value
+//{
+//    return [self isMatch:tipMsg v:value regex:nil];
+//}
+-(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name
 {
-    return [self isMatch:tipMsg v:value regex:nil];
+    return [self isMatch:tipMsg name:name regex:nil];
 }
--(BOOL)isMatch:(NSString*)tipMsg uiName:(NSString*)name
-{
-    return [self isMatch:tipMsg uiName:name regex:nil];
-}
--(BOOL)isMatch:(NSString*)tipMsg uiName:(NSString*)name regex:(NSString*)pattern
+-(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name regex:(NSString*)pattern
 {
     return [self isMatch:tipMsg v:[self stValue:name] regex:pattern];
 }
@@ -311,7 +311,7 @@
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewCellEditingStyleDelete;
 }
-//设置进入编辑状态时，Cell不会缩进
+//设置进入编辑状态时，Cell不会缩进，好像没生效。
 - (BOOL)tableView: (UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
     return NO;
 }

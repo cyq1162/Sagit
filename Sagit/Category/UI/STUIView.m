@@ -256,12 +256,24 @@ static char keyValueChar='k';
     self.alpha=value;
     return self;
 }
--(UIButton*)layerCornerRadiusToHalf
+-(UIView*)layerCornerRadiusToHalf
 {
     self.layer.cornerRadius=self.frame.size.width/2;
     return self;
 }
-
+-(UIView*)corner:(BOOL)yesNo
+{
+    [self clipsToBounds:yesNo];
+    if(yesNo)
+    {
+        [self layerCornerRadiusToHalf];
+    }
+    else
+    {
+        self.layer.cornerRadius=0;
+    }
+    return self;
+}
 #pragma mark 扩展导航栏事件
 -(BOOL)needNavBar
 {

@@ -69,23 +69,20 @@
 }
 
 #pragma mark addUI
--(UIView*)removeView:(UIView*)view{
-    if(view!=nil)
+-(void)removeSelf
+{
+    
+    if(self.preView!=nil)
     {
-        if(view.preView!=nil)
-        {
-            [view.preView nextView:view.nextView];
-        }
-        if(view.nextView!=nil)
-        {
-            [view.nextView preView:view.preView];
-        }
-        [view removeFromSuperview];
-        view=nil;//释放
+        [self.preView nextView:self.nextView];
     }
-    return self;
+    if(self.nextView!=nil)
+    {
+        [self.nextView preView:self.preView];
+    }
+    [self removeFromSuperview];
 }
--(UIView*)removeAllViews
+-(UIView*)removeAllsubViews
 {
     NSInteger count=self.subviews.count;
     if(count>0)
@@ -122,6 +119,16 @@
     }
     [self addSubview:view];
     return view;
+}
+-(STView*)addSTView:(NSString*)name
+{
+    Class viewClass=NSClassFromString(name);
+    if(viewClass)
+    {
+        STView *ui=[viewClass new];
+        return [self addView:ui name:name];
+    }
+    return nil;
 }
 -(UIView*)addUIView:(NSString*)name
 {
@@ -387,18 +394,4 @@
     [self addView:ui name:name];
     return ui;
 }
-//-(STTable*)addTable:(NSString*)name
-//{
-//    return [self addTable:name style:UITableViewStylePlain];
-//}
-//-(STTable*)addTable:(NSString*)name style:(UITableViewStyle)style
-//{
-//    STTable *ui=[[STTable alloc] initWithFrame:STFullRect style:style];
-//    ui.delegate=(id)self.STController;
-//    ui.dataSource=(id)self.STController;
-//   // self register
-//    [ui registerClass:[STTableCell class] forCellReuseIdentifier:@"STTableCell"];
-//    [self addView:ui name:name];
-//    return ui;
-//}
 @end

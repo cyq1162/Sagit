@@ -31,8 +31,8 @@
 
 //得到的是750下转换的像素
 #define STNavHeightPx 44.0f*Ypx
-#define STStatusBarHeightPx 20.0f*Ypx
-#define STToolBarHeightPx 49.0f*Ypx
+#define STStatusHeightPx 20.0f*Ypx
+#define STMenuHeightPx 49.0f*Ypx
 
 //750,1334        414,736 *3
 
@@ -50,9 +50,12 @@
 
 #define STRectCopy(frame) CGRectMake(frame.origin.x,frame.origin.y, frame.size.width, frame.size.height);
 
+//!定义一个可以在view和Controller中共同使用的布局标识
+#define sagit self.stView
+
 //上一个UI控件的简写
-#define STPreView self.stView.lastAddView.preView
-#define STLastView self.stView.lastAddView
+#define STPreView sagit.lastAddView.preView
+#define STLastView sagit.lastAddView
 #define STLastButton ((UIButton*)STLastView)
 #define STLastTextField ((UITextField*)STLastView)
 #define STLastTextView ((UITextView*)STLastView)
@@ -65,19 +68,20 @@
 #define STLastTableView ((UITableView*)STLastView)
 
 //获取控件
-#define STSTView(name)    ((STView*)self.stView.UIList[name])
-#define STButton(name) ((UIButton*)self.stView.UIList[name])
-#define STTextField(name) ((UITextField*)self.stView.UIList[name])
-#define STTextView(name) ((UITextView*)self.stView.UIList[name])
-#define STImageView(name) ((UIImageView*)self.stView.UIList[name])
-#define STLabel(name) ((UILabel*)self.stView.UIList[name])
-#define STSwitch(name) ((UISwitch*)self.stView.UIList[name])
-#define STStepper(name) ((UIStepper*)self.stView.UIList[name])
-#define STSlider(name) ((UISlider*)self.stView.UIList[name])
-#define STProgressView(name) ((UIProgressView*)self.stView.UIList[name])
-#define STTableView(name) ((UITableView*)self.stView.UIList[name])
-#define STFirstTable ((UITableView*)[self.stView firstView:@"UITableView"])
-//#define STSTTable(name) ((STTable*)self.stView.UIList[name])
+#define STUIView(name)    [sagit find:name]
+#define STSTView(name)    ((STView*)STUIView(name))
+#define STButton(name) ((UIButton*)STUIView(name))
+#define STTextField(name) ((UITextField*)STUIView(name))
+#define STTextView(name) ((UITextView*)STUIView(name))
+#define STImageView(name) ((UIImageView*)STUIView(name))
+#define STLabel(name) ((UILabel*)STUIView(name))
+#define STSwitch(name) ((UISwitch*)STUIView(name))
+#define STStepper(name) ((UIStepper*)STUIView(name))
+#define STSlider(name) ((UISlider*)STUIView(name))
+#define STProgressView(name) ((UIProgressView*)STUIView(name))
+#define STTableView(name) ((UITableView*)STUIView(name))
+#define STFirstTable ((UITableView*)[sagit firstView:@"UITableView"])
+
 
 //原始图片大小，不需要转
 //#define UIEdgeInsetsMake(top, left, bottom, right) UIEdgeInsetsMake(top*Ypt, left*Xpt, bottom*Ypt, right*Xpt)

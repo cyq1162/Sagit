@@ -36,4 +36,6 @@
 -(NSMutableDictionary*)formData;
 //!从UIList中遍历获取属性isFormUI的表单数据列表 superView ：指定一个父，不指定则为根视图
 -(NSMutableDictionary*)formData:(id)superView;
+//!从当前的UI中寻找控件。
+-(UIView*)find:(id)name;
 @end

@@ -224,8 +224,8 @@ static NSInteger xyNone=-99999;
             bottom=value2==xyNone?value:value2;
             break;
         case TopRight:
-            right=value;
-            top=value2==xyNone?value:value2;
+            top=value;
+            right=value2==xyNone?value:value2;
             break;
         case RightBottom:
             right=value;

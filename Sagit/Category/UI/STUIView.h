@@ -64,7 +64,7 @@
 -(UIView*)alpha:(CGFloat)value;
 //!将圆角半径设为宽度的一半
 -(UIView*)layerCornerRadiusToHalf;
-
+-(UIView*)corner:(BOOL)yesNo;
 #pragma mark 扩展导航栏事件
 //!返回当前视图是否需要导航栏
 -(BOOL)needNavBar;

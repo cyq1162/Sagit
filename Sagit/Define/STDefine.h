@@ -20,4 +20,10 @@
 //系统的版本号
 #define STOSVersion [[[UIDevice currentDevice] systemVersion] doubleValue]
 
+#define STNew(className) [NSClassFromString(className) new]
+
+//block块中用的引用
+#define STWeakThis __weak typeof(self) this = self;
+#define STWeakObj(o) __weak typeof(o) o##Weak = o;
+#define STStrongObj(o) __strong typeof(o) o = o##Weak;
 #endif /* Constants_h */

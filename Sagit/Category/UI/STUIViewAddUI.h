@@ -31,9 +31,15 @@
 - (UIView*)isFormUI:(BOOL)yesNo;
 
 #pragma mark 添置UI
--(UIView*)removeView:(UIView*)view;
--(UIView*)removeAllViews;
+//!移除自身（前会修改前后视图的指向关系）
+-(void)removeSelf;
+//!移除所有的subViews
+-(UIView*)removeAllsubViews;
+//!所有添加View的最后总入口。
 -(UIView*)addView:(UIView *)view name:(NSString*)name;
+//!添加一个STView类型的子控件
+-(STView*)addSTView:(NSString*)name;
+//!添加一个空的UIView
 -(UIView*)addUIView:(NSString*)name;
 -(UISwitch*)addSwitch:(NSString*)name;
 -(UIStepper *)addStepper:(NSString *)name;
