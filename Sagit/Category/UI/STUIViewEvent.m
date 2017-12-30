@@ -65,24 +65,16 @@ static char longPressChar='p';
     self.userInteractionEnabled=YES;
     if([eventType isEqualToString:@"click"])
     {
-        if([self removeGesture:[UITapGestureRecognizer class]])
-        {
-            //移除参数
-            [self.keyValue removeObjectsForKeys:@[@"clickView",@"clickSel",@"clickTarget",@"clickPointView"]];
-            [self setClickBlock:nil];
-        }
+        [self removeClick];
+        
         UITapGestureRecognizer *click = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click)];
         [self addGestureRecognizer:click];
         return click;
     }
     else if([eventType isEqualToString:@"longPress"])
     {
-        if([self removeGesture:[UILongPressGestureRecognizer class]])
-        {
-            //移除参数
-            [self.keyValue removeObjectsForKeys:@[@"longPressView",@"longPressSel",@"longPressTarget",@"longPressPointView"]];
-            [self setLongPressBlock:nil];
-        }
+        [self removeLongPress];
+        
         UILongPressGestureRecognizer *longPress= [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressStart:)];
         [self addGestureRecognizer:longPress];
         return longPress;
@@ -236,7 +228,16 @@ static char longPressChar='p';
     }
     return self;
 }
-
+-(UIView *)removeClick
+{
+    if([self removeGesture:[UITapGestureRecognizer class]])
+    {
+        //移除参数
+        [self.keyValue removeObjectsForKeys:@[@"clickView",@"clickSel",@"clickTarget",@"clickPointView"]];
+        [self setClickBlock:nil];
+    }
+    return self;
+}
 
 #pragma mark longPress 事件
 - (UIView *)longPressStart:(UILongPressGestureRecognizer *)recognizer {
@@ -266,6 +267,16 @@ static char longPressChar='p';
         [self key:@"longPressView" value:self];
         [self setLongPressBlock:block];
         
+    }
+    return self;
+}
+-(UIView *)removeLongPress
+{
+    if([self removeGesture:[UILongPressGestureRecognizer class]])
+    {
+        //移除参数
+        [self.keyValue removeObjectsForKeys:@[@"longPressView",@"longPressSel",@"longPressTarget",@"longPressPointView"]];
+        [self setLongPressBlock:nil];
     }
     return self;
 }

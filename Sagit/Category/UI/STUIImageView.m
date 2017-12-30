@@ -36,6 +36,10 @@ static char pickChar='p';
     {
         [self longPress:@"save" target:self];
     }
+    else
+    {
+        [self removeLongPress];
+    }
     return self;
 }
 

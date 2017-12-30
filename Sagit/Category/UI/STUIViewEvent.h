@@ -21,8 +21,9 @@ typedef  void(^ViewDescription)(id view);
 //!绑定事件 并指定target
 -(UIView*)click:(NSString *)event target:(UIViewController*)target;
 //!绑定事件 用代码块的形式
-- (UIView*)addClick:(onClick)block;
-
+-(UIView*)addClick:(onClick)block;
+//!移除绑定点击事件
+-(UIView*)removeClick;
 //!执行长按事件
 -(UIView*)longPress;
 //!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name）
@@ -31,7 +32,8 @@ typedef  void(^ViewDescription)(id view);
 -(UIView*)longPress:(NSString *)event target:(UIViewController*)target;
 //!绑定事件 用代码块的形式
 -(UIView*)addLongPress:(onLongPress)block;
-
+//!移除绑定长按事件
+-(UIView*)removeLongPress;
 #pragma mark 增加描述
 //!提供一个代码块，方便代码规范 description处可以写代码块的说明文字
 -(void)block:(NSString*)description on:(ViewDescription)descBlock;

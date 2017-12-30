@@ -10,6 +10,12 @@
 #import <UIKit/UIKit.h>
 
 @interface UILabel(ST)
+
+#pragma mark 扩展系统事件
+-(UILabel*)longPressCopy:(BOOL)yesNo;
+//!复制文本
+-(UILabel*)copy;
+
 #pragma mark 扩展系统属性
 -(UILabel*)text:(NSString*)text;
 -(UILabel*)textColor:(id)colorOrHex;
