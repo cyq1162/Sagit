@@ -19,9 +19,10 @@
 #define STToString(value)  ([NSString stringWithFormat: @"%ld", value]);
 //系统的版本号
 #define STOSVersion [[[UIDevice currentDevice] systemVersion] doubleValue]
-
-#define STNew(className) [NSClassFromString(className) new]
-
+//!为Controller定义的
+#define STNew(className) STNewClass([className appendIfNotEndWith:@"Controller"])
+//!为所有的class定义的
+#define STNewClass(className) [NSClassFromString(className) new]
 //block块中用的引用
 #define STWeakSelf __weak typeof(self) selfWeak = self;__weak typeof(selfWeak) this = selfWeak;
 #define STWeakObj(o) __weak typeof(o) o##Weak = o;

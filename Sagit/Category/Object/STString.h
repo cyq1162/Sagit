@@ -15,6 +15,8 @@
 -(BOOL)isInt;
 -(BOOL)isFloat;
 -(NSString*)append:(NSString*)string;
+//!检测是否已经是以后面的结尾，如果是，则不追加
+-(NSString *)appendIfNotEndWith:(NSString *)string;
 -(NSString*)replace:(NSString*)a with:(NSString*)b;
 -(NSString *)replace:(NSString *)a with:(NSString *)b ignoreCase:(BOOL)ignoreCase;
 -(NSArray<NSString*>*)split:(NSString*)separator;

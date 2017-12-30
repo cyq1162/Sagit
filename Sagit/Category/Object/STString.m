@@ -34,7 +34,16 @@
     float val;
     return[scan scanFloat:&val] && [scan isAtEnd];
 }
--(NSString *)append:(NSString *)string{
+-(NSString *)appendIfNotEndWith:(NSString *)string
+{
+    if(![self endWith:string])
+    {
+        return [self append:string];
+    }
+    return self;
+}
+-(NSString *)append:(NSString *)string
+{
     return [NSString stringWithFormat:@"%@%@",self,string];
 }
 -(NSString *)replace:(NSString *)a with:(NSString *)b

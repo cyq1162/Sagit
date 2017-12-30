@@ -17,9 +17,11 @@
 
 //UI
 #import "STUIView.h"
+#import "STUIViewAs.h"
 #import "STUIViewEvent.h"
 #import "STUIViewAutoLayout.h"
 #import "STUIViewAddUI.h"
+
 #import "STUITextView.h"
 #import "STUITextField.h"
 #import "STUIButton.h"
