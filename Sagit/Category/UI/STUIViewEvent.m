@@ -63,6 +63,10 @@ static char longPressChar='p';
 -(UIGestureRecognizer*)addGesture:(NSString*)eventType
 {
     self.userInteractionEnabled=YES;
+    if(self.superview!=nil)
+    {
+        self.superview.userInteractionEnabled=YES;
+    }
     if([eventType isEqualToString:@"click"])
     {
         [self removeClick];
@@ -199,7 +203,7 @@ static char longPressChar='p';
     }
     if(isEvent)
     {
-        self.userInteractionEnabled=YES;
+        //self.userInteractionEnabled=YES;
         return sel;
     }
     return nil;

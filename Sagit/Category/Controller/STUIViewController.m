@@ -209,14 +209,28 @@ static char keyValueChar='k';
     self.tabBarItem.title=title;
     return self;
 }
--(UIViewController*)tabImage:(NSString*)imgName
+-(UIViewController*)tabImage:(id)imgOrName
 {
-    self.tabBarItem.image=STImageOriginal(imgName);
+    if([imgOrName isKindOfClass:[NSString class]])
+    {
+        self.tabBarItem.image=STImageOriginal(imgOrName);
+    }
+    else
+    {
+        self.tabBarItem.image=[UIView toImage:imgOrName];
+    }
     return self;
 }
--(UIViewController*)tabSelectedImage:(NSString*)imgName
+-(UIViewController*)tabSelectedImage:(id)imgOrName
 {
-    self.tabBarItem.selectedImage=STImageOriginal(imgName);
+    if([imgOrName isKindOfClass:[NSString class]])
+    {
+        self.tabBarItem.selectedImage=STImageOriginal(imgOrName);
+    }
+    else
+    {
+        self.tabBarItem.selectedImage=[UIView toImage:imgOrName];
+    }
     return self;
 }
 -(UIViewController*)tabBadgeValue:(NSString*)value

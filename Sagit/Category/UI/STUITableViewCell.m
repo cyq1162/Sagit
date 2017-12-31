@@ -18,6 +18,8 @@
         //[[cell.imageView width:80 height:80] clipsToBounds:YES];//默认大小
         cell=[[UITableViewCell alloc] initWithStyle:tableView.cellStyle reuseIdentifier:@"TableViewCell"];
         [cell key:@"table" value:tableView];
+        [cell key:@"stView" value:tableView.stView];
+        [cell key:@"baseView" value:tableView.baseView];
     }
     return cell;
 }

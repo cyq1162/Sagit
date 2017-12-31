@@ -68,6 +68,15 @@ static NSInteger xyNone=-99999;
     }
     return self.superview.frame.size;
 }
+-(CGPoint)superOrigin
+{
+    if(self.superview==nil)
+    {
+        return STEmptyRect.origin;
+    }
+    return self.superview.frame.origin;
+}
+
 -(CGRect)getUIFrame:(UIView*)ui
 {
     if(ui==nil)
@@ -98,8 +107,8 @@ static NSInteger xyNone=-99999;
     {
         frame.size.width=(frame.origin.x+frame.size.width)-uiFrame.origin.x-uiFrame.size.width-x*Xpt;
     }
-    frame.origin.x=uiFrame.size.width+uiFrame.origin.x+x*Xpt;
-    frame.origin.y=uiFrame.origin.y+y*Ypt;
+    frame.origin.x=floor(uiFrame.size.width+uiFrame.origin.x+x*Xpt);
+    frame.origin.y=floor(uiFrame.origin.y+y*Ypt);
     
     //检测是否有onLeft规则，若有，调整宽度
     
@@ -123,13 +132,13 @@ static NSInteger xyNone=-99999;
     //检测是否有onRight规则，若有，调整宽度
     if([self.LayoutTracer has:@"onRight"])
     {
-        frame.size.width=uiFrame.origin.x-x*Xpt-frame.origin.x;;
+        frame.size.width=uiFrame.origin.x-x*Xpt-frame.origin.x;
     }
     else
     {
-        frame.origin.x=uiFrame.origin.x-frame.size.width-x*Xpt;
+        frame.origin.x=floor(uiFrame.origin.x-frame.size.width-x*Xpt);
     }
-    frame.origin.y=uiFrame.origin.y+y*Ypt;
+    frame.origin.y=floor(uiFrame.origin.y+y*Ypt);
     
     [self frame:frame];
     return self;
@@ -153,10 +162,10 @@ static NSInteger xyNone=-99999;
     }
     else
     {
-        frame.origin.y=uiFrame.origin.y-frame.size.height-y*Ypt;
+        frame.origin.y=floor(uiFrame.origin.y-frame.size.height-y*Ypt);
     }
     
-    frame.origin.x=uiFrame.origin.x+x*Xpt;
+    frame.origin.x=floor(uiFrame.origin.x+x*Xpt);
     [self frame:frame];
     return self;
 }
@@ -176,8 +185,8 @@ static NSInteger xyNone=-99999;
     {
         frame.size.height=(frame.origin.y+frame.size.height)-uiFrame.origin.y-uiFrame.size.height-y*Ypt;
     }
-    frame.origin.y=uiFrame.origin.y+ui.frame.size.height+y*Ypt;
-    frame.origin.x=uiFrame.origin.x+x*Xpt;
+    frame.origin.y=floor(uiFrame.origin.y+ui.frame.size.height+y*Ypt);
+    frame.origin.x=floor(uiFrame.origin.x+x*Xpt);
     [self frame:frame];
     return self;
 }
@@ -289,19 +298,45 @@ static NSInteger xyNone=-99999;
     }
     if(left!=xyNone)
     {
+        CGFloat changeValue=frame.origin.x-floor(left*Xpt);//X发生变化的值
         frame.origin.x=floor(left*Xpt);
+        //检测是否有onLeft规则，若有，调整宽度
+        if([self.LayoutTracer has:@"onLeft"])
+        {
+            frame.size.width=frame.size.width+changeValue;
+        }
     }
     else if(right!=xyNone)
     {
-        frame.origin.x=floor(superSize.width-frame.size.width-right*Xpt);
+        if([self.LayoutTracer has:@"onRight"])
+        {
+            frame.size.width=superSize.width-frame.origin.x-floor(right*Xpt);
+        }
+        else
+        {
+            frame.origin.x=floor(superSize.width-frame.size.width-right*Xpt);
+        }
     }
     if(top!=xyNone)
     {
+        CGFloat changeValue=frame.origin.y-floor(top*Ypt);//Y发生变化的值
         frame.origin.y=floor(top*Ypt);
+        //检测是否有onLeft规则，若有，调整宽度
+        if([self.LayoutTracer has:@"onTop"])
+        {
+            frame.size.height=frame.size.height+changeValue;
+        }
     }
     else if(bottom!=xyNone)
     {
-        frame.origin.y=floor(superSize.height-frame.size.height-bottom*Xpt);
+        if([self.LayoutTracer has:@"onBottom"])
+        {
+            frame.size.height=superSize.height-frame.origin.y-bottom*Ypt;
+        }
+        else
+        {
+            frame.origin.y=floor(superSize.height-frame.size.height-bottom*Ypt);
+        }
     }
     [self frame:frame];
     return self;

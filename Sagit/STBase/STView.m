@@ -37,7 +37,7 @@
             if([ui isKindOfClass:[UITextView class]])
             {
                 //文本修改事件
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTextChange:) name:UITextViewTextDidChangeNotification object:ui];
+//                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTextChange:) name:UITextViewTextDidChangeNotification object:ui];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTextClick:) name:UITextViewTextDidBeginEditingNotification object:ui];
             }
             else
@@ -85,7 +85,7 @@
 -(void)moveTextView
 {
     //NSLog(@"frame:%@",NSStringFromCGRect( self.OriginFrame ));
-
+    
     if(self.keyboardHeight>0 && self.editingTextUI!=nil && [self.editingTextUI isFirstResponder]
        && CGPointEqualToPoint(CGPointZero, self.OriginFrame.origin))
     {
@@ -114,74 +114,7 @@
         self.editingTextUI=nil;
     }
 }
-//UITextView
--(void)onTextChange:(NSNotification *)notify
-{
-    UITextView *textView=notify.object;
-    
-    //if(textView.text.length==0){return;}
-    CGRect frame=textView.frame;
-    if(CGRectEqualToRect(textView.OriginFrame, CGRectZero))
-    {
-        textView.OriginFrame=textView.frame;
-        textView.tag=textView.contentSize.height-frame.size.height;//用于ContentSize的高和文本框的差值
-        if(textView.maxHeight==0)
-        {
-            [textView maxHeight:floorf(textView.font.lineHeight)*6];
-        }
-        return;
-    }
-    if(textView.maxHeight<textView.frame.size.height){return;}//初始比最大行高还大，则无需要调整
-    CGFloat addHeight=textView.contentSize.height-frame.size.height-textView.tag;
-    if(addHeight!=0)//差值发生变化，
-    {
-        //修正差值，不能大于最大值，不能小于初始值
-        if(addHeight>0 && frame.size.height+addHeight>textView.maxHeight)
-        {
-            addHeight=textView.maxHeight-frame.size.height;
-        }
-        else if(addHeight<0 && frame.size.height+addHeight<textView.OriginFrame.size.height)
-        {
-            addHeight=textView.OriginFrame.size.height-frame.size.height;//负数
-        }
-        if(addHeight==0){return;}
-        frame.size.height+=addHeight;
-        if([textView isOnSTView])
-        {
-            if(frame.origin.y-addHeight>64)//不能超过导航栏和状态栏之上
-            {
-                frame.origin.y=frame.origin.y-addHeight;
-            }
-        }
-        else //子控件里
-        {
-            
-            CGRect superFrame=textView.superview.frame;
-            superFrame.origin.y-=addHeight;
-            if(addHeight>0 && superFrame.origin.y<0)//上面到顶，无法上移，尝试下移
-            {
-                if([textView.LayoutTracer has:@"onBottom"] || frame.origin.y+frame.size.height>superFrame.size.height)//下面到顶，无法下移
-                {
-                    return;
-                }
-                //往下增加高度
-                superFrame.origin.y+=addHeight;//还原坐标
-            }
-            superFrame.size.height+=addHeight;
-            textView.superview.frame=superFrame;
-        }
-        
-        NSString *text=textView.text;
-        textView.text=nil;
-        [UIView animateWithDuration:0.5 animations:^{
-            textView.frame = frame;
-        } completion:nil];
-        textView.text=text;
-        [self refleshLayout:NO];
 
-    }
-
-}
 
 -(void)onTextClick:(NSNotification*)notify{
     
@@ -190,8 +123,28 @@
     [self moveTextView];
 }
 //初始化[子类重写该方法]
--(void)initUI{}
--(void)initData{}
+-(void)initUI
+{
+    //触发子控件事件(该事件由UIView的AddSTView内部触发)
+    //    for (NSString *key in self.UIList)
+    //    {
+    //        if([self.UIList[key] isKindOfClass:[STView class]])
+    //        {
+    //            [self.UIList[key] initUI];
+    //        }
+    //    }
+}
+-(void)initData
+{
+    //触发子控件事件
+    for (NSString *key in self.UIList)
+    {
+        if([self.UIList[key] isKindOfClass:[STView class]])
+        {
+            [self.UIList[key] initData];
+        }
+    }
+}
 -(void)reloadData
 {
     //触发子控件事件
@@ -260,15 +213,23 @@
     }
     else if([data isKindOfClass:[STModelBase class]])
     {
-        STModelBase *base=data;
-        dic=[base toDictionary];
+        dic=[data toDictionary];
     }
     if(dic==nil){return;}
-    for (NSString*key in data) {
+    //NSDictionary *aa=self.UIList;
+    for (NSString*key in dic) {
+        
         UIView *ui=self.UIList[key];
         if(ui!=nil)
         {
-            [ui stValue:data[key]];
+            id value=dic[key];
+            
+            if(value!=nil && [value isKindOfClass:[NSNumber class]])
+            {
+                value=[((NSNumber*)value) stringValue];
+            }
+            
+            [ui stValue:value];
         }
     }
 }

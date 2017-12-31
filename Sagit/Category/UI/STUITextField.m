@@ -23,10 +23,7 @@
 }
 - (UITextField*)maxLength:(NSInteger)length{
     [self key:@"maxLength" value:[@(length) stringValue]];
-    if(self.STController!=nil)
-    {
-        self.delegate=self.STController;
-    }
+    self.delegate = (id)self;
     return self;
 
 }
@@ -43,6 +40,10 @@
 }
 -(UITextField*)text:(NSString*)text
 {
+    if(self.maxLength>0 && text.length>self.maxLength)
+    {
+        text=[text substringToIndex:self.maxLength-1];
+    }
     self.text=text;
     return self;
 }
@@ -65,5 +66,13 @@
 {
     self.placeholder=text;
     return self;
+}
+#pragma mark TextFiled 协议实现
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (textField.maxLength>0 && range.location >=textField.maxLength) {
+        return NO;
+    }
+    return YES;
 }
 @end

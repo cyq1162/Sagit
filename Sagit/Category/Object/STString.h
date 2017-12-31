@@ -31,7 +31,6 @@
 +(NSString*)toString:(id)value;
 -(NSString*)trim;
 
-
 -(NSInteger)indexOf:(NSString*)searchString;
 -(NSInteger)indexOf:(NSString*)searchString ignoreCase:(BOOL)ignoreCase;
 -(NSString*)firstCharUpper;

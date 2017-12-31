@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface UITextField(ST)
+@interface UITextField(ST)<UITextFieldDelegate>
 #pragma mark 自定义追加属系统
 //!文本指定的最大长度(超过这个长度则无法再输入内容)
 -(NSInteger)maxLength;

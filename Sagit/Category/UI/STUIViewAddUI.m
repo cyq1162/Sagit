@@ -199,13 +199,13 @@
 }
 -(UIImageView*)addImageView:(NSString*)name
 {
-    return [self addImageView:name imgName:nil xyFlag:XYNone];
+    return [self addImageView:name img:nil xyFlag:XYNone];
 }
--(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName
+-(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName
 {
-    return [self addImageView:name imgName:imgName xyFlag:XYNone];
+    return [self addImageView:name img:imgOrName xyFlag:XYNone];
 }
--(UIImageView*)addImageView:(NSString*)name imgName:(NSString*)imgName xyFlag:(XYFlag)xyFlag
+-(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName xyFlag:(XYFlag)xyFlag
 {
     CGRect frame=self.frame;
     NSInteger tagIndex=0;
@@ -231,11 +231,10 @@
     }
     UIImageView *ui = [[UIImageView alloc] initWithFrame:frame];
     ui.tag=tagIndex;//设置tag，方便后续点击事件通过索引找到对应的UI
-    if(imgName!=nil)
+    if(imgOrName)
     {
-        UIImage *image=[UIImage imageNamed:imgName];
-        [ui setImage:image];
-        [ui width:image.size.width*Xpx height:image.size.height*Ypx];
+        [ui image:imgOrName];
+       // [ui width:image.size.width*Xpx height:image.size.height*Ypx];
     }
     [self addView:ui name:name];
     return ui;
@@ -325,49 +324,83 @@
 
 -(UIButton*)addButton:(NSString*)name
 {
-    return [self addButton:name title:nil font:0 imgName:nil buttonType:0];
+    return [self addButton:name title:nil font:0 color:nil img:nil buttonType:0];
 }
--(UIButton*)addButton:(NSString*)name imgName:(NSString*)imgName
+-(UIButton *)addButton:(NSString *)name buttonType:(UIButtonType)buttonType
 {
-    return [self addButton:name title:nil font:0 imgName:imgName buttonType:0];
+    return [self addButton:name title:nil font:0 color:nil img:nil buttonType:buttonType];
 }
--(UIButton*)addButton:(NSString*)name imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType
+-(UIButton*)addButton:(NSString*)name img:(id)imgOrName
 {
-    return [self addButton:name title:nil font:0 imgName:imgName buttonType:buttonType];
+    return [self addButton:name title:nil font:0 color:nil img:imgOrName buttonType:0];
 }
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title
 {
-    return [self addButton:name title:title font:0 imgName:nil buttonType:0];
+    return [self addButton:name title:title font:0 color:nil img:nil buttonType:0];
 }
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px
 {
-    return [self addButton:name title:title font:px imgName:nil buttonType:0];
+   return [self addButton:name title:title font:px color:nil img:nil buttonType:0];
 }
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px buttonType:(UIButtonType)buttonType
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex
 {
-    return [self addButton:name title:title font:px imgName:nil buttonType:buttonType];
+    return [self addButton:name title:title font:px color:colorOrHex img:nil buttonType:0];
 }
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex img:(id)imgOrName;
+{
+    return [self addButton:name title:title font:px color:colorOrHex img:imgOrName buttonType:0];
+}
+
 //此方法不对外开放。
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px imgName:(NSString*)imgName buttonType:(UIButtonType)buttonType
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px  color:(id)colorOrHex img:(id)imgOrName buttonType:(UIButtonType)buttonType
 {
     UIButton *ui=[UIButton buttonWithType:buttonType];
-    if(title!=nil)
+    if(px>0)
     {
-        [ui setTitle:title forState:UIControlStateNormal];
-        ui.titleLabel.textAlignment=NSTextAlignmentCenter;
-        if(px>0)
-        {
-            [ui titleFont:px];
-        }
-        [ui.titleLabel sizeToFit];
-        [ui width:ui.titleLabel.stWidth height:ui.titleLabel.stHeight];
+        [ui titleFont:px];
     }
-    else if(imgName!=nil)
+    if(title)
     {
-        UIImage *img=[self toImage:imgName];
-        [ui setImage:img forState:UIControlStateNormal];
-        [ui width:img.size.width*Xpx height:img.size.height*Ypx];
+        [ui title:title];
+        [ui.titleLabel textAlignment:NSTextAlignmentCenter];
+        //[ui width:ui.titleLabel.stWidth height:ui.titleLabel.stHeight];
     }
+    if(imgOrName)
+    {
+        [ui image:imgOrName];
+//        if(!title)
+//        {
+//            [ui width:ui.imageView.image.size.width*Xpx height:ui.imageView.image.size.height*Ypx];
+//        }
+//        else
+//        {
+//            [ui stWidthToFit];
+//        }
+    }
+    
+    if(colorOrHex)
+    {
+        [ui titleColor:colorOrHex];
+    }
+    [ui sizeToFit];
+//
+//    if(title!=nil)
+//    {
+//        [ui setTitle:title forState:UIControlStateNormal];
+//        ui.titleLabel.textAlignment=NSTextAlignmentCenter;
+//        if(px>0)
+//        {
+//            [ui titleFont:px];
+//        }
+//        [ui.titleLabel sizeToFit];
+//        [ui width:ui.titleLabel.stWidth height:ui.titleLabel.stHeight];
+//    }
+//    else if(imgName!=nil)
+//    {
+//        UIImage *img=[self toImage:imgName];
+//        [ui setImage:img forState:UIControlStateNormal];
+//        [ui width:img.size.width*Xpx height:img.size.height*Ypx];
+//    }
     [self addView:ui name:name];
     if(name!=nil)
     {
@@ -396,18 +429,18 @@
     [self addView:ui name:name];
     return ui;
 }
--(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction imgName:(NSString*)imgName,...NS_REQUIRES_NIL_TERMINATION
+-(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction img:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION
 {
     UIScrollView *ui=[self addScrollView:name];
-    if(imgName)
+    if(imgOrName)
     {
         va_list args;
-        va_start(args, imgName);
-        [ui addImageView:nil imgName:imgName xyFlag:direction];//内部会重设contentSize属性
+        va_start(args, imgOrName);
+        [ui addImageView:nil img:imgOrName xyFlag:direction];//内部会重设contentSize属性
         NSString *otherImgName;
         
         while ((otherImgName = va_arg(args, NSString *))) {
-            [ui addImageView:nil imgName:otherImgName xyFlag:direction];
+            [ui addImageView:nil img:otherImgName xyFlag:direction];
         }
         va_end(args);
     }
@@ -420,6 +453,7 @@
 }
 -(UITableView*)addTableView:(NSString*)name style:(UITableViewStyle)style
 {
+    if(name==nil){name=@"stFirstTable";}//避免STFirstTable找不到对象。
     UITableView *ui=[[UITableView alloc] initWithFrame:STFullRect style:style];
     ui.delegate=(id)self.STController;
     ui.dataSource=(id)self.STController;

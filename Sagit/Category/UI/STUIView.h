@@ -31,6 +31,12 @@
 -(NSString*)stValue;
 //!为UI赋属性值
 -(UIView*)stValue:(NSString*)value;
+//!默认为下拉选择等做简化（扩展属性）
+-(NSString*)selectText;
+-(UIView*)selectText:(NSString*)text;
+//!默认为下拉选择等做简化（扩展属性）
+-(NSString*)selectValue;
+-(UIView*)selectValue:(NSString*)value;
 
 #pragma mark keyvalue
 //!扩展一个字典属性，方便存档及数据传递

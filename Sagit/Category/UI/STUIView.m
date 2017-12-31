@@ -61,11 +61,17 @@ static char keyValueChar='k';
 
 -(UIView*)baseView
 {
-    UIView *view=[self superview];
-    if(view!=nil)
+    UIView *superView=[self superview];
+    if(superView!=nil)
     {
-        return [view baseView];
+        if([superView isKindOfClass:[UIWindow class]])
+        {
+            return self;
+        }
+        return [superView baseView];
     }
+    superView=[self key:@"baseView"];//对于TableCell这一类的，在创建时先指定其指向的baseView)
+    if(superView!=nil){return superView;}
     return self;
 }
 -(STView*)stView
@@ -81,7 +87,7 @@ static char keyValueChar='k';
         {
             return [view stView];
         }
-        return nil;
+        return [self key:@"stView"];//对于TableCell这一类的，在创建时先指定其指向的stView
     }
 }
 -(STController*)STController
@@ -94,15 +100,15 @@ static char keyValueChar='k';
 {
     if([self isMemberOfClass:[UITextField class]])
     {
-        ((UITextField*)self).text=value;
+        [((UITextField*)self) text:value];
     }
     else if([self isMemberOfClass:[UITextView class]])
     {
-        ((UITextView*)self).text=value;
+        [((UITextView*)self) text:value];
     }
     else if([self isMemberOfClass:[UILabel class]])
     {
-        ((UILabel*)self).text=value;
+        [((UILabel*)self) text:value];
     }
     else if([self isMemberOfClass:[UIButton class]])
     {
@@ -173,6 +179,24 @@ static char keyValueChar='k';
         return [((UIImageView*)self) url];
     }
     return  nil;
+}
+-(NSString *)selectText
+{
+    return [self key:@"selectText"];
+}
+-(UIView *)selectText:(NSString *)text
+{
+    [self key:@"selectText" value:text];
+    return self;
+}
+-(NSString *)selectValue
+{
+    return [self key:@"selectValue"];
+}
+-(UIView *)selectValue:(NSString *)value
+{
+    [self key:@"selectValue" value:value];
+    return self;
 }
 #pragma mark 共用接口
 //子类重写

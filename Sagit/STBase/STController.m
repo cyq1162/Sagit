@@ -151,6 +151,7 @@
 }
 -(void)setToAll:(id)data{[self.stView setToAll:data];}
 -(NSMutableDictionary*)formData{return [self.stView formData:nil];}
+//!获取表单数据:superView 可以指定一个子UI。
 -(NSMutableDictionary*)formData:(id)superView{return [self.stView formData:superView];}
 
 
@@ -197,20 +198,7 @@
     _box=nil;
 }
 
-#pragma mark TextFiled、TextView 协议实现
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (textField.maxLength>0 && range.location >=textField.maxLength) {
-        return NO;
-    }
-    return YES;
-}
--(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    if (textView.maxLength>0 && range.location >=textView.maxLength) {
-        return NO;
-    }
-    return YES;
-}
+
 
 #pragma mark - UITableView 协议实现
 // 返回行数

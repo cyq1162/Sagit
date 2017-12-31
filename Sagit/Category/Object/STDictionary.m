@@ -25,7 +25,12 @@
 }
 -(void)remove:(NSString*)key
 {
-    [self removeObjectForKey:key];
+    NSArray *items=[key split:@","];
+    for (NSString* item in items)
+    {
+        [self removeObjectForKey:item];
+    }
+    
 }
 -(NSString*)toJson
 {

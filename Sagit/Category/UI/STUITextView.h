@@ -12,12 +12,11 @@
 
 @interface UITextView(ST)
 #pragma mark 自定义追加属系统
-//文字框最多能输入的长度
+//!文字框最多能输入的长度
 -(NSInteger)maxLength;
 - (UITextView*)maxLength:(NSInteger)length;
-//- (UITextView*)setMaxLength:(NSInteger)length;
 
-//文字框最大的高度
+//!文字框最大的高度(px)
 - (CGFloat)maxHeight;
 - (UITextView*)maxHeight:(CGFloat)px;
 

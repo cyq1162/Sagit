@@ -76,7 +76,7 @@
 -(UIView*)refleshLayout;
 //!重新刷新当前UI（及子UI）的布局（根据事先内部设置的轨迹属性） withWidthHeight : 是否改变宽与高，默认是YES
 -(UIView*)refleshLayout:(BOOL)withWidthHeight;
-//!如果当前是UIView：检测其子UI，如果子UI部分超过，则扩展宽与高，但不会缩小。其它：则返回siteToFit方法的属性。
+//!遍历检测其子UI，如果子UI部分超过，则扩展宽与高，但不会缩小。
 -(UIView*)stSizeToFit;
 //!图片拉伸（一般适用于背景拉伸或聊天图片的拉伸）
 -(UIView*)stretch;

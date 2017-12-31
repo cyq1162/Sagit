@@ -49,8 +49,8 @@ typedef void(^ControllerDescription)(UIViewController *controller);
 #pragma mark for TabBar 属性扩展
 -(UIViewController*)title:(NSString*)title;
 -(UIViewController*)tabTitle:(NSString*)title;
--(UIViewController*)tabImage:(NSString*)imgName;
--(UIViewController*)tabSelectedImage:(NSString*)imgName;
+-(UIViewController*)tabImage:(id)imgOrName;
+-(UIViewController*)tabSelectedImage:(id)imgOrName;
 -(UIViewController*)tabBadgeValue:(NSString*)value;
 -(UIViewController*)tabBadgeColor:(id)colorOrHex;
 -(UINavigationController*)toUINavigationController;
