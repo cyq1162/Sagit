@@ -84,6 +84,11 @@
 #define STFirstTable ((UITableView*)[sagit firstView:@"UITableView"])
 #define STFirstCollection ((UICollectionView*)[sagit firstView:@"UICollectionView"])
 
+//获取UI值
+# define STValue(name) [STUIView(name) stValue]
+# define STSelectValue(name) [STUIView(name) selectValue]
+# define STSelectText(name) [STUIView(name) selectText]
+
 //原始图片大小，不需要转
 //#define UIEdgeInsetsMake(top, left, bottom, right) UIEdgeInsetsMake(top*Ypt, left*Xpt, bottom*Ypt, right*Xpt)
 //(770,100)

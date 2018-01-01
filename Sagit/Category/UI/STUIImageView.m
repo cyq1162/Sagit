@@ -45,12 +45,13 @@ static char pickChar='p';
 
 -(UIImageView*)save
 {
-    [Sagit.MsgBox confirm:@"是否保存图片？" title:@"消息提示" click:^(BOOL isOK,UIAlertView* view) {
-        if(isOK)
+    [Sagit.MsgBox confirm:@"是否保存图片？" title:@"消息提示" click:^BOOL(NSInteger isOK,UIAlertView* view) {
+        if(isOK>0)
         {
             UIImageView *view=self;
             UIImageWriteToSavedPhotosAlbum(view.image, self, @selector(afterImageSave:error:contextInfo:),nil);
         }
+        return YES;
     }];
     return self;
 }

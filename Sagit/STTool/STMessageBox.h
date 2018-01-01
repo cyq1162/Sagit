@@ -8,24 +8,26 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-typedef void (^OnConfirmClick)(BOOL isOK,UIAlertView* view);
+typedef BOOL (^OnConfirmClick)(NSInteger btnIndex,UIAlertView* view);
+typedef void (^OnBeforeShow)(UIAlertView* view);
 //!提供基础的消息弹窗
 @interface STMessageBox : NSObject
 + (STMessageBox*)share;
 
 #pragma AlertView
 //!提示消息
--(void)prompt:(NSString*)msg;
--(void)prompt:(NSString*)msg second:(int)second;
+-(void)prompt:(id)msg;
+-(void)prompt:(id)msg second:(NSInteger)second;
 //!弹出需要点击确定的消息框
--(void)alert:(NSString*)msg;
--(void)alert:(NSString*)msg title:(NSString*)title;
+-(void)alert:(id)msg;
+-(void)alert:(id)msg title:(NSString*)title;
 -(void)loading;
--(void)loading:(NSString*)text;
+-(void)loading:(id)text;
 -(void)hideLoading;
 //!弹出需要确认，并可执行事件的消息框。
--(void)confirm:(NSString*)msg title:(NSString*)title click:(OnConfirmClick)click;
--(void)confirm:(NSString *)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText;
--(void)confirm:(NSString *)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText  cancelText:(NSString*)cancelText;
-
+-(void)confirm:(id)msg title:(NSString*)title click:(OnConfirmClick)click;
+-(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText;
+-(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText  cancelText:(NSString*)cancelText;
+//!弹出一个可以(自定义)输入内容的对话框
+-(void)custom:(id)title before:(OnBeforeShow)beforeShow click:(OnConfirmClick)click okText:(NSString*)okText  cancelText:(NSString*)cancelText;
 @end

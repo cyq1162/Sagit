@@ -94,10 +94,10 @@
    return _lodingView;
 }
 #pragma mark 消息提示
--(void)prompt:(NSString*)msg {
+-(void)prompt:(id)msg {
     [self prompt:msg second:2];
 }
--(void)prompt:(NSString*)msg second:(int)second
+-(void)prompt:(id)msg second:(NSInteger)second
 {
     [[[self.window addUIView:nil] backgroundColor:[UIColor colorWithWhite:0.0f alpha:0.4f]] block:nil on:^(UIView* view) {
         
@@ -124,53 +124,90 @@
     }];
 }
 
--(void)alert:(NSString *)msg{
+-(void)alert:(id)msg{
     [self confirm:msg title:nil click:nil okText:@"确定" cancelText:nil];
 }
--(void)alert:(NSString*)msg title:(NSString *)title
+-(void)alert:(id)msg title:(NSString *)title
 {
     [self confirm:msg title:nil click:nil okText:@"确定" cancelText:nil];
 }
--(void)confirm:(NSString *)msg title:(NSString *)title click:(OnConfirmClick)click
+-(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click
 {
     [self confirm:msg title:title click:click okText:@"确定" cancelText:@"取消"];
 }
--(void)confirm:(NSString *)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString *)okText
+-(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString *)okText
 {
     [self confirm:msg title:title click:click okText:okText cancelText:@"取消"];
 }
--(void)confirm:(NSString *)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText;
+-(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText;
 {
     _click=click;
-    if(_confirmView==nil)
+    _confirmView=nil;
+    _confirmView = [[UIAlertView alloc] initWithTitle:title
+                                              message:msg
+                                             delegate:self
+                                    cancelButtonTitle:cancelText
+                                    otherButtonTitles:nil];
+    
+    if(okText)
     {
-
-        _confirmView = [[UIAlertView alloc] initWithTitle:title
-                                                        message:msg
-                                                       delegate:self
-                                                cancelButtonTitle:cancelText
-                                                otherButtonTitles:okText,nil];
+        NSArray<NSString*> *items=[okText split:@","];
+        for (NSString *item in items) {
+            [_confirmView addButtonWithTitle:item];
+        }
     }
-    else
+    [_confirmView show];
+}
+-(void)custom:(id)title before:(OnBeforeShow)beforeShow click:(OnConfirmClick)click okText:(NSString *)okText cancelText:(NSString *)cancelText
+{
+    _click=click;
+    _confirmView=nil;
+    
+    _confirmView = [[STUIAlertView alloc] initWithTitle:title
+                                              message:nil
+                                             delegate:self
+                                    cancelButtonTitle:cancelText
+                                      otherButtonTitles:nil];
+    if(okText)
     {
-        _confirmView.title=title;
-        _confirmView.message=msg;
-        _confirmView.delegate=self;
+        NSArray<NSString*> *items=[okText split:@","];
+        for (NSString *item in items) {
+            [_confirmView addButtonWithTitle:item];
+        }
+    }
+    _confirmView.alertViewStyle=UIAlertViewStylePlainTextInput;
+    if(beforeShow)
+    {
+        beforeShow(_confirmView);
     }
     [_confirmView show];
 }
 
+//- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+//{
+//
+//}
+//- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+//{
+//    if(_confirmView!=nil)
+//    {
+//        _confirmView=nil;
+//    }
+//}
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    [alertView allowDismiss:YES];
     if(_click!=nil)
     {
-        _click(buttonIndex>0,alertView);
+        BOOL yesNo=_click(buttonIndex,alertView);
+        [alertView allowDismiss:yesNo];
+        if(!yesNo)
+        {
+            return;
+        }
         _click=nil;
-    }
-    if(_confirmView!=nil)
-    {
-        _confirmView=nil;
     }
 }
 @end
+
 
