@@ -33,6 +33,7 @@
 #import "STUICollectionViewCell.h"
 #import "STUIImageView.h"
 #import "STUIControl.h"
+#import "STUISwitch.h"
 
 //New UI
 //

@@ -40,5 +40,7 @@ typedef BOOL(^DelTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 -(UITableView*)afterDelCell:(NSIndexPath*)indexPath;
 #pragma mark 扩展属性
 -(UITableView*)scrollEnabled:(BOOL)yesNo;
-
+-(UITableView*)sectionCount:(NSInteger)count;
+//!每个Section的num数：参数可以传递：@[@"1",@"2",@"2",@"1"] 或者：@"1,2,2,1"
+-(UITableView*)rowCountInSections:(id)nums;
 @end

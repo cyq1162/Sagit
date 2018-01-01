@@ -138,7 +138,17 @@
 }
 -(UISwitch *)addSwitch:(NSString *)name
 {
+    return [self addSwitch:name on:YES onColor:nil];
+}
+-(UISwitch *)addSwitch:(NSString *)name on:(BOOL)yesNo
+{
+    return [self addSwitch:name on:yesNo onColor:nil];
+}
+-(UISwitch *)addSwitch:(NSString *)name on:(BOOL)yesNo onColor:(id)colorOrHex
+{
     UISwitch *ui=[[UISwitch alloc] initWithFrame:STEmptyRect];
+    [ui setOn:yesNo];
+    ui.onTintColor=[self toColor:colorOrHex];
     [self addView:ui name:name];
     [ui isFormUI:YES];
     return ui;
@@ -234,7 +244,7 @@
     if(imgOrName)
     {
         [ui image:imgOrName];
-       // [ui width:image.size.width*Xpx height:image.size.height*Ypx];
+        [ui width:ui.image.size.width*Xpx height:ui.image.size.height*Ypx];
     }
     [self addView:ui name:name];
     return ui;
@@ -404,7 +414,7 @@
     [self addView:ui name:name];
     if(name!=nil)
     {
-        [ui click:name];//加入控件后，才找的到STController
+        [ui addClick:name];//加入控件后，才找的到STController
     }
     return ui;
 }

@@ -37,8 +37,8 @@
 -(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name;
 -(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name regex:(NSString*)pattern;
 //!验证文本框的值是否填写或格式是否错误 根据已获取的value进行处理
-//-(BOOL)isMatch:(NSString*)tipMsg v:(NSString*)value;
-//-(BOOL)isMatch:(NSString*)tipMsg v:(NSString*)value regex:(NSString*)pattern;
+-(BOOL)isMatch:(NSString*)tipMsg value:(NSString*)value;
+-(BOOL)isMatch:(NSString*)tipMsg value:(NSString*)value regex:(NSString*)pattern;
 
 //!根据指定的结果弹出消息。
 -(BOOL)isMatch:(NSString*)tipMsg isMatch:(BOOL)result;

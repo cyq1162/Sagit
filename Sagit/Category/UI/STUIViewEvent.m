@@ -213,15 +213,15 @@ static char longPressChar='p';
 {
     return [self exeEvent:@"click"];
 }
--(UIView*)click:(NSString *)event
+-(UIView*)addClick:(NSString *)event
 {
-    return [self click:event target:nil];
+    return [self addClick:event target:nil];
 }
--(UIView*)click:(NSString *)event target:(UIViewController*)target
+-(UIView*)addClick:(NSString *)event target:(UIViewController*)target
 {
     return [self addEvent:@"click" event:event target:target];
 }
--(UIView*)addClick:(onClick)block
+-(UIView*)onClick:(onClick)block
 {
     if(block!=nil)
     {
@@ -255,15 +255,15 @@ static char longPressChar='p';
 {
     return [self exeEvent:@"longPress"];
 }
--(UIView *)longPress:(NSString *)event
+-(UIView *)addLongPress:(NSString *)event
 {
-    return [self longPress:event target:nil];
+    return [self addLongPress:event target:nil];
 }
--(UIView *)longPress:(NSString *)event target:(UIViewController *)target
+-(UIView *)addLongPress:(NSString *)event target:(UIViewController *)target
 {
     return [self addEvent:@"longPress" event:event target:target];
 }
--(UIView *)addLongPress:(onLongPress)block
+-(UIView *)onLongPress:(onLongPress)block
 {
     if(block!=nil)
     {

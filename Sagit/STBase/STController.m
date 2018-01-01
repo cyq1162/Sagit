@@ -78,19 +78,19 @@
     }
     return _http;
 }
-//-(BOOL)isMatch:(NSString*)tipMsg v:(NSString*)value
-//{
-//    return [self isMatch:tipMsg v:value regex:nil];
-//}
+-(BOOL)isMatch:(NSString*)tipMsg value:(NSString*)value
+{
+    return [self isMatch:tipMsg value:value regex:nil];
+}
 -(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name
 {
     return [self isMatch:tipMsg name:name regex:nil];
 }
 -(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name regex:(NSString*)pattern
 {
-    return [self isMatch:tipMsg v:[self stValue:name] regex:pattern];
+    return [self isMatch:tipMsg value:[self stValue:name] regex:pattern];
 }
--(BOOL)isMatch:(NSString*)tipMsg v:(NSString*)value regex:(NSString*)pattern
+-(BOOL)isMatch:(NSString*)tipMsg value:(NSString*)value regex:(NSString*)pattern
 {
     if([NSString isNilOrEmpty:tipMsg]){return NO;}
     
@@ -201,11 +201,31 @@
 
 
 #pragma mark - UITableView 协议实现
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    NSString *num=[tableView key:@"sectionCount"];
+    if(num!=nil)
+    {
+        return [num integerValue];
+    }
+    return 1;
+}
+
 // 返回行数
-- (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    NSInteger count=tableView.source.count;
-    tableView.separatorStyle=count>0?UITableViewCellSeparatorStyleSingleLine:UITableViewCellSeparatorStyleNone;
-    return count;
+- (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSArray<NSString*> *numb=[tableView key:@"rowCountInSections"];
+    if(numb!=nil)
+    {
+        return [numb[section] integerValue];
+    }
+    else
+    {
+        NSInteger count=tableView.source.count;
+        tableView.separatorStyle=count>0?UITableViewCellSeparatorStyleSingleLine:UITableViewCellSeparatorStyleNone;
+        return count;
+    }
 }
 
 // 设置cell

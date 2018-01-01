@@ -104,4 +104,23 @@
     self.scrollEnabled=yesNo;
     return self;
 }
+-(UITableView*)sectionCount:(NSInteger)count
+{
+    [self key:@"sectionCount" value:[@(count) stringValue]];
+    return self;
+}
+-(UITableView*)rowCountInSections:(id)nums
+{
+    NSArray *items;
+    if([nums isKindOfClass:[NSString class]])
+    {
+        items=[nums split:@","];
+    }
+    else
+    {
+        items=nums;
+    }
+    [self key:@"rowCountInSections" value:items];
+    return self;
+}
 @end

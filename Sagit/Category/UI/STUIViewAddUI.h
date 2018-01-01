@@ -42,6 +42,8 @@
 //!添加一个空的UIView
 -(UIView*)addUIView:(NSString*)name;
 -(UISwitch*)addSwitch:(NSString*)name;
+-(UISwitch*)addSwitch:(NSString*)name on:(BOOL)yesNo;
+-(UISwitch*)addSwitch:(NSString*)name on:(BOOL)yesNo onColor:(id)colorOrHex;
 -(UIStepper *)addStepper:(NSString *)name;
 -(UISlider *)addSlider:(NSString *)name;
 -(UIProgressView *)addProgress:(NSString *)name;

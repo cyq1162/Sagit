@@ -19,7 +19,7 @@
         {
             [self key:@"longPressCopy" value:@"1"];
             
-            [self addLongPress:^(UILabel *this) {
+            [self onLongPress:^(UILabel *this) {
                 [this key:@"backgroundColor" value:this.backgroundColor];
                 [[NSNotificationCenter defaultCenter] addObserver:this  selector:@selector(didHideMenu:) name:UIMenuControllerDidHideMenuNotification object:nil];//注册菜单隐藏事件,在隐藏时会注销事件
                 

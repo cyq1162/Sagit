@@ -34,7 +34,7 @@ static char pickChar='p';
 {
     if(yesNo)
     {
-        [self longPress:@"save" target:self];
+        [self addLongPress:@"save" target:self];
     }
     else
     {
