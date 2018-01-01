@@ -7,24 +7,23 @@
 //
 
 #import "STMessageBox.h"
-#import "MBProgressHUD.h"
 #import "STCategory.h"
 #import "STDefineUI.h"
-@interface STMessageBox ()<MBProgressHUDDelegate>
-{
-    MBProgressHUD *HUD;
-}
-@property (nonatomic,assign) UIWindow *window;
-@property (nonatomic,copy) OnClick click;
-@property (nonatomic,retain)UIAlertView *confirmView;
 
+@interface STMessageBox()
+@property (nonatomic,assign) UIWindow *window;
+@property (nonatomic,copy) OnConfirmClick click;
+@property (nonatomic,retain)UIAlertView *confirmView;
+@property (nonatomic,retain)UIView *lodingView;
+@property (nonatomic,assign) NSInteger hiddenFlag;
 @end
+
 @implementation STMessageBox
 +(STMessageBox*)share {
     static STMessageBox *obj = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        obj = [[STMessageBox alloc]init];
+        obj = [STMessageBox new];
     });
     return obj;
 }
@@ -36,160 +35,118 @@
     return _window;
 }
 
--(void)showWaitViewInView:(UIView *)view animation:(BOOL)animated withText:(NSString *)text  withDetailsText:(NSString *)detailsText withDuration:(CGFloat)duration hideWhenFinish:(BOOL)hideWhenFinish{
-    HUD = [MBProgressHUD showHUDAddedTo:view animated:YES];
-    HUD.mode = MBProgressHUDModeText;
-    HUD.bezelView.color = [UIColor colorWithWhite:0.0f alpha:0.4f];
-    HUD.bezelView.layer.cornerRadius = 10.0f;
-    
-    HUD.label.text = text;
-    //NSUInteger aa=30*Ypt;
-    HUD.label.font = STFont(30);
-    HUD.label.textColor = [UIColor hex:@"#ffffff"];
-    HUD.detailsLabel.text = detailsText;
-    HUD.detailsLabel.font = STFont(15);
-    HUD.margin = 13.f;
-    HUD.delegate = self;
-    //HUD.yOffset = -200.f;
-    
-    HUD.removeFromSuperViewOnHide = hideWhenFinish;
-    HUD.userInteractionEnabled = NO;
-    [HUD hideAnimated:YES afterDelay:duration];
+#pragma mark loding...
+-(void)loading
+{
+    [self loading:@"Loding..."];
 }
--(void)showWaitViewWithIcon:(UIView*)view
-                   withText:(NSString*)text
-                       icon:(NSString*)icon{
-    HUD = [[MBProgressHUD alloc] initWithView:view];
-    [view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:icon]];
-    // Set custom view mode
-    HUD.mode = MBProgressHUDModeCustomView;
-    HUD.delegate = self;
-    HUD.label.text = text;
-    HUD.yOffset = -150.f;
-    [HUD showAnimated:YES];
-    [HUD hideAnimated:YES afterDelay:3];
+-(void)loading:(NSString*)text
+{
+    self.hiddenFlag=1;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [NSThread sleepForTimeInterval:2];////延时2秒，如果事件在2秒内结束，就不显示加载框
+        if(self.hiddenFlag==1)
+        {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                //切回主线程处理
+                if(text!=nil)
+                {
+                    UILabel *label= self.lodingView.subviews[0];
+                    if(label!=nil)
+                    {
+                        [label text:text];
+                    }
+                }
+                [self.lodingView alpha:1];
+            });
+           
+        }
+        
+    });
 }
-- (void)showWhileExecuting:(UIView*)view
-                  withText:(NSString*)text
-       whileExecutingBlock:(dispatch_block_t)block complete:(Complete)complete{
-    HUD = [[MBProgressHUD alloc] initWithView:view];
-    HUD.delegate = self;
-    HUD.label.text = text;
-    [view addSubview:HUD];
-    [HUD showAnimated:YES whileExecutingBlock:^{
-        block();
-    } completionBlock:^{
-        [HUD removeFromSuperview];
-        complete();
+-(void)hideLoading
+{
+    self.hiddenFlag=0;
+    [self.lodingView alpha:0];
+}
+-(UIView *)lodingView
+{
+    if(_lodingView==nil)
+    {
+        [[[self.window addUIView:nil] backgroundColor:[UIColor colorWithWhite:0.0f alpha:0.4f]] block:nil on:^(UIView* view) {
+            
+            [[view addLabel:nil text:@"Loding..." font:30 color:@"ffffff"] block:nil on:^(UILabel *label)
+             {
+                 if(STScreenWidthPx-label.stWidth<200)
+                 {
+                     [label width:STScreenWidthPx-200];
+                     [[label numberOfLines:0] sizeToFit];
+                 }
+                 [view width:label.stWidth+100 height:label.stHeight+50];
+                 [label toCenter];
+             }];
+            
+            [[view layerCornerRadius:10.f] toCenter];
+            [view alpha:0];//默认隐藏
+            _lodingView=view;
+        }];
+    }
+   return _lodingView;
+}
+#pragma mark 消息提示
+-(void)prompt:(NSString*)msg {
+    [self prompt:msg second:2];
+}
+-(void)prompt:(NSString*)msg second:(int)second
+{
+    [[[self.window addUIView:nil] backgroundColor:[UIColor colorWithWhite:0.0f alpha:0.4f]] block:nil on:^(UIView* view) {
+        
+        [[view addLabel:nil text:msg font:30 color:@"ffffff"] block:nil on:^(UILabel *label)
+        {
+            if(STScreenWidthPx-label.stWidth<200)
+            {
+                [label width:STScreenWidthPx-200];
+                [[label numberOfLines:0] sizeToFit];
+            }
+            [view width:label.stWidth+100 height:label.stHeight+50];
+            [label toCenter];
+        }];
+        
+        [[view layerCornerRadius:10.f] toCenter];
+        [UIView animateWithDuration:second animations:^{
+            view.alpha = 0.0f;//动画消失
+        } completion:^(BOOL finished) {
+            if(finished)
+            {
+                [view removeSelf];
+            }
+        }];
     }];
 }
--(void)showWithCustomView:(UIView*)view gifName:(NSString*)gifName{
-    if (HUD == nil) {
-        HUD = [[MBProgressHUD alloc]initWithView:view];
-        [view addSubview:HUD];
-    }
-    CGRect frame = CGRectMake(0,0,30,20);
-    frame.size = [UIImage imageNamed:[[NSString alloc]initWithFormat:@"%@.gif", gifName]].size;
-    //读取gif图片数据
-    NSData *gif = [NSData dataWithContentsOfFile: [[NSBundle mainBundle] pathForResource:gifName ofType:@"gif"]];
-    //view生成
-    frame = CGRectMake(-10,30,frame.size.width + 10,frame.size.height);
-    UIWebView *webView = [[UIWebView alloc] initWithFrame:frame];
-    webView.userInteractionEnabled = YES;//用户不可交互
-    webView.scalesPageToFit = YES;
-    webView.backgroundColor = [UIColor clearColor];
-    [webView loadData:gif MIMEType:@"image/gif" textEncodingName:nil baseURL:nil];
-    HUD.customView = webView;
-    // Set custom view mode
-    HUD.mode = MBProgressHUDModeCustomView;
-    HUD.userInteractionEnabled = NO;
-    HUD.color = [UIColor whiteColor];
-    HUD.dimBackground = YES;
-    HUD.delegate = self;
-    [HUD showAnimated:YES];
-}
--(void)showCustomViewText:(NSString*)text{
-    HUD.label.text = text;
-    HUD.label.textColor = [UIColor blackColor];
-}
--(void)hideView{
-    if(HUD!=nil)
-    {
-        dispatch_async(dispatch_get_main_queue(), ^{
 
-        });
-        [HUD hideAnimated:YES];
-        [HUD removeFromSuperview];
-        HUD = nil;
-    }
+-(void)alert:(NSString *)msg{
+    [self confirm:msg title:nil click:nil okText:@"确定" cancelText:nil];
 }
-#pragma mark - MBProgressHUDDelegate
-- (void)hudWasHidden:(MBProgressHUD *)hud {
-    //Remove HUD from screen when the HUD was hidded
-    [HUD.customView removeFromSuperview];
-    [HUD removeFromSuperview];
-    HUD = nil;
-}
-
-
-- (void)showLoadingViewOnView:(UIView *)view text:(NSString *)text{
-    HUD = [MBProgressHUD showHUDAddedTo:view animated:YES];
-    HUD.mode = MBProgressHUDModeIndeterminate;
-    HUD.label.text = text;
-    HUD.label.font = [UIFont systemFontOfSize:17];
-}
-
-- (void)viewDidUnload {
-}
-
-#pragma mark alertView
--(void)loading{
-    [self loading:nil];
-}
--(void)loading:(NSString*)text{
-    if(text!=nil && HUD!=nil)
-    {
-        [self showLoadingViewOnView:self.window text:text];
-    }
-}
--(void)hideLoading{
-    [self hideView];
-}
--(void)prompt:(NSString*)text {
-    [self prompt:text duration:1];
-}
--(void)prompt:(NSString*)text duration:(int)duration {
-    [self prompt:text duration:duration withDetailText:nil];
-}
--(void)prompt:(NSString*)text duration:(int)duration withDetailText:(NSString *)detailText;
+-(void)alert:(NSString*)msg title:(NSString *)title
 {
-    [self showWaitViewInView:self.window animation:YES withText:text withDetailsText:detailText withDuration:duration hideWhenFinish:YES];
+    [self confirm:msg title:nil click:nil okText:@"确定" cancelText:nil];
 }
--(void)alert:(NSString *)text{
-    [self alert:@"消息提示" msg:text];
-}
--(void)alert:(NSString*)title msg:(NSString *)text{
-    UIAlertView *alert =[[UIAlertView alloc] initWithTitle:title message:text delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-    [alert show];
-    alert=nil;
-}
--(void)confirm:(NSString *)title msg:(NSString *)message click:(OnClick)click
+-(void)confirm:(NSString *)msg title:(NSString *)title click:(OnConfirmClick)click
 {
-    [self confirm:title msg:message click:click okText:@"确定"];
+    [self confirm:msg title:title click:click okText:@"确定" cancelText:@"取消"];
 }
--(void)confirm:(NSString *)title msg:(NSString *)message click:(OnClick)click okText:(NSString*)okText
+-(void)confirm:(NSString *)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString *)okText
 {
-    [self confirm:title msg:message click:click okText:okText cancelText:@"取消"];
+    [self confirm:msg title:title click:click okText:okText cancelText:@"取消"];
 }
--(void)confirm:(NSString *)title msg:(NSString *)message click:(OnClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText;
+-(void)confirm:(NSString *)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText;
 {
     _click=click;
     if(_confirmView==nil)
     {
 
-    _confirmView = [[UIAlertView alloc] initWithTitle:title
-                                                        message:message
+        _confirmView = [[UIAlertView alloc] initWithTitle:title
+                                                        message:msg
                                                        delegate:self
                                                 cancelButtonTitle:cancelText
                                                 otherButtonTitles:okText,nil];
@@ -197,19 +154,22 @@
     else
     {
         _confirmView.title=title;
-        _confirmView.message=message;
+        _confirmView.message=msg;
         _confirmView.delegate=self;
     }
     [_confirmView show];
-    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if(_click!=nil)
     {
-        _click(buttonIndex>0);
+        _click(buttonIndex>0,alertView);
         _click=nil;
+    }
+    if(_confirmView!=nil)
+    {
+        _confirmView=nil;
     }
 }
 @end

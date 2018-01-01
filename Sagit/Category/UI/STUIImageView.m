@@ -45,7 +45,7 @@ static char pickChar='p';
 
 -(UIImageView*)save
 {
-    [[STMessageBox share] confirm:@"提示" msg:@"是否保存图片？" click:^(BOOL isOK) {
+    [Sagit.MsgBox confirm:@"是否保存图片？" title:@"消息提示" click:^(BOOL isOK,UIAlertView* view) {
         if(isOK)
         {
             UIImageView *view=self;
@@ -57,10 +57,10 @@ static char pickChar='p';
 - (void)afterImageSave:(UIImage *)image error:(NSError *)error contextInfo:(void *)contextInfo
 {
     if (!error) {
-        [[STMessageBox share] prompt:@"保存成功"];
+        [Sagit.MsgBox prompt:@"保存成功"];
     }else {
         
-        [[STMessageBox share] prompt:@"保存失败:保存照片权限被拒绝，您需要重新设置才能保存！"];
+        [Sagit.MsgBox prompt:@"保存失败:保存照片权限被拒绝，您需要重新设置才能保存！"];
     }
 }
 -(NSString *)url

@@ -12,7 +12,7 @@
 
 typedef void(^Success)(STModel *result);
 typedef void(^Error)(NSString *errMsg);
-
+//!提供基础的网络请求（get、post、upload(图片上传））
 @interface STHttp : NSObject
 
 @property (nonatomic,strong) STMessageBox *box;

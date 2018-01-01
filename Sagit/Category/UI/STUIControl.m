@@ -23,7 +23,7 @@
 //    return self;
 //}
 //!绑定事件 用代码块的形式
--(UIControl*)onAction:(UIControlEvents)event on:(onAction)block
+-(UIControl*)onAction:(UIControlEvents)event on:(OnAction)block
 {
     if(block)
     {
@@ -42,7 +42,7 @@
 -(void)exeAction
 {
     //目前只处理一个
-    onAction action=[self key:@"event"];
+    OnAction action=[self key:@"event"];
     if(action)
     {
         STWeakObj(self);

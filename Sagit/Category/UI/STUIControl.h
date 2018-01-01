@@ -11,7 +11,7 @@
 @interface UIControl (ST)
 
 #pragma mark 系统事件
-typedef  void(^onAction)(id control);
+typedef  void(^OnAction)(id control);
 ////!执行点击事件
 //-(UIControl*)action;
 ////!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name）
@@ -22,7 +22,7 @@ typedef  void(^onAction)(id control);
 //-(UIControl*)onAction:(onAction)block event:(UIControlEvents)event;
 ////!移除绑定点击事件
 //-(UIControl*)removeAction;
--(UIControl*)onAction:(UIControlEvents)event on:(onAction)block;
+-(UIControl*)onAction:(UIControlEvents)event on:(OnAction)block;
 #pragma mark 系统属性
 -(UIControl*)enabled:(BOOL)yesNo;
 -(UIControl *)selected:(BOOL)yesNo;

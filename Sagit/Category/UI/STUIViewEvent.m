@@ -13,11 +13,11 @@
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)
 static char clickChar='c';
 static char longPressChar='p';
--(void)setClickBlock:(onClick)block
+-(void)setClickBlock:(OnClick)block
 {
     objc_setAssociatedObject(self, &clickChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
--(void)setLongPressBlock:(onLongPress)block
+-(void)setLongPressBlock:(OnLongPress)block
 {
     objc_setAssociatedObject(self, &longPressChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
@@ -25,7 +25,7 @@ static char longPressChar='p';
 {
     if([eventType isEqualToString:@"click"])
     {
-        onClick event = (onClick)objc_getAssociatedObject(self, &clickChar);
+        OnClick event = (OnClick)objc_getAssociatedObject(self, &clickChar);
         if(event)
         {
             STWeakObj(view);
@@ -34,7 +34,7 @@ static char longPressChar='p';
     }
     else if([eventType isEqualToString:@"longPress"])
     {
-        onLongPress event = (onLongPress)objc_getAssociatedObject(self, &longPressChar);
+        OnLongPress event = (OnLongPress)objc_getAssociatedObject(self, &longPressChar);
         if(event)
         {
             STWeakObj(view);
@@ -221,7 +221,7 @@ static char longPressChar='p';
 {
     return [self addEvent:@"click" event:event target:target];
 }
--(UIView*)onClick:(onClick)block
+-(UIView*)onClick:(OnClick)block
 {
     if(block!=nil)
     {
@@ -263,7 +263,7 @@ static char longPressChar='p';
 {
     return [self addEvent:@"longPress" event:event target:target];
 }
--(UIView *)onLongPress:(onLongPress)block
+-(UIView *)onLongPress:(OnLongPress)block
 {
     if(block!=nil)
     {

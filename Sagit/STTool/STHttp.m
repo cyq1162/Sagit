@@ -30,7 +30,7 @@
     static STHttp *_share = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _share = [[STHttp alloc] init:[STMessageBox share]];
+        _share = [[STHttp alloc] init:Sagit.MsgBox];
     });
     return _share;
 }
@@ -203,7 +203,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
         [self.box alert:[@"网络连接错误:" append:errMsg]];
     }
     else{
-        [[STMessageBox share] alert:[@"网络连接错误:" append:errMsg]];
+        [Sagit.MsgBox alert:[@"网络连接错误:" append:errMsg]];
     }
 }
 

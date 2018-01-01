@@ -9,6 +9,7 @@
 #ifndef STFramework_h
 #define STFramework_h
 
+#import "STSagit.h"
 #import "STEnum.h"
 #import "STDefine.h"
 #import "STDefineUI.h"
@@ -18,6 +19,7 @@
 #import "STCategory.h"
 #import "STMessageBox.h"
 #import "STHttp.h"
+#import "STFile.h"
 #import "STController.h"
 #import "STTabController.h"
 #import "STView.h"
