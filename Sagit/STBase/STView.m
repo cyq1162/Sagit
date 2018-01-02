@@ -156,16 +156,7 @@
         }
     }
 }
--(UIView *)firstView:(NSString *)className
-{
-    for (NSString *key in self.UIList) {
-        if([NSStringFromClass([self.UIList[key] class]) isEqualToString:className])
-        {
-            return self.UIList[key];
-        }
-    }
-    return nil;
-}
+
 -(instancetype)init
 {
     self = [super init];
@@ -183,15 +174,11 @@
     }
     return self;
 }
-//延时加载
--(NSMutableDictionary*)UIList
-{
-    if(_UIList==nil)
-    {
-        _UIList=[NSMutableDictionary new];
-    }
-    return _UIList;
-}
+////延时加载
+//-(NSMutableDictionary*)UIList
+//{
+//    return [super.baseView key:@"UIList"];
+//}
 -(NSMutableArray*)UITextList
 {
     if(_UITextList==nil)
@@ -201,6 +188,10 @@
     return _UITextList;
 }
 -(void)setToAll:(id)data
+{
+    [self setToAll:data toChild:NO];
+}
+-(void)setToAll:(id)data toChild:(BOOL)toChild
 {
     NSDictionary *dic;
     if([data isKindOfClass:[NSDictionary class]])
@@ -216,7 +207,6 @@
         dic=[data toDictionary];
     }
     if(dic==nil){return;}
-    //NSDictionary *aa=self.UIList;
     for (NSString*key in dic) {
         
         UIView *ui=self.UIList[key];
@@ -228,8 +218,18 @@
             {
                 value=[((NSNumber*)value) stringValue];
             }
-            
             [ui stValue:value];
+        }
+    }
+    if(toChild)
+    {
+        //触发子控件事件
+        for (NSString *key in self.UIList)
+        {
+            if([self.UIList[key] isKindOfClass:[STView class]])
+            {
+                [self.UIList[key] setToAll:dic toChild:toChild];
+            }
         }
     }
 }
@@ -250,19 +250,7 @@
     }
     return formData;
 }
--(UIView *)find:(id)name
-{
-    if(name==nil){return nil;}
-    if([name isKindOfClass:[NSString class]])
-    {
-        return self.UIList[name];
-    }
-    else if([name isKindOfClass:[UIView class]])
-    {
-        return name;
-    }
-    return nil;
-}
+
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];//在视图控制器消除时，移除键盘事件的通知
 }

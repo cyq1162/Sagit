@@ -40,6 +40,12 @@ static char keyValueChar='k';
 }
 
 #pragma mark 设置为默认的根视图
+
+-(UIView *)baseView
+{
+    return self.view.baseView;
+}
+
 //获取上一个（父）控制器
 -(UIViewController *)preController
 {

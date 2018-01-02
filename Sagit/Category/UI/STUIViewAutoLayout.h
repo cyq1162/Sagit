@@ -72,10 +72,12 @@
 -(UIView*)moveTo:(CGRect)frame;
 //!还原第一次设置的坐标系及宽高
 -(UIView*)backToOrigin;
-//!重新刷新当前UI（及子UI）的布局（根据事先内部设置的轨迹属性）
+//!刷新当前UI及子UI的布局以及宽高
 -(UIView*)refleshLayout;
-//!重新刷新当前UI（及子UI）的布局（根据事先内部设置的轨迹属性） withWidthHeight : 是否改变宽与高，默认是YES
+//!刷新当前UI及子UI的布局以及[宽高(可控制)] withWidthHeight : 是否改变宽与高，默认是YES
 -(UIView*)refleshLayout:(BOOL)withWidthHeight;
+//!刷新[当前UI(可控制)]及子UI的布局 withWidthHeight:是否改变宽与高，默认是YES ignoreSelf:忽略自身，默认是NO
+-(UIView*)refleshLayout:(BOOL)withWidthHeight ignoreSelf:(BOOL)ignoreSelf;
 //!遍历检测其子UI，如果子UI部分超过，则扩展宽与高，但不会缩小。
 -(UIView*)stSizeToFit;
 //!图片拉伸（一般适用于背景拉伸或聊天图片的拉伸）

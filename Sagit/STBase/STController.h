@@ -22,6 +22,7 @@
 //!所有name的控件的集合(指向的是view的UIList)
 @property (nonatomic,retain) NSMutableDictionary *UIList;
 
+#pragma mark 通用的三个事件方法：onInit、initUI、initData(还有一个位于基类的：reloadData)
 //!事件在UI初始化之前执行
 -(void)onInit;
 //!UI初始化

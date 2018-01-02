@@ -43,15 +43,18 @@
 //空屏
 #define STEmptyRect CGRectMake(0,0,0,0)
 
-
+//坐标系
 #define STRectMake(x,y,width,height) CGRectMake(x*Xpt,y*Ypt,width*Xpt,height*Ypt)
 #define STSizeMake(width,height) CGSizeMake(width*Xpt,height*Ypt)
 #define STPointMake(x,y) CGPointMake(x*Xpt,y*Ypt)
-
 #define STRectCopy(frame) CGRectMake(frame.origin.x,frame.origin.y, frame.size.width, frame.size.height);
 
+//定义两个布局的宽高参数 (用于自动布局时可以刷新约束)
+#define STSameToWidth  -99990
+#define STSameToHeight -99991
+
 //!定义一个可以在view和Controller中共同使用的布局标识
-#define sagit self.stView
+#define sagit self.baseView
 
 //上一个UI控件的简写
 #define STPreView sagit.lastAddView.preView

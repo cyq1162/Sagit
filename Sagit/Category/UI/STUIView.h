@@ -17,12 +17,12 @@
 -(STController*)STController;
 //!获取当前UI的STView，如果当前UI的根视图没有继承自STView，则返回nil
 -(STView*)stView;
-//!获取当前UI的根视图
+//!获取当前UI的根视图，如果当前的UI没有根视图或根视图为UIWindow，则返回自身。
 -(UIView*)baseView;
 //!检测当前UI是否STView
 -(BOOL)isSTView;
 //!检测当前UI的根视图是否继承自STView
--(BOOL)isOnSTView;
+//-(BOOL)isOnSTView;
 //!为每个UI都扩展有一个name
 - (NSString*)name;
 //!为UI设置name
@@ -72,6 +72,7 @@
 -(UIView*)layerCornerRadiusToHalf;
 -(UIView*)layerCornerRadius:(CGFloat)px;
 -(UIView*)corner:(BOOL)yesNo;
+-(UIView*)contentMode:(UIViewContentMode)contentMode;
 #pragma mark 扩展导航栏事件
 //!返回当前视图是否需要导航栏
 -(BOOL)needNavBar;

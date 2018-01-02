@@ -11,6 +11,8 @@
 #import "STEnum.h"
 
 @interface UIViewController(ST)
+//!当前控制器的视图的根视图
+-(UIView*)baseView;
 //!前一个页面控制器
 -(UIViewController*)preController;
 //!设置自身为根控制器

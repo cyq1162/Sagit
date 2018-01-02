@@ -25,6 +25,7 @@
     [self loadUI];
     [self loadData];
 }
+//内部私有方法
 -(void)loadUI{
     //获取当前的类名
     NSString* className= NSStringFromClass([self class]);
@@ -33,30 +34,31 @@
     if(viewClass!=nil)//view
     {
         self.view=self.stView=[[viewClass alloc] initWithController:self];
-        [self.stView loadUI];
+        //[self.stView loadUI];
     }
     else
     {
         self.view=self.stView=[[STView alloc] initWithController:self];//将view换成STView
-        [self initUI];
     }
-    
+    [self initUI];
 }
-//空方法（保留给子类复盖）
+//内部私有方法
 -(void)loadData
 {
     [self initData];
-    [self.stView initData];
-    
 }
+#pragma mark 通用的三个事件方法：onInit、initUI、initData(还有一个位于基类的：reloadData)
 //在UI加载之前处理的
 -(void)onInit{}
 //加载UI时处理的
--(void)initUI{}
+-(void)initUI
+{
+    [self.stView loadUI];
+}
 //加载UI后处理的
 -(void)initData
 {
-    
+    [self.stView initData];
 }
 -(NSMutableDictionary*)UIList
 {

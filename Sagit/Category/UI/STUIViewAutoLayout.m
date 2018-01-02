@@ -38,12 +38,13 @@ static NSInteger xyNone=-99999;
 {
     if([ui isKindOfClass:[NSString class]])
     {
+       return self.baseView.UIList[(NSString*)ui];
         //STView *vi=self.stView;
         //NSDictionary *dic=self.stView.UIList;
-        if(self.stView!=nil && [self.stView.UIList has:(NSString*)ui])
-        {
-            return self.stView.UIList[(NSString*)ui];
-        }
+//        if(self.stView!=nil && [self.stView.UIList has:(NSString*)ui])
+//        {
+//            return self.stView.UIList[(NSString*)ui];
+//        }
     }
     else if([ui isKindOfClass:[UIView class]])
     {
@@ -466,14 +467,20 @@ static NSInteger xyNone=-99999;
 }
 -(UIView*)width:(CGFloat)width height:(CGFloat)height
 {
-    if((width>=0 && width<=1) ||(height>=0 && height<=1))
+    if((width>=0 && width<=1) || (height>=0 && height<=1) || width==STSameToHeight || height==STSameToWidth )
     {
         [self addTracer:nil method:@"widthHeight" v1:width v2:height v3:0 v4:0 location:0 xyFlag:0];
         if(width>=0 && width<=1){width=[self superSize].width*Xpx*width;}
         if(height>=0 && height<=1){height=[self superSize].height*Ypx*height;}
-        
     }
-    
+    if(width==STSameToHeight)
+    {
+        width=height;
+    }
+    else if(height==STSameToWidth)
+    {
+        height=width;
+    }
     CGRect frame=self.frame;
     frame.size=STSizeMake(width, height);
     [self frame:frame];
@@ -535,9 +542,16 @@ static NSInteger xyNone=-99999;
 }
 -(UIView*)refleshLayout
 {
-    return [self refleshLayout:YES];
+    return [self refleshLayout:YES ignoreSelf:NO];
 }
--(UIView*)refleshLayout:(BOOL)withWidthHeight{
+-(UIView*)refleshLayout:(BOOL)withWidthHeight
+{
+    return [self refleshLayout:YES ignoreSelf:NO];
+}
+-(UIView*)refleshLayout:(BOOL)withWidthHeight ignoreSelf:(BOOL)ignoreSelf
+{
+    if(!ignoreSelf)
+    {
     NSMutableDictionary* tracer=self.LayoutTracer;
     if(tracer!=nil && tracer.count>0)
     {
@@ -570,17 +584,19 @@ static NSInteger xyNone=-99999;
             }
             else if (withWidthHeight && [method isEqualToString:@"widthHeight"])
             {
-                CGRect frame=STRectCopy(self.frame);//处理百分比
-                if(v.v1>=0 && v.v1<=1){frame.size.width=[self superSize].width*v.v1;}
-                if(v.v2>=0 && v.v2<=1){frame.size.height=[self superSize].height*v.v2;}
-                [self frame:frame];
+                [self width:v.v1 height:v.v2];
+//                CGRect frame=STRectCopy(self.frame);//处理百分比
+//                if(v.v1>=0 && v.v1<=1){frame.size.width=[self superSize].width*v.v1;}
+//                if(v.v2>=0 && v.v2<=1){frame.size.height=[self superSize].height*v.v2;}
+//                [self frame:frame];
             }
         }
+    }
     }
     if(self.subviews!=nil && self.subviews.count>0)
     {
         for (int i=0; i<self.subviews.count; i++) {
-            [self.subviews[i] refleshLayout:withWidthHeight];
+            [self.subviews[i] refleshLayout:withWidthHeight ignoreSelf:NO];
         }
     }
     return self;

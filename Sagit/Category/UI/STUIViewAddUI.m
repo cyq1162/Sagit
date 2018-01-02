@@ -50,7 +50,16 @@
 {
     return [self key:@"isFormUI" value:yesNo?@"1":@"0"];
 }
-
+-(NSMutableDictionary *)UIList
+{
+    NSMutableDictionary *dic=[self key:@"UIList"];
+    if(dic==nil)
+    {
+        dic=[NSMutableDictionary new];
+        [self key:@"UIList" value:dic];
+    }
+    return dic;
+}
 // Name
 - (UIView*)preView{
     return [self key:@"preView"];
@@ -67,7 +76,29 @@
 {
     return [self key:@"nextView" value:view];
 }
-
+-(UIView *)find:(id)name
+{
+    if(name==nil){return nil;}
+    if([name isKindOfClass:[NSString class]])
+    {
+        return self.UIList[name];
+    }
+    else if([name isKindOfClass:[UIView class]])
+    {
+        return name;
+    }
+    return nil;
+}
+-(UIView *)firstView:(NSString *)className
+{
+    for (NSString *key in self.UIList) {
+        if([NSStringFromClass([self.UIList[key] class]) isEqualToString:className])
+        {
+            return self.UIList[key];
+        }
+    }
+    return nil;
+}
 #pragma mark addUI
 -(void)removeSelf
 {
@@ -99,11 +130,7 @@
     if(name!=nil)
     {
         [view name:name];
-        STView *stView=[self stView];
-        if(stView!=nil)
-        {
-            [stView.UIList set:name value:view];
-        }
+        [self.baseView.UIList set:name value:view];
     }
     if(self.subviews.count>0)//非第一个控件
     {
@@ -111,7 +138,7 @@
         [lastView nextView:view];
         [view preView:lastView];
     }
-    [[self baseView].keyValue set:@"lastAddView" value:view];
+    [self.baseView.keyValue set:@"lastAddView" value:view];
     if([view isSTView])//子控件STView
     {
         view.stView.Controller=self.STController;

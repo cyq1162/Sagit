@@ -25,10 +25,16 @@
 - (UIView*)nextView;
 //!设置当前UI的下一个UI
 - (UIView*)nextView:(UIView*)view;
+//!从当前的UI中寻找控件。
+-(UIView*)find:(id)name;
+//!根据类名，获取第一个UI
+-(UIView*)firstView:(NSString*)className;
 //!当前UI是否表单UI【如果是，可以通过self.formData 取值】
 - (BOOL)isFormUI;
 //!设置当前UI是否表单UI
 - (UIView*)isFormUI:(BOOL)yesNo;
+//!有name的控件的集合
+- (NSMutableDictionary *)UIList;
 
 #pragma mark 添置UI
 //!移除自身（前会修改前后视图的指向关系）

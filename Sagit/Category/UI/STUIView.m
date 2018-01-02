@@ -54,24 +54,46 @@ static char keyValueChar='k';
 {
     return[self isKindOfClass:[STView class]];
 }
--(BOOL)isOnSTView
-{
-    return self.superview!=nil && [self.superview isSTView];
-}
+
+//-(BOOL)isOnSTView
+//{
+//    return self.superview!=nil && [self.superview isSTView];
+//}
 
 -(UIView*)baseView
 {
+    //为什么用这个之后就出事了呢？搞了半天才发现，原来布局是sagit开头，sagit是指向self.baseView，这样在子控件的时候，
+    //都全跑根目录去布局，自然就出事了，所以baseView需要以每个子控件的根为根。
+//    if(self.STController!=nil)
+//    {
+//        UIView * abc=self.STController.stView;
+//        return self.STController.stView;
+//
+//    }
+    if([self isSTView])
+    {
+        return self;
+    }
+    
     UIView *superView=[self superview];
     if(superView!=nil)
     {
+        //Controller.view，在不同的环境，会被挂载到不同的视图下，导致superView不一定是UIWindow
+        //这会导致在正常情况下，是在UIWindows下的baseView处理的数据，到了异步请求时，再从baseView拿数据，却因superView变了而拿不到数据。
+        //所以，如果是STView下会正常，但没继承STView的时候...
         if([superView isKindOfClass:[UIWindow class]])
         {
             return self;
         }
         return [superView baseView];
     }
+    
     superView=[self key:@"baseView"];//对于TableCell这一类的，在创建时先指定其指向的baseView)
-    if(superView!=nil){return superView;}
+    if(superView!=nil)
+    {
+        return superView;
+        
+    }
     return self;
 }
 -(STView*)stView
@@ -288,6 +310,11 @@ static char keyValueChar='k';
     {
         self.layer.cornerRadius=0;
     }
+    return self;
+}
+-(UIView*)contentMode:(UIViewContentMode)contentMode
+{
+    self.contentMode=contentMode;
     return self;
 }
 #pragma mark 扩展导航栏事件
