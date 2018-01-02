@@ -263,6 +263,11 @@
 //
 //            });
         }
+        if(tableView.afterReload)
+        {
+            STWeakObj(tableView);
+            tableView.afterReload(tableViewWeak);
+        }
     }
 }
 

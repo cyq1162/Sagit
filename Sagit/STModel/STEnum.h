@@ -21,26 +21,27 @@ typedef NS_ENUM(NSUInteger,XYFlag)  {
     X=1,
     Y=2
 };
+//!布局时的相对位置（取值的依据为：Left:1 Top:2 Ritht:3 Bottom:4 可以根据值来检测所相对哪些位置）
 typedef NS_ENUM(NSUInteger,XYLocation)  {
-    Left,
-    LeftTop,
-    LeftTopRight,
-    LeftTopBottom,
-    LeftRight,
-    LeftBottom,
-    LeftBottomRight,
+    Left = 1,
+    LeftTop = 12,
+    LeftTopRight = 123,
+    LeftTopBottom = 124,
+    LeftRight = 13,
+    LeftBottom = 14,
+    LeftBottomRight = 143,
     
-    Top,
-    TopRight,
-    TopBottom,
-    TopRightBottom,
+    Top = 2,
+    TopRight = 23,
+    TopBottom = 24,
+    TopRightBottom = 234,
     
-    Right,
-    RightBottom,
+    Right = 3,
+    RightBottom = 34,
     
-    Bottom,
+    Bottom = 4,
     //相对四边
-    LeftTopRightBottom
+    LeftTopRightBottom = 1234
 };
 
 #endif /* Header_h */

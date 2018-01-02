@@ -13,10 +13,13 @@
 #pragma mark 核心扩展
 typedef void(^AddTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 typedef BOOL(^DelTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
+typedef void(^AfterTableReloadData)(UITableView *tableView);
 //!用于为Table追加每一行的Cell
 @property (nonatomic,copy) AddTableCell addCell;
 //!用于为Table移除行的Cell
 @property (nonatomic,copy) DelTableCell delCell;
+//!用于为Table reloadData 加载完数据后触发
+@property (nonatomic,copy) AfterTableReloadData afterReload;
 //!获取Table的数据源
 @property (nonatomic,strong) NSMutableArray<id> *source;
 //!设置Table的数据源

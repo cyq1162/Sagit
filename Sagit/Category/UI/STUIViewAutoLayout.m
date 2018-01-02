@@ -108,10 +108,21 @@ static NSInteger xyNone=-99999;
         frame.size.width=(frame.origin.x+frame.size.width)-uiFrame.origin.x-uiFrame.size.width-x*Xpt;
     }
     frame.origin.x=floor(uiFrame.size.width+uiFrame.origin.x+x*Xpt);
-    frame.origin.y=floor(uiFrame.origin.y+y*Ypt);
     
-    //检测是否有onLeft规则，若有，调整宽度
-    
+    BOOL needSetY=YES;
+    if(y==0)
+    {
+        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
+        if(tracer!=nil)
+        {
+            NSString *relate=[@(tracer.location) stringValue];
+            needSetY=!([relate contains:@"2"] || [relate contains:@"4"]);//包含左右则不设置
+        }
+    }
+    if(needSetY)//未设置相对时，才设置
+    {
+        frame.origin.y=floor(uiFrame.origin.y+y*Ypt);
+    }
     [self frame:frame];
     return self;
 }
@@ -138,7 +149,22 @@ static NSInteger xyNone=-99999;
     {
         frame.origin.x=floor(uiFrame.origin.x-frame.size.width-x*Xpt);
     }
-    frame.origin.y=floor(uiFrame.origin.y+y*Ypt);
+    BOOL needSetY=YES;
+    if(y==0)
+    {
+        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
+        if(tracer!=nil)
+        {
+            NSString *relate=[@(tracer.location) stringValue];
+            needSetY=!([relate contains:@"2"] || [relate contains:@"4"]);//包含左右则不设置
+        }
+    }
+    if(needSetY)//未设置相对时，才设置
+    {
+        frame.origin.y=floor(uiFrame.origin.y+y*Ypt);
+    }
+    
+    
     
     [self frame:frame];
     return self;
@@ -165,7 +191,22 @@ static NSInteger xyNone=-99999;
         frame.origin.y=floor(uiFrame.origin.y-frame.size.height-y*Ypt);
     }
     
-    frame.origin.x=floor(uiFrame.origin.x+x*Xpt);
+    BOOL needSetX=YES;
+    if(y==0)
+    {
+        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
+        if(tracer!=nil)
+        {
+            NSString *relate=[@(tracer.location) stringValue];
+            needSetX=!([relate contains:@"1"] || [relate contains:@"3"]);//包含则不设置
+        }
+    }
+    if(needSetX)//未设置相对时，才设置
+    {
+        frame.origin.x=floor(uiFrame.origin.x+x*Xpt);
+    }
+    
+    
     [self frame:frame];
     return self;
 }
@@ -186,7 +227,22 @@ static NSInteger xyNone=-99999;
         frame.size.height=(frame.origin.y+frame.size.height)-uiFrame.origin.y-uiFrame.size.height-y*Ypt;
     }
     frame.origin.y=floor(uiFrame.origin.y+ui.frame.size.height+y*Ypt);
-    frame.origin.x=floor(uiFrame.origin.x+x*Xpt);
+
+    
+    BOOL needSetX=YES;
+    if(y==0)
+    {
+        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
+        if(tracer!=nil)
+        {
+            NSString *relate=[@(tracer.location) stringValue];
+            needSetX=!([relate contains:@"1"] || [relate contains:@"3"]);//包含则不设置
+        }
+    }
+    if(needSetX)//未设置相对时，才设置
+    {
+        frame.origin.x=floor(uiFrame.origin.x+x*Xpt);
+    }
     [self frame:frame];
     return self;
 }

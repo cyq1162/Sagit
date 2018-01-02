@@ -44,7 +44,14 @@
 {
     [self key:@"delCell" value:delCell];
 }
-
+-(AfterTableReloadData)afterReload
+{
+    return [self key:@"afterReload"];
+}
+-(void)setAfterReload:(AfterTableReloadData)afterReload
+{
+    [self key:@"afterReload" value:afterReload];
+}
 -(BOOL)autoHeight
 {
     if(self.keyValue[@"autoHeight"]!=nil)

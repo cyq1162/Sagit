@@ -139,7 +139,7 @@
 {
     [self confirm:msg title:title click:click okText:okText cancelText:@"取消"];
 }
--(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText;
+-(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText
 {
     _click=click;
     _confirmView=nil;

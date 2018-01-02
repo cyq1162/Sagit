@@ -135,7 +135,7 @@ static char pickChar='p';
 {
     [picker dismissViewControllerAnimated:YES completion:nil];
     UIImage *image = info[picker.allowsEditing?UIImagePickerControllerEditedImage:UIImagePickerControllerOriginalImage];
-    NSData *data = [image compress:[[self key:@"maxKb"] intValue]];//[ITTool compressImage:image toByte:250000];
+    NSData *data = [image compress:[[self key:@"maxKb"] intValue]];//[Sagit.Tool compressImage:image toByte:250000];
     OnPick event = (OnPick)objc_getAssociatedObject(self, &pickChar);
     if(event)
     {
