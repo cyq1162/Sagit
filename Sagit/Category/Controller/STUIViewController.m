@@ -17,7 +17,7 @@ static char keyValueChar='k';
 {
     return self.keyValue[key];
 }
--(UIView*)key:(NSString *)key value:(id)value
+-(UIViewController*)key:(NSString *)key value:(id)value
 {
     [self.keyValue set:key value:value];
     return self;
@@ -170,12 +170,12 @@ static char keyValueChar='k';
     }
     else if(imgOrName)
     {
-        self.navigationItem.leftBarButtonItem =
+        self.navigationItem.rightBarButtonItem =
         [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(onRightNavBarClick:)];
     }
     else
     {
-        self.navigationItem.leftBarButtonItem=[UIBarButtonItem new];
+        self.navigationItem.rightBarButtonItem=[UIBarButtonItem new];
     }
     return self;
 }

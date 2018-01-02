@@ -26,7 +26,7 @@
 //!从keyValue属性中获取字指定key的值
 -(id)key:(NSString*)key;
 //!为keyValue属性设置键与值
--(UIView*)key:(NSString*)key value:(id)value;
+-(UIViewController*)key:(NSString*)key value:(id)value;
 
 #pragma mark 代码说明块
 typedef void(^ControllerDescription)(UIViewController *controller);
