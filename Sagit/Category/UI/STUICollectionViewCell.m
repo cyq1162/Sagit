@@ -7,7 +7,7 @@
 //
 
 #import "STUICollectionViewCell.h"
-
+#import "STUIView.h"
 @implementation UICollectionViewCell(ST)
 
 +(instancetype)reuseCell:(UICollectionView *)tableView index:(NSIndexPath *)index

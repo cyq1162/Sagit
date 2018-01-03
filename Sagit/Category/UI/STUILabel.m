@@ -9,6 +9,7 @@
 #import "STUILabel.h"
 #import "STDefineUI.h"
 #import "STUIView.h"
+#import "STUIViewEvent.h"
 #import "STDictionary.h"
 
 @implementation UILabel(ST)

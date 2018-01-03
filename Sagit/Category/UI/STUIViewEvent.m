@@ -10,7 +10,11 @@
 #import <objc/runtime.h>
 #import "STDefine.h"
 #import "STString.h"
-#import "STView.h"
+#import "STUIView.h"
+#import "STUIViewAddUI.h"
+#import "STDictionary.h"
+
+@class STView;
 @implementation UIView (STUIViewEvent)
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)
 static char clickChar='c';

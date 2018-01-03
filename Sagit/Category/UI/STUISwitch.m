@@ -7,7 +7,8 @@
 //
 
 #import "STUISwitch.h"
-
+#import "STUIView.h"
+#import "STUIControl.h"
 @implementation UISwitch(ST)
 -(UISwitch*)on:(BOOL)yesNo
 {

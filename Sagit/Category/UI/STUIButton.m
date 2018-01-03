@@ -9,6 +9,10 @@
 #import "STUIButton.h"
 //#import <objc/runtime.h>
 #import "STDefineUI.h"
+#import "STUIView.h"
+#import "STUIViewAutoLayout.h"
+#import "STString.h"
+#import "STUIControl.h"
 @implementation UIButton (ST)
 
 //static char ActionTag;

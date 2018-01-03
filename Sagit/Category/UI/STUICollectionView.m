@@ -7,7 +7,7 @@
 //
 
 #import "STUICollectionView.h"
-
+#import "STUIView.h"
 @implementation UICollectionView(ST)
 
 #pragma mark 核心扩展
@@ -23,7 +23,7 @@
 //    }
     [self source:source];
 }
--(UITableView *)source:(NSMutableArray<id> *)dataSource
+-(UICollectionView *)source:(NSMutableArray<id> *)dataSource
 {
     [self key:@"source" value:dataSource];
     return self;

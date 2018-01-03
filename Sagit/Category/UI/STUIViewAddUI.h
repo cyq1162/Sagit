@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STEnum.h"
+
+@class STView;
 //#import "STTable.h"
 @interface UIView (STUIViewAddUI)
 
@@ -60,7 +63,7 @@
 -(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex;
 -(UIImageView*)addImageView:(NSString*)name;
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName;
--(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName xyFlag:(XYFlag)xyFlag;
+-(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName direction:(XYFlag)direction;
 
 -(UITextField*)addTextField:(NSString*)name;
 -(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder;

@@ -8,7 +8,12 @@
 
 #import "STUIViewController.h"
 #import <objc/runtime.h>
-
+#import "STDictionary.h"
+#import "STDefine.h"
+#import "STDefineUI.h"
+#import "STUIView.h"
+#import "STUIViewAddUI.h"
+#import "STUIViewAutoLayout.h"
 @implementation UIViewController(ST)
 
 #pragma mark keyvalue
@@ -33,7 +38,7 @@ static char keyValueChar='k';
     }
     return kv;
 }
--(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue
+-(UIViewController*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue
 {
     objc_setAssociatedObject(self, &keyValueChar, keyValue,OBJC_ASSOCIATION_RETAIN);
     return self;

@@ -9,6 +9,7 @@
 #import "STView.h"
 #import "STLayoutTracer.h"
 #import "STDefineUI.h"
+#import "STModelBase.h"
 //#import <objc/runtime.h>
 
 @interface STView()

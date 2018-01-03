@@ -7,11 +7,18 @@
 //
 
 #import "STUIViewAddUI.h"
+
 #import "STDefineUI.h"
 #import "STUIView.h"
 #import "STUIViewAutoLayout.h"
 #import "STUIViewEvent.h"
+#import "STDictionary.h"
 
+#import "STUILabel.h"
+#import "STUIButton.h"
+#import "STUIImageView.h"
+#import "STUITextView.h"
+#import "STUITextField.h"
 @implementation UIView (STUIViewAddUI)
 
 
@@ -156,7 +163,8 @@
     if(viewClass)
     {
         STView *ui=[viewClass new];
-        return [self addView:ui name:name];
+        [self addView:ui name:name];
+        return ui;
     }
     return nil;
 }
@@ -239,13 +247,13 @@
 }
 -(UIImageView*)addImageView:(NSString*)name
 {
-    return [self addImageView:name img:nil xyFlag:XYNone];
+    return [self addImageView:name img:nil direction:XYNone];
 }
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName
 {
-    return [self addImageView:name img:imgOrName xyFlag:XYNone];
+    return [self addImageView:name img:imgOrName direction:XYNone];
 }
--(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName xyFlag:(XYFlag)xyFlag
+-(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName direction:(XYFlag)direction
 {
     CGRect frame=self.frame;
     NSInteger tagIndex=0;
@@ -254,13 +262,13 @@
         UIScrollView *scroll= (UIScrollView*)self;
         long count= self.subviews.count;//这么计算的话，ImageView必须先添加，然后才能添加其它控件。
         CGSize size=scroll.contentSize;
-        if(xyFlag==X)
+        if(direction==X)
         {
             frame.origin.x=frame.size.width*(count);
             scroll.showsHorizontalScrollIndicator=NO;
             size.width=size.width+frame.size.width;
         }
-        else if(xyFlag==Y)
+        else if(direction==Y)
         {
             scroll.showsVerticalScrollIndicator=NO;
             frame.origin.y=frame.size.height*(count);
@@ -476,11 +484,11 @@
     {
         va_list args;
         va_start(args, imgOrName);
-        [ui addImageView:nil img:imgOrName xyFlag:direction];//内部会重设contentSize属性
+        [ui addImageView:nil img:imgOrName direction:direction];//内部会重设contentSize属性
         NSString *otherImgName;
         
         while ((otherImgName = va_arg(args, NSString *))) {
-            [ui addImageView:nil img:otherImgName xyFlag:direction];
+            [ui addImageView:nil img:otherImgName direction:direction];
         }
         va_end(args);
     }

@@ -8,7 +8,13 @@
 #import "STDefineUI.h"
 #import "STUIView.h"
 #import <objc/runtime.h>
+#import "STDictionary.h"
+#import "STColor.h"
 
+#import "STUITextField.h"
+#import "STUITextView.h"
+#import "STUILabel.h"
+#import "STUIImageView.h"
 
 @implementation UIView(ST)
 

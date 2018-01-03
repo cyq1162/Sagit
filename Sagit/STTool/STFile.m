@@ -7,6 +7,7 @@
 //
 
 #import "STFile.h"
+#import "STDictionary.h"
 
 @implementation STFile
 

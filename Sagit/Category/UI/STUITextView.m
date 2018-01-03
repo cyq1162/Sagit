@@ -8,6 +8,11 @@
 
 #import "STUITextView.h"
 #import "STUIView.h"
+#import "STDefineUI.h"
+#import "STUIViewAddUI.h"
+#import "STUIViewAutoLayout.h"
+#import "STUITableView.h"
+#import "STUITableViewCell.h"
 //#import "objc/runtime.h"
 
 //@interface UITextView()
@@ -26,7 +31,7 @@
     }
     return 0;
 }
-- (UITextField*)maxLength:(NSInteger)length{
+- (UITextView*)maxLength:(NSInteger)length{
     [self key:@"maxLength" value:[@(length) stringValue]];
     self.delegate = (id)self;
     return self;

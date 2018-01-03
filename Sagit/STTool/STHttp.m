@@ -10,7 +10,7 @@
 #import "STMessageBox.h"
 #import "STCategory.h"
 #import <AFNetworking.h>
-
+#import "STSagit.h"
 @interface STHttp()
 @property (nonatomic,strong) AFHTTPSessionManager *http;
 
