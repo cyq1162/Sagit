@@ -194,11 +194,6 @@
     [self stPush:viewController title:title img:nil];
 }
 
--(void)dealloc
-{
-    _http=nil;
-    _box=nil;
-}
 
 
 
@@ -389,5 +384,11 @@
     }
     return cell;
 }
-
+-(void)dealloc
+{
+    _http=nil;
+    _box=nil;
+    [self.stView removeAllsubViews];
+    NSLog(@"%@ ->STController relase", [self class]);
+}
 @end

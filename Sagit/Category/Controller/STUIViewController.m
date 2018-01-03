@@ -254,4 +254,9 @@ static char keyValueChar='k';
     if(self.navigationController!=nil){return self.navigationController;}
     return [[UINavigationController alloc]initWithRootViewController:self];
 }
+-(void)dealloc
+{
+    [self.view removeAllsubViews];//处理内存释放后的异常。
+    NSLog(@"%@ ->UIViewControlelr relase", [self class]);
+}
 @end

@@ -16,7 +16,9 @@
 +(STFile*)File;
 //!用于存档到内存的全局唯一字典。
 +(NSMutableDictionary*)Cache;
+//!用于发起网络请求的单例类,，在STController中时用self.http调用
 +(STHttp*)Http;
+//!用于弹窗消息的单例类，在STController中时用self.box调用
 +(STMessageBox*)MsgBox;
 @end
 

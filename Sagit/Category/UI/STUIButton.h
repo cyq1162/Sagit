@@ -11,10 +11,6 @@
 //typedef void(^onAction)(UIButton *button);
 @interface UIButton (ST)
 
-//定义可以额外追加方法
-//- (void)addClick:(onAction)block;
-//- (void)addAction:(onAction)block forControlEvents:(UIControlEvents)controlEvents;
-
 #pragma mark 扩展系统属性
 -(UIButton*)backgroundImage:(id)img;
 -(UIButton*)backgroundImage:(id)img forState:(UIControlState)state;

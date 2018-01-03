@@ -9,7 +9,8 @@
 #import "STUIViewAddUI.h"
 #import "STDefineUI.h"
 #import "STUIView.h"
-//#import "STUITableView.h"
+#import "STUIViewAutoLayout.h"
+#import "STUIViewEvent.h"
 
 @implementation UIView (STUIViewAddUI)
 
@@ -17,7 +18,7 @@
 #pragma mark UI属性
 -(UIView*)lastAddView
 {
-    UIView *lastAddView=[self baseView].keyValue[@"lastAddView"];
+    UIView *lastAddView=[self.baseView key:@"lastAddView"];
     
     if(lastAddView==nil)
     {
@@ -111,6 +112,7 @@
     {
         [self.nextView preView:self.preView];
     }
+    [self.keyValue removeAllObjects];
     [self removeFromSuperview];
 }
 -(UIView*)removeAllsubViews
@@ -120,6 +122,7 @@
     {
         for (NSInteger i=count-1; i>=0; i--) {
             UIView *view=self.subviews[i];
+            [view.keyValue removeAllObjects];
             [view removeFromSuperview];
             view=nil;
         }
@@ -138,10 +141,10 @@
         [lastView nextView:view];
         [view preView:lastView];
     }
-    [self.baseView.keyValue set:@"lastAddView" value:view];
+    [self.baseView key:@"lastAddView" value:view];
     if([view isSTView])//子控件STView
     {
-        view.stView.Controller=self.STController;
+        view.stView.Controller=self.stController;
         [view.stView loadUI];//这里才初始化（可以让事件在指定Controller后再绑定）
     }
     [self addSubview:view];
@@ -462,7 +465,7 @@
     ui.pagingEnabled = YES;
     //    ui.backgroundColor=[UIColor redColor];
     //ui.showsHorizontalScrollIndicator=NO;
-    ui.delegate=(id)[self STController];
+    ui.delegate=(id)self.stController;
     [self addView:ui name:name];
     return ui;
 }
@@ -492,8 +495,8 @@
 {
     if(name==nil){name=@"stFirstTable";}//避免STFirstTable找不到对象。
     UITableView *ui=[[UITableView alloc] initWithFrame:STFullRect style:style];
-    ui.delegate=(id)self.STController;
-    ui.dataSource=(id)self.STController;
+    ui.delegate=(id)self.stController;
+    ui.dataSource=(id)self.stController;
     [self addView:ui name:name];
     return ui;
 }
@@ -505,8 +508,8 @@
 {
     UICollectionView *ui=[[UICollectionView alloc] initWithFrame:STFullRect collectionViewLayout:layout];
     [ui registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"UICollectionViewCell"];
-    ui.delegate=(id)self.STController;
-    ui.dataSource=(id)self.STController;
+    ui.delegate=(id)self.stController;
+    ui.dataSource=(id)self.stController;
     [self addView:ui name:name];
     
     return ui;

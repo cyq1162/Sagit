@@ -8,7 +8,7 @@
 
 #import "STUINavigationBar.h"
 #import "STDefineUI.h"
-
+#import "STUIView.h"
 
 @implementation UINavigationBar (ST)
 

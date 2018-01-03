@@ -8,6 +8,8 @@
 
 #import "STUILabel.h"
 #import "STDefineUI.h"
+#import "STUIView.h"
+#import "STDictionary.h"
 
 @implementation UILabel(ST)
 #pragma mark 扩展系统事件

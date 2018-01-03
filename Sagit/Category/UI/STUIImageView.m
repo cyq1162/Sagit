@@ -128,7 +128,7 @@ static char pickChar='p';
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate = (id)self;
     picker.allowsEditing = yesNo;
-    [self.STController presentViewController:picker animated:YES completion:nil];
+    [self.stController presentViewController:picker animated:YES completion:nil];
     return self;
 }
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info

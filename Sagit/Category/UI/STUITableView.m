@@ -54,9 +54,9 @@
 }
 -(BOOL)autoHeight
 {
-    if(self.keyValue[@"autoHeight"]!=nil)
+    if([self key:@"autoHeight"]!=nil)
     {
-        return [self.keyValue[@"autoHeight"] isEqualToString:@"1"];
+        return [[self key:@"autoHeight"] isEqualToString:@"1"];
     }
     return NO;
 }

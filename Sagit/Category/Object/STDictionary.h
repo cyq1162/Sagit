@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface NSMutableDictionary(ST)
+-(id)get:(NSString*)key;
 -(BOOL)has:(NSString*)key;
 -(void)set:(NSString*)key value:(id)value;
 -(void)remove:(NSString*)key;
@@ -16,9 +17,17 @@
 @end
 
 @interface NSDictionary(ST)
+-(id)get:(NSString*)key;
 -(id)firstObject;
 -(BOOL)has:(NSString*)key;
 -(NSString*)toJson;
 //!把格式化的JSON格式的字符串转换成字典
 + (NSDictionary *)dictionaryWithJson:(NSString *)json;
+@end
+
+@interface NSMapTable(ST)
+-(id)get:(NSString*)key;
+-(BOOL)has:(NSString*)key;
+-(void)set:(NSString*)key value:(id)value;
+-(void)remove:(NSString*)key;
 @end

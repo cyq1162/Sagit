@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
 @interface UIAlertView(ST)
 -(BOOL)allowDismiss;
 -(UIAlertView*)allowDismiss:(BOOL)yesNo;

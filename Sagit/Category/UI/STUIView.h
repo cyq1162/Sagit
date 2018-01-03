@@ -8,15 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "STController.h"
+
 #import "STView.h"
 
+@class STController;
+@class STView;
 
 @interface UIView(ST)
 //!获取当前UI的STController，如果当前UI的控制器没有继承自STController，则返回nil
--(STController*)STController;
+-(STController*)stController;
 //!获取当前UI的STView，如果当前UI的根视图没有继承自STView，则返回nil
 -(STView*)stView;
+
+//!获取当前UI的根控制器UIViewController
+//-(UIViewController*)baseController;
 //!获取当前UI的根视图，如果当前的UI没有根视图或根视图为UIWindow，则返回自身。
 -(UIView*)baseView;
 //!检测当前UI是否STView
@@ -39,15 +44,15 @@
 -(UIView*)selectValue:(NSString*)value;
 
 #pragma mark keyvalue
-//!扩展一个字典属性，方便存档及数据传递
+//!扩展一个弱引用的字典属性，方便存档及数据传递
 -(NSMutableDictionary<NSString*,id>*)keyValue;
+//!扩展一个弱引用的字典属性，用于存档target等，避免死引用
+//-(NSMapTable*)keyValueWeak;
 //!从keyValue属性中获取字指定key的值
 -(id)key:(NSString*)key;
 //!为keyValue属性设置键与值
 -(UIView*)key:(NSString*)key value:(id)value;
-//避免外部赋值，破坏系统内部预设的值。
-//-(UIView*)keyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
-//-(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue;
+
 
 #pragma mark 共用接口
 //!重新加载数据（一般由子类重写，由于方法统一，在不同控制器中都可以直接调用，而不用搞代理事件）
@@ -71,8 +76,11 @@
 //!将圆角半径设为宽度的一半
 -(UIView*)layerCornerRadiusToHalf;
 -(UIView*)layerCornerRadius:(CGFloat)px;
+-(UIView*)layerBorderWidth:(NSInteger)px;
+-(UIView*)layerBorderColor:(id)colorOrHex;
 -(UIView*)corner:(BOOL)yesNo;
 -(UIView*)contentMode:(UIViewContentMode)contentMode;
+
 #pragma mark 扩展导航栏事件
 //!返回当前视图是否需要导航栏
 -(BOOL)needNavBar;

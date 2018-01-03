@@ -6,11 +6,15 @@
 //  Copyright © 2017-2027年. All rights reserved.
 //
 #import "STDictionary.h"
-
+#import "STString.h"
 @implementation NSMutableDictionary(ST)
 
 -(BOOL)has:(NSString*)key{
     return self[key]!=nil;
+}
+-(id)get:(NSString*)key
+{
+    return self[key];
 }
 -(void)set:(NSString*)key value:(id)value
 {
@@ -56,7 +60,10 @@
     }
     return nil;
 }
-
+-(id)get:(NSString*)key
+{
+    return self[key];
+}
 -(BOOL)has:(NSString*)key{
     return self[key]!=nil;
 }
@@ -86,5 +93,37 @@
         return nil;
     }
     return dic;
+}
+@end
+
+@implementation NSMapTable(ST)
+
+-(id)get:(NSString*)key
+{
+    return [self objectForKey:key];
+}
+-(BOOL)has:(NSString*)key
+{
+    return [self objectForKey:key]!=nil;
+}
+-(void)set:(NSString*)key value:(id)value
+{
+    if(value!=nil)
+    {
+        [self setObject:value forKey:key];
+    }
+    else
+    {
+        [self remove:key];
+    }
+}
+-(void)remove:(NSString*)key
+{
+    NSArray *items=[key split:@","];
+    for (NSString* item in items)
+    {
+        [self removeObjectForKey:item];
+    }
+    
 }
 @end

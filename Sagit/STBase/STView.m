@@ -169,7 +169,7 @@
 {
     self=[self init];
     if (controller) {
-        //self.frame = controller.view.bounds;//事件问题
+        //STWeakObj(controller)
         self.Controller=controller;
     }
     return self;
@@ -253,6 +253,7 @@
 
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];//在视图控制器消除时，移除键盘事件的通知
+    NSLog(@"%@ ->STView relase", [self class]);
 }
 @end
 

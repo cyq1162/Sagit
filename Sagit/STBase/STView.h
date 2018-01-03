@@ -10,8 +10,8 @@
 #import "STController.h"
 
 @interface STView : UIView
-//!所对应的Controller
-@property (nonatomic,retain) STController *Controller;
+//!所对应的Controller (弱引用，不然就双向引用内存不保)
+@property (nonatomic,weak) STController *Controller;
 ////!所有name的控件的集合
 //@property (nonatomic,retain)NSMutableDictionary *UIList;
 //!存档文本框的列表

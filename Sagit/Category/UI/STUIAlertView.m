@@ -7,7 +7,7 @@
 //
 
 #import "STUIAlertView.h"
-
+#import "STUIView.h"
 @implementation UIAlertView(ST)
 
 -(BOOL)allowDismiss

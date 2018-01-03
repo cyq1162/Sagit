@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STHttp.h"
-#import "STMessageBox.h"
 #import "STEnum.h"
 
 @class STView;
+@class STHttp;
+@class STMessageBox;
+
 @interface STController : UIViewController<UITableViewDelegate,UITableViewDataSource,UICollectionViewDelegate,UICollectionViewDataSource>
 //!当前控制器的STView根视图
-@property (nonatomic,strong) STView* stView;
+@property (nonatomic,retain) STView* stView;
 //!用于发起http请求
 @property (nonatomic,retain) STHttp *http;
 //!用于弹窗提示消息

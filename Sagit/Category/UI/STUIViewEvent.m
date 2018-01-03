@@ -8,7 +8,9 @@
 
 #import "STUIViewEvent.h"
 #import <objc/runtime.h>
-
+#import "STDefine.h"
+#import "STString.h"
+#import "STView.h"
 @implementation UIView (STUIViewEvent)
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)
 static char clickChar='c';
@@ -101,23 +103,33 @@ static char longPressChar='p';
         NSString *viewKey=[eventType append:@"View"];
         NSString *selKey=[eventType append:@"Sel"];
         NSString *targetKey=[eventType append:@"Target"];
-        id target=eventTarget;
+        
         UIView *view=self;
         NSString *sel=items.lastObject;
+        id target=eventTarget;
+        
         if(target==nil)
         {
-            if(self.STController!=nil)
-            {
-                target=self.STController;
-            }
-            else
-            {
-                target=self;
-            }
+            //发现这招成功了，不过要配合Controller的delloc方法执行view removeAllView，不然控制器释放后，有消息发来时，就出现野指针错误，很压抑。
+            target=@"1";
+            //不能存档自身指向的Controller，会引发双向引用，内存不释放问题，所以只存标识1,用的时候再拿就可以了。
+//            if(self.stController!=nil)
+//            {
+//                target=self.stController;
+//            }
+//            else
+//            {
+//                target=self;
+//            }
+        }
+        else if(target==self)
+        {
+            target=@"0";
         }
         [self key:viewKey value:view];
         [self key:selKey value:sel];
         [self key:targetKey value:target];
+        //[Sagit.Cache set:eventName value:target];//这招也失败了....
     }
     return self;
 }
@@ -145,10 +157,23 @@ static char longPressChar='p';
     if(view==nil){view=self;}
     
     id target=[self key:targetKey];
-    if(target)
+    //id target= [Sagit.Cache get:[self key:selKey]];
+    if(target!=nil)
     {
+        if([target isKindOfClass:[NSString class]])
+        {
+            NSString*type=(NSString*)target;
+            if([type isEqualToString:@"1"] && self.stController!=nil)
+            {
+                target=self.stController;
+            }
+            else
+            {
+                target=self;
+            }
+        }
         SEL sel=[self getSel:[self key:selKey] controller:target];
-        if(sel!=nil)
+        if(sel!=nil && target!=nil)
         {
             [target performSelector:sel withObject:view];
         }
@@ -163,7 +188,7 @@ static char longPressChar='p';
 {
     if(controller==nil)
     {
-        controller=self.STController;
+        controller=self.stController;
     }
     if(controller==nil)
     {
@@ -237,7 +262,7 @@ static char longPressChar='p';
     if([self removeGesture:[UITapGestureRecognizer class]])
     {
         //移除参数
-        [self.keyValue removeObjectsForKeys:@[@"clickView",@"clickSel",@"clickTarget",@"clickPointView"]];
+        [self.keyValue remove:@"clickView,clickSel,clickTarget,clickPointView"];
         [self setClickBlock:nil];
     }
     return self;
@@ -279,7 +304,7 @@ static char longPressChar='p';
     if([self removeGesture:[UILongPressGestureRecognizer class]])
     {
         //移除参数
-        [self.keyValue removeObjectsForKeys:@[@"longPressView",@"longPressSel",@"longPressTarget",@"longPressPointView"]];
+        [self.keyValue remove:@"longPressView,longPressSel,longPressTarget,longPressPointView"];
         [self setLongPressBlock:nil];
     }
     return self;

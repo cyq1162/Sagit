@@ -14,33 +14,60 @@
 
 #pragma mark keyvalue
 static char keyValueChar='k';
+//static char keyValueWeakChar='w';
 -(id)key:(NSString *)key
 {
-    return self.keyValue[key];
+    //检测需要弱引用的拦截
+//    if([key endWith:@"Controleller"] || [key endWith:@"Target"])
+//    {
+////        if(self.stController!=nil)
+////        {
+////            id value=[self.stController.keyValue get:key];
+////            return value;
+////        }
+//        return [self.keyValueWeak get:key];
+//    }
+    return [self.keyValue get:key];
 }
 -(UIView*)key:(NSString *)key value:(id)value
 {
+    //检测需要弱引用的拦截
+//    if([key endWith:@"Controleller"] || [key endWith:@"Target"])
+//    {
+////        if(self.stController!=nil)
+////        {
+////            [self.stController.keyValue set:key value:value];
+////            return self;
+////        }
+//        [self.keyValueWeak set:key value:value];
+//        return self;
+//    }
     [self.keyValue set:key value:value];
     return self;
 }
+//-(NSMapTable<NSString*,id>*)keyValueWeak
+//{
+//
+//    NSMapTable<NSString*,id> *kv= (NSMapTable<NSString*,id>*)objc_getAssociatedObject(self, &keyValueWeakChar);
+//    if(kv==nil)
+//    {
+//        kv=[NSMapTable mapTableWithKeyOptions:NSMapTableWeakMemory valueOptions:NSMapTableWeakMemory];
+//        objc_setAssociatedObject(self, &keyValueWeakChar, kv,OBJC_ASSOCIATION_RETAIN);
+//    }
+//    return kv;
+//}
+
 -(NSMutableDictionary<NSString*,id>*)keyValue
 {
-    
+
     NSMutableDictionary<NSString*,id> *kv= (NSMutableDictionary<NSString*,id>*)objc_getAssociatedObject(self, &keyValueChar);
     if(kv==nil)
     {
         kv=[NSMutableDictionary<NSString*,id> new];
-        [self setKeyValue:kv];
+        objc_setAssociatedObject(self, &keyValueChar, kv,OBJC_ASSOCIATION_RETAIN);
     }
     return kv;
 }
-
--(UIView*)setKeyValue:(NSMutableDictionary<NSString*,id>*)keyValue
-{
-    objc_setAssociatedObject(self, &keyValueChar, keyValue,OBJC_ASSOCIATION_RETAIN);
-    return self;
-}
-
 // Name
 - (NSString*)name{
     return [self key:@"name"];
@@ -112,10 +139,18 @@ static char keyValueChar='k';
         return [self key:@"stView"];//对于TableCell这一类的，在创建时先指定其指向的stView
     }
 }
--(STController*)STController
+-(STController*)stController
 {
     STView *stView=[self stView];
-    if(stView!=nil){return stView.Controller;}
+    
+    if(stView!=nil)
+    {
+        STController *controller=stView.Controller;
+//        STWeakObj(controller)
+//        return controllerWeak;
+        return controller;
+        
+    }
     return nil;
 }
 -(UIView*)stValue:(NSString*)value
@@ -299,6 +334,15 @@ static char keyValueChar='k';
     self.layer.cornerRadius=px*Xpt;
     return self;
 }
+-(UIView*)layerBorderWidth:(NSInteger)px
+{
+    self.layer.borderWidth=px*Xpt;
+    return self;
+}
+-(UIView*)layerBorderColor:(id)colorOrHex{
+    self.layer.borderColor=[[self toColor:colorOrHex] CGColor];
+    return self;
+}
 -(UIView*)corner:(BOOL)yesNo
 {
     [self clipsToBounds:yesNo];
@@ -320,13 +364,13 @@ static char keyValueChar='k';
 #pragma mark 扩展导航栏事件
 -(BOOL)needNavBar
 {
-    if(self.keyValue[@"needNavBar"]!=nil)
+    if([self key:@"needNavBar"]!=nil)
     {
-        return [self.keyValue[@"needNavBar"] isEqualToString:@"1"];
+        return [[self key:@"needNavBar"] isEqualToString:@"1"];
     }
-    if(self.STController!=nil && self.STController.navigationController!=nil)
+    if(self.stController!=nil && self.stController.navigationController!=nil)
     {
-        return !self.STController.navigationController.navigationBar.hidden;
+        return !self.stController.navigationController.navigationBar.hidden;
     }
     return NO;
 }
@@ -337,22 +381,22 @@ static char keyValueChar='k';
 -(UIView*)needNavBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar
 {
     [self.keyValue set:@"needNavBar" value:yesNo?@"1":@"0"];
-    if(setNavBar && self.STController!=nil && self.STController.navigationController!=nil)
+    if(setNavBar && self.stController!=nil && self.stController.navigationController!=nil)
     {
-        self.STController.navigationController.navigationBar.hidden=!yesNo;
+        self.stController.navigationController.navigationBar.hidden=!yesNo;
     }
     return self;
 }
 
 -(BOOL)needTabBar
 {
-    if(self.keyValue[@"needTabBar"]!=nil)
+    if([self key:@"needTabBar"]!=nil)
     {
-        return [self.keyValue[@"needTabBar"] isEqualToString:@"1"];
+        return [[self key:@"needTabBar"] isEqualToString:@"1"];
     }
-    if(self.STController!=nil && self.STController.tabBarController!=nil)
+    if(self.stController!=nil && self.stController.tabBarController!=nil)
     {
-        return !self.STController.tabBarController.tabBar.hidden;
+        return !self.stController.tabBarController.tabBar.hidden;
     }
     return NO;
 }
@@ -363,10 +407,26 @@ static char keyValueChar='k';
 -(UIView*)needTabBar:(BOOL)yesNo setTabBar:(BOOL)setTabBar
 {
     [self.keyValue set:@"needTabBar" value:yesNo?@"1":@"0"];
-    if(setTabBar && self.STController!=nil && self.STController.tabBarController!=nil)
+    if(setTabBar && self.stController!=nil && self.stController.tabBarController!=nil)
     {
-        self.STController.tabBarController.tabBar.hidden=!yesNo;
+        self.stController.tabBarController.tabBar.hidden=!yesNo;
     }
     return self;
+}
+-(void)dealloc
+{
+    if(self.gestureRecognizers.count>0)
+    {
+        if(self.gestureRecognizers!=nil)
+        {
+            for (NSInteger i=self.gestureRecognizers.count-1; i>=0; i--)
+            {
+                [self removeGestureRecognizer:self.gestureRecognizers[i]];
+            }
+        }
+    }
+    //[self.keyValueWeak removeAllObjects];
+    [self.keyValue removeAllObjects];
+    NSLog(@"%@ ->UIView relase", [self class]);
 }
 @end
