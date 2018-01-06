@@ -29,7 +29,7 @@
     if(block)
     {
         
-        [self key:@"event" value:block];
+        [self key:@"event" valueWeak:block];
         [self addTarget:self action:@selector(exeAction) forControlEvents:event];
     }
     return self;
@@ -46,8 +46,8 @@
     OnAction action=[self key:@"event"];
     if(action)
     {
-        STWeakObj(self);
-        action(selfWeak);
+        //STWeakObj(self);
+        action(self);
     }
 }
 //!移除绑定点击事件

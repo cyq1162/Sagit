@@ -9,13 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface UITextField(ST)<UITextFieldDelegate>
+@interface UITextField(ST)
 #pragma mark 自定义追加属系统
 //!文本指定的最大长度(超过这个长度则无法再输入内容)
 -(NSInteger)maxLength;
 //!对文本指定最大长度(超过这个长度则无法再输入内容)
 - (UITextField*)maxLength:(NSInteger)length;
-//- (UITextField*)setMaxLength:(NSInteger)length;
+
 
 #pragma mark 扩展系统属性
 -(UITextField*)keyboardType:(UIKeyboardType)value;

@@ -16,11 +16,12 @@
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"TableViewCell"];
     if(cell==nil)
     {
-        //[[cell.imageView width:80 height:80] clipsToBounds:YES];//默认大小
         cell=[[UITableViewCell alloc] initWithStyle:tableView.cellStyle reuseIdentifier:@"TableViewCell"];
-        [cell key:@"table" value:tableView];
-        [cell key:@"stView" value:tableView.stView];
-        [cell key:@"baseView" value:tableView.baseView];
+       // [cell.keyValueWeak set:@"table" value:tableView];
+//        STWeakObj(tableView);//
+        [cell key:@"table" valueWeak:tableView];
+        [cell key:@"stView" valueWeak:tableView.stView];
+        [cell key:@"baseView" valueWeak:tableView.baseView];//因为Cell在Add时，并没有父，所以需要提前设置，这样STLastView等宏才能找到上一个UI
     }
     return cell;
 }
@@ -62,5 +63,9 @@
 {
     [self key:@"firstValue" value:value];
     return self;
+}
+-(void)dealloc
+{
+    NSLog(@"%@ ->STUITableViewCell relase", [self class]);
 }
 @end

@@ -58,12 +58,12 @@
 {
     return [self key:@"isFormUI" value:yesNo?@"1":@"0"];
 }
--(NSMutableDictionary *)UIList
+-(NSMapTable *)UIList
 {
-    NSMutableDictionary *dic=[self key:@"UIList"];
+    NSMapTable *dic=[self key:@"UIList"];
     if(dic==nil)
     {
-        dic=[NSMutableDictionary new];
+        dic=[NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsStrongMemory];
         [self key:@"UIList" value:dic];
     }
     return dic;
@@ -74,7 +74,7 @@
 }
 - (UIView*)preView:(UIView*)view
 {
-    return [self key:@"preView" value:view];
+    return [self key:@"preView" valueWeak:view];
 }
 
 - (UIView*)nextView{
@@ -82,14 +82,14 @@
 }
 - (UIView*)nextView:(UIView*)view
 {
-    return [self key:@"nextView" value:view];
+    return [self key:@"nextView" valueWeak:view];
 }
 -(UIView *)find:(id)name
 {
     if(name==nil){return nil;}
     if([name isKindOfClass:[NSString class]])
     {
-        return self.UIList[name];
+        return [self.UIList get:name];
     }
     else if([name isKindOfClass:[UIView class]])
     {
@@ -99,10 +99,12 @@
 }
 -(UIView *)firstView:(NSString *)className
 {
-    for (NSString *key in self.UIList) {
-        if([NSStringFromClass([self.UIList[key] class]) isEqualToString:className])
+    for (NSString *key in self.UIList)
+    {
+        UIView *view=[self.UIList get:key];
+        if([NSStringFromClass([view class]) isEqualToString:className])
         {
-            return self.UIList[key];
+            return view;
         }
     }
     return nil;
@@ -110,29 +112,42 @@
 #pragma mark addUI
 -(void)removeSelf
 {
-    
-    if(self.preView!=nil)
+    @try
     {
-        [self.preView nextView:self.nextView];
+        if(self.preView!=nil)
+        {
+            [self.preView nextView:self.nextView];
+        }
+        if(self.nextView!=nil)
+        {
+            [self.nextView preView:self.preView];
+        }
+       // [self removeAllSubViews];
+        [self dispose];
+        [self removeFromSuperview];
     }
-    if(self.nextView!=nil)
-    {
-        [self.nextView preView:self.preView];
-    }
-    [self.keyValue removeAllObjects];
-    [self removeFromSuperview];
+    @catch(NSException*err){}
 }
--(UIView*)removeAllsubViews
+-(UIView*)removeAllSubViews
 {
     NSInteger count=self.subviews.count;
     if(count>0)
     {
-        for (NSInteger i=count-1; i>=0; i--) {
-            UIView *view=self.subviews[i];
-            [view.keyValue removeAllObjects];
-            [view removeFromSuperview];
-            view=nil;
+        @try
+        {
+            for (NSInteger i=count-1; i>=0; i--)
+            {
+                UIView *view=self.subviews[i];
+                if(view!=nil)
+                {
+                   // [view removeAllSubViews];
+                    [view dispose];//disponse包含removeAllSubViews
+                    [view removeFromSuperview];
+                    view=nil;
+                }
+            }
         }
+        @catch(NSException* err){}
     }
     return self;
 }
@@ -148,7 +163,7 @@
         [lastView nextView:view];
         [view preView:lastView];
     }
-    [self.baseView key:@"lastAddView" value:view];
+    [self.baseView key:@"lastAddView" valueWeak:view];
     if([view isSTView])//子控件STView
     {
         view.stView.Controller=self.stController;

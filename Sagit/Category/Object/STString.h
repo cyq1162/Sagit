@@ -29,6 +29,7 @@
 -(BOOL)isEmpty;
 +(BOOL)isNilOrEmpty:(NSString*)value;
 +(NSString*)toString:(id)value;
++(NSString *)newGuid;
 -(NSString*)trim;
 
 -(NSInteger)indexOf:(NSString*)searchString;

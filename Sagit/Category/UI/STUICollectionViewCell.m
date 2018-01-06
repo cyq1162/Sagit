@@ -16,9 +16,9 @@
     if(cell==nil)
     {
         cell=[UICollectionViewCell new];
-        [cell key:@"table" value:tableView];
-        [cell key:@"stView" value:tableView.stView];
-        [cell key:@"baseView" value:tableView.baseView];
+        [cell key:@"table" valueWeak:tableView];
+        [cell key:@"stView" valueWeak:tableView.stView];
+        [cell key:@"baseView" valueWeak:tableView.baseView];
     }
     return cell;
 }

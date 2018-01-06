@@ -21,10 +21,30 @@
 @end
 @implementation STView
 
+-(instancetype)init
+{
+    self = [super init];
+    self.frame=STFullRect;
+    self.backgroundColor=[UIColor whiteColor];//卡的问题
+    self.OriginFrame=self.frame;
+    
+    return self;
+}
+
+- (instancetype)initWithController:(STController*)controller
+{
+    self=[self init];
+    if (controller) {
+        //STWeakObj(controller)
+        self.Controller=controller;
+    }
+    return self;
+}
+
 //这个方法可以重写，如果想在这里搞点事情的话
 -(void)loadUI{
     [self initUI];
-    [self regEvent];
+    //[self regEvent];
 }
 -(void)regEvent{
     if(self.lock==nil){self.lock=[NSLock new];}
@@ -126,23 +146,17 @@
 //初始化[子类重写该方法]
 -(void)initUI
 {
-    //触发子控件事件(该事件由UIView的AddSTView内部触发)
-    //    for (NSString *key in self.UIList)
-    //    {
-    //        if([self.UIList[key] isKindOfClass:[STView class]])
-    //        {
-    //            [self.UIList[key] initUI];
-    //        }
-    //    }
+    
 }
 -(void)initData
 {
     //触发子控件事件
     for (NSString *key in self.UIList)
     {
-        if([self.UIList[key] isKindOfClass:[STView class]])
+        STView*view=[self.UIList get:key];
+        if([view isKindOfClass:[STView class]])
         {
-            [self.UIList[key] initData];
+            [view initData];
         }
     }
 }
@@ -151,30 +165,15 @@
     //触发子控件事件
     for (NSString *key in self.UIList)
     {
-        if([self.UIList[key] isKindOfClass:[STView class]])
+        STView*view=[self.UIList get:key];
+        if([view isKindOfClass:[STView class]])
         {
-            [self.UIList[key] reloadData];
+            [view reloadData];
         }
     }
 }
 
--(instancetype)init
-{
-    self = [super init];
-    self.frame=STFullRect;
-    self.backgroundColor=[UIColor whiteColor];//卡的问题
-    self.OriginFrame=self.frame;
-    return self;
-}
-- (instancetype)initWithController:(STController*)controller
-{
-    self=[self init];
-    if (controller) {
-        //STWeakObj(controller)
-        self.Controller=controller;
-    }
-    return self;
-}
+
 ////延时加载
 //-(NSMutableDictionary*)UIList
 //{
@@ -210,7 +209,7 @@
     if(dic==nil){return;}
     for (NSString*key in dic) {
         
-        UIView *ui=self.UIList[key];
+        UIView *ui=[self.UIList get:key];
         if(ui!=nil)
         {
             id value=dic[key];
@@ -227,9 +226,10 @@
         //触发子控件事件
         for (NSString *key in self.UIList)
         {
-            if([self.UIList[key] isKindOfClass:[STView class]])
+            STView *view=[self.UIList get:key];
+            if([view isKindOfClass:[STView class]])
             {
-                [self.UIList[key] setToAll:dic toChild:toChild];
+                [view setToAll:dic toChild:toChild];
             }
         }
     }
@@ -243,7 +243,7 @@
 {
     NSMutableDictionary *formData=[NSMutableDictionary new];
     for (NSString*key in self.UIList) {
-        UIView *ui=self.UIList[key];
+        UIView *ui=[self.UIList get:key];
         if([ui isFormUI] && (superView==nil || ui.superview==superView))
         {
             [formData setObject:[ui stValue] forKey:key];
@@ -253,8 +253,8 @@
 }
 
 -(void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];//在视图控制器消除时，移除键盘事件的通知
-    NSLog(@"%@ ->STView relase", [self class]);
+    //[[NSNotificationCenter defaultCenter] removeObserver:self];//在视图控制器消除时，移除键盘事件的通知
+    NSLog(@"STView relase -> %@", [self class]);
 }
 @end
 

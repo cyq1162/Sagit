@@ -21,56 +21,44 @@
 #pragma mark keyvalue
 static char keyValueChar='k';
 //static char keyValueWeakChar='w';
+
 -(id)key:(NSString *)key
 {
-    //检测需要弱引用的拦截
-//    if([key endWith:@"Controleller"] || [key endWith:@"Target"])
-//    {
-////        if(self.stController!=nil)
-////        {
-////            id value=[self.stController.keyValue get:key];
-////            return value;
-////        }
-//        return [self.keyValueWeak get:key];
-//    }
-    return [self.keyValue get:key];
+    id value=[self.keyValue get:key];
+    if(value==nil)
+    {
+        value=[self.keyValueWeak get:key];
+    }
+    return value;
+}
+-(UIView*)key:(NSString *)key valueWeak:(id)value
+{
+    [self.keyValueWeak set:key value:value];
+    return self;
 }
 -(UIView*)key:(NSString *)key value:(id)value
 {
-    //检测需要弱引用的拦截
-//    if([key endWith:@"Controleller"] || [key endWith:@"Target"])
-//    {
-////        if(self.stController!=nil)
-////        {
-////            [self.stController.keyValue set:key value:value];
-////            return self;
-////        }
-//        [self.keyValueWeak set:key value:value];
-//        return self;
-//    }
     [self.keyValue set:key value:value];
     return self;
 }
-//-(NSMapTable<NSString*,id>*)keyValueWeak
-//{
-//
-//    NSMapTable<NSString*,id> *kv= (NSMapTable<NSString*,id>*)objc_getAssociatedObject(self, &keyValueWeakChar);
-//    if(kv==nil)
-//    {
-//        kv=[NSMapTable mapTableWithKeyOptions:NSMapTableWeakMemory valueOptions:NSMapTableWeakMemory];
-//        objc_setAssociatedObject(self, &keyValueWeakChar, kv,OBJC_ASSOCIATION_RETAIN);
-//    }
-//    return kv;
-//}
+-(NSMapTable*)keyValueWeak
+{
+    NSMapTable *kv=[self.keyValue get:@"keyValueWeak"];
+    if(kv==nil)
+    {
+        kv=[NSMapTable mapTableWithKeyOptions:NSMapTableWeakMemory valueOptions:NSMapTableWeakMemory];
+        [self.keyValue set:@"keyValueWeak" value:kv];
+    }
+    return kv;
+}
 
 -(NSMutableDictionary<NSString*,id>*)keyValue
 {
-
     NSMutableDictionary<NSString*,id> *kv= (NSMutableDictionary<NSString*,id>*)objc_getAssociatedObject(self, &keyValueChar);
     if(kv==nil)
     {
         kv=[NSMutableDictionary<NSString*,id> new];
-        objc_setAssociatedObject(self, &keyValueChar, kv,OBJC_ASSOCIATION_RETAIN);
+        objc_setAssociatedObject(self, &keyValueChar, kv,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return kv;
 }
@@ -151,10 +139,7 @@ static char keyValueChar='k';
     
     if(stView!=nil)
     {
-        STController *controller=stView.Controller;
-//        STWeakObj(controller)
-//        return controllerWeak;
-        return controller;
+        return stView.Controller;;
         
     }
     return nil;
@@ -367,72 +352,51 @@ static char keyValueChar='k';
     self.contentMode=contentMode;
     return self;
 }
-#pragma mark 扩展导航栏事件
--(BOOL)needNavBar
+//!框架自动释放资源（不需要人工调用）
+-(void)dispose
 {
-    if([self key:@"needNavBar"]!=nil)
+    @try
     {
-        return [[self key:@"needNavBar"] isEqualToString:@"1"];
-    }
-    if(self.stController!=nil && self.stController.navigationController!=nil)
-    {
-        return !self.stController.navigationController.navigationBar.hidden;
-    }
-    return NO;
-}
--(UIView*)needNavBar:(BOOL)yesNo
-{
-    return [self needNavBar:yesNo setNavBar:NO];
-}
--(UIView*)needNavBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar
-{
-    [self.keyValue set:@"needNavBar" value:yesNo?@"1":@"0"];
-    if(setNavBar && self.stController!=nil && self.stController.navigationController!=nil)
-    {
-        self.stController.navigationController.navigationBar.hidden=!yesNo;
-    }
-    return self;
-}
-
--(BOOL)needTabBar
-{
-    if([self key:@"needTabBar"]!=nil)
-    {
-        return [[self key:@"needTabBar"] isEqualToString:@"1"];
-    }
-    if(self.stController!=nil && self.stController.tabBarController!=nil)
-    {
-        return !self.stController.tabBarController.tabBar.hidden;
-    }
-    return NO;
-}
--(UIView*)needTabBar:(BOOL)yesNo
-{
-    return [self needTabBar:yesNo setTabBar:NO];
-}
--(UIView*)needTabBar:(BOOL)yesNo setTabBar:(BOOL)setTabBar
-{
-    [self.keyValue set:@"needTabBar" value:yesNo?@"1":@"0"];
-    if(setTabBar && self.stController!=nil && self.stController.tabBarController!=nil)
-    {
-        self.stController.tabBarController.tabBar.hidden=!yesNo;
-    }
-    return self;
-}
--(void)dealloc
-{
-    if(self.gestureRecognizers.count>0)
-    {
-        if(self.gestureRecognizers!=nil)
+        [self removeAllSubViews];
+        //清理键值对。
+        NSMutableDictionary *dic=self.keyValue;
+        if(dic!=nil)
         {
-            for (NSInteger i=self.gestureRecognizers.count-1; i>=0; i--)
+            NSMapTable *kv=[self.keyValue get:@"keyValueWeak"];
+            if(kv!=nil)
             {
-                [self removeGestureRecognizer:self.gestureRecognizers[i]];
+                [kv removeAllObjects];
+                kv=nil;
             }
+            [dic removeAllObjects];
+            dic=nil;
         }
+        //清理事件
+        for (UIGestureRecognizer *ges in self.gestureRecognizers) {
+            [self removeGestureRecognizer:ges];
+        }
+        //移除通知
+        [[NSNotificationCenter defaultCenter] removeObserver:self];//在视图控制器消除时，移除键盘事件的通知
     }
-    //[self.keyValueWeak removeAllObjects];
-    [self.keyValue removeAllObjects];
-    NSLog(@"%@ ->UIView relase", [self class]);
+    @catch(NSException*err){}
+    
 }
+//fuck dealloc 方法存在时，会影响导航的后退事件Crash，以下两种情况：1:当前UI有自定义导航按钮时；2:Push两层再回退。
+//-(void)dealloc
+//{
+////    if(self.gestureRecognizers.count>0)
+////    {
+////        if(self.gestureRecognizers!=nil)
+////        {
+////            for (NSInteger i=self.gestureRecognizers.count-1; i>=0; i--)
+////            {
+////                [self removeGestureRecognizer:self.gestureRecognizers[i]];
+////            }
+////        }
+////    }
+//    //[self.keyValueWeak removeAllObjects];
+//  //  [self.keyValue removeAllObjects];
+//
+//    NSLog(@"UIView relase -> %@ name:%@", [self class],self.name);
+//}
 @end

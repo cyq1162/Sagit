@@ -74,6 +74,13 @@
 -(BOOL)isEmpty{return [self isEqualToString:@""];}
 +(BOOL)isNilOrEmpty:(NSString*)value{return value==nil || [value isEmpty];}
 +(NSString *)toString:(id)value{return [NSString stringWithFormat:@"%@",value];}
++(NSString *)newGuid
+{
+    CFUUIDRef theUUID = CFUUIDCreate(NULL);
+    CFStringRef string = CFUUIDCreateString(NULL, theUUID);
+    CFRelease(theUUID);
+    return (__bridge NSString *)string;
+}
 -(NSString*)trim
 {
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];

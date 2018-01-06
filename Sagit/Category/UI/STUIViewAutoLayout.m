@@ -38,7 +38,7 @@ static NSInteger xyNone=-99999;
 {
     if([ui isKindOfClass:[NSString class]])
     {
-       return self.baseView.UIList[(NSString*)ui];
+       return [self.baseView.UIList get:(NSString*)ui];
         //STView *vi=self.stView;
         //NSDictionary *dic=self.stView.UIList;
 //        if(self.stView!=nil && [self.stView.UIList has:(NSString*)ui])
@@ -546,7 +546,7 @@ static NSInteger xyNone=-99999;
 }
 -(UIView*)refleshLayout:(BOOL)withWidthHeight
 {
-    return [self refleshLayout:YES ignoreSelf:NO];
+    return [self refleshLayout:withWidthHeight ignoreSelf:NO];
 }
 -(UIView*)refleshLayout:(BOOL)withWidthHeight ignoreSelf:(BOOL)ignoreSelf
 {

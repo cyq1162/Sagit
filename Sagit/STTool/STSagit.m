@@ -16,12 +16,7 @@
 }
 +(NSMutableDictionary *)Cache
 {
-    static NSMutableDictionary *_share = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _share = [NSMutableDictionary new];
-    });
-    return _share;
+    return [NSMutableDictionary share];
 }
 +(STHttp *)Http
 {
@@ -30,5 +25,14 @@
 +(STMessageBox *)MsgBox
 {
     return [STMessageBox share];
+}
++(instancetype)share
+{
+    static Sagit *_share = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _share = [Sagit new];
+    });
+    return _share;
 }
 @end

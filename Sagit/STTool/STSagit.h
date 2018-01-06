@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+//#import <UIKit/UIKit.h>
 #import "STFile.h"
 #import "STHttp.h"
 #import "STMessageBox.h"
@@ -20,6 +21,7 @@
 +(STHttp*)Http;
 //!用于弹窗消息的单例类，在STController中时用self.box调用
 +(STMessageBox*)MsgBox;
++ (instancetype)share;
 @end
 
 

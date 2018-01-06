@@ -37,13 +37,13 @@
 //!设置当前UI是否表单UI
 - (UIView*)isFormUI:(BOOL)yesNo;
 //!有name的控件的集合
-- (NSMutableDictionary *)UIList;
+- (NSMapTable *)UIList;
 
 #pragma mark 添置UI
 //!移除自身（前会修改前后视图的指向关系）
 -(void)removeSelf;
 //!移除所有的subViews
--(UIView*)removeAllsubViews;
+-(UIView*)removeAllSubViews;
 //!所有添加View的最后总入口。
 -(UIView*)addView:(UIView *)view name:(NSString*)name;
 //!添加一个STView类型的子控件

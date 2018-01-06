@@ -9,6 +9,16 @@
 #import "STString.h"
 @implementation NSMutableDictionary(ST)
 
++(instancetype)share
+{
+    static NSMutableDictionary *_share = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _share = [NSMutableDictionary new];
+    });
+    return _share;
+}
+
 -(BOOL)has:(NSString*)key{
     return self[key]!=nil;
 }
@@ -27,6 +37,23 @@
         [self remove:key];
     }
 }
+//-(void)set:(NSString*)key valueWeak:(id)value
+//{
+//    NSMapTable *dic=self[@"NSMutableDictionaryWeak"];
+//    if(dic==nil)
+//    {
+//        dic=[NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory valueOptions:NSPointerFunctionsWeakMemory];
+//        [self set:@"NSMutableDictionaryWeak" value:dic];
+//    }
+//    if(value!=nil)
+//    {
+//        [dic setObject:value forKey:key];
+//    }
+//    else
+//    {
+//        [dic remove:key];
+//    }
+//}
 -(void)remove:(NSString*)key
 {
     NSArray *items=[key split:@","];
@@ -49,7 +76,14 @@
 }
 @end
 @implementation NSDictionary(ST)
-
+-(NSMutableDictionary *)toNSMutableDictionary
+{
+    NSMutableDictionary*dic=[NSMutableDictionary new];
+    for (NSString*key in self) {
+        [dic set:key value:self[key]];
+    }
+    return dic;
+}
 -(id)firstObject
 {
     if(self.count>0)
@@ -117,6 +151,7 @@
         [self remove:key];
     }
 }
+
 -(void)remove:(NSString*)key
 {
     NSArray *items=[key split:@","];

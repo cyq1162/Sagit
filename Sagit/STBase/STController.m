@@ -138,7 +138,7 @@
 }
 -(void)stValue:(NSString*)name value:(NSString *)value
 {
-    UIView *ui=self.UIList[name];
+    UIView *ui=[self.UIList get:name];
     if(ui!=nil)
     {
         [ui stValue:value];
@@ -147,7 +147,7 @@
 //get set ui view....
 -(NSString*)stValue:(NSString*)name
 {
-    UIView *ui=self.UIList[name];
+    UIView *ui=[self.UIList get:name];
     if(ui!=nil)
     {
         return ui.stValue;
@@ -176,7 +176,11 @@
             STController *controller=[class new];
             if(self.navigationController!=nil)
             {
-                [controller key:STNavConfig value:[view key:STNavConfig]];
+                NSDictionary *config=[view key:STNavConfig];
+                if(config!=nil)
+                {
+                    [controller key:STNavConfig value: [config toNSMutableDictionary]];
+                }
                 [self stPush:controller];
             }
             else
@@ -240,11 +244,18 @@
         }
         //默认设置
         [cell width:1 height:88];//IOS的默认高度
-        //cell.
-       // UITableViewCellStyleDefault
         cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;//右边有小箭头
         cell.selectionStyle=UITableViewCellSeparatorStyleNone;//选中无状态
         tableView.addCell(cell,indexPath);
+       // tableView.addCell(cell,indexPath);//以参数传入的对象，不会被block所持有。
+//        NSMutableDictionary __weak *dic=NSMutableDictionary.share;
+//        AddTableCell __weak block=[dic get:tableView.addCellKey];
+//        if(block)
+//        {
+//            block(cell,indexPath);
+//            block=nil;
+//        }
+//        dic=nil;
     }
     
     return cell;
@@ -255,18 +266,13 @@
     if(indexPath.row == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row)
     {
         //cell.separatorInset = UIEdgeInsetsMake(0, STScreeWidthPt , 0, 0);//去掉最后一条线的
-        //end of loading
         if(tableView.autoHeight)
         {
             [tableView height:(tableView.contentSize.height-1)*Ypx];
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//
-//            });
         }
         if(tableView.afterReload)
         {
-            STWeakObj(tableView);
-            tableView.afterReload(tableViewWeak);
+            tableView.afterReload(tableView);
         }
     }
 }
@@ -335,6 +341,7 @@
     UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
     if(editingStyle==UITableViewCellEditingStyleDelete && tableView.delCell)
     {
+        //STWeakObj(cell);//
         if(tableView.delCell(cell, indexPath))
         {
             [tableView afterDelCell:indexPath];
@@ -391,7 +398,7 @@
 {
     _http=nil;
     _box=nil;
-    [self.stView removeAllsubViews];
-    NSLog(@"%@ ->STController relase", [self class]);
+    _stView=nil;
+    NSLog(@"STController relase -> %@", [self class]);
 }
 @end

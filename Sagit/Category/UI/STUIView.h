@@ -44,15 +44,16 @@
 -(UIView*)selectValue:(NSString*)value;
 
 #pragma mark keyvalue
-//!扩展一个弱引用的字典属性，方便存档及数据传递
+//!一个强引用的字典属性，方便存档及数据传递
 -(NSMutableDictionary<NSString*,id>*)keyValue;
-//!扩展一个弱引用的字典属性，用于存档target等，避免死引用
+//!扩展一个弱引用的字典属性，用于存档有可能造成双向循环的对象，避免死引用
 //-(NSMapTable*)keyValueWeak;
 //!从keyValue属性中获取字指定key的值
 -(id)key:(NSString*)key;
 //!为keyValue属性设置键与值
 -(UIView*)key:(NSString*)key value:(id)value;
-
+//!为keyValue属性设置键与值 其中value为弱引用
+-(UIView*)key:(NSString*)key valueWeak:(id)value;
 
 #pragma mark 共用接口
 //!重新加载数据（一般由子类重写，由于方法统一，在不同控制器中都可以直接调用，而不用搞代理事件）
@@ -80,23 +81,9 @@
 -(UIView*)layerBorderColor:(id)colorOrHex;
 -(UIView*)corner:(BOOL)yesNo;
 -(UIView*)contentMode:(UIViewContentMode)contentMode;
-
-#pragma mark 扩展导航栏事件
-//!返回当前视图是否需要导航栏
--(BOOL)needNavBar;
-//!设置当前视图是否需要导航栏（默认并不设置显示或隐藏）
--(UIView*)needNavBar:(BOOL)yesNo;
-//!设置当前视图是否需要导航栏 setNavBar:同时是否设置隐藏或显示
--(UIView*)needNavBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar;
-
-
-//!返回当前视图是否需要Tab栏
--(BOOL)needTabBar;
-//!设置当前视图是否需要Tab栏
--(UIView*)needTabBar:(BOOL)yesNo;
-//!设置当前视图是否需要Tab栏 setTabBar:同时是否设置隐藏或显示
--(UIView*)needTabBar:(BOOL)yesNo setTabBar:(BOOL)setTabBar;
-
+#pragma mark 扩展系统方法
+//!框架自动释放资源（不需要人工调用）
+-(void)dispose;
 @end
 
 

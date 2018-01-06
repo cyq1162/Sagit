@@ -9,14 +9,18 @@
 #import <Foundation/Foundation.h>
 
 @interface NSMutableDictionary(ST)
++(instancetype)share;
 -(id)get:(NSString*)key;
 -(BOOL)has:(NSString*)key;
 -(void)set:(NSString*)key value:(id)value;
+//-(void)set:(NSString*)key valueWeak:(id)value;
 -(void)remove:(NSString*)key;
 -(NSString*)toJson;
+
 @end
 
 @interface NSDictionary(ST)
+-(NSMutableDictionary*)toNSMutableDictionary;
 -(id)get:(NSString*)key;
 -(id)firstObject;
 -(BOOL)has:(NSString*)key;

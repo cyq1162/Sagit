@@ -8,6 +8,7 @@
 
 #import "STUIAlertView.h"
 #import "STUIView.h"
+#import "STUIViewAddUI.h"
 @implementation UIAlertView(ST)
 
 -(BOOL)allowDismiss
@@ -27,7 +28,13 @@
 {
     if(self.allowDismiss)
     {
+        [super dispose];
         [super dismissWithClickedButtonIndex:buttonIndex animated:animated];
+        
     }
+}
+-(void)dealloc
+{
+    NSLog(@"STUIAlertView relase -> %@", [self class]);
 }
 @end

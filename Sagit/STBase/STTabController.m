@@ -8,7 +8,7 @@
 
 #import "STTabController.h"
 #import "STUIView.h"
-
+#import "STUIViewController.h"
 @implementation STTabController
 
 -(instancetype)init
@@ -46,12 +46,16 @@
     if(childController==nil){return;}
     if(childController.navigationController!=nil)
     {
-        [childController.navigationController.viewControllers[0].view needTabBar:YES setTabBar:YES];
+        [childController.navigationController.viewControllers[0] needTabBar:YES setTabBar:YES];
     }
     else
     {
-        [childController.view needTabBar:YES setTabBar:YES];
+        [childController needTabBar:YES setTabBar:YES];
     }
     [super addChildViewController:childController];
+}
+-(void)dealloc
+{
+    NSLog(@"STTabController relase -> %@", [self class]);
 }
 @end

@@ -15,12 +15,30 @@
 -(UIView*)baseView;
 //!前一个页面控制器
 -(UIViewController*)preController;
+//!后一个页面控制器（系统用于检测是否释放使用）
+-(UIViewController *)nextController;
 //!设置自身为根控制器
 -(UIViewController*)asRoot;
 /**设置自身为根控制器
  @param rootType 设置的根类型
  */
 -(UIViewController*)asRoot:(RootViewControllerType) rootType;
+
+#pragma mark 扩展导航栏事件
+//!返回当前视图是否需要导航栏
+-(BOOL)needNavBar;
+//!设置当前视图是否需要导航栏（默认并不设置显示或隐藏）
+-(UIViewController*)needNavBar:(BOOL)yesNo;
+//!设置当前视图是否需要导航栏 setNavBar:同时是否设置隐藏或显示
+-(UIViewController*)needNavBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar;
+
+
+//!返回当前视图是否需要Tab栏
+-(BOOL)needTabBar;
+//!设置当前视图是否需要Tab栏
+-(UIViewController*)needTabBar:(BOOL)yesNo;
+//!设置当前视图是否需要Tab栏 setTabBar:同时是否设置隐藏或显示
+-(UIViewController*)needTabBar:(BOOL)yesNo setTabBar:(BOOL)setTabBar;
 
 #pragma mark keyvalue
 //!扩展一个字典属性，方便存档及数据传递
@@ -29,7 +47,8 @@
 -(id)key:(NSString*)key;
 //!为keyValue属性设置键与值
 -(UIViewController*)key:(NSString*)key value:(id)value;
-
+//!为keyValue属性设置键与值 其中value为弱引用
+-(UIViewController*)key:(NSString*)key valueWeak:(id)value;
 #pragma mark 代码说明块
 typedef void(^ControllerDescription)(UIViewController *controller);
 //!提供一个代码块，方便代码规范 description处可以写代码块的说明文字
@@ -43,6 +62,8 @@ typedef void(^ControllerDescription)(UIViewController *controller);
 -(UIViewController*)rightNav:(NSString*)title img:(id)imgOrName;
 //!右侧导航栏的默认点击事件
 -(void)onRightNavBarClick:(UIView*)view;
+//系统内部调用的方法
+-(UIViewController*)reSetNav:(UINavigationController*)navController;
 #pragma mark 共用接口
 //!重新加载数据（一般由子类重写，由于方法统一，在不同控制器中都可以直接调用，而不用搞代理事件）
 -(void)reloadData;
@@ -56,5 +77,6 @@ typedef void(^ControllerDescription)(UIViewController *controller);
 -(UIViewController*)tabBadgeValue:(NSString*)value;
 -(UIViewController*)tabBadgeColor:(id)colorOrHex;
 -(UINavigationController*)toUINavigationController;
-
+//!框架自动释放资源（不需要人工调用）
+-(void)dispose;
 @end

@@ -33,21 +33,66 @@
     [self key:@"source" value:dataSource];
     return self;
 }
+//-(NSString*)addCellKey
+//{
+//    return [self key:@"addCell"];
+//}
 -(AddTableCell)addCell
 {
     return [self key:@"addCell"];
+//    NSString*guid=[self key:@"addCell"];
+//    if(guid!=nil)
+//    {
+//        AddTableCell addTableCell=[NSMutableDictionary.share get:guid];
+//        STWeakObj(addTableCell);
+//        return addTableCellWeak;
+//    }
+//    return nil;
 }
 -(void)setAddCell:(AddTableCell)addCell
 {
-    [self key:@"addCell" value:addCell];
+    if(addCell!=nil)
+    {
+        //if(addCell iskin)
+        addCell=[addCell copy];
+        
+        //__weak AddTableCell addCellWeak=addCell;
+        [self key:@"addCell" value:addCell];
+        //AddTableCell cell=[self key:@"addCell"];
+//        if(cell)
+//        {
+//
+//        }
+    }
+    else
+    {
+        [self.keyValue remove:@"addCell"];
+    }
 }
+//-(UITableView*)addCell:(AddTableCell)addCell
+//{
+//    //产生一个随机key
+//    NSString *guid=NSString.newGuid;
+//    [self key:@"addCell" value:guid];
+//   __weak NSMutableDictionary  *dic=NSMutableDictionary.share;
+//    [dic set:guid value:addCell];
+//    return self;
+//}
 -(DelTableCell)delCell
 {
     return [self key:@"delCell"];
 }
 -(void)setDelCell:(DelTableCell)delCell
 {
-    [self key:@"delCell" value:delCell];
+    if(delCell==nil)
+    {
+        [self.keyValue remove:@"delCell"];
+    }
+    else
+    {
+       // __weak DelTableCell delCellWeak=delCell;
+        [self key:@"delCell" value:delCell];
+    }
 }
 -(AfterTableReloadData)afterReload
 {
@@ -134,5 +179,11 @@
     }
     [self key:@"rowCountInSections" value:items];
     return self;
+}
+-(void)dealloc
+{
+    //移除全局缓存中的事件
+    
+    NSLog(@"%@ ->STUITableView relase", [self class]);
 }
 @end

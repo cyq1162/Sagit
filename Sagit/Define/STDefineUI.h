@@ -6,7 +6,9 @@
 //  Copyright © 2017-2027年. All rights reserved.
 //
 
-//#import "STUITableView.h"
+
+
+
 #ifndef STDefineUI_h
 #define STDefineUI_h
 
@@ -53,8 +55,11 @@
 #define STSameToWidth  -99990
 #define STSameToHeight -99991
 
+#ifndef sagit
 //!定义一个可以在view和Controller中共同使用的布局标识
 #define sagit self.baseView
+
+#endif
 
 //上一个UI控件的简写
 #define STPreView sagit.lastAddView.preView

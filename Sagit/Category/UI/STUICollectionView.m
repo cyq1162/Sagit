@@ -17,10 +17,6 @@
 }
 -(void)setSource:(NSMutableArray<id> *)source
 {
-//    if(self.allowDelete && ![source isKindOfClass:[NSMutableArray class]])
-//    {
-//        source=[source toNSMutableArray];
-//    }
     [self source:source];
 }
 -(UICollectionView *)source:(NSMutableArray<id> *)dataSource

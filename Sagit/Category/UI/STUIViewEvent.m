@@ -34,8 +34,8 @@ static char longPressChar='p';
         OnClick event = (OnClick)objc_getAssociatedObject(self, &clickChar);
         if(event)
         {
-            STWeakObj(view);
-            event(viewWeak);
+            //STWeakObj(view);
+            event(view);
         }
     }
     else if([eventType isEqualToString:@"longPress"])
@@ -43,8 +43,8 @@ static char longPressChar='p';
         OnLongPress event = (OnLongPress)objc_getAssociatedObject(self, &longPressChar);
         if(event)
         {
-            STWeakObj(view);
-            event(viewWeak);
+            //STWeakObj(view);
+            event(view);
         }
     }
 }
@@ -130,7 +130,7 @@ static char longPressChar='p';
         {
             target=@"0";
         }
-        [self key:viewKey value:view];
+        [self key:viewKey valueWeak:view];
         [self key:selKey value:sel];
         [self key:targetKey value:target];
         //[Sagit.Cache set:eventName value:target];//这招也失败了....
@@ -146,7 +146,7 @@ static char longPressChar='p';
         NSString *name=[self key:pointViewKey];
         if(name)
         {
-            UIView *pointView=self.stView.UIList[name];
+            UIView *pointView=[self.stView.UIList get:name];
             if(pointView!=nil)
             {
                return [pointView exeEvent:eventType];
@@ -179,7 +179,11 @@ static char longPressChar='p';
         SEL sel=[self getSel:[self key:selKey] controller:target];
         if(sel!=nil && target!=nil)
         {
+#pragma clang diagnostic push //忽略系统的内存泄漏警告。
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             [target performSelector:sel withObject:view];
+#pragma clang diagnostic pop
+            
         }
     }
     else
@@ -319,8 +323,9 @@ static char longPressChar='p';
 {
     if(descBlock!=nil)
     {
-        STWeakSelf;
-        descBlock(this);
+       //STWeakSelf;
+       descBlock(self);//对于自身对自身的引用，无需弱引用。
+       descBlock=nil;
     }
 }
 @end

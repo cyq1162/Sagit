@@ -160,6 +160,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
     {
         STModel *model=[[STModel alloc]initWithDictionary:response error:nil];
         success(model);
+        success=nil;
     }
 }
 -(void)onError:(NSError*)errorMsg error:(Error)error
@@ -168,6 +169,7 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
     if(error!=nil)
     {
         error([NSString toString:errorMsg]);
+        error=nil;
     }
     else
     {

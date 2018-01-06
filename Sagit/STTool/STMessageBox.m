@@ -12,8 +12,8 @@
 
 @interface STMessageBox()
 @property (nonatomic,assign) UIWindow *window;
-@property (nonatomic,copy) OnConfirmClick click;
-@property (nonatomic,retain)UIAlertView *confirmView;
+//@property (nonatomic,copy) OnConfirmClick click;
+//@property (retain)UIAlertView *confirmView;
 @property (nonatomic,retain)UIView *lodingView;
 @property (nonatomic,assign) NSInteger hiddenFlag;
 @end
@@ -141,9 +141,7 @@
 }
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText
 {
-    _click=click;
-    _confirmView=nil;
-    _confirmView = [[UIAlertView alloc] initWithTitle:title
+   UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title
                                               message:msg
                                              delegate:self
                                     cancelButtonTitle:cancelText
@@ -153,17 +151,15 @@
     {
         NSArray<NSString*> *items=[okText split:@","];
         for (NSString *item in items) {
-            [_confirmView addButtonWithTitle:item];
+            [alertView addButtonWithTitle:item];
         }
     }
-    [_confirmView show];
+    [alertView key:@"click" value:[click copy]];
+    [alertView show];
 }
 -(void)custom:(id)title before:(OnBeforeShow)beforeShow click:(OnConfirmClick)click okText:(NSString *)okText cancelText:(NSString *)cancelText
 {
-    _click=click;
-    _confirmView=nil;
-    
-    _confirmView = [[STUIAlertView alloc] initWithTitle:title
+   UIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
                                               message:nil
                                              delegate:self
                                     cancelButtonTitle:cancelText
@@ -172,40 +168,32 @@
     {
         NSArray<NSString*> *items=[okText split:@","];
         for (NSString *item in items) {
-            [_confirmView addButtonWithTitle:item];
+            [alertView addButtonWithTitle:item];
         }
     }
-    _confirmView.alertViewStyle=UIAlertViewStylePlainTextInput;
+    alertView.alertViewStyle=UIAlertViewStylePlainTextInput;
     if(beforeShow)
     {
-        beforeShow(_confirmView);
+        beforeShow(alertView);
+        beforeShow=nil;
     }
-    [_confirmView show];
+    [alertView key:@"click" value:[click copy]];
+    [alertView show];
 }
 
-//- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
-//{
-//
-//}
-//- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
-//{
-//    if(_confirmView!=nil)
-//    {
-//        _confirmView=nil;
-//    }
-//}
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     [alertView allowDismiss:YES];
-    if(_click!=nil)
+    OnConfirmClick click=[alertView key:@"click"];
+    if(click!=nil)
     {
-        BOOL yesNo=_click(buttonIndex,alertView);
+        BOOL yesNo=click(buttonIndex,alertView);
         [alertView allowDismiss:yesNo];
         if(!yesNo)
         {
             return;
         }
-        _click=nil;
+        click=nil;
     }
 }
 @end
