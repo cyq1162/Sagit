@@ -244,7 +244,19 @@ static char longPressChar='p';
 #pragma mark click 事件
 -(UIView*)click
 {
-    return [self exeEvent:@"click"];
+    if(self.userInteractionEnabled)
+    {
+        self.userInteractionEnabled=NO;
+        [self exeEvent:@"click"];
+        [Sagit delayExecute:1 onMainThread:YES block:^{
+            if(self)
+            {
+                self.userInteractionEnabled=YES;
+            }
+        }];
+        
+    }
+    return self;
 }
 -(UIView*)addClick:(NSString *)event
 {

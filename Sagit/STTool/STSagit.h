@@ -11,8 +11,14 @@
 #import "STFile.h"
 #import "STHttp.h"
 #import "STMessageBox.h"
-//!所有单例的入口，可以扩展此类，来增加不同的方法，达到如：Sagit.Globa之类的用法。
+
+
+//!所有单例的入口，可以扩展此类，来增加不同的方法，达到如：Sagit.Global之类的用法。
 @interface Sagit : NSObject
+//!单例，目前没啥用。
+//+ (instancetype)share;
+//@property(nonatomic,weak)UIView* Layout;
+
 //!用于存档数据到plist文件中
 +(STFile*)File;
 //!用于存档到内存的全局唯一字典。
@@ -21,7 +27,12 @@
 +(STHttp*)Http;
 //!用于弹窗消息的单例类，在STController中时用self.box调用
 +(STMessageBox*)MsgBox;
-+ (instancetype)share;
+
+#pragma mark 扩展一些全局的方法
+typedef void (^DelayExecuteBlock)();
+//延时N秒后执行
++(void)delayExecute:(NSInteger)second onMainThread:(BOOL)onMainThread block:(DelayExecuteBlock)block;
+
 @end
 
 

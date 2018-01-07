@@ -23,7 +23,9 @@
     [self onInit];
     return self;
 }
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
+    //检测上一个Controller
     [super viewDidLoad];
     [self loadUI];
     [self loadData];
@@ -161,35 +163,7 @@
 
 
 
--(void)redirect:(UIView*)view{
-    if(view==nil){return;}
-    NSString* name=[view key:@"clickSel"];
-    if(name!=nil)
-    {
-        if(![name hasSuffix:@"Controller"])
-        {
-            name=[name append:@"Controller"];
-        }
-        Class class=NSClassFromString(name);
-        if(class!=nil)
-        {
-            STController *controller=[class new];
-            if(self.navigationController!=nil)
-            {
-                NSDictionary *config=[view key:STNavConfig];
-                if(config!=nil)
-                {
-                    [controller key:STNavConfig value: [config toNSMutableDictionary]];
-                }
-                [self stPush:controller];
-            }
-            else
-            {
-                [self presentViewController:controller animated:YES completion:nil];
-            }
-        }
-    }
-}
+
 
 //项目需要重写时，此方法留给具体项目重写。
 - (void)stPush:(UIViewController *)viewController
@@ -200,8 +174,23 @@
 {
     [self stPush:viewController title:title img:nil];
 }
+-(void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
+{
+    if([self key:@"dispose"]!=nil)
+    {
+        [self dispose];
+    }
+    [super presentViewController:viewControllerToPresent animated:flag completion:completion];
+}
 
-
+-(void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion
+{
+    if([self key:@"dispose"]!=nil)
+    {
+        [self dispose];
+    }
+    [super dismissViewControllerAnimated:flag completion:completion];
+}
 
 
 #pragma mark - UITableView 协议实现

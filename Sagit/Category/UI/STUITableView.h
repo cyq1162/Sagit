@@ -16,10 +16,6 @@ typedef BOOL(^DelTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 typedef void(^AfterTableReloadData)(UITableView *tableView);
 //!用于为Table追加每一行的Cell
 @property (nonatomic,copy) AddTableCell addCell;
-//!用于为Table追加每一行的Cell（此方法可以避开循环引用，块里可以用self）
-//-(AddTableCell)addCell;
-//-(NSString*)addCellKey;
-//-(UITableView*)addCell:(AddTableCell)addCell;
 //!用于为Table移除行的Cell
 @property (nonatomic,copy) DelTableCell delCell;
 //!用于为Table reloadData 加载完数据后触发

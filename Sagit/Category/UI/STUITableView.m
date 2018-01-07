@@ -33,10 +33,6 @@
     [self key:@"source" value:dataSource];
     return self;
 }
-//-(NSString*)addCellKey
-//{
-//    return [self key:@"addCell"];
-//}
 -(AddTableCell)addCell
 {
     return [self key:@"addCell"];

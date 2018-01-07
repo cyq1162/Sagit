@@ -9,7 +9,15 @@
 #import "Sagit.h"
 
 @implementation Sagit
-
+//+(instancetype)share
+//{
+//    static Sagit *_share = nil;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        _share = [Sagit new];
+//    });
+//    return _share;
+//}
 +(STFile *)File
 {
     return [STFile share];
@@ -26,13 +34,22 @@
 {
     return [STMessageBox share];
 }
-+(instancetype)share
+#pragma mark 扩展一些全局的方法
++(void)delayExecute:(NSInteger)second onMainThread:(BOOL)onMainThread block:(DelayExecuteBlock)block
 {
-    static Sagit *_share = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _share = [Sagit new];
+    if(!block){return;}
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [NSThread sleepForTimeInterval:second];
+        if(onMainThread)
+        {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                block();
+            });
+        }
+        else
+        {
+            block();
+        }
     });
-    return _share;
 }
 @end

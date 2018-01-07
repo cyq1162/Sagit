@@ -64,6 +64,9 @@ typedef void(^ControllerDescription)(UIViewController *controller);
 -(void)onRightNavBarClick:(UIView*)view;
 //系统内部调用的方法
 -(UIViewController*)reSetNav:(UINavigationController*)navController;
+
+//!跳转到其它页面(内部方法)
+-(void)redirect:(UITapGestureRecognizer*)recognizer;
 #pragma mark 共用接口
 //!重新加载数据（一般由子类重写，由于方法统一，在不同控制器中都可以直接调用，而不用搞代理事件）
 -(void)reloadData;

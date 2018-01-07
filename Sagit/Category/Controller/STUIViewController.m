@@ -274,12 +274,12 @@ static char keyValueChar='k';
     if(self.navigationItem==nil){return self;}
     if(title)
     {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(onRightNavBarClick:)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(rightNavClick:)];
     }
     else if(imgOrName)
     {
         self.navigationItem.rightBarButtonItem =
-        [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(onRightNavBarClick:)];
+        [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(rightNavClick:)];
     }
     else
     {
@@ -287,9 +287,55 @@ static char keyValueChar='k';
     }
     return self;
 }
--(void)onRightNavBarClick:(UIView*)view
+-(void)rightNavClick:(UIBarButtonItem*)view
+{
+    if(view!=nil)
+    {
+        
+        view.enabled=NO;
+        [self onRightNavBarClick:view];
+        [Sagit delayExecute:2 onMainThread:YES block:^{
+            if(view)
+            {
+                view.enabled=YES;
+            }
+        }];
+        
+    }
+}
+//用于被用户复盖方法
+-(void)onRightNavBarClick:(UIBarButtonItem*)view
 {
     
+}
+-(void)redirect:(UIView*)view{
+    if(view==nil){return;}
+    NSString* name=[view key:@"clickSel"];
+    if(name!=nil)
+    {
+        if(![name hasSuffix:@"Controller"])
+        {
+            name=[name append:@"Controller"];
+        }
+        Class class=NSClassFromString(name);
+        if(class!=nil)
+        {
+            STController *controller=[class new];
+            if(self.navigationController!=nil)
+            {
+                NSDictionary *config=[view key:STNavConfig];
+                if(config!=nil)
+                {
+                    [controller key:STNavConfig value: [config toNSMutableDictionary]];
+                }
+                [self stPush:controller];
+            }
+            else
+            {
+                [self presentViewController:controller animated:YES completion:nil];
+            }
+        }
+    }
 }
 #pragma mark 共用接口
 //子类重写
