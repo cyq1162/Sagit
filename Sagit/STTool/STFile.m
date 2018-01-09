@@ -9,22 +9,69 @@
 #import "STFile.h"
 #import "STDictionary.h"
 
+@interface STFile()
+@property (nonatomic,assign)NSSearchPathDirectory directory;
+@property (nonatomic,retain)NSMutableDictionary *cacheDic;
+@property (nonatomic,copy) NSString* STBigFileFoler;
+@end
+
 @implementation STFile
 
-+ (instancetype)share {
++ (instancetype)share
+{
     static STFile *_share = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _share = [[STFile alloc] init];
-        _share.FileName=@"stFile.plist";
+        _share.directory=NSCachesDirectory;
     });
     return _share; 
+}
+-(STFile *)Home
+{
+    if(!_Home)
+    {
+        _Home=[STFile new];
+        _Home.directory=NSUserDirectory;
+    }
+    return _Home;
+}
+-(STFile *)Document
+{
+    if(!_Document)
+    {
+        _Document=[STFile new];
+        _Document.directory=NSDocumentDirectory;
+    }
+    return _Document;
+}
+-(STFile *)Libaray
+{
+    if(!_Libaray)
+    {
+        _Libaray=[STFile new];
+        _Libaray.directory=NSLibraryDirectory;
+    }
+    return _Libaray;
+}
+-(STFile *)Temp
+{
+    if(!_Temp)
+    {
+        _Temp=[STFile new];
+        _Temp.directory=NSDemoApplicationDirectory;
+    }
+    return _Temp;
+}
+-(NSString *)fileName
+{
+    return @"stfile.plist";
 }
 -(CGFloat)size
 {
     CGFloat folderSize = 0.0f;
     //获取路径
-    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(self.directory,NSUserDomainMask,YES) firstObject];
     //获取所有文件的数组
     NSArray *files = [[NSFileManager defaultManager] subpathsAtPath:cachePath];
     //    NSLog(@"文件数：%ld",files.count);
@@ -41,7 +88,7 @@
 
 - (void)clear:(void(^)(BOOL success))block {
     //获取路径
-    NSString*cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) firstObject];
+    NSString *cachePath=self.folderPath;
     //返回路径中的文件数组
     NSArray*files = [[NSFileManager defaultManager] subpathsAtPath:cachePath];
     BOOL result=YES;
@@ -54,6 +101,8 @@
             result = [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
         }
     }
+    _cacheDic=nil;
+    _STBigFileFoler=nil;//需要重新创建文件夹。
     if(block!=nil){block(result);}
     
 }
@@ -62,12 +111,21 @@
     if(key==nil || value==nil){return;}
     @try
     {
-        NSMutableDictionary *dic = [self file:self.FileName];
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:value];
-        [dic setObject:data forKey:key];
-        [dic writeToFile:[self filePath:self.FileName] atomically:YES];
-        data=nil;
-        dic=nil;
+        if(data)
+        {
+            if(data.length>4*1024) // >4K转存独立文件
+            {
+                NSString *fileName=[[@"STBigFile_" append:[@([key hash]) stringValue]] append:@".dat"];
+                [data writeToFile:[self.STBigFileFoler append:fileName] atomically:YES];
+                [self.cacheDic set:key value:fileName];
+            }
+            else
+            {
+                [self.cacheDic set:key value:data];
+            }
+            [self writeToFile];
+        }
     }
     @catch(NSException * e)
     {}
@@ -77,11 +135,21 @@
     if(key==nil){return nil;}
     @try
     {
-        NSMutableDictionary *dic = [self file:self.FileName];
-        if(dic!=nil && dic.allKeys.count>0)
+        if(self.cacheDic.count>0)
         {
-            NSData *data = [dic objectForKey:key];
-            return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            id data = [self.cacheDic get:key];
+            if(data)
+            {
+                if([data isKindOfClass:[NSString class]] && [((NSString*)data) startWith:@"STBigFile_"])
+                {
+                    NSString *path=[self.STBigFileFoler append:(NSString*)data];
+                    data=[[NSData alloc] initWithContentsOfFile:path];
+                }
+                if(data)
+                {
+                    return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+                }
+            }
         }
     }
     @catch(NSException * e)
@@ -93,30 +161,70 @@
     if(key==nil){return;}
     @try
     {
-        NSMutableDictionary *dic = [self file:self.FileName];
-        [dic remove:key];
-        [dic writeToFile:[self filePath:self.FileName] atomically:YES];
+        [self.cacheDic remove:key];
+        [self writeToFile];
     }
     @catch(NSException * e)
     {}
 }
-#pragma mark --- 私有方法
-- (NSString *)filePath:(NSString *)fileName {
-    NSString *dicPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).lastObject;
-    NSString *filedicPath = [dicPath  stringByAppendingPathComponent:fileName];
-    return filedicPath;
+-(NSMutableDictionary *)cacheDic
+{
+    if(!_cacheDic)
+    {
+        _cacheDic=[self readFromFile];
+    }
+    return _cacheDic;
+}
+-(void)writeToFile
+{
+     [self.cacheDic writeToFile:self.filePath atomically:YES];
 }
 
-- (NSMutableDictionary *)file:(NSString *)fileName {
-    NSString *filedicPath = [self filePath:fileName];
+- (NSMutableDictionary *)readFromFile
+{
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSMutableDictionary *fileDic;
-    if ([fileManager fileExistsAtPath:filedicPath]) {
-        fileDic = [[NSMutableDictionary alloc] initWithContentsOfFile:filedicPath];
-    } else {
-        fileDic = [NSMutableDictionary dictionary];
+    if ([fileManager fileExistsAtPath:self.filePath])
+    {
+        fileDic = [[NSMutableDictionary alloc] initWithContentsOfFile:self.filePath];
+    }
+    else
+    {
+        fileDic = [NSMutableDictionary new];
     }
     return fileDic;
 }
-
+-(NSString*)filePath
+{
+    return [self.folderPath stringByAppendingPathComponent:self.fileName];
+}
+-(NSString*)folderPath
+{
+    NSString *folder=nil;
+    switch (self.directory) {
+        case NSUserDirectory:
+            folder=NSHomeDirectory();
+            break;
+        case NSDemoApplicationDirectory:
+            folder=NSTemporaryDirectory();
+            break;
+        default:
+            folder=NSSearchPathForDirectoriesInDomains(self.directory, NSUserDomainMask, YES).lastObject;
+            break;
+    }
+    return folder;
+}
+-(NSString *)STBigFileFoler
+{
+    if(!_STBigFileFoler)
+    {
+        _STBigFileFoler=[[self folderPath] append:@"/STBigFile/"];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if(![fileManager fileExistsAtPath:_STBigFileFoler])
+        {
+            [fileManager createDirectoryAtPath:_STBigFileFoler withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+    }
+    return _STBigFileFoler;
+}
 @end

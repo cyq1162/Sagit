@@ -49,6 +49,7 @@
         _http.securityPolicy = securityPolicy;
         
         _http.responseSerializer = [AFJSONResponseSerializer serializer];//以字典格式返回数据
+       // _http.responseSerializer = [AFHTTPResponseSerializer serializer];//以字典格式返回数据
     }
     return _http;
 }
@@ -158,7 +159,8 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
     [self hideLoading];
     if(success!=nil)
     {
-        STModel *model=[[STModel alloc]initWithDictionary:response error:nil];
+        
+        STModel *model=[[STModel alloc] initWithObject:response];
         success(model);
         success=nil;
     }

@@ -19,7 +19,7 @@
 //+ (instancetype)share;
 //@property(nonatomic,weak)UIView* Layout;
 
-//!用于存档数据到plist文件中
+//!默认对应于NSCache沙盒目录（用于存档数据到plist文件中）
 +(STFile*)File;
 //!用于存档到内存的全局唯一字典。
 +(NSMutableDictionary*)Cache;

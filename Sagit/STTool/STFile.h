@@ -8,10 +8,20 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-//!用于存档数据到plist文件中
+//!用于存档数据到plist文件中,默认存档沙盒的Cache目录
 @interface STFile : NSObject
 
-@property (nonatomic,copy) NSString* FileName;
+//!对应沙盒的Home目录
+@property (nonatomic,retain) STFile* Home;
+//!对应沙盒的Document目录
+@property (nonatomic,retain) STFile* Document;
+//!对应沙盒的Libaray目录
+@property (nonatomic,retain) STFile* Libaray;
+//!对应沙盒的Tmp目录
+@property (nonatomic,retain) STFile* Temp;
+//!存档的文件名。
+@property (readonly,nonatomic,copy) NSString* fileName;
+
 + (instancetype)share;
 //!获取文件的大小
 - (CGFloat)size;

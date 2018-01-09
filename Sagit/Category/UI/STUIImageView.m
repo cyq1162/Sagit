@@ -109,7 +109,6 @@ static char pickChar='p';
     if(cacheImg)
     {
         [self image:cacheImg];
-        cacheImg=nil;
         if(block){block(self);block=nil;}
         return self;
     }
@@ -121,25 +120,28 @@ static char pickChar='p';
       NSData * data = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
         if (data != nil)
         {
-            UIImage *image = [[UIImage alloc]initWithData:data];
             if(compress>=0 && data.length>compress*1024)//>400K
             {
+                UIImage *image = [[UIImage alloc]initWithData:data];
                 data= [image compress:compress];//压缩图片
-                image = [[UIImage alloc]initWithData:data];
             }
-            //存档到文件中
-            [Sagit.File set:cacheKey value:data];
+        }
+        if (data || block)
+        {
             dispatch_async(dispatch_get_main_queue(), ^{
                 //在这里做UI操作(UI操作都要放在主线程中执行)
-                self.image=image;
+                if(data)
+                {
+                    self.image=[[UIImage alloc]initWithData:data];
+                    [Sagit.File set:cacheKey value:data];
+                }
+                if(block)
+                {
+                    block(self);
+                }
             });
-            data=nil;
         }
-        if(block)
-        {
-            block(self);
-        }
-        
+        data=nil;
     });
     return self;
 }
@@ -201,7 +203,7 @@ static char pickChar='p';
 #pragma mark 扩展属性
 -(UIImageView *)image:(id)imgOrName
 {
-    [self setImage:[UIView toImage:imgOrName]];
+    self.image=[UIView toImage:imgOrName];
     return self;
 }
 @end
