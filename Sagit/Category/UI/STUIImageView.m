@@ -53,68 +53,91 @@ static char pickChar='p';
     [Sagit.MsgBox confirm:@"是否保存图片？" title:@"消息提示" click:^BOOL(NSInteger isOK,UIAlertView* view) {
         if(isOK>0)
         {
-            UIImageView *view=self;
-            UIImageWriteToSavedPhotosAlbum(view.image, self, @selector(afterImageSave:error:contextInfo:),nil);
+            [self.image save:^(NSError *err) {
+                [Sagit.MsgBox prompt:!err?@"保存成功":@"保存失败:保存照片权限被拒绝，您需要重新设置才能保存！"];
+            }];
         }
         return YES;
     }];
     return self;
 }
-- (void)afterImageSave:(UIImage *)image error:(NSError *)error contextInfo:(void *)contextInfo
-{
-    if (!error) {
-        [Sagit.MsgBox prompt:@"保存成功"];
-    }else {
-        
-        [Sagit.MsgBox prompt:@"保存失败:保存照片权限被拒绝，您需要重新设置才能保存！"];
-    }
-}
+
 -(NSString *)url
 {
-    return [self key:@"url"];
+    return [self key:@"url" ];
 }
+
 -(UIImageView *)url:(NSString *)url
 {
-    return [self url:url maxKb:256];
+    return [self url:url maxKb:256 default:nil after:nil];
+}
+-(UIImageView *)url:(NSString *)url after:(AfterSetImageUrl)block
+{
+    return [self url:url maxKb:256 default:nil after:block];
 }
 -(UIImageView *)url:(NSString *)url default:(id)imgOrName
 {
-    return [self url:url maxKb:256 default:imgOrName];
+    return [self url:url maxKb:256 default:imgOrName  after:nil];
 }
 -(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress
 {
-    return [self url:url maxKb:compress default:nil];
+    return [self url:url maxKb:compress default:nil  after:nil];
 }
 -(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress default:(id)imgOrName
+{
+    return [self url:url maxKb:compress default:nil after:nil];
+}
+-(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress default:(id)imgOrName after:(AfterSetImageUrl)block
 {
     if([NSString isNilOrEmpty:url])
     {
         self.image=nil;
         [self.keyValue remove:@"url"];
+        if(block){block(self);block=nil;}
         return self;
     }
     [self key:@"url" value:url];
     if(![url startWith:@"http"])
     {
-        return [self image:url];
+        [self image:url];
+        if(block){block(self);block=nil;}
+        return self;
+    }
+    NSString *cacheKey=[@"STImgUrl_" append:[@([url hash]) stringValue]];
+    NSData * cacheImg=[Sagit.File get:cacheKey];
+    //检测有没有缓存
+    if(cacheImg)
+    {
+        [self image:cacheImg];
+        cacheImg=nil;
+        if(block){block(self);block=nil;}
+        return self;
     }
     if(imgOrName)
     {
         self.image=[self toImage:imgOrName];
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSData * data = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
-        if (data != nil) {
+      NSData * data = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
+        if (data != nil)
+        {
             UIImage *image = [[UIImage alloc]initWithData:data];
             if(compress>=0 && data.length>compress*1024)//>400K
             {
                 data= [image compress:compress];//压缩图片
                 image = [[UIImage alloc]initWithData:data];
             }
+            //存档到文件中
+            [Sagit.File set:cacheKey value:data];
             dispatch_async(dispatch_get_main_queue(), ^{
                 //在这里做UI操作(UI操作都要放在主线程中执行)
                 self.image=image;
             });
+            data=nil;
+        }
+        if(block)
+        {
+            block(self);
         }
         
     });
@@ -211,5 +234,17 @@ static char pickChar='p';
     }
     return data;
 }
-
+-(void)save:(AfterImageSave)afterSaveBlock
+{
+    self.afterImageSaveBlock=afterSaveBlock;
+    UIImageWriteToSavedPhotosAlbum(self, self, @selector(afterImageSave:error:contextInfo:),nil);
+}
+- (void)afterImageSave:(UIImage *)image error:(NSError *)error contextInfo:(void *)contextInfo
+{
+    if(self.afterImageSaveBlock)
+    {
+        self.afterImageSaveBlock(error);
+        self.afterImageSaveBlock = nil;
+    }
+}
 @end

@@ -66,6 +66,8 @@
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:value];
         [dic setObject:data forKey:key];
         [dic writeToFile:[self filePath:self.FileName] atomically:YES];
+        data=nil;
+        dic=nil;
     }
     @catch(NSException * e)
     {}

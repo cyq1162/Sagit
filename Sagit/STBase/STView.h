@@ -30,13 +30,6 @@
 //!事件在UI初始化之后执行
 -(void)initData;
 
-//!将指定的数据批量赋值到所有的UI中：data可以是字典、是json，是实体等
--(void)setToAll:(id)data;
-//!将指定的数据批量赋值到所有的UI中：data可以是字典、是json，是实体等 toChild:是否检测子控件并对子控件也批量赋值，默认NO。
--(void)setToAll:(id)data toChild:(BOOL)toChild;
-//!从UIList中遍历获取属性isFormUI的表单数据列表
--(NSMutableDictionary*)formData;
-//!从UIList中遍历获取属性isFormUI的表单数据列表 superView ：指定一个父，不指定则为根视图
--(NSMutableDictionary*)formData:(id)superView;
+
 
 @end

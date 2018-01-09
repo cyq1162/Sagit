@@ -601,8 +601,12 @@ static NSInteger xyNone=-99999;
     }
     return self;
 }
-//仅遍历一级
 -(UIView*)stSizeToFit
+{
+    return [self stSizeToFit:0 y:0];
+}
+//仅遍历一级
+-(UIView*)stSizeToFit:(NSInteger)widthPx y:(NSInteger)heightPx
 {
     NSString *className=NSStringFromClass([self class]);
     if([className isEqualToString:@"UIView"])
@@ -611,18 +615,19 @@ static NSInteger xyNone=-99999;
         {
             NSInteger xValue=0,yValue=0;
             
-            for (NSInteger i=0; i<self.subviews.count; i++) {
+            for (NSInteger i=0; i<self.subviews.count; i++)
+            {
                 CGRect subFrame= self.subviews[i].frame;
                 CGRect myFrame=self.frame;
                 xValue=subFrame.origin.x+subFrame.size.width -myFrame.size.width;
                 yValue=subFrame.origin.y+subFrame.size.height -myFrame.size.height;
                 if(xValue>0)
                 {
-                    [self width: (myFrame.size.width+xValue)*Xpx];
+                    [self width: (myFrame.size.width+xValue)*Xpx+widthPx];
                 }
                 if(yValue>0)
                 {
-                    [self height:(myFrame.size.height+yValue)*Ypx];
+                    [self height:(myFrame.size.height+yValue)*Ypx+heightPx];
                 }
             }
         }

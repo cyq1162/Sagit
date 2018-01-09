@@ -111,7 +111,7 @@
     [self.keyValue set:@"autoHeight" value:yesNo?@"1":@"0"];
     if(yesNo){
        // [self height:0];//先置为0,避免没有数据时全屏空白
-        [self scrollEnabled:NO];//自动计算高度时，滚动条默认没必要存在。
+        [self scrollEnabled:NO];//自动计算高度时，滚动条默认没必要存在但如果计算高度超屏时，则自动还原回来。。
     }
     return self;
 }
@@ -176,10 +176,10 @@
     [self key:@"rowCountInSections" value:items];
     return self;
 }
--(void)dealloc
-{
-    //移除全局缓存中的事件
-    
-    NSLog(@"%@ ->STUITableView relase", [self class]);
-}
+//-(void)dealloc
+//{
+//    //移除全局缓存中的事件
+//    
+//    NSLog(@"%@ ->STUITableView relase", [self class]);
+//}
 @end

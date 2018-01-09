@@ -257,7 +257,17 @@
         //cell.separatorInset = UIEdgeInsetsMake(0, STScreeWidthPt , 0, 0);//去掉最后一条线的
         if(tableView.autoHeight)
         {
-            [tableView height:(tableView.contentSize.height-1)*Ypx];
+            //检测是否高度超过屏
+            NSInteger passValue=tableView.frame.origin.y+tableView.contentSize.height-tableView.superview.frame.size.height;
+            if(passValue>0)
+            {
+                tableView.scrollEnabled=YES;
+                [tableView height:(tableView.contentSize.height-passValue-1)*Ypx];
+            }
+            else
+            {
+                [tableView height:(tableView.contentSize.height-1)*Ypx];//减1是去掉最后的线。
+            }
         }
         if(tableView.afterReload)
         {

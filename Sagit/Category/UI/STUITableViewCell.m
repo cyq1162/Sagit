@@ -17,12 +17,18 @@
     if(cell==nil)
     {
         cell=[[UITableViewCell alloc] initWithStyle:tableView.cellStyle reuseIdentifier:@"TableViewCell"];
-       // [cell.keyValueWeak set:@"table" value:tableView];
-//        STWeakObj(tableView);//
-        [cell key:@"table" valueWeak:tableView];
-        [cell key:@"stView" valueWeak:tableView.stView];
-        [cell key:@"baseView" valueWeak:tableView.baseView];//因为Cell在Add时，并没有父，所以需要提前设置，这样STLastView等宏才能找到上一个UI
     }
+    else
+    {
+        if(cell.contentView.subviews.count>0)
+        {
+            [cell.contentView removeAllSubViews];
+        }
+       // [cell key:@"isReused" value:@"1"];
+    }
+    [cell key:@"table" valueWeak:tableView];
+    [cell key:@"stView" valueWeak:tableView.stView];
+    [cell key:@"baseView" valueWeak:tableView.baseView];//因为Cell在Add时，并没有父，所以需要提前设置，这样STLastView等宏才能找到上一个UI
     return cell;
 }
 -(UITableView *)table
@@ -42,6 +48,10 @@
     [self key:@"source" value:dataSource];
     return self;
 }
+//-(BOOL)isReused
+//{
+//    return [self key:@"isReused"]!=nil;
+//}
 -(BOOL)allowDelete
 {
     if([self key:@"allowDelete"]==nil)
@@ -64,8 +74,8 @@
     [self key:@"firstValue" value:value];
     return self;
 }
--(void)dealloc
-{
-    NSLog(@"%@ ->STUITableViewCell relase", [self class]);
-}
+//-(void)dealloc
+//{
+//    NSLog(@"%@ ->STUITableViewCell relase", [self class]);
+//}
 @end

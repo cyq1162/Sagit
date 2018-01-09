@@ -55,10 +55,10 @@
         }
     }
 }
--(void)dealloc
-{
-    NSLog(@"UINavigationController relase -> %@", [self class]);
-}
+//-(void)dealloc
+//{
+//    NSLog(@"UINavigationController relase -> %@", [self class]);
+//}
 @end
 
 

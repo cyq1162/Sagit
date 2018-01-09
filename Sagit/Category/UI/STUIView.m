@@ -16,6 +16,9 @@
 #import "STUILabel.h"
 #import "STUIImageView.h"
 
+#import "STUIViewAddUI.h"
+#import "STUIViewAutoLayout.h"
+#import "STModelBase.h"
 @implementation UIView(ST)
 
 #pragma mark keyvalue
@@ -250,7 +253,70 @@ static char keyValueChar='k';
 //子类重写
 -(void)reloadData{}
 -(void)reloadData:(NSString*)para{}
-
+-(void)setToAll:(id)data
+{
+    [self setToAll:data toChild:NO];
+}
+-(void)setToAll:(id)data toChild:(BOOL)toChild
+{
+    NSDictionary *dic;
+    if([data isKindOfClass:[NSDictionary class]])
+    {
+        dic=data;
+    }
+    else if([data isKindOfClass:[NSString class]])
+    {
+        dic=[NSDictionary dictionaryWithJson:data];
+    }
+    else if([data isKindOfClass:[STModelBase class]])
+    {
+        dic=[data toDictionary];
+    }
+    if(dic==nil){return;}
+    for (NSString*key in dic) {
+        
+        UIView *ui=[self.UIList get:key];
+        if(ui!=nil)
+        {
+            id value=dic[key];
+            
+            if(value!=nil && [value isKindOfClass:[NSNumber class]])
+            {
+                value=[((NSNumber*)value) stringValue];
+            }
+            [ui stValue:value];
+        }
+    }
+    if(toChild)
+    {
+        //触发子控件事件
+        for (NSString *key in self.UIList)
+        {
+            UIView *view=[self.UIList get:key];
+            if([view isKindOfClass:[STView class]])
+            {
+                [view setToAll:dic toChild:toChild];
+            }
+        }
+    }
+}
+-(NSMutableDictionary *)formData
+{
+    return [self formData:nil];
+}
+//!获取当前窗体的表单数据
+-(NSMutableDictionary *)formData:(id)superView
+{
+    NSMutableDictionary *formData=[NSMutableDictionary new];
+    for (NSString*key in self.UIList) {
+        UIView *ui=[self.UIList get:key];
+        if([ui isFormUI] && (superView==nil || ui.superview==superView))
+        {
+            [formData setObject:[ui stValue] forKey:key];
+        }
+    }
+    return formData;
+}
 #pragma mark 扩展系统属性
 
 -(UIColor*)toColor:(id)hexOrColor

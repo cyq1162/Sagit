@@ -14,6 +14,7 @@
 #import "STUIView.h"
 #import "STUIViewAddUI.h"
 #import "STUIViewAutoLayout.h"
+#import "Sagit.h"
 @implementation UIViewController(ST)
 
 #pragma mark keyvalue
@@ -182,8 +183,14 @@ static char keyValueChar='k';
             dic=[NSMutableDictionary new];
             [viewController key:STNavConfig value:dic];
         }
-        [dic set:STNavLeftTitle value:title];
-        [dic set:STNavLeftImage value:imgOrName];
+        if(title)
+        {
+            [dic set:STNavLeftTitle value:title];
+        }
+        if(imgOrName)
+        {
+            [dic set:STNavLeftImage value:imgOrName];
+        }
         [viewController reSetNav:self.navigationController];
     }
     
@@ -203,8 +210,13 @@ static char keyValueChar='k';
             self.tabBarController.tabBar.hidden=![preController needTabBar];
         }
         [self dispose];
-        //[self reSetNav:self.navigationController];
         [self.navigationController popViewControllerAnimated:YES];
+    }
+    else if([self isKindOfClass:[UINavigationController class]])
+    {
+        //什么鬼，升级到Xcode 9.2 二次push之后，第二次竟然已经到了Navigation了？ 修正图票事件后好了？
+        [((UINavigationController*)self) popViewControllerAnimated:YES];
+        
     }
 }
 //系统内部调用的方法
@@ -253,7 +265,7 @@ static char keyValueChar='k';
         {
             //创一张空View 显示
             btn=[[UIButton alloc] initWithFrame:STRectMake(0, 0, 200, STNavHeightPx)];
-            [btn backgroundColor:ColorBlack];
+            [btn backgroundColor:ColorClear];
             [navController.navigationBar addSubview:btn];
         }
         else
@@ -327,8 +339,13 @@ static char keyValueChar='k';
                 if(config!=nil)
                 {
                     [controller key:STNavConfig value: [config toNSMutableDictionary]];
+                    [self stPush:controller title:nil img:nil];
                 }
-                [self stPush:controller];
+                else
+                {
+                    [self stPush:controller title:STNavLeftDefaultTitle img:STNavLeftDefaultImage];
+                }
+                
             }
             else
             {

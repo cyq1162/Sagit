@@ -33,8 +33,8 @@
         
     }
 }
--(void)dealloc
-{
-    NSLog(@"STUIAlertView relase -> %@", [self class]);
-}
+//-(void)dealloc
+//{
+//    NSLog(@"STUIAlertView relase -> %@", [self class]);
+//}
 @end

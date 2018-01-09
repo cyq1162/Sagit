@@ -80,6 +80,8 @@
 -(UIView*)refleshLayout:(BOOL)withWidthHeight ignoreSelf:(BOOL)ignoreSelf;
 //!遍历检测其子UI，如果子UI部分超过，则扩展宽与高，但不会缩小。
 -(UIView*)stSizeToFit;
+//!遍历检测其子UI，如果子UI部分超过，则扩展宽与高，但不会缩小。px参数：扩展后再追加的长度或高度，默认0
+-(UIView*)stSizeToFit:(NSInteger)widthPx y:(NSInteger)heightPx;
 //!图片拉伸（一般适用于背景拉伸或聊天图片的拉伸）
 -(UIView*)stretch;
 //!图片拉伸（一般适用于背景拉伸或聊天图片的拉伸） x：是px值

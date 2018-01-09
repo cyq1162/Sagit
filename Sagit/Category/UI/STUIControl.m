@@ -74,8 +74,8 @@
     [self setHighlighted:yesNo];
     return self;
 }
--(void)dealloc
-{
-    //[self removeTarget:self action:nil forControlEvents:nil];
-}
+//-(void)dealloc
+//{
+//    //[self removeTarget:self action:nil forControlEvents:nil];
+//}
 @end

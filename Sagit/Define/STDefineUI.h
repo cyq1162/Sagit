@@ -133,7 +133,13 @@
 #define STNavTitle @"STNavTitle"
 #define STNavRightTitle @"STNavRightTitle"
 #define STNavRightImage @"STNavRightImage"
-
+//定义两个左侧导航的默认值
+#ifndef STNavLeftDefaultTitle
+#define STNavLeftDefaultTitle nil
+#endif
+#ifndef STNavLeftDefaultImage
+#define STNavLeftDefaultImage nil
+#endif
 //图片
 #define STImage(imgName) [UIImage imageNamed:imgName]
 #define STImageOriginal(imgName) [[UIImage imageNamed:imgName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];

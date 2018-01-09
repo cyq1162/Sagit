@@ -61,7 +61,7 @@ typedef void(^ControllerDescription)(UIViewController *controller);
 //!设置右侧导航栏的按钮为文字或图片
 -(UIViewController*)rightNav:(NSString*)title img:(id)imgOrName;
 //!右侧导航栏的默认点击事件
--(void)onRightNavBarClick:(UIView*)view;
+-(void)onRightNavBarClick:(UIBarButtonItem*)view;
 //系统内部调用的方法
 -(UIViewController*)reSetNav:(UINavigationController*)navController;
 
