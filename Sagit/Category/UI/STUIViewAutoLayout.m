@@ -17,7 +17,7 @@
 #pragma mark 属性定义
 static char layoutTracerChar='l';
 static char originFrameChar='o';
-static NSInteger xyNone=-99999;
+static NSInteger nullValue=-99999;
 // Name
 - (NSMutableDictionary*)LayoutTracer{
     return (NSMutableDictionary*)objc_getAssociatedObject(self, &layoutTracerChar);
@@ -92,6 +92,10 @@ static NSInteger xyNone=-99999;
     return ui.frame;
 }
 //在右边
+-(UIView*)onRight:(id)uiOrName
+{
+    return [self onRight:uiOrName x:0 y:0];
+}
 -(UIView*)onRight:(id)uiOrName x:(CGFloat)x
 {
     return [self onRight:uiOrName x:x y:0];
@@ -128,6 +132,10 @@ static NSInteger xyNone=-99999;
     return self;
 }
 //在左边
+-(UIView*)onLeft:(id)uiOrName
+{
+    return [self onLeft:uiOrName x:0 y:0];
+}
 -(UIView*)onLeft:(id)uiOrName x:(CGFloat)x
 {
     return [self onLeft:uiOrName x:x y:0];
@@ -171,6 +179,10 @@ static NSInteger xyNone=-99999;
     return self;
 }
 //在上边
+-(UIView*)onTop:(id)uiOrName
+{
+    return [self onTop:uiOrName y:0 x:0];
+}
 -(UIView*)onTop:(id)uiOrName y:(CGFloat)y
 {
     return [self onTop:uiOrName y:y x:0];
@@ -212,6 +224,10 @@ static NSInteger xyNone=-99999;
     return self;
 }
 //在下边
+-(UIView *)onBottom:(id)uiOrName
+{
+    return [self onBottom:uiOrName y:0 x:0];
+}
 -(UIView *)onBottom:(id)uiOrName y:(CGFloat)y
 {
     return [self onBottom:uiOrName y:y x:0];
@@ -249,20 +265,20 @@ static NSInteger xyNone=-99999;
 }
 -(UIView*)relate:(XYLocation)location v:(CGFloat)value
 {
-    return [self relate:location v:value v2:xyNone v3:xyNone v4:xyNone];
+    return [self relate:location v:value v2:nullValue v3:nullValue v4:nullValue];
 }
 -(UIView*)relate:(XYLocation)location v:(CGFloat)value v2:(CGFloat)value2
 {
-    return [self relate:location v:value v2:value2 v3:xyNone v4:xyNone];
+    return [self relate:location v:value v2:value2 v3:nullValue v4:nullValue];
 }
 -(UIView*)relate:(XYLocation)location v:(CGFloat)value v2:(CGFloat)value2 v3:(CGFloat)value3
 {
-    return [self relate:location v:value v2:value2 v3:value3 v4:xyNone];
+    return [self relate:location v:value v2:value2 v3:value3 v4:nullValue];
 }
 -(UIView*)relate:(XYLocation)location v:(CGFloat)value v2:(CGFloat)value2 v3:(CGFloat)value3 v4:(CGFloat)value4
 {
     [self addTracer:nil method:@"relate" v1:value v2:value2 v3:value3 v4:value4 location:location xyFlag:0];
-    CGFloat left=xyNone,top=xyNone,right=xyNone,bottom=xyNone;
+    CGFloat left=nullValue,top=nullValue,right=nullValue,bottom=nullValue;
     switch (location) {
         case Left:
             left=value;
@@ -279,56 +295,56 @@ static NSInteger xyNone=-99999;
             //tow values
         case LeftTop:
             left=value;
-            top=value2==xyNone?value:value2;
+            top=value2==nullValue?value:value2;
             break;
         case LeftRight:
             left=value;
-            right=value2==xyNone?value:value2;
+            right=value2==nullValue?value:value2;
             break;
         case LeftBottom:
             left=value;
-            bottom=value2==xyNone?value:value2;
+            bottom=value2==nullValue?value:value2;
             break;
         case TopRight:
             top=value;
-            right=value2==xyNone?value:value2;
+            right=value2==nullValue?value:value2;
             break;
         case RightBottom:
             right=value;
-            bottom=value2==xyNone?value:value2;
+            bottom=value2==nullValue?value:value2;
             break;
         case TopBottom:
             top=value;
-            bottom=value2==xyNone?value:value2;
+            bottom=value2==nullValue?value:value2;
             break;
             //three values
         case LeftTopRight:
             left=value;
-            top=value2==xyNone?value:value2;
-            right=value3==xyNone?left:value3;
+            top=value2==nullValue?value:value2;
+            right=value3==nullValue?left:value3;
             break;
         case LeftTopBottom:
             left=value;
-            top=value2==xyNone?value:value2;
-            bottom=value3==xyNone?top:value3;
+            top=value2==nullValue?value:value2;
+            bottom=value3==nullValue?top:value3;
             break;
         case LeftBottomRight:
             left=value;
-            bottom=value2==xyNone?value:value2;
-            right=value3==xyNone?left:value3;
+            bottom=value2==nullValue?value:value2;
+            right=value3==nullValue?left:value3;
             break;
         case TopRightBottom:
             top=value;
-            right=value2==xyNone?value:value2;
-            bottom=value3==xyNone?top:value3;
+            right=value2==nullValue?value:value2;
+            bottom=value3==nullValue?top:value3;
             break;
             //four values
         default:
         case LeftTopRightBottom:
             left=value;
-            top=value2==xyNone?value:value2;
-            right=value3==xyNone?left:value3;
-            bottom=value4==xyNone?top:value4;
+            top=value2==nullValue?value:value2;
+            right=value3==nullValue?left:value3;
+            bottom=value4==nullValue?top:value4;
             break;
     }
     return [self relate:LeftTopRightBottom left:left top:top right:right bottom:bottom];
@@ -345,15 +361,15 @@ static NSInteger xyNone=-99999;
     CGSize superSize=[self superSize];
     CGRect frame=STRectCopy(self.frame);
     //frame.origin=CGPointZero;//归零处理 后来没想通为什么要归零，只能去掉。
-    if(left!=xyNone && right!=xyNone)
+    if(left!=nullValue && right!=nullValue)
     {
         frame.size.width=superSize.width-left*Xpt-right*Xpt;
     }
-    if(top!=xyNone && bottom!=xyNone)
+    if(top!=nullValue && bottom!=nullValue)
     {
         frame.size.height=superSize.height-top*Ypt-bottom*Ypt;
     }
-    if(left!=xyNone)
+    if(left!=nullValue)
     {
         CGFloat changeValue=frame.origin.x-floor(left*Xpt);//X发生变化的值
         frame.origin.x=floor(left*Xpt);
@@ -363,7 +379,7 @@ static NSInteger xyNone=-99999;
             frame.size.width=frame.size.width+changeValue;
         }
     }
-    else if(right!=xyNone)
+    else if(right!=nullValue)
     {
         if([self.LayoutTracer has:@"onRight"])
         {
@@ -374,7 +390,7 @@ static NSInteger xyNone=-99999;
             frame.origin.x=floor(superSize.width-frame.size.width-right*Xpt);
         }
     }
-    if(top!=xyNone)
+    if(top!=nullValue)
     {
         CGFloat changeValue=frame.origin.y-floor(top*Ypt);//Y发生变化的值
         frame.origin.y=floor(top*Ypt);
@@ -384,7 +400,7 @@ static NSInteger xyNone=-99999;
             frame.size.height=frame.size.height+changeValue;
         }
     }
-    else if(bottom!=xyNone)
+    else if(bottom!=nullValue)
     {
         if([self.LayoutTracer has:@"onBottom"])
         {
@@ -402,20 +418,54 @@ static NSInteger xyNone=-99999;
 
 -(UIView*)toCenter
 {
-    return [self toCenter:0];
+    return [self toCenter:XY];
 }
 -(UIView*)toCenter:(XYFlag)flag
 {
     [self addTracer:nil method:@"toCenter" v1:0 v2:0 v3:0 v4:0 location:0 xyFlag:flag];
     CGRect frame=self.frame;
     CGSize superSize=[self superSize];
+    //计算去掉超出父窗体或屏幕的部分
+    BOOL relateTop=NO,relateBottom=NO,relateLeft=NO,relateRight=NO;//检测有没有上下左右的约束。
+    STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
+    if(tracer!=nil)
+    {
+        NSString *relate=[@(tracer.location) stringValue];
+        relateLeft=[relate contains:@"1"];
+        relateTop=[relate contains:@"2"];
+        relateRight=[relate contains:@"3"];
+        relateBottom=[relate contains:@"4"];
+    }
+    
     if(flag==1 || flag==0)
     {
-        frame.origin.x=superSize.width/2-frame.size.width/2;
+        if((relateRight || [self.LayoutTracer has:@"onLeft"]) && frame.origin.x+frame.size.width<superSize.width)
+        {
+            frame.origin.x=frame.origin.x/2;
+        }
+        else if((relateLeft || [self.LayoutTracer has:@"onRight"]) && frame.origin.x>0)
+        {
+            frame.origin.x+=(superSize.width-frame.size.width-frame.origin.x)/2;
+        }
+        else
+        {
+            frame.origin.x=(superSize.width-frame.size.width)/2;
+        }
     }
     if(flag==2 || flag==0)
     {
-        frame.origin.y=superSize.height/2-frame.size.height/2;
+        if((relateBottom || [self.LayoutTracer has:@"onTop"]) && frame.origin.y+frame.size.height<superSize.height)
+        {
+            frame.origin.y=frame.origin.y/2;
+        }
+        else if((relateTop || [self.LayoutTracer has:@"onBottom"]) && frame.origin.y>0)
+        {
+            frame.origin.y+=(superSize.height-frame.size.height-frame.origin.y)/2;
+        }
+        else
+        {
+            frame.origin.y=(superSize.height-frame.size.height)/2;
+        }
     }
     [self frame:frame];
     return self;
@@ -558,11 +608,7 @@ static NSInteger xyNone=-99999;
         for (NSString*method in tracer)
         {
             STLayoutTracer *v=tracer[method];
-            if ([method isEqualToString:@"toCenter"])
-            {
-                [self toCenter:v.xyFlag];
-            }
-            else if ([method isEqualToString:@"relate"])
+            if ([method isEqualToString:@"relate"])
             {
                 [self relate:v.location v:v.v1 v2:v.v2 v3:v.v3 v4:v.v4];
             }
@@ -582,13 +628,13 @@ static NSInteger xyNone=-99999;
             {
                 [self onBottom:v.view y:v.v1 x:v.v2];
             }
+            else if ([method isEqualToString:@"toCenter"])
+            {
+                [self toCenter:v.xyFlag];
+            }
             else if (withWidthHeight && [method isEqualToString:@"widthHeight"])
             {
                 [self width:v.v1 height:v.v2];
-//                CGRect frame=STRectCopy(self.frame);//处理百分比
-//                if(v.v1>=0 && v.v1<=1){frame.size.width=[self superSize].width*v.v1;}
-//                if(v.v2>=0 && v.v2<=1){frame.size.height=[self superSize].height*v.v2;}
-//                [self frame:frame];
             }
         }
     }

@@ -360,7 +360,7 @@ static char keyValueChar='k';
 -(void)reloadData:(NSString*)para{}
 
 #pragma mark 代码说明块
--(void)block:(NSString*)description on:(ControllerDescription)descBlock
+-(UIViewController*)block:(NSString*)description on:(ControllerDescription)descBlock
 {
     if(descBlock!=nil)
     {
@@ -368,6 +368,7 @@ static char keyValueChar='k';
         descBlock(self);
         descBlock=nil;
     }
+    return self;
 }
 
 #pragma mark for TabBar 属性扩展

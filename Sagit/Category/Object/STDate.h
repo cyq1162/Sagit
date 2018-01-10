@@ -11,8 +11,26 @@
 @interface NSDate(ST)
 -(NSString*)toString:(NSString*)formatter;
 -(NSString*)toString;
-+(NSDateComponents *)now;
+//!返回类型可以取更多日期属性
+-(NSDateComponents *)component;
+//!获取北京的当前时间。
 +(NSDate *)beiJinDate;
+
+@property(readonly) NSInteger year;
+@property(readonly) NSInteger month;
+@property(readonly) NSInteger day;
+@property(readonly) NSInteger hour;
+@property(readonly) NSInteger minute;
+@property(readonly) NSInteger second;
+@property(readonly) NSInteger nanosecond;
+
+-(NSDate*)addSecond:(NSInteger)second;
+-(NSDate*)addMinute:(NSInteger)minute;
+-(NSDate*)addHour:(NSInteger)hour;
+-(NSDate*)addDay:(NSInteger)day;
+-(NSDate*)addMonth:(NSInteger)month;
+-(NSDate*)addYear:(NSInteger)year;
+
 @end
 @interface NSDateComponents(ST)
 -(NSString*)toString:(NSString*)formatter;

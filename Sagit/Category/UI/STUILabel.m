@@ -66,7 +66,14 @@
 -(UILabel*)copy
 {
     UIPasteboard *pboard = [UIPasteboard generalPasteboard];
-    pboard.string = self.text;
+    if(self.text)
+    {
+        pboard.string = self.text;
+    }
+    else if(self.attributedText.string)
+    {
+        pboard.string = self.attributedText.string;
+    }
     return self;
 }
 

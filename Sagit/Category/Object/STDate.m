@@ -30,17 +30,80 @@
     //转为现在时间
     return [[NSDate alloc] initWithTimeInterval:interval sinceDate:self];
 }
-+(NSDateComponents *)now
+-(NSInteger)nanosecond
 {
-    NSDate *date = [NSDate beiJinDate];//这个是NSDate类型的日期，所要获取的年月日都放在这里；
+    return [self component:NSCalendarUnitNanosecond].nanosecond;
+}
+-(NSInteger)second
+{
+    return [self component:NSCalendarUnitSecond].second;
+}
+-(NSInteger)minute
+{
+    return [self component:NSCalendarUnitMinute].minute;
+}
+-(NSInteger)hour
+{
+    return [self component:NSCalendarUnitHour].hour;
+}
+-(NSInteger)day
+{
+    return [self component:NSCalendarUnitDay].day;
+}
+-(NSInteger)month
+{
+    return [self component:NSCalendarUnitMonth].month;
+}
+-(NSInteger)year
+{
+    return [self component:NSCalendarUnitYear].year;
+}
+-(NSDateComponents *)component
+{
+    return [self component:9999];
+}
+-(NSDateComponents *)component:(NSCalendarUnit)unit
+{
     NSCalendar *cal = [NSCalendar currentCalendar];
     //这句是说你要获取日期的元素有哪些。获取年就要写NSYearCalendarUnit，获取小时就要写NSHourCalendarUnit，中间用|隔开；
-    unsigned int unitFlags = NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour |NSCalendarUnitMinute|NSCalendarUnitSecond|NSCalendarUnitNanosecond ;
+    unsigned int unitFlags =unit;
+    if(unitFlags==9999)
+    {
+        unitFlags=NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour |NSCalendarUnitMinute|NSCalendarUnitSecond|NSCalendarUnitNanosecond ;
+    }
+    return [cal components:unitFlags fromDate:self];//把要从date中获取的unitFlags标示的日期元素存放在NSDateComponents类型的d里面；
+}
+-(NSDate *)addSecond:(NSInteger)second
+{
+    return [NSDate dateWithTimeInterval:second sinceDate:self];
+}
+-(NSDate *)addMinute:(NSInteger)minute
+{
+    return [self addSecond:minute*60];
+}
+-(NSDate *)addHour:(NSInteger)hour
+{
+    return [self addMinute:hour*60];
+}
+-(NSDate *)addDay:(NSInteger)day
+{
+    return [self addHour:day*24];
+}
+-(NSDate *)addMonth:(NSInteger)month
+{
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
+    [comps setMonth:month];
     
-    return [cal components:unitFlags fromDate:date];//把要从date中获取的unitFlags标示的日期元素存放在NSDateComponents类型的d里面；
-
+    NSCalendar *calender = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    return [calender dateByAddingComponents:comps toDate:self options:0];
+}
+-(NSDate *)addYear:(NSInteger)year
+{
+    return [self addMonth:year*12];
 }
 @end
+
+
 @implementation NSDateComponents(ST)
 -(NSString *)toString{return [self toString:nil];}
 -(NSString *)toString:(NSString*)formatter{

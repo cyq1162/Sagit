@@ -22,9 +22,9 @@
 {
     return [STFile share];
 }
-+(NSMutableDictionary *)Cache
++(STCache *)Cache
 {
-    return [NSMutableDictionary share];
+    return [STCache share];
 }
 +(STHttp *)Http
 {

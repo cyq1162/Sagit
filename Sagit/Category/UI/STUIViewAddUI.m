@@ -262,11 +262,11 @@
 }
 -(UIImageView*)addImageView:(NSString*)name
 {
-    return [self addImageView:name img:nil direction:XYNone];
+    return [self addImageView:name img:nil direction:XY];
 }
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName
 {
-    return [self addImageView:name img:imgOrName direction:XYNone];
+    return [self addImageView:name img:imgOrName direction:XY];
 }
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName direction:(XYFlag)direction
 {
@@ -508,6 +508,12 @@
         va_end(args);
     }
     
+    return ui;
+}
+-(UIPickerView *)addPickerView:(NSString *)name
+{
+    UIPickerView *ui=[[UIPickerView alloc]initWithFrame:STEmptyRect];
+    [self addView:ui name:name];
     return ui;
 }
 -(UITableView*)addTableView:(NSString*)name

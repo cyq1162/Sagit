@@ -331,7 +331,7 @@ static char longPressChar='p';
 }
 #pragma mark 增加描述
 //用于格式化增加描述的方法
--(void)block:(NSString *)description on:(ViewDescription)descBlock
+-(UIView*)block:(NSString *)description on:(ViewDescription)descBlock
 {
     if(descBlock!=nil)
     {
@@ -339,5 +339,6 @@ static char longPressChar='p';
        descBlock(self);//对于自身对自身的引用，无需弱引用。
        descBlock=nil;
     }
+    return self;
 }
 @end

@@ -10,6 +10,7 @@
 //#import <UIKit/UIKit.h>
 #import "STFile.h"
 #import "STHttp.h"
+#import "STCache.h"
 #import "STMessageBox.h"
 
 
@@ -22,7 +23,7 @@
 //!默认对应于NSCache沙盒目录（用于存档数据到plist文件中）
 +(STFile*)File;
 //!用于存档到内存的全局唯一字典。
-+(NSMutableDictionary*)Cache;
++(STCache*)Cache;
 //!用于发起网络请求的单例类,，在STController中时用self.http调用
 +(STHttp*)Http;
 //!用于弹窗消息的单例类，在STController中时用self.box调用

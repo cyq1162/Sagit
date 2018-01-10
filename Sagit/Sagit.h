@@ -20,6 +20,7 @@
 #import "STMessageBox.h"
 #import "STHttp.h"
 #import "STFile.h"
+#import "STCache.h"
 #import "STController.h"
 #import "STTabController.h"
 #import "STView.h"

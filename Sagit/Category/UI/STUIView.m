@@ -383,11 +383,13 @@ static char keyValueChar='k';
 }
 -(UIView*)layerCornerRadiusToHalf
 {
+    self.clipsToBounds=YES;
     self.layer.cornerRadius=self.frame.size.width/2;
     return self;
 }
 -(UIView*)layerCornerRadius:(CGFloat)px
 {
+    self.clipsToBounds=YES;
     self.layer.cornerRadius=px*Xpt;
     return self;
 }

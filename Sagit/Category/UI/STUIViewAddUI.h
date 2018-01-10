@@ -85,7 +85,7 @@
 -(UIView*)addLine:name color:(id)colorOrHex;
 -(UIScrollView*)addScrollView:(NSString*)name;
 -(UIScrollView *)addScrollView:(NSString*)name direction:(XYFlag)direction img:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION;
-
+-(UIPickerView*)addPickerView:(NSString*)name;
 -(UITableView*)addTableView:(NSString*)name;
 -(UITableView*)addTableView:(NSString*)name style:(UITableViewStyle)style;
 -(UICollectionView*)addCollectionView:(NSString*)name;

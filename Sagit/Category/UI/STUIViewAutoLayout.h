@@ -23,15 +23,19 @@
 //-(CGSize)superSize;
 #pragma mark [相对布局方法] RelativeLayout
 //当前UI将布局于指定UI的右侧
+-(UIView*)onRight:(id)uiOrName;
 -(UIView*)onRight:(id)uiOrName x:(CGFloat)x;
 -(UIView*)onRight:(id)uiOrName x:(CGFloat)x y:(CGFloat)y;
 //当前UI将布局于指定UI的左侧
+-(UIView*)onLeft:(id)uiOrName;
 -(UIView*)onLeft:(id)uiOrName x:(CGFloat)x;
 -(UIView*)onLeft:(id)uiOrName x:(CGFloat)x y:(CGFloat)y;
 //当前UI将布局于指定UI的上方
+-(UIView*)onTop:(id)uiOrName;
 -(UIView*)onTop:(id)uiOrName y:(CGFloat)y;
 -(UIView*)onTop:(id)uiOrName y:(CGFloat)y x:(CGFloat)x;
 //当前UI将布局于指定UI的下方
+-(UIView *)onBottom:(id)uiOrName;
 -(UIView *)onBottom:(id)uiOrName y:(CGFloat)y;
 -(UIView *)onBottom:(id)uiOrName y:(CGFloat)y x:(CGFloat)x;
 //!相对当前UI的父视图布局 XYLocation 决定相对的位置
@@ -43,7 +47,6 @@
 -(UIView*)toCenter;
 //!将当前的UI居中 XYFlag 指定左右或上下
 -(UIView*)toCenter:(XYFlag)xyFlag;
-
 //!获取当前UI的X值（px)
 -(CGFloat)stX;
 -(CGFloat)stAbsX;
