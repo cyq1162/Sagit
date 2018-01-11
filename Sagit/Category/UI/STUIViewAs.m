@@ -53,4 +53,17 @@
 {
     return (UICollectionView*)self;
 }
+-(UIPickerView*)asPickerView
+{
+    return (UICollectionView*)self;
+}
+-(STView *)asSTView
+{
+    return (STView*)self;
+}
+-(UIView *)asBaseView
+{
+    [self key:@"isBaseView" value:@"1"];
+    return self;
+}
 @end

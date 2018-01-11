@@ -42,8 +42,9 @@
         //[self.stView loadUI];
     }
     else
-    {
-        self.view=self.stView=[[STView alloc] initWithController:self];//将view换成STView
+    {   //这一步，在ViewController中的loadView做了处理，默认self.view就是STView
+        //self.view=self.stView=[[STView alloc] initWithController:self];//将view换成STView
+        self.stView=self.view;
     }
     [self initUI];
 }
@@ -161,19 +162,6 @@
 //!获取表单数据:superView 可以指定一个子UI。
 -(NSMutableDictionary*)formData:(id)superView{return [self.stView formData:superView];}
 
-
-
-
-
-//项目需要重写时，此方法留给具体项目重写。
-- (void)stPush:(UIViewController *)viewController
-{
-    [self stPush:viewController title:nil img:nil];
-}
-- (void)stPush:(UIViewController *)viewController title:(NSString *)title
-{
-    [self stPush:viewController title:title img:nil];
-}
 -(void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
 {
     if([self key:@"dispose"]!=nil)

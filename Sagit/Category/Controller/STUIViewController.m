@@ -15,7 +15,24 @@
 #import "STUIViewAddUI.h"
 #import "STUIViewAutoLayout.h"
 #import "Sagit.h"
+
 @implementation UIViewController(ST)
+
+//-(UIView *)view
+//{
+//    UIView *view=[self key:@"view"];
+//    if(!view)
+//    {
+//        view=[[STView alloc]initWithController:self];
+//        [self key:@"view" value:view];
+//    }
+//    return view;
+//}
+//此方法在第一次view时被触发，把view修改成 STView
+-(void)loadView
+{
+    self.view=[[STView alloc]initWithController:self];
+}
 
 #pragma mark keyvalue
 static char keyValueChar='k';
@@ -156,7 +173,14 @@ static char keyValueChar='k';
     return self;
 }
 #pragma mark 导航栏功能
-
+- (void)stPush:(UIViewController *)viewController
+{
+    [self stPush:viewController title:STNavLeftDefaultTitle img:STNavLeftDefaultImage];
+}
+- (void)stPush:(UIViewController *)viewController title:(NSString *)title
+{
+    [self stPush:viewController title:title img:STNavLeftDefaultImage];
+}
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName
 {
     if(self.navigationController==nil){return;}

@@ -20,4 +20,7 @@
 -(UIScrollView*)asScrollView;
 -(UITableView*)asTableView;
 -(UICollectionView*)asCollectionView;
+-(UIPickerView*)asPickerView;
+-(STView*)asSTView;
+-(UIView*)asBaseView;
 @end

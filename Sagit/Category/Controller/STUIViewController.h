@@ -55,6 +55,10 @@ typedef void(^ControllerDescription)(UIViewController *controller);
 -(UIViewController*)block:(NSString*)description on:(ControllerDescription)descBlock;
 #pragma mark 导航栏功能
 //!压入视图并显示下一个页面（通过此方法跳转视图，系统会自动控制导航栏和Tab栏的显示与隐藏，以及滑动返回事件）
+- (void)stPush:(UIViewController *)viewController;
+//!压入视图并显示下一个页面（通过此方法跳转视图，系统会自动控制导航栏和Tab栏的显示与隐藏，以及滑动返回事件）
+- (void)stPush:(UIViewController *)viewController title:(NSString *)title;
+//!压入视图并显示下一个页面（通过此方法跳转视图，系统会自动控制导航栏和Tab栏的显示与隐藏，以及滑动返回事件）
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName;
 //!退弹出视图并返回上一个页面(对应stPush方法)
 - (void)stPop;

@@ -51,10 +51,4 @@
 //!指向view的formData： 从UIList中遍历获取属性isFormUI的表单数据列表  superView ：指定一个父，不指定则为根视图
 -(NSMutableDictionary*)formData:(id)superView;
 
-
-
-//!压入视图并显示下一个页面（通过此方法跳转视图，系统会自动控制导航栏和Tab栏的显示与隐藏，以及滑动返回事件）
-- (void)stPush:(UIViewController *)viewController;
-//!压入视图并显示下一个页面（通过此方法跳转视图，系统会自动控制导航栏和Tab栏的显示与隐藏，以及滑动返回事件）
-- (void)stPush:(UIViewController *)viewController title:(NSString *)title;
 @end

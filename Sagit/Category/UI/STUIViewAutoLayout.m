@@ -425,7 +425,8 @@ static NSInteger nullValue=-99999;
     [self addTracer:nil method:@"toCenter" v1:0 v2:0 v3:0 v4:0 location:0 xyFlag:flag];
     CGRect frame=self.frame;
     CGSize superSize=[self superSize];
-    //计算去掉超出父窗体或屏幕的部分
+    
+    //检测约束
     BOOL relateTop=NO,relateBottom=NO,relateLeft=NO,relateRight=NO;//检测有没有上下左右的约束。
     STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
     if(tracer!=nil)
@@ -436,7 +437,7 @@ static NSInteger nullValue=-99999;
         relateRight=[relate contains:@"3"];
         relateBottom=[relate contains:@"4"];
     }
-    
+    //X坐标[宽度居中]
     if(flag==1 || flag==0)
     {
         if((relateRight || [self.LayoutTracer has:@"onLeft"]) && frame.origin.x+frame.size.width<superSize.width)
@@ -445,22 +446,40 @@ static NSInteger nullValue=-99999;
         }
         else if((relateLeft || [self.LayoutTracer has:@"onRight"]) && frame.origin.x>0)
         {
-            frame.origin.x+=(superSize.width-frame.size.width-frame.origin.x)/2;
+            frame.origin.x=frame.origin.x+(superSize.width-frame.size.width-frame.origin.x)/2;
         }
         else
         {
             frame.origin.x=(superSize.width-frame.size.width)/2;
         }
     }
+    //Y坐标[高度居中]
     if(flag==2 || flag==0)
     {
+        //计算去掉超出父窗体或屏幕的部分
+        if(CGSizeEqualToSize(superSize, STFullSize))
+        {
+            //检测页面有没有导航条或Tarbar条
+            if(self.stView && self.stView.stController)
+            {
+                UIViewController *controller=self.stView.stController;
+                if([controller needNavBar])
+                {
+                    superSize.height=superSize.height-STNavHeightPt-STStatusHeightPt;
+                }
+                if([controller needTabBar])
+                {
+                    superSize.height-=STTabHeightPt;
+                }
+            }
+        }
         if((relateBottom || [self.LayoutTracer has:@"onTop"]) && frame.origin.y+frame.size.height<superSize.height)
         {
             frame.origin.y=frame.origin.y/2;
         }
         else if((relateTop || [self.LayoutTracer has:@"onBottom"]) && frame.origin.y>0)
         {
-            frame.origin.y+=(superSize.height-frame.size.height-frame.origin.y)/2;
+            frame.origin.y=frame.origin.y+(superSize.height-frame.size.height-frame.origin.y)/2;
         }
         else
         {

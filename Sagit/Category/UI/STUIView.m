@@ -94,7 +94,7 @@ static char keyValueChar='k';
 //        return self.STController.stView;
 //
 //    }
-    if([self isSTView])
+    if([self isSTView] || [self key:@"isBaseView"])
     {
         return self;
     }

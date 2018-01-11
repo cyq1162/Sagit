@@ -32,9 +32,13 @@
 #define Ypx (STScreenHeightPx/STScreeHeightPt) //2208/1334
 
 //得到的是750下转换的像素
+#define STNavHeightPt 44.0f
+#define STStatusHeightPt 20.0f
+#define STTabHeightPt 49.0f
+
 #define STNavHeightPx 44.0f*Ypx
 #define STStatusHeightPx 20.0f*Ypx
-#define STMenuHeightPx 49.0f*Ypx
+#define STTabHeightPx 49.0f*Ypx
 
 //750,1334        414,736 *3
 
