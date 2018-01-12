@@ -395,7 +395,15 @@ static char keyValueChar='k';
 }
 -(UIView*)layerBorderWidth:(NSInteger)px
 {
+    return [self layerBorderWidth:px color:nil];
+}
+-(UIView*)layerBorderWidth:(NSInteger)px color:(id)colorOrHex
+{
     self.layer.borderWidth=px*Xpt;
+    if(colorOrHex)
+    {
+        [self layerBorderColor:colorOrHex];
+    }
     return self;
 }
 -(UIView*)layerBorderColor:(id)colorOrHex{

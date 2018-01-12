@@ -36,44 +36,19 @@
 -(AddTableCell)addCell
 {
     return [self key:@"addCell"];
-//    NSString*guid=[self key:@"addCell"];
-//    if(guid!=nil)
-//    {
-//        AddTableCell addTableCell=[NSMutableDictionary.share get:guid];
-//        STWeakObj(addTableCell);
-//        return addTableCellWeak;
-//    }
-//    return nil;
 }
 -(void)setAddCell:(AddTableCell)addCell
 {
     if(addCell!=nil)
     {
-        //if(addCell iskin)
         addCell=[addCell copy];
-        
-        //__weak AddTableCell addCellWeak=addCell;
         [self key:@"addCell" value:addCell];
-        //AddTableCell cell=[self key:@"addCell"];
-//        if(cell)
-//        {
-//
-//        }
     }
     else
     {
         [self.keyValue remove:@"addCell"];
     }
 }
-//-(UITableView*)addCell:(AddTableCell)addCell
-//{
-//    //产生一个随机key
-//    NSString *guid=NSString.newGuid;
-//    [self key:@"addCell" value:guid];
-//   __weak NSMutableDictionary  *dic=NSMutableDictionary.share;
-//    [dic set:guid value:addCell];
-//    return self;
-//}
 -(DelTableCell)delCell
 {
     return [self key:@"delCell"];
@@ -86,9 +61,18 @@
     }
     else
     {
-       // __weak DelTableCell delCellWeak=delCell;
         [self key:@"delCell" value:delCell];
     }
+}
+-(NSMutableDictionary*)heightForCells
+{
+    NSMutableDictionary *heights=[self key:@"heightForCells"];
+    if(!heights)
+    {
+        heights=[NSMutableDictionary new];
+        [self key:@"heightForCells" value:heights];
+    }
+    return heights;
 }
 -(AfterTableReloadData)afterReload
 {

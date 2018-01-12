@@ -205,7 +205,7 @@ static NSInteger nullValue=-99999;
     }
     
     BOOL needSetX=YES;
-    if(y==0)
+    if(x==0)
     {
         STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
         if(tracer!=nil)
@@ -247,7 +247,7 @@ static NSInteger nullValue=-99999;
 
     
     BOOL needSetX=YES;
-    if(y==0)
+    if(x==0)
     {
         STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
         if(tracer!=nil)
@@ -673,33 +673,29 @@ static NSInteger nullValue=-99999;
 //仅遍历一级
 -(UIView*)stSizeToFit:(NSInteger)widthPx y:(NSInteger)heightPx
 {
-    NSString *className=NSStringFromClass([self class]);
-    if([className isEqualToString:@"UIView"])
+    if(self.subviews.count>0)
     {
-        if(self.subviews.count>0)
+        NSInteger xValue=0,yValue=0;
+        BOOL xYes=NO,yYes=NO;
+        for (NSInteger i=0; i<self.subviews.count; i++)
         {
-            NSInteger xValue=0,yValue=0;
-            
-            for (NSInteger i=0; i<self.subviews.count; i++)
+            CGRect subFrame= self.subviews[i].frame;
+            CGRect myFrame=self.frame;
+            xValue=subFrame.origin.x+subFrame.size.width -myFrame.size.width;
+            yValue=subFrame.origin.y+subFrame.size.height -myFrame.size.height;
+            if(xValue>0)
             {
-                CGRect subFrame= self.subviews[i].frame;
-                CGRect myFrame=self.frame;
-                xValue=subFrame.origin.x+subFrame.size.width -myFrame.size.width;
-                yValue=subFrame.origin.y+subFrame.size.height -myFrame.size.height;
-                if(xValue>0)
-                {
-                    [self width: (myFrame.size.width+xValue)*Xpx+widthPx];
-                }
-                if(yValue>0)
-                {
-                    [self height:(myFrame.size.height+yValue)*Ypx+heightPx];
-                }
+                xYes=YES;
+                [self width: (myFrame.size.width+xValue)*Xpx];
+            }
+            if(yValue>0)
+            {
+                yYes=YES;
+                [self height:(myFrame.size.height+yValue)*Ypx];
             }
         }
-    }
-    else
-    {
-        [self sizeToFit];
+        if(xYes){[self width:self.stWidth+widthPx];}
+        if(yYes){[self height:self.stHeight+heightPx];}
     }
     return self;
 }

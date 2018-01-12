@@ -28,11 +28,13 @@
 //    }
 //    return view;
 //}
+
 //此方法在第一次view时被触发，把view修改成 STView
--(void)loadView
-{
-    self.view=[[STView alloc]initWithController:self];
-}
+//-(void)loadView
+//{
+      //引发UIAlertView弹窗全屏(把导航栏也占了,背景也全灰了)，所以不用了
+//    self.view=[[STView alloc]initWithController:self];
+//}
 
 #pragma mark keyvalue
 static char keyValueChar='k';

@@ -229,7 +229,7 @@
     return ui;
 }
 
--(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex row:(NSInteger)num
 {
     UILabel *ui = [[UILabel alloc] initWithFrame:STEmptyRect];
     if(text!=nil)
@@ -244,9 +244,14 @@
     {
         [ui textColor:colorOrHex];
     }
+    [ui numberOfLines:num];
     [ui sizeToFit];
     [self addView:ui name:name];
     return ui;
+}
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex
+{
+    return [self addLabel:name text:text font:px color:colorOrHex row:1];
 }
 -(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px
 {

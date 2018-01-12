@@ -24,7 +24,8 @@ typedef void(^AfterTableReloadData)(UITableView *tableView);
 @property (nonatomic,strong) NSMutableArray<id> *source;
 //!设置Table的数据源
 -(UITableView*)source:(NSMutableArray<id> *)dataSource;
-
+//!存档所有Cell的高度（由系统控制）
+@property (readonly,nonatomic,retain) NSMutableDictionary *heightForCells;
 
 
 //!是否自动控制Table的高度

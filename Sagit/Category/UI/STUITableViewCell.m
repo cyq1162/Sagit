@@ -23,9 +23,19 @@
         if(cell.contentView.subviews.count>0)
         {
             [cell.contentView removeAllSubViews];
+            //[cell.contentView width:1 height:88];
+            for (NSInteger i=0; i<cell.subviews.count; i++)//恢复分隔线的Y坐标
+            {
+                UIView*view=cell.subviews[i];
+                if(view.stY>88){[view y:88];}
+                if(view.stHeight>88){[view height:88];}
+            }
         }
-       // [cell key:@"isReused" value:@"1"];
     }
+    //默认设置
+    [cell width:1 height:88];//IOS的默认高度
+    [cell accessoryType:UITableViewCellAccessoryDisclosureIndicator];//右边有小箭头
+    [cell selectionStyle:UITableViewCellSelectionStyleNone];//选中无状态
     [cell key:@"table" valueWeak:tableView];
     [cell key:@"stView" valueWeak:tableView.stView];
     [cell key:@"baseView" valueWeak:tableView.baseView];//因为Cell在Add时，并没有父，所以需要提前设置，这样STLastView等宏才能找到上一个UI
@@ -35,15 +45,15 @@
 {
     return [self key:@"table"];
 }
--(NSMutableDictionary<NSString *,id> *)source
+-(id)source
 {
     return [self key:@"source"];
 }
--(void)setSource:(NSMutableDictionary<NSString *,id> *)source
+-(void)setSource:(id)source
 {
     [self source:source];
 }
--(UITableViewCell*)source:(NSMutableDictionary<NSString *,id> *)dataSource
+-(UITableViewCell*)source:(id)dataSource
 {
     [self key:@"source" value:dataSource];
     return self;
@@ -72,6 +82,17 @@
 -(UITableViewCell *)firstValue:(NSString *)value
 {
     [self key:@"firstValue" value:value];
+    return self;
+}
+#pragma mark 扩展属性
+-(UITableViewCell *)accessoryType:(UITableViewCellAccessoryType)type
+{
+    self.accessoryType=type;
+    return self;
+}
+-(UITableViewCell *)selectionStyle:(UITableViewCellSelectionStyle)style
+{
+    self.selectionStyle=style;
     return self;
 }
 //-(void)dealloc

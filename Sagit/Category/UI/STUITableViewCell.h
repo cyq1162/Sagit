@@ -12,11 +12,11 @@
 //!获取当前所在的table,(weak，不能造成双strong引用)
 @property (readonly,nonatomic,weak) UITableView *table;
 //!获取Cell的数据源
-@property (nonatomic,strong) NSMutableDictionary<NSString*,id> *source;
+@property (nonatomic,strong) id source;
 //!Cell是否重用的Cell，如果是，就不要再添加子控制，避免重复添加。
 //@property (readonly,nonatomic,assign) BOOL isReused;
 //!设置Cell的数据源
--(UITableViewCell *)source:(NSMutableDictionary<NSString*,id> *)dataSource;
+-(UITableViewCell *)source:(id)dataSource;
 //!创建或复用Cell
 + (instancetype)reuseCell:(UITableView *)tableView index:(NSIndexPath *)index;
 
@@ -28,5 +28,9 @@
 //!数据源中的第一个字段，系统自动设置
 -(NSString*)firstValue;
 -(UITableViewCell*)firstValue:(NSString*)value;
+
+#pragma mark 扩展属性
+-(UITableViewCell*)accessoryType:(UITableViewCellAccessoryType)type;
+-(UITableViewCell*)selectionStyle:(UITableViewCellSelectionStyle)style;
 
 @end

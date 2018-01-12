@@ -17,11 +17,11 @@
 
 @implementation UIImageView(ST)
 
-static char pickChar='p';
--(void)setPickBlock:(OnPick)block
-{
-    objc_setAssociatedObject(self, &pickChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
+//static char pickChar='p';
+//-(void)setPickBlock:(OnPick)block
+//{
+//    objc_setAssociatedObject(self, &pickChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+//}
 -(UIImageView *)corner:(BOOL)yesNo
 {
     [self clipsToBounds:yesNo];
@@ -154,7 +154,8 @@ static char pickChar='p';
 {
     if(pick==nil){return self;}
     [self key:@"maxKb" value:[@(maxKb) stringValue]];
-    [self setPickBlock:pick];
+    [self key:@"pickBlock" value:pick];
+    //[self setPickBlock:pick];
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate = (id)self;
     picker.allowsEditing = yesNo;
@@ -163,14 +164,20 @@ static char pickChar='p';
 }
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
+    if([self key:@"picking"]){return;}
+    [self key:@"picking" value:@"1"];//这里只允许一次选择一张，避免快速点击产生多选（先不开启一次性多选）
     [picker dismissViewControllerAnimated:YES completion:nil];
     UIImage *image = info[picker.allowsEditing?UIImagePickerControllerEditedImage:UIImagePickerControllerOriginalImage];
     NSData *data = [image compress:[[self key:@"maxKb"] intValue]];//[Sagit.Tool compressImage:image toByte:250000];
-    OnPick event = (OnPick)objc_getAssociatedObject(self, &pickChar);
+    OnPick event = [self key:@"pickBlock"];// (OnPick)objc_getAssociatedObject(self, &pickChar);
     if(event)
     {
         event(data,picker,info);
     }
+    [Sagit delayExecute:1 onMainThread:NO block:^{
+        [self key:@"picking" value:nil];
+    }];
+    
 }
 -(UIImageView *)cutSize:(CGSize)maxSize
 {

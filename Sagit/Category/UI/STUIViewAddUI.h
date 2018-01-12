@@ -61,6 +61,7 @@
 -(UILabel*)addLabel:(NSString*)name text:(NSString*)text;
 -(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px;
 -(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex;
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex row:(NSInteger)num;
 -(UIImageView*)addImageView:(NSString*)name;
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName;
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName direction:(XYFlag)direction;

@@ -87,6 +87,7 @@
 -(UIView*)layerCornerRadiusToHalf;
 -(UIView*)layerCornerRadius:(CGFloat)px;
 -(UIView*)layerBorderWidth:(NSInteger)px;
+-(UIView*)layerBorderWidth:(NSInteger)px color:(id)colorOrHex;
 -(UIView*)layerBorderColor:(id)colorOrHex;
 -(UIView*)corner:(BOOL)yesNo;
 -(UIView*)contentMode:(UIViewContentMode)contentMode;

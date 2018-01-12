@@ -43,8 +43,8 @@
     }
     else
     {   //这一步，在ViewController中的loadView做了处理，默认self.view就是STView
-        //self.view=self.stView=[[STView alloc] initWithController:self];//将view换成STView
-        self.stView=self.view;
+        self.view=self.stView=[[STView alloc] initWithController:self];//将view换成STView
+        //self.stView=self.view;
     }
     [self initUI];
 }
@@ -217,24 +217,16 @@
         if(tableView.source.count>indexPath.row)
         {
             cell.source=tableView.source[indexPath.row];
-            [cell firstValue:cell.source.firstObject];
+            if([cell.source isKindOfClass:[NSDictionary class]])
+            {
+                [cell firstValue:((NSDictionary*)cell.source).firstObject];
+            }
         }
-        //默认设置
-        [cell width:1 height:88];//IOS的默认高度
-        cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;//右边有小箭头
-        cell.selectionStyle=UITableViewCellSeparatorStyleNone;//选中无状态
         tableView.addCell(cell,indexPath);
-       // tableView.addCell(cell,indexPath);//以参数传入的对象，不会被block所持有。
-//        NSMutableDictionary __weak *dic=NSMutableDictionary.share;
-//        AddTableCell __weak block=[dic get:tableView.addCellKey];
-//        if(block)
-//        {
-//            block(cell,indexPath);
-//            block=nil;
-//        }
-//        dic=nil;
+        [cell stSizeToFit];//调整高度
     }
-    
+    NSMutableDictionary *dic=tableView.heightForCells;
+    [dic set:[NSString stringWithFormat:@"%ld,%ld",indexPath.section,indexPath.row] value:[@(cell.frame.size.height) stringValue]];
     return cell;
 }
 //tableview 加载完成可以调用的方法--因为tableview的cell高度不定，所以在加载完成以后重新计算高度
@@ -265,10 +257,11 @@
 }
 
 - (CGFloat)tableView:(nonnull UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-    UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
-    if(cell!=nil)
+    NSMutableDictionary *dic=tableView.heightForCells;
+    NSString *height=[dic get:[NSString stringWithFormat:@"%ld,%ld",indexPath.section,indexPath.row]];
+    if(height)
     {
-        return cell.frame.size.height;
+        return [height integerValue];
     }
     return 88*Ypt;
 }
