@@ -226,7 +226,26 @@
         [cell stSizeToFit];//调整高度
     }
     NSMutableDictionary *dic=tableView.heightForCells;
-    [dic set:[NSString stringWithFormat:@"%ld,%ld",indexPath.section,indexPath.row] value:[@(cell.frame.size.height) stringValue]];
+    NSMutableArray *rows=dic[@(indexPath.section)];
+    if(!rows)
+    {
+        rows=[NSMutableArray new];
+        [dic set:@(indexPath.section) value:rows];
+    }
+    NSNumber *height=@(cell.frame.size.height);
+    if(indexPath.row==rows.count)
+    {
+        [rows addObject:height];
+    }
+    else if(indexPath.row<rows.count)
+    {
+        rows[indexPath.row]=height;
+    }
+    else //处理乱序飞入
+    {
+        [dic setObject:height forKey:indexPath];
+    }
+    
     return cell;
 }
 //tableview 加载完成可以调用的方法--因为tableview的cell高度不定，所以在加载完成以后重新计算高度
@@ -257,12 +276,13 @@
 }
 
 - (CGFloat)tableView:(nonnull UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-    NSMutableDictionary *dic=tableView.heightForCells;
-    NSString *height=[dic get:[NSString stringWithFormat:@"%ld,%ld",indexPath.section,indexPath.row]];
-    if(height)
+    NSMutableArray *rows=[tableView.heightForCells get:@(indexPath.section)];
+    if(rows && rows.count>indexPath.row)
     {
-        return [height integerValue];
+        return [(NSNumber*)rows[indexPath.row] integerValue];
     }
+    NSNumber *value=[tableView.heightForCells get:indexPath];//乱序飞入的情况
+    if(value){return [value integerValue];}
     return 88*Ypt;
 }
 //这个方法存在时：estimatedHeightForRowAtIndexPath=>cellForRowAtIndexPath=>heightForRowAtIndexPath

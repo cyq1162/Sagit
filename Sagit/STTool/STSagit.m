@@ -52,4 +52,12 @@
         }
     });
 }
++(void)runOnMainThread:(DelayExecuteBlock)block
+{
+    if(!block){return;}
+    if([NSThread isMainThread]){block();return;}
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        block();
+    });
+}
 @end

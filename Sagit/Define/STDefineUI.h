@@ -98,6 +98,7 @@
 
 //获取UI值
 # define STValue(name) [STUIView(name) stValue]
+# define STSetValue(name,value) [STUIView(name) stValue:value]
 # define STSelectValue(name) [STUIView(name) selectValue]
 # define STSelectText(name) [STUIView(name) selectText]
 
@@ -137,14 +138,21 @@
 #define STNavTitle @"STNavTitle"
 #define STNavRightTitle @"STNavRightTitle"
 #define STNavRightImage @"STNavRightImage"
-//定义两个左侧导航的默认值
-#ifndef STNavLeftDefaultTitle
-#define STNavLeftDefaultTitle nil
-#endif
-#ifndef STNavLeftDefaultImage
-#define STNavLeftDefaultImage nil
-#endif
+
 //图片
 #define STImage(imgName) [UIImage imageNamed:imgName]
 #define STImageOriginal(imgName) [[UIImage imageNamed:imgName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 #endif /* STDefineUI_h */
+
+//定义一些可被修改的默认值
+//定义两个左侧导航的默认值
+#ifndef STDefaultForNavLeftTitle
+#define STDefaultForNavLeftTitle nil
+#endif
+#ifndef STDefaultForNavLeftImage
+#define STDefaultForNavLeftImage nil
+#endif
+#ifndef STDefaultForImageInitName
+#define STDefaultForImageInitName nil
+#endif
+

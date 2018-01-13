@@ -21,6 +21,14 @@
 //@end
 @implementation UITextView(ST)
 
+-(OnTextViewEdit)onEdit
+{
+    return [self key:@"onEdit"];
+}
+-(void)setOnEdit:(OnTextViewEdit)onEdit
+{
+    [self key:@"onEdit" value:onEdit];
+}
 #pragma mark 自定义追加属系统
 - (NSInteger)maxLength
 {
@@ -38,18 +46,18 @@
     
 }
 
-- (CGFloat)maxHeight
+- (NSInteger)maxRow
 {
-    NSString *max=[self key:@"maxHeight"];
+    NSString *max=[self key:@"maxRow"];
     if(max)
     {
-        return [max floatValue];
+        return [max integerValue];
     }
-    return 0;
+    return 1;
 }
--(UITextView *)maxHeight:(CGFloat)px
+-(UITextView *)maxRow:(NSInteger)num
 {
-    [self key:@"maxHeight" value:[@(px) stringValue]];
+    [self key:@"maxRow" value:[@(num) stringValue]];
     self.delegate = (id)self;
     return self;
 }
@@ -97,7 +105,7 @@
 {
     if([self key:@"placeholder"]==nil)
     {
-        UILabel *placeholer=[[self addLabel:nil text:text font:self.font.pointSize*Ypx color:@"#cccccc"] relate:LeftTop v:8 v2:8];
+        UILabel *placeholer=[[self addLabel:nil text:text font:self.font.pointSize*Ypx color:@"#cccccc"] relate:LeftTop v:8 v2:16];
         [self key:@"placeholderLabel" value:placeholer];
     }
     [self key:@"placeholder" value:text];
@@ -113,7 +121,7 @@
     {
         label.alpha=textView.hasText?0:1;
     }
-    if(self.maxHeight>0)
+    if(self.maxRow!=1)
     {
         [self changeHeight];
     }
@@ -131,67 +139,31 @@
 //UITextView
 -(void)changeHeight
 {
-    CGRect frame=self.frame;
-    NSInteger margin=8;//根据观察：contentSize 默认上下margin 4个pt，比height少8个pt
-    NSInteger maxHeightPt=self.maxHeight*Ypt;
+    
     if(CGRectEqualToRect(self.OriginFrame, CGRectZero))//第一次先记录原始坐标
     {
         self.OriginFrame=self.frame;
     }
-    if(maxHeightPt<self.frame.size.height){return;}//初始比最大行高还大，则无需要调整
-    
-    CGFloat addHeight= self.contentSize.height-frame.size.height-margin;
+    CGRect frame=self.frame;
+    NSInteger fontHeight=floor(self.font.lineHeight);
+    //根据观察：contentSize 默认上下margin 4个pt，比height少8个pt。
+    NSInteger nowRows=round((self.frame.size.height-8)/fontHeight);
+    NSInteger needRows=MIN(round(self.contentSize.height/fontHeight)-1,self.maxRow);
+    if(needRows==nowRows){return;}//没变化
+    CGFloat addHeight=0;
+    if(needRows==1)
+    {
+        //恢复到原来的状态，得到负数，降低高度。
+        addHeight=self.OriginFrame.size.height-self.frame.size.height;
+    }
+    else
+    {
+        addHeight=ceil(needRows*fontHeight)+8-self.frame.size.height;//要修正的高度
+    }
     if(addHeight!=0)//差值发生变化，
     {
-        //修正差值，不能大于最大值，不能小于初始值
-        if(addHeight>0 && frame.size.height+addHeight>maxHeightPt)
-        {
-            addHeight=maxHeightPt-frame.size.height;
-        }
-        else if(addHeight<0 && frame.size.height+addHeight<self.OriginFrame.size.height)
-        {
-            addHeight=self.OriginFrame.size.height-frame.size.height;//负数
-        }
-        if(addHeight==0){return;}
         [self height:(frame.size.height+addHeight)*Ypx];
-        [self findSuperToFixHeight:self fix:addHeight];
-        //[self.superview stSizeToFit:addHeight];
-        //        if([textView isOnSTView])//上一层就是根视图
-        //        {
-        //            if(frame.origin.y-addHeight>64)//导航栏和状态栏之下，则往上移
-        //            {
-        //                frame.origin.y=frame.origin.y-addHeight;
-        //            }
-        //        }
-        //        else //子控件里
-        //
-        //        {
-        //
-        //            UIView *superView=[self findSuperToFixHeight:self.superview fix:addHeight];
-        //            [superView refleshLayout:NO];
-        //            CGRect superFrame=textView.superview.frame;
-        //            superFrame.origin.y-=addHeight;
-        //            if(addHeight>0 && superFrame.origin.y<0)//上面到顶，无法上移，尝试下移
-        //            {
-        //                if([textView.LayoutTracer has:@"onBottom"] || frame.origin.y+frame.size.height>superFrame.size.height)//下面到顶，无法下移
-        //                {
-        //                    return;
-        //                }
-        //                //往下增加高度
-        //                superFrame.origin.y+=addHeight;//还原坐标
-        //            }
-        //            superFrame.size.height+=addHeight;
-        //            textView.superview.frame=superFrame;
-        //        }
-        
-        //        NSString *text=textView.text;
-        //        textView.text=nil;
-        //        [UIView animateWithDuration:0.5 animations:^{
-        //            textView.frame = frame;
-        //        } completion:nil];
-        //        textView.text=text;
-        //        [self.baseView refleshLayout:NO];
-        
+        [self findSuperToFixHeight:self fix:addHeight]; 
     }
     
 }
@@ -200,7 +172,9 @@
 {
     if([me isKindOfClass:[UITableViewCell class]]) // 表格内的特殊处理。
     {
-        UITableView *table= ((UITableViewCell*)me).table;
+        UITableViewCell *cell=me;
+        [cell resetHeightCache];
+        UITableView *table= cell.table;
         if(table.autoHeight)
         {
             if(table.contentSize.height<table.frame.size.height)
@@ -215,20 +189,19 @@
                 [table height:table.stHeight+fixHeight*Ypx];
             }
         }
-        [me refleshLayout:NO];
+        [cell refleshLayout:NO ignoreSelf:YES];
         return;
     }
     
     UIView *superView=me.superview;
-    if(superView==nil){[me refleshLayout:NO];return;}
-    if([superView isKindOfClass:[STView class]] || [superView isKindOfClass:[UIWindow class]])
+    if(superView==nil || [superView isKindOfClass:[STView class]] || [superView isKindOfClass:[UIWindow class]])
     {
-        [me refleshLayout:NO];//最高级别不刷新
+        [me refleshLayout:NO ignoreSelf:NO];//最高级别不刷新
         return;
     }
     if(fixHeight>0)
     {
-        if(me.frame.size.height>superView.frame.size.height)
+        if(me.frame.size.height+me.frame.origin.y>superView.frame.size.height)
         {
             [superView height:(superView.frame.size.height+fixHeight)*Ypx];
             [superView key:@"maxHeightAutoFix" value:@"yes"];
@@ -245,20 +218,21 @@
     }
     
 }
-//- (void)textViewDidEndEditing:(UITextView *)textView
-//{
-//    if(self.hasText){
-//        textView.text = @"我是placeholder";
-//        textView.textColor = [UIColor grayColor];
-//    }
-//}
-//- (void)textViewDidBeginEditing:(UITextView *)textView
-//{
-//    if([textView.text isEqualToString:@"我是placeholder"]){
-//        textView.text=@"";
-//        textView.textColor=[UIColor blackColor];
-//    }
-//}
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+   if(self.onEdit)
+   {
+       self.onEdit(textView,YES);
+   }
+    
+}
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    if(self.onEdit)
+    {
+        self.onEdit(textView,NO);
+    }
+}
 
 @end
 

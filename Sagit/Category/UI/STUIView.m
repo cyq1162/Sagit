@@ -348,15 +348,7 @@ static char keyValueChar='k';
     return STImage(imgOrName);
 }
 
--(UIView*)frame:(CGRect)frame
-{
-    frame.origin.x=roundf(frame.origin.x);
-    frame.origin.y=roundf(frame.origin.y);
-    frame.size.width=roundf(frame.size.width);
-    frame.size.height=roundf(frame.size.height);
-    self.frame=frame;
-    return self;
-}
+
 -(UIView*)hidden:(BOOL)yesNo
 {
     [self setHidden:yesNo];

@@ -38,13 +38,13 @@ static NSInteger nullValue=-99999;
 {
     if([ui isKindOfClass:[NSString class]])
     {
-       return [self.baseView.UIList get:(NSString*)ui];
+        return [self.baseView.UIList get:(NSString*)ui];
         //STView *vi=self.stView;
         //NSDictionary *dic=self.stView.UIList;
-//        if(self.stView!=nil && [self.stView.UIList has:(NSString*)ui])
-//        {
-//            return self.stView.UIList[(NSString*)ui];
-//        }
+        //        if(self.stView!=nil && [self.stView.UIList has:(NSString*)ui])
+        //        {
+        //            return self.stView.UIList[(NSString*)ui];
+        //        }
     }
     else if([ui isKindOfClass:[UIView class]])
     {
@@ -244,7 +244,7 @@ static NSInteger nullValue=-99999;
         frame.size.height=(frame.origin.y+frame.size.height)-uiFrame.origin.y-uiFrame.size.height-y*Ypt;
     }
     frame.origin.y=floor(uiFrame.origin.y+ui.frame.size.height+y*Ypt);
-
+    
     
     BOOL needSetX=YES;
     if(x==0)
@@ -494,7 +494,19 @@ static NSInteger nullValue=-99999;
     [self width:width height:height];
     return [self relate:LeftTop v:x v2:y];
 }
-
+-(UIView*)frame:(CGRect)frame
+{
+    frame.origin.x=roundf(frame.origin.x);
+    frame.origin.y=roundf(frame.origin.y);
+    if(![self key:@"denyFixWidthHeight"])
+    {
+        frame.size.width=roundf(frame.size.width);
+        frame.size.height=roundf(frame.size.height);
+    }
+    
+    self.frame=frame;
+    return self;
+}
 -(CGFloat)stX{return self.frame.origin.x*Xpx;}
 -(CGFloat)stY{return self.frame.origin.y*Ypx;}
 -(CGFloat)stWidth
@@ -536,6 +548,7 @@ static NSInteger nullValue=-99999;
 }
 -(UIView*)width:(CGFloat)width height:(CGFloat)height
 {
+    
     if((width>=0 && width<=1) || (height>=0 && height<=1) || width==STSameToHeight || height==STSameToWidth )
     {
         [self addTracer:nil method:@"widthHeight" v1:width v2:height v3:0 v4:0 location:0 xyFlag:0];
@@ -621,42 +634,44 @@ static NSInteger nullValue=-99999;
 {
     if(!ignoreSelf)
     {
-    NSMutableDictionary* tracer=self.LayoutTracer;
-    if(tracer!=nil && tracer.count>0)
-    {
-        for (NSString*method in tracer)
+        NSMutableDictionary* tracer=self.LayoutTracer;
+        if(tracer!=nil && tracer.count>0)
         {
-            STLayoutTracer *v=tracer[method];
-            if ([method isEqualToString:@"relate"])
+            [self key:@"denyFixWidthHeight" value:@"1"];
+            for (NSString*method in tracer)
             {
-                [self relate:v.location v:v.v1 v2:v.v2 v3:v.v3 v4:v.v4];
+                STLayoutTracer *v=tracer[method];
+                if ([method isEqualToString:@"relate"])
+                {
+                    [self relate:v.location v:v.v1 v2:v.v2 v3:v.v3 v4:v.v4];
+                }
+                else if ([method isEqualToString:@"onLeft"])
+                {
+                    [self onLeft:v.view x:v.v1 y:v.v2];
+                }
+                else if ([method isEqualToString:@"onTop"])
+                {
+                    [self onTop:v.view y:v.v1 x:v.v2];
+                }
+                else if ([method isEqualToString:@"onRight"])
+                {
+                    [self onRight:v.view x:v.v1 y:v.v2];
+                }
+                else if ([method isEqualToString:@"onBottom"])
+                {
+                    [self onBottom:v.view y:v.v1 x:v.v2];
+                }
+                else if ([method isEqualToString:@"toCenter"])
+                {
+                    [self toCenter:v.xyFlag];
+                }
+                else if (withWidthHeight && [method isEqualToString:@"widthHeight"])
+                {
+                    [self width:v.v1 height:v.v2];
+                }
             }
-            else if ([method isEqualToString:@"onLeft"])
-            {
-                [self onLeft:v.view x:v.v1 y:v.v2];
-            }
-            else if ([method isEqualToString:@"onTop"])
-            {
-                [self onTop:v.view y:v.v1 x:v.v2];
-            }
-            else if ([method isEqualToString:@"onRight"])
-            {
-                [self onRight:v.view x:v.v1 y:v.v2];
-            }
-            else if ([method isEqualToString:@"onBottom"])
-            {
-                [self onBottom:v.view y:v.v1 x:v.v2];
-            }
-            else if ([method isEqualToString:@"toCenter"])
-            {
-                [self toCenter:v.xyFlag];
-            }
-            else if (withWidthHeight && [method isEqualToString:@"widthHeight"])
-            {
-                [self width:v.v1 height:v.v2];
-            }
+             [self key:@"denyFixWidthHeight" value:nil];
         }
-    }
     }
     if(self.subviews!=nil && self.subviews.count>0)
     {

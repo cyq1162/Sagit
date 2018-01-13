@@ -10,6 +10,8 @@
 #import <UIKit/UIKit.h>
 
 @interface UITextField(ST)
+typedef void (^OnTextFieldEdit)(UITextField*textField,BOOL isEnd);
+@property (nonatomic,copy) OnTextFieldEdit onEdit;
 #pragma mark 自定义追加属系统
 //!文本指定的最大长度(超过这个长度则无法再输入内容)
 -(NSInteger)maxLength;

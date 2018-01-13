@@ -33,7 +33,8 @@
 typedef void (^DelayExecuteBlock)();
 //延时N秒后执行
 +(void)delayExecute:(NSInteger)second onMainThread:(BOOL)onMainThread block:(DelayExecuteBlock)block;
-
+//回主线程处理代码
++(void)runOnMainThread:(DelayExecuteBlock)block;
 @end
 
 

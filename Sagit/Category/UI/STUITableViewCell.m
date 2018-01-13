@@ -32,6 +32,7 @@
             }
         }
     }
+    [cell indexPath:index];
     //默认设置
     [cell width:1 height:88];//IOS的默认高度
     [cell accessoryType:UITableViewCellAccessoryDisclosureIndicator];//右边有小箭头
@@ -58,6 +59,15 @@
     [self key:@"source" value:dataSource];
     return self;
 }
+-(NSIndexPath *)indexPath
+{
+    return [self key:@"indexPath"];
+}
+-(UITableViewCell *)indexPath:(NSIndexPath *)indexPath
+{
+    [self key:@"indexPath" value:indexPath];
+    return self;
+}
 //-(BOOL)isReused
 //{
 //    return [self key:@"isReused"]!=nil;
@@ -82,6 +92,16 @@
 -(UITableViewCell *)firstValue:(NSString *)value
 {
     [self key:@"firstValue" value:value];
+    return self;
+}
+-(UITableViewCell*)resetHeightCache
+{
+    NSIndexPath *index=self.indexPath;
+    NSMutableArray *array=[self.table.heightForCells get:@(index.section)];
+    if(array && array.count>=index.row)
+    {
+        array[index.row]=@(self.frame.size.height);
+    }
     return self;
 }
 #pragma mark 扩展属性

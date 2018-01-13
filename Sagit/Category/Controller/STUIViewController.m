@@ -177,11 +177,11 @@ static char keyValueChar='k';
 #pragma mark 导航栏功能
 - (void)stPush:(UIViewController *)viewController
 {
-    [self stPush:viewController title:STNavLeftDefaultTitle img:STNavLeftDefaultImage];
+    [self stPush:viewController title:STDefaultForNavLeftTitle img:STDefaultForNavLeftImage];
 }
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title
 {
-    [self stPush:viewController title:title img:STNavLeftDefaultImage];
+    [self stPush:viewController title:title img:STDefaultForNavLeftImage];
 }
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName
 {
@@ -369,7 +369,7 @@ static char keyValueChar='k';
                 }
                 else
                 {
-                    [self stPush:controller title:STNavLeftDefaultTitle img:STNavLeftDefaultImage];
+                    [self stPush:controller];
                 }
                 
             }

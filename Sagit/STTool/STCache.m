@@ -19,7 +19,7 @@
     dispatch_once(&onceToken, ^{
         _share = [[STCache alloc] init];
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [_share clearTimeOutCache];
+           // [_share clearTimeOutCache];
         });
     });
     return _share;

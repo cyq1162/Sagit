@@ -244,6 +244,7 @@
     {
         [ui textColor:colorOrHex];
     }
+    [ui textAlignment:NSTextAlignmentLeft];
     [ui numberOfLines:num];
     [ui sizeToFit];
     [self addView:ui name:name];
@@ -267,7 +268,7 @@
 }
 -(UIImageView*)addImageView:(NSString*)name
 {
-    return [self addImageView:name img:nil direction:XY];
+    return [self addImageView:name img:STDefaultForImageInitName direction:XY];
 }
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName
 {
@@ -531,6 +532,7 @@
     UITableView *ui=[[UITableView alloc] initWithFrame:STFullRect style:style];
     ui.delegate=(id)self.stController;
     ui.dataSource=(id)self.stController;
+    ui.tableFooterView=[UIView new];//去掉空白行。
     [self addView:ui name:name];
     return ui;
 }

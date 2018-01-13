@@ -19,8 +19,9 @@
 -(UITableViewCell *)source:(id)dataSource;
 //!创建或复用Cell
 + (instancetype)reuseCell:(UITableView *)tableView index:(NSIndexPath *)index;
-
-
+//!获取Cell所在的行数
+-(NSIndexPath*)indexPath;
+-(UITableViewCell*)indexPath:(NSIndexPath*)indexPath;
 //!获取是否允许删除属性
 -(BOOL)allowDelete;
 //!设置是否允许删除
@@ -28,7 +29,8 @@
 //!数据源中的第一个字段，系统自动设置
 -(NSString*)firstValue;
 -(UITableViewCell*)firstValue:(NSString*)value;
-
+//当Cell的高度在绑定后，需要动态根据子内容高度变化，再次刷新高度时使用。
+-(UITableViewCell*)resetHeightCache;
 #pragma mark 扩展属性
 -(UITableViewCell*)accessoryType:(UITableViewCellAccessoryType)type;
 -(UITableViewCell*)selectionStyle:(UITableViewCellSelectionStyle)style;

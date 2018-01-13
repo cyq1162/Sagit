@@ -11,14 +11,16 @@
 
 
 @interface UITextView(ST)
+typedef void (^OnTextViewEdit)(UITextView*textView,BOOL isEnd);
+@property (nonatomic,copy) OnTextViewEdit onEdit;
 #pragma mark 自定义追加属系统
 //!文字框最多能输入的长度
 -(NSInteger)maxLength;
 - (UITextView*)maxLength:(NSInteger)length;
 
-//!文字框最大的高度(px)
-- (CGFloat)maxHeight;
-- (UITextView*)maxHeight:(CGFloat)px;
+//!文字框最大的行数(px)
+- (NSInteger)maxRow;
+- (UITextView*)maxRow:(NSInteger)num;
 
 #pragma mark 扩展系统属性
 -(UITextView*)keyboardType:(UIKeyboardType)value;

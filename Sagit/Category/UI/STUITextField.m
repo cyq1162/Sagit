@@ -11,7 +11,14 @@
 #import "STDefineUI.h"
 
 @implementation UITextField(ST)
-
+-(OnTextFieldEdit)onEdit
+{
+    return [self key:@"onEdit"];
+}
+-(void)setOnEdit:(OnTextFieldEdit)onEdit
+{
+    [self key:@"onEdit" value:onEdit];
+}
 #pragma mark 自定义追加属系统
 - (NSInteger)maxLength
 {
@@ -76,4 +83,20 @@
     }
     return YES;
 }
+- (void)textFieldDidBeginEditing:(UITextField *)textField           // became first responder
+{
+    if(self.onEdit)
+    {
+        self.onEdit(textField,NO);
+    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if(self.onEdit)
+    {
+        self.onEdit(textField,YES);
+    }
+}
+
 @end

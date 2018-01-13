@@ -77,6 +77,26 @@
     return self;
 }
 
+#pragma mark 扩展文字高级属性
+//-(NSAttributedString*)rand
+//{
+//    if(!self.attributedText)
+//    {
+//        self.attributedText=[[NSMutableAttributedString alloc] initWithString:self.text];
+//    }
+//
+//    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:self.text];
+//    20     [attributedString addAttribute:NSLinkAttributeName
+//            21                              value:@"zhifubao://"
+//            22                              range:[[attributedString string] rangeOfString:@"《支付宝协议》"]];
+//    23     [attributedString addAttribute:NSLinkAttributeName
+//            24                              value:@"weixin://"
+//            25                              range:[[attributedString string] rangeOfString:@"《微信协议》"]];
+//    26     [attributedString addAttribute:NSLinkAttributeName
+//            27                              value:@"jianhang://"
+//            28                              range:[[attributedString string] rangeOfString:@"《建行协议》"]];
+//}
+
 #pragma mark 扩展系统属性
 
 -(UILabel*)text:(NSString*)text

@@ -77,7 +77,7 @@
 -(UIImage*)toImage:(id)imgOrName;
 +(UIImage*)toImage:(id)imgOrName;
 
--(UIView*)frame:(CGRect) frame;
+
 -(UIView*)hidden:(BOOL)yesNo;
 -(UIView*)backgroundColor:(id)colorOrHex;
 -(UIView*)clipsToBounds:(BOOL)value;

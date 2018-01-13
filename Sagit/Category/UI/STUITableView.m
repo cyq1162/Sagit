@@ -22,14 +22,16 @@
 }
 -(void)setSource:(NSMutableArray<id> *)source
 {
-    if(self.allowDelete && ![source isKindOfClass:[NSMutableArray class]])
-    {
-        source=[source toNSMutableArray];
-    }
     [self source:source];
 }
 -(UITableView *)source:(NSMutableArray<id> *)dataSource
 {
+    if(self.allowDelete && ![dataSource isKindOfClass:[NSMutableArray class]])
+    {
+        dataSource=[dataSource toNSMutableArray];
+    }
+    //清掉高度缓存
+    [self.heightForCells removeAllObjects];
     [self key:@"source" value:dataSource];
     return self;
 }
@@ -125,13 +127,21 @@
 -(UITableView*)afterDelCell:(NSIndexPath*)indexPath
 {
    // dispatch_async(dispatch_get_main_queue(), ^{
-        [self.source removeObjectAtIndex:indexPath.row];
-        [self deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        if(self.autoHeight)
-        {
-            [self height:(self.contentSize.height-1)*Ypx];
-        }
-        return self;
+    //重置Cell高度的缓存
+    [self.heightForCells remove:[NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row]];
+    NSMutableArray *rows=self.heightForCells[@(indexPath.section)];
+    if(rows && rows.count>indexPath.row)
+    {
+        [rows removeObjectAtIndex:indexPath.row];
+    }
+    [self.source removeObjectAtIndex:indexPath.row];
+    [self deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+
+    if(self.autoHeight)
+    {
+        [self height:(self.contentSize.height-1)*Ypx];
+    }
+    return self;
    // });
     
 }

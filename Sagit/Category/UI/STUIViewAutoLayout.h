@@ -57,7 +57,7 @@
 -(CGFloat)stWidth;
 //!获取当前UI的height值（px)
 -(CGFloat)stHeight;
-
+-(UIView*)frame:(CGRect) frame;
 //!用px值设置当前UI的坐标体系或宽高
 -(UIView*)x:(CGFloat)x;
 -(UIView*)x:(CGFloat)x y:(CGFloat)y;
