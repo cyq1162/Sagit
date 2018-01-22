@@ -116,7 +116,7 @@
 }
 -(UILabel*)font:(NSInteger)px
 {
-    self.font=STFont(px);
+    self.font=[self toFont:px];
     return self;
 }
 -(UILabel*)numberOfLines:(NSInteger)value

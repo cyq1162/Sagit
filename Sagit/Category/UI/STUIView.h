@@ -76,7 +76,8 @@
 +(UIColor*)toColor:(id)hexOrColor;
 -(UIImage*)toImage:(id)imgOrName;
 +(UIImage*)toImage:(id)imgOrName;
-
+-(UIFont *)toFont:(NSInteger)px;
++(UIFont*)toFont:(id)sizeOrName;
 
 -(UIView*)hidden:(BOOL)yesNo;
 -(UIView*)backgroundColor:(id)colorOrHex;

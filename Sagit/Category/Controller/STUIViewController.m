@@ -229,11 +229,15 @@ static char keyValueChar='k';
     if(self.navigationController!=nil)
     {
         NSInteger count=self.navigationController.viewControllers.count;
-        UIViewController *preController=self.navigationController.viewControllers[count-2];
-        self.navigationController.navigationBar.hidden=![preController needNavBar];
-        if(self.tabBarController!=nil)
+        if(count>2)
         {
-            self.tabBarController.tabBar.hidden=![preController needTabBar];
+            UIViewController *preController=self.navigationController.viewControllers[count-2];
+            self.navigationController.navigationBar.hidden=![preController needNavBar];
+
+            if(self.tabBarController!=nil)
+            {
+                self.tabBarController.tabBar.hidden=![preController needTabBar];
+            }
         }
         [self dispose];
         [self.navigationController popViewControllerAnimated:YES];
@@ -242,7 +246,7 @@ static char keyValueChar='k';
     {
         //什么鬼，升级到Xcode 9.2 二次push之后，第二次竟然已经到了Navigation了？ 修正图票事件后好了？
         [((UINavigationController*)self) popViewControllerAnimated:YES];
-        
+        NSLog(@"发生了...");
     }
 }
 //系统内部调用的方法

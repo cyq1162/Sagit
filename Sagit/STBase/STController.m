@@ -12,7 +12,7 @@
 #import <objc/runtime.h>
 #import "STDefine.h"
 #import "STDefineUI.h"
-#import "STMessageBox.h"
+#import "STMsgBox.h"
 #import "STHttp.h"
 @implementation STController
 
@@ -30,6 +30,19 @@
     [self loadUI];
     [self loadData];
 }
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    [super viewDidAppear:animated];
+//    if(self.needNavBar)
+//    {
+//        self.navigationController.navigationBar.hidden=NO;
+//    }
+//    if(self.needTabBar)
+//    {
+//        self.tabBarController.tabBar.hidden=NO;
+//    }
+//}
+
 //内部私有方法
 -(void)loadUI{
     //获取当前的类名
@@ -70,11 +83,11 @@
 {
     return self.stView.UIList;
 }
--(STMessageBox *)box
+-(STMsgBox *)box
 {
     if(_box==nil)
     {
-        _box=[STMessageBox new];
+        _box=[STMsgBox new];
     }
     return _box;
 }
@@ -196,27 +209,36 @@
 // 返回行数
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    NSInteger count;
     NSArray<NSString*> *numb=[tableView key:@"rowCountInSections"];
     if(numb!=nil)
     {
-        return [numb[section] integerValue];
+        count= [numb[section] integerValue];
     }
     else
     {
-        NSInteger count=tableView.source.count;
-        tableView.separatorStyle=count>0?UITableViewCellSeparatorStyleSingleLine:UITableViewCellSeparatorStyleNone;
-        return count;
+        count=tableView.source.count;
     }
+    tableView.separatorStyle=count>0?UITableViewCellSeparatorStyleSingleLine:UITableViewCellSeparatorStyleNone;
+    return count;
 }
 
 // 设置cell
 - (UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
     UITableViewCell *cell=[UITableViewCell reuseCell:tableView index:indexPath];
+    if(!tableView.reuseCell && cell.contentView.subviews.count>0){return cell;}
     if(tableView.addCell)
     {
-        if(tableView.source.count>indexPath.row)
+        NSInteger row=indexPath.row;
+        if(indexPath.section>0)
         {
-            cell.source=tableView.source[indexPath.row];
+            for (NSInteger i=0; i<indexPath.section; i++) {
+                row+=[tableView numberOfRowsInSection:i];
+            }
+        }
+        if(tableView.source.count>row)
+        {
+            cell.source=tableView.source[row];
             if([cell.source isKindOfClass:[NSDictionary class]])
             {
                 [cell firstValue:((NSDictionary*)cell.source).firstObject];
@@ -299,6 +321,10 @@
 {
     return tableView.tableHeaderView.frame.size.height;
 }
+-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section
+{
+    return 0.01;
+}
 // 返回每组的组尾
 //- (UIView *)tableView:(nonnull UITableView *)tableView viewForFooterInSection:(NSInteger)section{
 //    return nil;
@@ -306,6 +332,10 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return tableView.tableFooterView.frame.size.height;
+}
+-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForFooterInSection:(NSInteger)section
+{
+    return 0.01;
 }
 // 选中某行cell时会调用
 //- (void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{

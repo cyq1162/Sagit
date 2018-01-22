@@ -13,33 +13,39 @@
 
 +(instancetype)reuseCell:(UITableView *)tableView index:(NSIndexPath *)index
 {
-    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"TableViewCell"];
+    NSString *key=@"TableViewCell";
+    if(!tableView.reuseCell)
+    {
+        key=[[key append:@(index.section)] append:@(index.row)];
+    }
+    UITableViewCell*  cell=[tableView dequeueReusableCellWithIdentifier:key];
     if(cell==nil)
     {
-        cell=[[UITableViewCell alloc] initWithStyle:tableView.cellStyle reuseIdentifier:@"TableViewCell"];
-    }
-    else
-    {
-        if(cell.contentView.subviews.count>0)
-        {
-            [cell.contentView removeAllSubViews];
-            //[cell.contentView width:1 height:88];
-            for (NSInteger i=0; i<cell.subviews.count; i++)//恢复分隔线的Y坐标
-            {
-                UIView*view=cell.subviews[i];
-                if(view.stY>88){[view y:88];}
-                if(view.stHeight>88){[view height:88];}
-            }
-        }
+        cell=[[UITableViewCell alloc] initWithStyle:tableView.cellStyle reuseIdentifier:key];
+        [cell key:@"table" valueWeak:tableView];
+        [cell key:@"stView" valueWeak:tableView.stView];
+        [cell key:@"baseView" valueWeak:tableView.baseView];//因为Cell在Add时，并没有父，所以需要提前设置，这样STLastView等宏才能找到上一个UI
+        [cell accessoryType:UITableViewCellAccessoryDisclosureIndicator];//右边有小箭头
+        [cell selectionStyle:UITableViewCellSelectionStyleNone];//选中无状态
     }
     [cell indexPath:index];
+    if(!tableView.reuseCell)
+    {
+        return cell;
+    }
+    
+    if(cell.contentView.subviews.count>0)
+    {
+        [cell.contentView removeAllSubViews];
+        for (NSInteger i=0; i<cell.subviews.count; i++)//恢复分隔线的Y坐标
+        {
+            UIView*view=cell.subviews[i];
+            if(view.stY>88){[view y:88];}
+            if(view.stHeight>88){[view height:88];}
+        }
+    }
     //默认设置
     [cell width:1 height:88];//IOS的默认高度
-    [cell accessoryType:UITableViewCellAccessoryDisclosureIndicator];//右边有小箭头
-    [cell selectionStyle:UITableViewCellSelectionStyleNone];//选中无状态
-    [cell key:@"table" valueWeak:tableView];
-    [cell key:@"stView" valueWeak:tableView.stView];
-    [cell key:@"baseView" valueWeak:tableView.baseView];//因为Cell在Add时，并没有父，所以需要提前设置，这样STLastView等宏才能找到上一个UI
     return cell;
 }
 -(UITableView *)table

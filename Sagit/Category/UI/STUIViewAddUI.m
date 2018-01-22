@@ -532,6 +532,7 @@
     UITableView *ui=[[UITableView alloc] initWithFrame:STFullRect style:style];
     ui.delegate=(id)self.stController;
     ui.dataSource=(id)self.stController;
+    ui.tableHeaderView=[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f,0, 0.01f)];
     ui.tableFooterView=[UIView new];//去掉空白行。
     [self addView:ui name:name];
     return ui;

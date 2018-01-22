@@ -17,7 +17,7 @@
 #import "STModelBase.h"
 #import "STLayoutTracer.h"
 #import "STCategory.h"
-#import "STMessageBox.h"
+#import "STMsgBox.h"
 #import "STHttp.h"
 #import "STFile.h"
 #import "STCache.h"

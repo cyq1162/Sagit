@@ -84,6 +84,19 @@
 {
     [self key:@"afterReload" value:afterReload];
 }
+-(BOOL)reuseCell
+{
+    if([self key:@"reuseCell"]!=nil)
+    {
+        return [[self key:@"reuseCell"] isEqualToString:@"1"];
+    }
+    return YES;
+}
+-(BOOL)reuseCell:(BOOL)yesNo
+{
+    [self.keyValue set:@"reuseCell" value:yesNo?@"1":@"0"];
+    return self;
+}
 -(BOOL)autoHeight
 {
     if([self key:@"autoHeight"]!=nil)

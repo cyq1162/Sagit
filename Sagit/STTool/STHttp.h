@@ -8,16 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "STModel.h"
-#import "STMessageBox.h"
+#import "STMsgBox.h"
 
 typedef void(^Success)(STModel *result);
 typedef void(^Error)(NSString *errMsg);
 //!提供基础的网络请求（get、post、upload(图片上传））
 @interface STHttp : NSObject
 
-@property (nonatomic,strong) STMessageBox *box;
+@property (nonatomic,strong) STMsgBox *box;
 
-- (instancetype)init:(STMessageBox*)box;
+- (instancetype)init:(STMsgBox*)box;
 - (void)get:(NSString *)url paras:(NSDictionary *)paras success:(Success)succese;
 - (void)get:(NSString *)url paras:(NSDictionary *)paras success:(Success)success error:(Error)error;
 

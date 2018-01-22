@@ -108,7 +108,6 @@
     {
         [self.lock lock];
         [self.timeOutDic set:key value:[NSDate.date addSecond:timeOutSecond]];
-        [self.lock unlock];
         if(!self.isStartClearTask)
         {
             self.isStartClearTask=YES;
@@ -116,6 +115,7 @@
                 [self clearTimeOutCache];
             });
         }
+        [self.lock unlock];
     }
 }
 -(void)remove:(NSString*)key

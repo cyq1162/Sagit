@@ -11,7 +11,7 @@
 
 @class STView;
 @class STHttp;
-@class STMessageBox;
+@class STMsgBox;
 
 @interface STController : UIViewController<UITableViewDelegate,UITableViewDataSource,UICollectionViewDelegate,UICollectionViewDataSource>
 //!当前控制器的STView根视图
@@ -19,7 +19,7 @@
 //!用于发起http请求
 @property (nonatomic,retain) STHttp *http;
 //!用于弹窗提示消息
-@property (nonatomic,retain) STMessageBox *box;
+@property (nonatomic,retain) STMsgBox *box;
 //!所有name的控件的集合(指向的是view的UIList)
 //@property (nonatomic,retain) NSMutableDictionary *UIList;
 

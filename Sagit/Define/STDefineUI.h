@@ -68,6 +68,7 @@
 //上一个UI控件的简写
 #define STPreView sagit.lastAddView.preView
 #define STLastView sagit.lastAddView
+#define STLastControl ((UIControl*)STLastView)
 #define STLastButton ((UIButton*)STLastView)
 #define STLastTextField ((UITextField*)STLastView)
 #define STLastTextView ((UITextView*)STLastView)
@@ -82,6 +83,7 @@
 //获取控件
 #define STUIView(name)    [sagit find:name]
 #define STSTView(name)    ((STView*)STUIView(name))
+#define STControl(name) ((UIControl*)STUIView(name))
 #define STButton(name) ((UIButton*)STUIView(name))
 #define STTextField(name) ((UITextField*)STUIView(name))
 #define STTextView(name) ((UITextView*)STUIView(name))
@@ -108,7 +110,8 @@
 
 //字体
 #define STFont(px) [UIFont systemFontOfSize:px*Ypt]
-
+//加粗
+#define STFontBold(px) [UIFont boldSystemFontOfSize:px*Ypt]
 #pragma mark 颜色
 //颜色
 #define STColor(color) [UIColor hex:color]

@@ -7,7 +7,7 @@
 //
 
 #import "STUIImageView.h"
-#import "STMessageBox.h"
+#import "STMsgBox.h"
 #import <objc/runtime.h>
 #import "STSagit.h"
 #import "STUIView.h"

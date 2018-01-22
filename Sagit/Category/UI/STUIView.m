@@ -347,7 +347,33 @@ static char keyValueChar='k';
     }
     return STImage(imgOrName);
 }
-
+-(UIFont *)toFont:(NSInteger)px
+{
+    NSString*name=nil;//IOS默认字体
+    if(px>100)
+    {
+        NSString*value=[@(px) stringValue];
+        px=[[value substringWithRange:NSMakeRange(0, 2)] integerValue];
+        NSInteger type=[[value substringFromIndex:2] integerValue];//type
+        if(type==0)
+        {
+            return STFontBold(px);
+        }
+        else if(type==1)
+        {
+            name=@"SFUIText-Light";
+        }
+    }
+    return [UIView toFont:name size:px];
+}
++(UIFont *)toFont:(NSString*)name size:(NSInteger)px
+{
+    if (name)
+    {
+        return [UIFont fontWithName:name size:px*Ypt];
+    }
+    return STFont(px);
+}
 
 -(UIView*)hidden:(BOOL)yesNo
 {

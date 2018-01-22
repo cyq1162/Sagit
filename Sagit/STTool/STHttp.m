@@ -7,7 +7,7 @@
 //
 
 #import "STHttp.h"
-#import "STMessageBox.h"
+#import "STMsgBox.h"
 #import "STCategory.h"
 #import <AFNetworking.h>
 #import "STSagit.h"
@@ -34,7 +34,7 @@
     });
     return _share;
 }
--(instancetype)init:(STMessageBox*)box{
+-(instancetype)init:(STMsgBox*)box{
     _box=box;
     return self;
 }
@@ -75,13 +75,7 @@
 }
 -(void)post:(NSString *)url paras:(NSDictionary *)paras success:(Success)success error:(Error)error{
     [self reSetHeader];
-    if ([NSThread currentThread] == [NSThread mainThread]) {
-        [self showLoading];
-    }else {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [self showLoading];
-        });
-    }
+    [self showLoading];
     url=[self reSetUrl:url];
     [self.http POST:url parameters:paras progress:nil
         success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {

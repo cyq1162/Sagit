@@ -27,7 +27,9 @@ typedef void(^AfterTableReloadData)(UITableView *tableView);
 //!存档所有Cell的高度（由系统控制）[存档格式为：section key,[row Array]]
 @property (readonly,nonatomic,retain) NSMutableDictionary *heightForCells;
 
-
+//!是否重用Cell（默认Yes)
+-(BOOL)reuseCell;
+-(BOOL)reuseCell:(BOOL)yesNo;
 //!是否自动控制Table的高度
 -(BOOL)autoHeight;
 //!设置是否自动控制Table的高度

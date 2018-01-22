@@ -16,7 +16,7 @@
 //将字符从小写转化成大写
 #define STCharUpper(c)      ((c >= 'a' && c <= 'z') ? (c & ~0x20) : c)
 //数字转字符串
-#define STToString(value)  ([NSString stringWithFormat: @"%ld", value]);
+#define STNumString(value)  [@(value) stringValue]
 //系统的版本号
 #define STOSVersion [[[UIDevice currentDevice] systemVersion] doubleValue]
 //!为Controller定义的

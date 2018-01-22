@@ -11,7 +11,7 @@
 #import "STFile.h"
 #import "STHttp.h"
 #import "STCache.h"
-#import "STMessageBox.h"
+#import "STMsgBox.h"
 
 
 //!所有单例的入口，可以扩展此类，来增加不同的方法，达到如：Sagit.Global之类的用法。
@@ -27,7 +27,7 @@
 //!用于发起网络请求的单例类,，在STController中时用self.http调用
 +(STHttp*)Http;
 //!用于弹窗消息的单例类，在STController中时用self.box调用
-+(STMessageBox*)MsgBox;
++(STMsgBox*)MsgBox;
 
 #pragma mark 扩展一些全局的方法
 typedef void (^DelayExecuteBlock)();

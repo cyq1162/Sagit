@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface UINavigationController (ST)
+//!//发现直接复盖原生的方法，Bug太多，只好用继承试试
+@interface UINavigationController(ST)
 
 @end
