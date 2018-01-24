@@ -32,8 +32,8 @@
 //此方法在第一次view时被触发，把view修改成 STView
 //-(void)loadView
 //{
-      //引发UIAlertView弹窗全屏(把导航栏也占了,背景也全灰了)，所以不用了
-//    self.view=[[STView alloc]initWithController:self];
+//     // 引发UIAlertView弹窗全屏(把导航栏也占了,背景也全灰了)，所以不用了
+//   // self.view=[[STView alloc]initWithController:self];
 //}
 
 #pragma mark keyvalue
@@ -144,7 +144,8 @@ static char keyValueChar='k';
     [self key:@"needNavBar" value:yesNo?@"1":@"0"];
     if(setNavBar && self.navigationController!=nil)
     {
-        self.navigationController.navigationBar.hidden=!yesNo;
+        [self.navigationController setNavigationBarHidden:!yesNo animated:NO];
+       // self.navigationController.navigationBar.hidden=!yesNo;
     }
     return self;
 }
@@ -197,7 +198,8 @@ static char keyValueChar='k';
     [self block:@"存档最后的Nav栏状态，用于检测是否还原。" on:^(UIViewController *controller)
      {
          [controller needNavBar:!controller.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
-         controller.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
+         [controller.navigationController setNavigationBarHidden:NO animated:NO];
+         //controller.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
          controller.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。
      }];
 
@@ -226,13 +228,18 @@ static char keyValueChar='k';
 }
 
 - (void)stPop {
-    if(self.navigationController!=nil)
+    UINavigationController *navC=self.navigationController;
+    if(navC)
     {
-        NSInteger count=self.navigationController.viewControllers.count;
-        if(count>2)
+        NSInteger count=navC.viewControllers.count;
+        if(count>1)
         {
-            UIViewController *preController=self.navigationController.viewControllers[count-2];
-            self.navigationController.navigationBar.hidden=![preController needNavBar];
+            UIViewController *preController=navC.viewControllers[count-2];
+            if(navC.navigationBar.hidden!=![preController needNavBar])
+            {
+                [navC setNavigationBarHidden:![preController needNavBar] animated:NO];//全部统一用这个处理
+            }
+            //navC.navigationBar.hidden=![preController needNavBar];
 
             if(self.tabBarController!=nil)
             {
@@ -240,7 +247,7 @@ static char keyValueChar='k';
             }
         }
         [self dispose];
-        [self.navigationController popViewControllerAnimated:YES];
+        [navC popViewControllerAnimated:YES];
     }
     else if([self isKindOfClass:[UINavigationController class]])
     {

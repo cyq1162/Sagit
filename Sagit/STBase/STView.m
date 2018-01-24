@@ -35,7 +35,6 @@
 {
     self=[self init];
     if (controller) {
-        //STWeakObj(controller)
         self.Controller=controller;
     }
     return self;
@@ -48,7 +47,7 @@
 }
 -(void)regEvent{
     if(self.lock==nil){self.lock=[NSLock new];}
-    if(self.UITextList!=nil && self.isStartTextChageEvent)
+    if(self.UITextList && self.UITextList.count>0)
     {
         //注册键盘回收事件
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(resignKeyboard)];
@@ -57,8 +56,6 @@
         {
             if([ui isKindOfClass:[UITextView class]])
             {
-                //文本修改事件
-//                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTextChange:) name:UITextViewTextDidChangeNotification object:ui];
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onTextClick:) name:UITextViewTextDidBeginEditingNotification object:ui];
             }
             else

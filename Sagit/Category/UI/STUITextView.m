@@ -41,7 +41,7 @@
 }
 - (UITextView*)maxLength:(NSInteger)length{
     [self key:@"maxLength" value:[@(length) stringValue]];
-    self.delegate = (id)self;
+    //self.delegate = (id)self;
     return self;
     
 }
@@ -58,7 +58,7 @@
 -(UITextView *)maxRow:(NSInteger)num
 {
     [self key:@"maxRow" value:[@(num) stringValue]];
-    self.delegate = (id)self;
+    //self.delegate = (id)self;
     return self;
 }
 #pragma mark 扩展系统属性
@@ -109,7 +109,6 @@
         [self key:@"placeholderLabel" value:placeholer];
     }
     [self key:@"placeholder" value:text];
-    self.delegate = (id)self;
     return self;
 }
 
@@ -218,22 +217,22 @@
     }
     
 }
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
-   if(self.onEdit)
-   {
-       self.onEdit(textView,YES);
-   }
-    
-}
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
+    self.window.editingTextUI=textView;
     if(self.onEdit)
     {
         self.onEdit(textView,NO);
     }
 }
-
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    if(self.onEdit)
+    {
+        self.onEdit(textView,YES);
+    }
+    
+}
 @end
 
 

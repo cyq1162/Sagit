@@ -10,7 +10,7 @@
 
 @interface UIView (STUIViewEvent)
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)
-typedef  void(^OnClick)(id view);
+typedef  void(^OnViewClick)(id view);
 typedef  void(^OnLongPress)(id view);
 typedef  void(^ViewDescription)(id view);
 #pragma mark 扩展系统事件
@@ -21,7 +21,7 @@ typedef  void(^ViewDescription)(id view);
 //!绑定事件 并指定target
 -(UIView*)addClick:(NSString *)event target:(UIViewController*)target;
 //!绑定事件 用代码块的形式
--(UIView*)onClick:(OnClick)block;
+-(UIView*)onClick:(OnViewClick)block;
 //!移除绑定点击事件
 -(UIView*)removeClick;
 //!执行长按事件

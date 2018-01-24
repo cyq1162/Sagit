@@ -323,6 +323,7 @@
 -(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex
 {
     UITextField *ui = [[UITextField alloc] initWithFrame:STEmptyRect];
+    ui.delegate=(id)ui;
     if(px>0)
     {
         [ui font:px];
@@ -359,6 +360,7 @@
 -(UITextView *)addTextView:(NSString *)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex
 {
     UITextView* ui=[[UITextView alloc] initWithFrame:STEmptyRect];
+    ui.delegate=(id)ui;
     if(px>0)
     {
         [ui font:px];

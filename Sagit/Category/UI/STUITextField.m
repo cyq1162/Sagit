@@ -31,10 +31,9 @@
 }
 - (UITextField*)maxLength:(NSInteger)length{
     [self key:@"maxLength" value:[@(length) stringValue]];
-    self.delegate = (id)self;
     return self;
-
 }
+
 #pragma mark 扩展系统属性
 -(UITextField*)keyboardType:(UIKeyboardType)type
 {
@@ -85,6 +84,7 @@
 }
 - (void)textFieldDidBeginEditing:(UITextField *)textField           // became first responder
 {
+    self.window.editingTextUI=textField;
     if(self.onEdit)
     {
         self.onEdit(textField,NO);

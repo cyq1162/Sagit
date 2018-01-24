@@ -243,6 +243,15 @@
     }
     return data;
 }
+static char afterImageSaveBlockChar='c';
+-(AfterImageSave)afterImageSaveBlock
+{
+    return (AfterImageSave)objc_getAssociatedObject(self, &afterImageSaveBlockChar);
+}
+-(void)setAfterImageSaveBlock:(AfterImageSave)afterImageSaveBlock
+{
+     objc_setAssociatedObject(self, &afterImageSaveBlockChar, afterImageSaveBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
 -(void)save:(AfterImageSave)afterSaveBlock
 {
     self.afterImageSaveBlock=afterSaveBlock;

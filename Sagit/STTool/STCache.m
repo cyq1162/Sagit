@@ -60,7 +60,7 @@
         }
         @catch(NSException*err)
         {
-            NSLog(err.description);
+            NSLog(@"%@",err);
             return;//异常则退出，不清缓存了。
         }
         

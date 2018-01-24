@@ -19,7 +19,7 @@
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)
 static char clickChar='c';
 static char longPressChar='p';
--(void)setClickBlock:(OnClick)block
+-(void)setClickBlock:(OnViewClick)block
 {
     objc_setAssociatedObject(self, &clickChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
@@ -31,7 +31,7 @@ static char longPressChar='p';
 {
     if([eventType isEqualToString:@"click"])
     {
-        OnClick event = (OnClick)objc_getAssociatedObject(self, &clickChar);
+        OnViewClick event = (OnViewClick)objc_getAssociatedObject(self, &clickChar);
         if(event)
         {
             //STWeakObj(view);
@@ -244,21 +244,22 @@ static char longPressChar='p';
 #pragma mark click 事件
 -(UIView*)click
 {
-    if(self.userInteractionEnabled && ![self.baseView key:@"stopEvent"])
-    {
-        self.userInteractionEnabled=NO;
-        [self exeEvent:@"click"];
-        [Sagit delayExecute:1 onMainThread:YES block:^{
-            @try
-            {
-                if(self)
-                {
-                    self.userInteractionEnabled=YES;
-                }
-            }@catch(NSException *err){}
-        }];
-        
-    }
+    [self exeEvent:@"click"];
+//    if(self.userInteractionEnabled && ![self.baseView key:@"stopEvent"])
+//    {
+//        self.userInteractionEnabled=NO;
+//
+//        [Sagit delayExecute:1 onMainThread:YES block:^{
+//            @try
+//            {
+//                if(self)
+//                {
+//                    self.userInteractionEnabled=YES;
+//                }
+//            }@catch(NSException *err){}
+//        }];
+//
+//    }
     return self;
 }
 -(UIView*)addClick:(NSString *)event
@@ -269,7 +270,7 @@ static char longPressChar='p';
 {
     return [self addEvent:@"click" event:event target:target];
 }
--(UIView*)onClick:(OnClick)block
+-(UIView*)onClick:(OnViewClick)block
 {
     if(block!=nil)
     {

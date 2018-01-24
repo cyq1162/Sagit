@@ -147,6 +147,10 @@ static char keyValueChar='k';
     }
     return nil;
 }
+//-(UIWindow*)window
+//{
+//   return [[UIApplication sharedApplication].delegate window];
+//}
 -(UIView*)stValue:(NSString*)value
 {
     if([self isMemberOfClass:[UITextField class]])
@@ -382,6 +386,18 @@ static char keyValueChar='k';
 }
 -(UIView*)backgroundColor:(id)colorOrHex{
     self.backgroundColor=[self toColor:colorOrHex];
+    return self;
+}
+-(UIView *)backgroundImage:(id)imgOrName
+{
+    if(!imgOrName)
+    {
+        self.layer.contents=nil;
+    }
+    else
+    {
+        self.layer.contents=(id)[self toImage:imgOrName].CGImage;
+    }
     return self;
 }
 -(UIView*)clipsToBounds:(BOOL)value

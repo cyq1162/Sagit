@@ -24,6 +24,7 @@
 //-(UIViewController*)baseController;
 //!获取当前UI的根视图，如果当前的UI没有根视图或根视图为UIWindow，则返回自身。
 -(UIView*)baseView;
+//-(UIWindow*)window;
 //!检测当前UI是否STView
 -(BOOL)isSTView;
 //!检测当前UI的根视图是否继承自STView
@@ -77,10 +78,11 @@
 -(UIImage*)toImage:(id)imgOrName;
 +(UIImage*)toImage:(id)imgOrName;
 -(UIFont *)toFont:(NSInteger)px;
-+(UIFont*)toFont:(id)sizeOrName;
++(UIFont *)toFont:(NSString*)name size:(NSInteger)px;
 
 -(UIView*)hidden:(BOOL)yesNo;
 -(UIView*)backgroundColor:(id)colorOrHex;
+-(UIView*)backgroundImage:(id)imgOrName;
 -(UIView*)clipsToBounds:(BOOL)value;
 -(UIView*)tag:(NSInteger)tag;
 -(UIView*)alpha:(CGFloat)value;

@@ -30,17 +30,19 @@
     [self loadUI];
     [self loadData];
 }
+
 //-(void)viewDidAppear:(BOOL)animated
 //{
 //    [super viewDidAppear:animated];
-//    if(self.needNavBar)
+//    if(self.navigationController && self.navigationController.navigationBar)
 //    {
-//        self.navigationController.navigationBar.hidden=NO;
+//        self.navigationController.navigationBar.hidden=!self.needNavBar;
 //    }
-//    if(self.needTabBar)
+//    if(self.tabBarController && self.tabBarController.tabBar)
 //    {
-//        self.tabBarController.tabBar.hidden=NO;
+//        self.tabBarController.tabBar.hidden=!self.needTabBar;
 //    }
+//    [self.view layoutIfNeeded];
 //}
 
 //内部私有方法

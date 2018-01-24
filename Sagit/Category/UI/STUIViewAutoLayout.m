@@ -587,7 +587,7 @@ static NSInteger nullValue=-99999;
             self.OriginFrame=self.frame;
         }
         [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
-        [UIView setAnimationDuration:0.2];
+        [UIView setAnimationDuration:0.5];
         [self frame:frame];
         [UIView commitAnimations];
     }
