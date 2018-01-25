@@ -14,6 +14,7 @@
 
 
 //全屏 以IPhone6的像素为标准参考 750*1334
+#define STIsIPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
 
 #define STScreenScale [UIScreen mainScreen].scale
 #define STScreeWidthPt [UIScreen mainScreen].bounds.size.width
@@ -21,6 +22,8 @@
 
 #define STScreenWidthPx (STScreeWidthPt<STScreeHeightPt?750:1334)
 #define STScreenHeightPx (STScreeWidthPt<STScreeHeightPt?1334:750)
+
+//#define STIsIPhoneX (STScreeWidthPt==812 || STScreeHeightPt==812)
 
 //比例系数 750下的像素 px*比例像素，得到对应的pt
 //特别说明，本系素不用能用于frame，因为frame不是标准
@@ -33,12 +36,12 @@
 
 //得到的是750下转换的像素
 #define STNavHeightPt 44.0f
-#define STStatusHeightPt 20.0f
+#define STStatusHeightPt (STIsIPhoneX?44.0f:20.0f)
 #define STTabHeightPt 49.0f
 
-#define STNavHeightPx 44.0f*Ypx
-#define STStatusHeightPx 20.0f*Ypx
-#define STTabHeightPx 49.0f*Ypx
+#define STNavHeightPx STNavHeightPt*Ypx
+#define STStatusHeightPx STStatusHeightPt*Ypx
+#define STTabHeightPx STTabHeightPt*Ypx
 
 //750,1334        414,736 *3
 
@@ -113,6 +116,9 @@
 //加粗
 #define STFontBold(px) [UIFont boldSystemFontOfSize:px*Ypt]
 #pragma mark 颜色
+
+//设备颜色
+#define STDeviceColor [UIColor hex:@"#f4f4f4"]//米白
 //颜色
 #define STColor(color) [UIColor hex:color]
 
@@ -155,7 +161,7 @@
 #ifndef STDefaultForNavLeftImage
 #define STDefaultForNavLeftImage nil
 #endif
-#ifndef STDefaultForImageInitName
-#define STDefaultForImageInitName nil
+#ifndef STDefaultForImageView
+#define STDefaultForImageView nil
 #endif
 

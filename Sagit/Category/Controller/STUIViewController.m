@@ -52,6 +52,14 @@ static char keyValueChar='k';
     [self.keyValueWeak set:key value:value];
     return self;
 }
+-(UIViewController*)key:(NSString *)key valueIfNil:(id)value
+{
+    if([self key:key]==nil)
+    {
+        return [self key:key value:value];
+    }
+    return self;
+}
 -(UIViewController*)key:(NSString *)key value:(id)value
 {
     [self.keyValue set:key value:value];
@@ -129,7 +137,7 @@ static char keyValueChar='k';
     {
         return [[self key:@"needNavBar"] isEqualToString:@"1"];
     }
-    if(self.navigationController!=nil)
+    if(self.navigationController && self.navigationController.navigationBar)
     {
         return !self.navigationController.navigationBar.hidden;
     }
@@ -156,7 +164,7 @@ static char keyValueChar='k';
     {
         return [[self key:@"needTabBar"] isEqualToString:@"1"];
     }
-    if(self.tabBarController!=nil)
+    if(self.tabBarController && self.tabBarController.tabBar)
     {
         return !self.tabBarController.tabBar.hidden;
     }
@@ -191,13 +199,16 @@ static char keyValueChar='k';
     {
         if(controller.tabBarController!=nil)//存档最后的Tab栏状态，用于检测是否还原。
         {
-            [controller needTabBar:!self.tabBarController.tabBar.hidden];
+            [controller key:@"needTabBar" valueIfNil:!self.tabBarController.tabBar.hidden?@"1":@"0"];
+            //[controller needTabBar:!self.tabBarController.tabBar.hidden];
             controller.tabBarController.tabBar.hidden=YES;
+            controller.hidesBottomBarWhenPushed=YES;
         }
     }];
     [self block:@"存档最后的Nav栏状态，用于检测是否还原。" on:^(UIViewController *controller)
      {
-         [controller needNavBar:!controller.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
+          [controller key:@"needNavBar" valueIfNil:!controller.navigationController.navigationBar.hidden?@"1":@"0"];
+         //[controller needNavBar:!controller.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
          [controller.navigationController setNavigationBarHidden:NO animated:NO];
          //controller.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
          controller.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。

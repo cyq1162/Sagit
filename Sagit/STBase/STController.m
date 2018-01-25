@@ -81,7 +81,7 @@
 {
     [self.stView initData];
 }
--(NSMutableDictionary*)UIList
+-(NSMapTable*)UIList
 {
     return self.stView.UIList;
 }

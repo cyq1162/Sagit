@@ -39,6 +39,14 @@ static char keyValueChar='k';
     [self.keyValueWeak set:key value:value];
     return self;
 }
+-(UIView *)key:(NSString *)key valueIfNil:(id)value
+{
+    if([self key:key]==nil)
+    {
+        return [self key:key value:value];
+    }
+    return self;
+}
 -(UIView*)key:(NSString *)key value:(id)value
 {
     [self.keyValue set:key value:value];

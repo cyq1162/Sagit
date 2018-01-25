@@ -101,12 +101,11 @@
 {
     [[[self.window addUIView:nil] backgroundColor:[UIColor colorWithWhite:0.0f alpha:0.4f]] block:nil on:^(UIView* view) {
         
-        [[view addLabel:nil text:msg font:30 color:@"ffffff"] block:nil on:^(UILabel *label)
+        [[view addLabel:nil text:msg font:30 color:@"ffffff" row:0] block:nil on:^(UILabel *label)
         {
-            if(STScreenWidthPx-label.stWidth<200)
+            if(STScreenWidthPx-label.stWidth<150)
             {
-                [label width:STScreenWidthPx-200];
-                [[label numberOfLines:0] sizeToFit];
+                [label width:STScreenWidthPx-150];
             }
             [view width:label.stWidth+100 height:label.stHeight+50];
             [label toCenter];

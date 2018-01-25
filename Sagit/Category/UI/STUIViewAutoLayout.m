@@ -496,12 +496,12 @@ static NSInteger nullValue=-99999;
 }
 -(UIView*)frame:(CGRect)frame
 {
-    frame.origin.x=roundf(frame.origin.x);
-    frame.origin.y=roundf(frame.origin.y);
+    frame.origin.x=ceilf(frame.origin.x);
+    frame.origin.y=ceilf(frame.origin.y);
     if(![self key:@"denyFixWidthHeight"])
     {
-        frame.size.width=roundf(frame.size.width);
-        frame.size.height=roundf(frame.size.height);
+        frame.size.width=ceilf(frame.size.width);
+        frame.size.height=ceilf(frame.size.height);
     }
     
     self.frame=frame;

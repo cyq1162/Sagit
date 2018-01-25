@@ -245,7 +245,10 @@
         [ui textColor:colorOrHex];
     }
     [ui textAlignment:NSTextAlignmentLeft];
-    [ui numberOfLines:num];
+    if(num!=1)
+    {
+        [ui numberOfLines:num];
+    }
     [ui sizeToFit];
     [self addView:ui name:name];
     return ui;
@@ -268,7 +271,7 @@
 }
 -(UIImageView*)addImageView:(NSString*)name
 {
-    return [self addImageView:name img:STDefaultForImageInitName direction:XY];
+    return [self addImageView:name img:STDefaultForImageView direction:XY];
 }
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName
 {
@@ -336,11 +339,6 @@
     {
         [ui textColor:colorOrHex];
     }
-    STView *view=[self stView];
-    if(view!=nil)
-    {
-        [view.UITextList addObject:ui];
-    }
     [ui isFormUI:YES];
     [self addView:ui name:name];
     return ui;
@@ -373,11 +371,11 @@
     {
         [ui textColor:colorOrHex];
     }
-    STView *view=[self stView];
-    if(view!=nil)
-    {
-        [view.UITextList addObject:ui];
-    }
+ //   STView *view=[self stView];
+//    if(view!=nil)
+//    {
+//        [view.UITextList addObject:ui];
+//    }
 //    ui.layer.cornerRadius = 4;
 //    ui.layer.borderWidth = 1;
     //当textview的字符串为0时发送（rerurn）键无效

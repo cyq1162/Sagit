@@ -53,6 +53,8 @@
 -(id)key:(NSString*)key;
 //!为keyValue属性设置键与值
 -(UIView*)key:(NSString*)key value:(id)value;
+//当value不存在时，才允许赋值（保证该方法仅赋值一次）
+-(UIView*)key:(NSString *)key valueIfNil:(id)value;
 //!为keyValue属性设置键与值 其中value为弱引用
 -(UIView*)key:(NSString*)key valueWeak:(id)value;
 

@@ -12,12 +12,7 @@
 @interface STView : UIView
 //!所对应的Controller (弱引用，不然就双向引用内存不保)
 @property (nonatomic,weak) STController *Controller;
-////!所有name的控件的集合
-//@property (nonatomic,retain)NSMutableDictionary *UIList;
-//!存档文本框的列表
-@property (nonatomic,retain) NSMutableArray *UITextList;
-//!开启针对文本的高度自适应、键盘遮档事件
-@property (nonatomic,assign) BOOL isStartTextChageEvent;
+
 //!是否开启手机旋转刷新布局功能。
 @property (nonatomic,assign) BOOL isStartRotateEvent;
 //!初始化

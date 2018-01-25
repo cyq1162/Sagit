@@ -17,10 +17,11 @@
 #define STCharUpper(c)      ((c >= 'a' && c <= 'z') ? (c & ~0x20) : c)
 //数字转字符串
 #define STNumString(value)  [@(value) stringValue]
+#define STString(format,...) [NSString stringWithFormat:format,##__VA_ARGS__]
 //系统的版本号
 #define STOSVersion [[[UIDevice currentDevice] systemVersion] doubleValue]
 //!为Controller定义的
-#define STNew(className) STNewClass([className appendIfNotEndWith:@"Controller"])
+#define STNew(className) ((UIViewController*)STNewClass([className appendIfNotEndWith:@"Controller"]))
 //!为所有的class定义的
 #define STNewClass(className) [NSClassFromString(className) new]
 //block块中用的引用
