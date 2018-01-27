@@ -15,22 +15,29 @@
 
 @implementation UIView(STAutoLayout)
 #pragma mark 属性定义
-static char layoutTracerChar='l';
-static char originFrameChar='o';
 static NSInteger nullValue=-99999;
 // Name
-- (NSMutableDictionary*)LayoutTracer{
-    return (NSMutableDictionary*)objc_getAssociatedObject(self, &layoutTracerChar);
+- (NSMutableDictionary*)LayoutTracer
+{
+    return [self key:@"LayoutTracer"];
 }
-- (UIView*)setLayoutTracer:(NSMutableDictionary*)tracer{
-    objc_setAssociatedObject(self, &layoutTracerChar, tracer,OBJC_ASSOCIATION_RETAIN);
+- (UIView*)setLayoutTracer:(NSMutableDictionary*)tracer
+{
+    [self key:@"LayoutTracer" value:tracer];
     return self;
 }
-- (CGRect)OriginFrame{
-    return CGRectFromString(objc_getAssociatedObject(self, &originFrameChar));
+- (CGRect)OriginFrame
+{
+    NSString *rect=[self key:@"OriginFrame"];
+    if(rect)
+    {
+        return CGRectFromString(rect);
+    }
+    return CGRectZero;
 }
-- (UIView*)setOriginFrame:(CGRect)frame{
-    objc_setAssociatedObject(self, &originFrameChar,NSStringFromCGRect(frame),OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (UIView*)setOriginFrame:(CGRect)frame
+{
+    [self key:@"OriginFrame" value:NSStringFromCGRect(frame)];
     return self;
 }
 #pragma mark [相对布局方法] RelativeLayout
@@ -61,13 +68,32 @@ static NSInteger nullValue=-99999;
     }
     return STRectCopy(self.frame);
 }
--(CGSize)superSize
+-(CGSize)superSizeWithFix
 {
-    if(self.superview==nil)
+    CGSize size=STFullSize;
+    if(self.superview)
     {
-        return STFullSize;
+        size=self.superview.frame.size;
     }
-    return self.superview.frame.size;
+    
+    if(size.height==STScreeHeightPt || size.height==STScreeHeightPt-STNavHeightPt-STStatusHeightPt)
+    {
+        //计算去掉超出父窗体或屏幕的部分
+        //检测页面有没有导航条或Tarbar条
+        if(self.stView && self.stView.stController)
+        {
+            UIViewController *controller=self.stView.stController;
+            if(size.height==STScreeHeightPt && [controller needNavBar])
+            {
+                size.height-=(STNavHeightPt+STStatusHeightPt);
+            }
+            if([controller needTabBar])
+            {
+                size.height-=STTabHeightPt;
+            }
+        }
+    }
+    return size;
 }
 -(CGPoint)superOrigin
 {
@@ -351,14 +377,15 @@ static NSInteger nullValue=-99999;
 }
 -(UIView*)relate:(XYLocation)location left:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
 {
-    if(left>=0 && left<=1){left=[self superSize].width*Xpx*left;}
-    if(top>=0 && top<=1){top=[self superSize].height*Ypx*top;}
+    CGSize superSize=[self superSizeWithFix];
+    if(left>=0 && left<=1){left=superSize.width*Xpx*left;}
+    if(top>=0 && top<=1){top=superSize.height*Ypx*top;}
     
-    if(right>=0 && right<=1){right=[self superSize].width*Xpx*right;}
-    if(bottom>=0 && bottom<=1){bottom=[self superSize].height*Ypx*bottom;}
+    if(right>=0 && right<=1){right=superSize.width*Xpx*right;}
+    if(bottom>=0 && bottom<=1){bottom=superSize.height*Ypx*bottom;}
     
     
-    CGSize superSize=[self superSize];
+    
     CGRect frame=STRectCopy(self.frame);
     //frame.origin=CGPointZero;//归零处理 后来没想通为什么要归零，只能去掉。
     if(left!=nullValue && right!=nullValue)
@@ -424,7 +451,7 @@ static NSInteger nullValue=-99999;
 {
     [self addTracer:nil method:@"toCenter" v1:0 v2:0 v3:0 v4:0 location:0 xyFlag:flag];
     CGRect frame=self.frame;
-    CGSize superSize=[self superSize];
+    CGSize superSize=[self superSizeWithFix];
     
     //检测约束
     BOOL relateTop=NO,relateBottom=NO,relateLeft=NO,relateRight=NO;//检测有没有上下左右的约束。
@@ -456,23 +483,23 @@ static NSInteger nullValue=-99999;
     //Y坐标[高度居中]
     if(flag==2 || flag==0)
     {
-        //计算去掉超出父窗体或屏幕的部分
-        if(CGSizeEqualToSize(superSize, STFullSize))
-        {
-            //检测页面有没有导航条或Tarbar条
-            if(self.stView && self.stView.stController)
-            {
-                UIViewController *controller=self.stView.stController;
-                if([controller needNavBar])
-                {
-                    superSize.height=superSize.height-STNavHeightPt-STStatusHeightPt;
-                }
-                if([controller needTabBar])
-                {
-                    superSize.height-=STTabHeightPt;
-                }
-            }
-        }
+//        //计算去掉超出父窗体或屏幕的部分
+//        if(CGSizeEqualToSize(superSize, STFullSize))
+//        {
+//            //检测页面有没有导航条或Tarbar条
+//            if(self.stView && self.stView.stController)
+//            {
+//                UIViewController *controller=self.stView.stController;
+//                if([controller needNavBar])
+//                {
+//                    superSize.height=superSize.height-STNavHeightPt-STStatusHeightPt;
+//                }
+//                if([controller needTabBar])
+//                {
+//                    superSize.height-=STTabHeightPt;
+//                }
+//            }
+//        }
         if((relateBottom || [self.LayoutTracer has:@"onTop"]) && frame.origin.y+frame.size.height<superSize.height)
         {
             frame.origin.y=frame.origin.y/2;
@@ -515,19 +542,22 @@ static NSInteger nullValue=-99999;
     
 }
 -(CGFloat)stHeight{return self.frame.size.height*Ypx;}
--(CGFloat)stAbsX{
-    if(self.superview!=nil)
-    {
-        return self.stX+self.superview.stAbsX;
-    }
-    return self.stX;
+-(CGFloat)stScreenX{
+    return [self convertPoint:self.frame.origin toView:nil].x*Xpx;
+//    if(self.superview!=nil)
+//    {
+//        return self.stX+self.superview.stScreenX;
+//    }
+//    return self.stX;
 }
--(CGFloat)stAbsY{
-    if(self.superview!=nil)
-    {
-        return self.stY+self.superview.stAbsY;
-    }
-    return self.stY;
+-(CGFloat)stScreenY
+{
+    return [self convertPoint:self.frame.origin toView:nil].y*Ypx;
+//    if(self.superview!=nil)
+//    {
+//        return self.stY+self.superview.stScreenY;
+//    }
+//    return self.stY;
 }
 -(UIView*)x:(CGFloat)x
 {
@@ -552,8 +582,8 @@ static NSInteger nullValue=-99999;
     if((width>=0 && width<=1) || (height>=0 && height<=1) || width==STSameToHeight || height==STSameToWidth )
     {
         [self addTracer:nil method:@"widthHeight" v1:width v2:height v3:0 v4:0 location:0 xyFlag:0];
-        if(width>=0 && width<=1){width=[self superSize].width*Xpx*width;}
-        if(height>=0 && height<=1){height=[self superSize].height*Ypx*height;}
+        if(width>=0 && width<=1){width=[self superSizeWithFix].width*Xpx*width;}
+        if(height>=0 && height<=1){height=[self superSizeWithFix].height*Ypx*height;}
     }
     if(width==STSameToHeight)
     {
@@ -595,7 +625,7 @@ static NSInteger nullValue=-99999;
 }
 -(UIView*)backToOrigin
 {
-    if(!CGRectEqualToRect(self.OriginFrame, self.frame))
+    if(!CGRectEqualToRect(self.OriginFrame,CGRectZero) && !CGRectEqualToRect(self.OriginFrame, self.frame))
     {
         [self moveTo:self.OriginFrame];
     }

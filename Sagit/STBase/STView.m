@@ -17,10 +17,8 @@
 -(instancetype)init
 {
     self = [super init];
-    self.frame=STFullRect;
+    self.frame=STFullRect;//页面加载完后，IOS系统会根据导航状态栏等情况修改坐标和高度
     self.backgroundColor=STDeviceColor;//卡的问题
-    self.OriginFrame=self.frame;
-    
     return self;
 }
 

@@ -14,7 +14,8 @@
 {
     self=[self initWithFrame:STFullRect];
     [self backgroundColor:colorOrHex];
-   //注册键盘出现与隐藏时候的通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+   //注册键盘出现与隐藏时候的通知(键盘有两个高度，中英文，所以不能关。)
    [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(keyboardShow:)
                                                      name:UIKeyboardWillShowNotification
@@ -42,18 +43,9 @@
 -(void)setEditingTextUI:(UIView *)newText
 {
     [self key:@"editingTextUI" valueWeak:newText];
-//    if(self.keyboardHeight==0)
-//    {
-//        //注册键盘出现与隐藏时候的通知
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                 selector:@selector(keyboardShow:)
-//                                                     name:UIKeyboardWillShowNotification
-//                                                   object:nil];
-//    }
     if(newText)
     {
-        //键盘高度遮挡事件处理
-        [self moveView:newText];
+        [self moveView:newText];//处理键盘高度（键盘出现的时候也有该方法调用执行，因为你不知道键盘和这个赋值哪个先出现，而且键盘还有两次事件）
         //键盘取消事件处理
         if(![self key:@"hasClick"])
         {
@@ -75,14 +67,17 @@
 }
 -(void)moveView:(UIView *)textView
 {
-    UIView *baseView=self.rootViewController.view;
-    if(self.keyboardHeight>0 && textView.isFirstResponder && CGPointEqualToPoint(CGPointZero, baseView.OriginFrame.origin))
+    NSInteger kbHeight=self.keyboardHeight;
+    UIView *baseView=textView.baseView; //self.rootViewController.view;
+    if(kbHeight>0 && textView.isFirstResponder)// && CGPointEqualToPoint(CGPointZero, baseView.frame.origin)
     {
-        NSInteger moveY=self.editingTextUI.stAbsY*Ypt+self.editingTextUI.frame.size.height+self.keyboardHeight-STScreeHeightPt;
+        NSInteger screenY=textView.stScreenY*Ypt;
+        NSInteger textHeight=textView.frame.size.height;
+        NSInteger moveY=screenY+textHeight+kbHeight-STScreeHeightPt;
         if(moveY>0)
         {
             CGRect frame=baseView.frame;
-            frame.origin.y-=(moveY+8);
+            frame.origin.y-=moveY;//+textHeight+8);
             [baseView moveTo:frame];
             //注册键盘回收事件
             //注册键盘出现与隐藏时候的通知
@@ -93,23 +88,31 @@
         }
     }
 }
-
+//第一次执行了两次（216､258) 先没有文字，然后出现提示文字（+42pt）
 -(void)keyboardShow:(NSNotification*)notify
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     NSDictionary *info = [notify userInfo];
     CGRect keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];//键盘的frame
     self.keyboardHeight=keyboardRect.size.height;
+    //键盘高度遮挡事件处理
+    UIView *textView=self.editingTextUI;
+    if(textView && textView.isFirstResponder)
+    {
+        UIView *baseView=textView.baseView;// self.rootViewController.view;//这个view包含已
+        [baseView backToOrigin];
+        [self moveView:textView];
+    }
 }
 -(void)keyboardHide:(NSNotification*)notify
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    UIView *baseView=self.rootViewController.view;
-    if(baseView)
+    UIView *textView=self.editingTextUI;
+    if(textView)
     {
-        [baseView backToOrigin];
+        UIView *baseView=textView.baseView;// self.rootViewController.view;//这个view包含已
+       [baseView backToOrigin];
     }
-    
 }
 @end
 

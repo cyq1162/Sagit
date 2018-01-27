@@ -49,10 +49,12 @@
 -(UIView*)toCenter:(XYFlag)xyFlag;
 //!获取当前UI的X值（px)
 -(CGFloat)stX;
--(CGFloat)stAbsX;
+//!获取当前UI的相对屏幕X值（px)
+-(CGFloat)stScreenX;
 //!获取当前UI的Y值（px)
 -(CGFloat)stY;
--(CGFloat)stAbsY;
+//!获取当前UI的相对屏幕Y值（px)
+-(CGFloat)stScreenY;
 //!获取当前UI的width值（px)
 -(CGFloat)stWidth;
 //!获取当前UI的height值（px)
