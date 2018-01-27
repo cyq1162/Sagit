@@ -115,6 +115,7 @@ static char keyValueChar='k';
 {
     return [self key:@"nextController"];
 }
+
 - (UIViewController*)asRoot {
     
     return [self asRoot:RootViewDefaultType];
@@ -194,7 +195,8 @@ static char keyValueChar='k';
 }
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName
 {
-    if(self.navigationController==nil){return;}
+    UINavigationController *navC=self.navigationController;
+    if(navC==nil){return;}
     [self block:@"存档最后的Tab栏状态，用于检测是否还原。" on:^(UIViewController *controller)
     {
         if(controller.tabBarController!=nil)//存档最后的Tab栏状态，用于检测是否还原。
@@ -202,19 +204,19 @@ static char keyValueChar='k';
             [controller key:@"needTabBar" valueIfNil:!self.tabBarController.tabBar.hidden?@"1":@"0"];
             //[controller needTabBar:!self.tabBarController.tabBar.hidden];
             controller.tabBarController.tabBar.hidden=YES;
-            controller.hidesBottomBarWhenPushed=YES;
+            //controller.hidesBottomBarWhenPushed=YES;//又是一个坑，fuck，如果push一次，再切换tab，再切回来，就不见了。
         }
     }];
     [self block:@"存档最后的Nav栏状态，用于检测是否还原。" on:^(UIViewController *controller)
      {
-          [controller key:@"needNavBar" valueIfNil:!controller.navigationController.navigationBar.hidden?@"1":@"0"];
+          [controller key:@"needNavBar" valueIfNil:!navC.navigationBar.hidden?@"1":@"0"];
          //[controller needNavBar:!controller.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
-         [controller.navigationController setNavigationBarHidden:NO animated:NO];
+         [navC setNavigationBarHidden:NO animated:NO];
          //controller.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
-         controller.navigationController.navigationBar.translucent=NO;//让默认View在导航工具条之下。
+         navC.navigationBar.translucent=NO;//让默认View在导航工具条之下。
      }];
 
-    if (self.navigationController.viewControllers.count != 0)
+    if (navC.viewControllers.count != 0)
     {
         NSMutableDictionary *dic=[viewController key:STNavConfig];
         if(dic==nil)
@@ -230,14 +232,35 @@ static char keyValueChar='k';
         {
             [dic set:STNavLeftImage value:imgOrName];
         }
-        [viewController reSetNav:self.navigationController];
+        [viewController reSetNav:navC];
     }
     
     [self key:@"nextController" valueWeak:viewController];//设置指向的下一个控制器（用于滑动返回时，若有循环引用无法释放时，补上一刀）
-    self.navigationController.interactivePopGestureRecognizer.delegate=(id)self.navigationController;
-    [self.navigationController pushViewController:viewController animated:YES];
+    navC.interactivePopGestureRecognizer.delegate=(id)navC;
+    [navC pushViewController:viewController animated:YES];
 }
-
+-(void)reSetNavTabBarState:(BOOL)animated
+{
+    UINavigationController *navC=self.navigationController;
+    if(navC==nil){return;}
+    if(navC.navigationBar.hidden!=![self needNavBar])
+    {
+        [navC setNavigationBarHidden:![self needNavBar] animated:animated];//全部统一用这个处理
+    }
+    if(self.tabBarController!=nil && self.tabBarController.tabBar.hidden!=![self needTabBar])
+    {
+        //self.tabBarController.tabBar
+        self.tabBarController.tabBar.hidden=![self needTabBar];
+    }
+    //检测上一个控制器有没有释放
+    UIViewController *nextController=self.nextController;
+    if(nextController)
+    {
+        [nextController dispose];
+        [self key:@"nextController" valueWeak:nil];
+        if(animated){nextController=nil;}
+    }
+}
 - (void)stPop {
     UINavigationController *navC=self.navigationController;
     if(navC)
@@ -246,18 +269,19 @@ static char keyValueChar='k';
         if(count>1)
         {
             UIViewController *preController=navC.viewControllers[count-2];
-            if(navC.navigationBar.hidden!=![preController needNavBar])
-            {
-                [navC setNavigationBarHidden:![preController needNavBar] animated:NO];//全部统一用这个处理
-            }
-            //navC.navigationBar.hidden=![preController needNavBar];
-
-            if(self.tabBarController!=nil)
-            {
-                self.tabBarController.tabBar.hidden=![preController needTabBar];
-            }
+            [preController reSetNavTabBarState:NO];
+//            if(navC.navigationBar.hidden!=![preController needNavBar])
+//            {
+//                [navC setNavigationBarHidden:![preController needNavBar] animated:NO];//全部统一用这个处理
+//            }
+//            [preController key:@"nextController" valueWeak:nil];
+//
+//            if(self.tabBarController!=nil)
+//            {
+//                self.tabBarController.tabBar.hidden=![preController needTabBar];
+//            }
         }
-        [self dispose];
+        //[self dispose];
         [navC popViewControllerAnimated:YES];
     }
     else if([self isKindOfClass:[UINavigationController class]])

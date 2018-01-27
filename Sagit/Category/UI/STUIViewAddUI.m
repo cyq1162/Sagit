@@ -281,7 +281,8 @@
 {
     CGRect frame=self.frame;
     NSInteger tagIndex=0;
-    if([self isKindOfClass:[UIScrollView class]])//计算ImageView的位置和UIScrollView的contentSize
+    BOOL isScrollView=[self isKindOfClass:[UIScrollView class]];
+    if(isScrollView)//计算ImageView的位置和UIScrollView的contentSize
     {
         UIScrollView *scroll= (UIScrollView*)self;
         long count= self.subviews.count;//这么计算的话，ImageView必须先添加，然后才能添加其它控件。
@@ -306,7 +307,13 @@
     if(imgOrName)
     {
         [ui image:imgOrName];
-        [ui width:ui.image.size.width*Xpx height:ui.image.size.height*Ypx];
+        CGSize s=ui.image.size;
+        if(isScrollView)
+        {
+            if(s.width>frame.size.width){s.width=frame.size.width;}
+            if(s.height>frame.size.height){s.height=frame.size.height;}
+        }
+        [ui width:s.width*Xpx height:s.height*Ypx];
     }
     [self addView:ui name:name];
     return ui;
@@ -393,35 +400,38 @@
 
 -(UIButton*)addButton:(NSString*)name
 {
-    return [self addButton:name title:nil font:0 color:nil img:nil buttonType:0];
+    return [self addButton:name title:nil font:0 color:nil img:nil bgImg:nil buttonType:0];
 }
 -(UIButton *)addButton:(NSString *)name buttonType:(UIButtonType)buttonType
 {
-    return [self addButton:name title:nil font:0 color:nil img:nil buttonType:buttonType];
+    return [self addButton:name title:nil font:0 color:nil img:nil bgImg:nil buttonType:buttonType];
 }
 -(UIButton*)addButton:(NSString*)name img:(id)imgOrName
 {
-    return [self addButton:name title:nil font:0 color:nil img:imgOrName buttonType:0];
+    return [self addButton:name title:nil font:0 color:nil img:imgOrName bgImg:nil buttonType:0];
 }
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title
 {
-    return [self addButton:name title:title font:0 color:nil img:nil buttonType:0];
+    return [self addButton:name title:title font:0 color:nil img:nil bgImg:nil buttonType:0];
 }
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px
 {
-   return [self addButton:name title:title font:px color:nil img:nil buttonType:0];
+   return [self addButton:name title:title font:px color:nil img:nil bgImg:nil buttonType:0];
 }
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex
 {
-    return [self addButton:name title:title font:px color:colorOrHex img:nil buttonType:0];
+    return [self addButton:name title:title font:px color:colorOrHex img:nil bgImg:nil buttonType:0];
 }
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex img:(id)imgOrName;
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex img:(id)imgOrName
 {
-    return [self addButton:name title:title font:px color:colorOrHex img:imgOrName buttonType:0];
+    return [self addButton:name title:title font:px color:colorOrHex img:imgOrName bgImg:nil buttonType:0];
 }
-
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex bgImg:(id)bgImgOrName
+{
+    return [self addButton:name title:title font:px color:colorOrHex img:nil bgImg:bgImgOrName buttonType:0];
+}
 //此方法不对外开放。
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px  color:(id)colorOrHex img:(id)imgOrName buttonType:(UIButtonType)buttonType
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px  color:(id)colorOrHex img:(id)imgOrName bgImg:(id)bgImgOrName buttonType:(UIButtonType)buttonType
 {
     UIButton *ui=[UIButton buttonWithType:buttonType];
     if(px>0)
@@ -445,6 +455,10 @@
 //        {
 //            [ui stWidthToFit];
 //        }
+    }
+    else if(bgImgOrName)
+    {
+        [ui backgroundImage:bgImgOrName];
     }
     
     if(colorOrHex)
@@ -498,23 +512,53 @@
     [self addView:ui name:name];
     return ui;
 }
--(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction img:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION
+-(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction imgArray:(NSArray*)imgArray
 {
     UIScrollView *ui=[self addScrollView:name];
+    if(imgArray && imgArray.count>0)
+    {
+        for (id item in imgArray) {
+            [ui addImageView:nil img:item direction:direction];//内部会重设contentSize属性
+        }
+    }
+    if(self.stController && self.stController.navigationController)
+    {
+        
+        [ui.panGestureRecognizer  requireGestureRecognizerToFail:self.stController.navigationController.interactivePopGestureRecognizer];
+//        NSArray *gestureArray = self.stController.navigationController.view.gestureRecognizers;
+//        //当是侧滑手势的时候设置scrollview需要此手势失效才生效即可
+//        for (UIGestureRecognizer *gesture in gestureArray) {
+//            if ([gesture isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]) {
+//                [ui.panGestureRecognizer requireGestureRecognizerToFail:gesture];
+//            }
+//        }
+    
+    }
+    return ui;
+}
+-(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction img:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION
+{
+    NSMutableArray *imgArray=[NSMutableArray new];
+//
+//    UIScrollView *ui=[self addScrollView:name];
     if(imgOrName)
     {
         va_list args;
         va_start(args, imgOrName);
-        [ui addImageView:nil img:imgOrName direction:direction];//内部会重设contentSize属性
+        [imgArray addObject:imgOrName];
+       // [ui addImageView:nil img:imgOrName direction:direction];//内部会重设contentSize属性
         NSString *otherImgName;
-        
-        while ((otherImgName = va_arg(args, NSString *))) {
-            [ui addImageView:nil img:otherImgName direction:direction];
+
+        while ((otherImgName = va_arg(args, NSString *)))
+        {
+             [imgArray addObject:otherImgName];
+            //[ui addImageView:nil img:otherImgName direction:direction];
         }
         va_end(args);
     }
-    
-    return ui;
+//
+//    return ui;
+    return [self addScrollView:name direction:direction imgArray:imgArray];
 }
 -(UIPickerView *)addPickerView:(NSString *)name
 {

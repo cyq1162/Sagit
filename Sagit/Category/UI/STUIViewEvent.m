@@ -242,6 +242,15 @@ static char longPressChar='p';
     return nil;
 }
 #pragma mark click 事件
+-(AfterEvent)after
+{
+    return [self key:@"onAfter"];
+}
+-(UIView *)onAfter:(AfterEvent)block
+{
+    [self key:@"onAfter" value:block];
+    return self;
+}
 -(UIView*)click
 {
     [self exeEvent:@"click"];

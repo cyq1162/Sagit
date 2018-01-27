@@ -404,7 +404,13 @@ static char keyValueChar='k';
     }
     else
     {
-        self.layer.contents=(id)[self toImage:imgOrName].CGImage;
+        UIImage *img=[self toImage:imgOrName];
+        if(self.frame.size.width>0 && self.frame.size.height>0)
+        {
+            img=[img reSize:self.frame.size];
+        }
+       // [[self addImageView:nil img:imgOrName] width:1 height:1];
+        self.layer.contents=(id)img.CGImage;
     }
     return self;
 }
@@ -470,6 +476,11 @@ static char keyValueChar='k';
     self.contentMode=contentMode;
     return self;
 }
+-(UIView*)userInteractionEnabled:(BOOL)yesNO
+{
+    self.userInteractionEnabled=yesNO;
+    return self;
+}
 //!框架自动释放资源（不需要人工调用）
 -(void)dispose
 {
@@ -489,10 +500,13 @@ static char keyValueChar='k';
             [dic removeAllObjects];
             dic=nil;
         }
+        [self removeClick];
+        [self removeLongPress];
         //清理事件
         for (UIGestureRecognizer *ges in self.gestureRecognizers) {
             [self removeGestureRecognizer:ges];
         }
+       
         //移除通知
         [[NSNotificationCenter defaultCenter] removeObserver:self];//在视图控制器消除时，移除键盘事件的通知
     }

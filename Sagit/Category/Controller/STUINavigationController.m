@@ -58,24 +58,25 @@
     {
         //找到关键，忽略全屏点击事件
         UIViewController *current=self.viewControllers[count-1];
-        
-        if(self.navigationBar.hidden!=![current needNavBar])
-        {
-            [self setNavigationBarHidden:![current needNavBar] animated:YES];//全部统一用这个处理
-           // self.navigationBar.hidden=![current needNavBar];//这个不显示（需要在页面显示前才有效）
-        }
-        if(self.tabBarController!=nil && self.tabBarController.tabBar.hidden!=![current needTabBar])
-        {
-            //self.tabBarController.tabBar
-            self.tabBarController.tabBar.hidden=![current needTabBar];
-        }
-        //检测上一个控制器有没有释放
-        UIViewController *nextController=current.nextController;
-        if(nextController)
-        {
-            [nextController dispose];
-            nextController=nil;
-        }
+        [current reSetNavTabBarState:YES];
+//        if(self.navigationBar.hidden!=![current needNavBar])
+//        {
+//            [self setNavigationBarHidden:![current needNavBar] animated:YES];//全部统一用这个处理
+//           // self.navigationBar.hidden=![current needNavBar];//这个不显示（需要在页面显示前才有效）
+//        }
+//        if(self.tabBarController!=nil && self.tabBarController.tabBar.hidden!=![current needTabBar])
+//        {
+//            //self.tabBarController.tabBar
+//            self.tabBarController.tabBar.hidden=![current needTabBar];
+//        }
+//        //检测上一个控制器有没有释放
+//        UIViewController *nextController=current.nextController;
+//        if(nextController)
+//        {
+//            [nextController dispose];
+//            nextController=nil;
+//            [current key:@"nextController" valueWeak:nil];
+//        }
     }
    
 }

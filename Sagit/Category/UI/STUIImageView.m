@@ -179,32 +179,9 @@
     }];
     
 }
--(UIImageView *)cutSize:(CGSize)maxSize
+-(UIImageView *)reSize:(CGSize)maxSize
 {
-    //[self width:maxSize.width height:maxSize.height];
-    UIImage *image=self.image;
-    if (image.size.width < maxSize.width && image.size.height < maxSize.height) return image;
-    CGFloat imageW = image.size.width;
-    CGFloat imageH = image.size.height;
-    CGFloat k = 0.0f;
-    CGSize size = CGSizeMake(maxSize.width, maxSize.height);
-    if (image.size.width > maxSize.width)
-    {
-        k = image.size.width / maxSize.width;
-        imageH = image.size.height / k;
-        size = CGSizeMake(maxSize.width, imageH);
-    }
-    if (imageH > maxSize.height) {
-        k = image.size.height / maxSize.height;
-        imageW = image.size.width / k;
-        size = CGSizeMake(imageW, maxSize.height);
-    }
-    UIGraphicsBeginImageContext(size);
-    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-    image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndPDFContext();
-    self.image=image;
-    
+    self.image=[self.image reSize:maxSize];;
     return self;
 }
 #pragma mark 扩展属性
@@ -264,5 +241,31 @@ static char afterImageSaveBlockChar='c';
         self.afterImageSaveBlock(error);
         self.afterImageSaveBlock = nil;
     }
+}
+-(UIImage *)reSize:(CGSize)maxSize
+{
+    //[self width:maxSize.width height:maxSize.height];
+    UIImage *image=self;
+    if (image.size.width < maxSize.width && image.size.height < maxSize.height) return image;
+    CGFloat imageW = image.size.width;
+    CGFloat imageH = image.size.height;
+    CGFloat k = 0.0f;
+    CGSize size = CGSizeMake(maxSize.width, maxSize.height);
+    if (image.size.width > maxSize.width)
+    {
+        k = image.size.width / maxSize.width;
+        imageH = image.size.height / k;
+        size = CGSizeMake(maxSize.width, imageH);
+    }
+    if (imageH > maxSize.height) {
+        k = image.size.height / maxSize.height;
+        imageW = image.size.width / k;
+        size = CGSizeMake(imageW, maxSize.height);
+    }
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndPDFContext();
+    return image;
 }
 @end

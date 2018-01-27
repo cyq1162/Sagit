@@ -39,7 +39,8 @@
 -(UIViewController*)needTabBar:(BOOL)yesNo;
 //!设置当前视图是否需要Tab栏 setTabBar:同时是否设置隐藏或显示
 -(UIViewController*)needTabBar:(BOOL)yesNo setTabBar:(BOOL)setTabBar;
-
+//系统内部调用的方法（用于还原导航栏和状态栏和Tab栏）
+-(void)reSetNavTabBarState:(BOOL)animated;
 #pragma mark keyvalue
 //!扩展一个字典属性，方便存档及数据传递
 -(NSMutableDictionary<NSString*,id>*)keyValue;

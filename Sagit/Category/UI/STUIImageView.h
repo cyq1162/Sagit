@@ -38,7 +38,7 @@ typedef void (^AfterSetImageUrl)(UIImageView* img);
 -(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo maxKb:(NSInteger)maxKb;
 
 //!将图片压缩到指定的宽高，当前图片受变化
--(UIImageView*)cutSize:(CGSize)maxSize;
+-(UIImageView*)reSize:(CGSize)maxSize;
 #pragma mark 扩展属性
 -(UIImageView*)image:(id)imgOrName;
 @end
@@ -49,5 +49,6 @@ typedef void (^AfterImageSave)(NSError *err);
 //!获取图片压缩后的字节数据，当前图片不受变化
 -(NSData*)compress:(NSInteger)maxKb;
 -(void)save:(AfterImageSave)afterSave;
-
+//!检测最大宽高的等比缩放
+-(UIImage *)reSize:(CGSize)maxSize;
 @end

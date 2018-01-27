@@ -30,20 +30,28 @@
     [self loadUI];
     [self loadData];
 }
-
-//-(void)viewDidAppear:(BOOL)animated
+//-(void)viewDidDisappear:(BOOL)animated
 //{
-//    [super viewDidAppear:animated];
-//    if(self.navigationController && self.navigationController.navigationBar)
-//    {
-//        self.navigationController.navigationBar.hidden=!self.needNavBar;
-//    }
-//    if(self.tabBarController && self.tabBarController.tabBar)
-//    {
-//        self.tabBarController.tabBar.hidden=!self.needTabBar;
-//    }
-//    [self.view layoutIfNeeded];
+//    [self key:@"viewDidDisappear" value:@"1"];
+//    [super viewDidDisappear:animated];
 //}
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    UIViewController *next=self.nextController;
+//    if(next && [next key:@"viewDidDisappear"])
+//    {
+//        [self reSetNavTabBarState:YES];
+//    }
+//}
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if(self.nextController)
+    {
+        [self reSetNavTabBarState:YES];
+    }
+}
 
 //内部私有方法
 -(void)loadUI{

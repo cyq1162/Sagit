@@ -38,26 +38,35 @@
 +(void)delayExecute:(NSInteger)second onMainThread:(BOOL)onMainThread block:(DelayExecuteBlock)block
 {
     if(!block){return;}
+    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [NSThread sleepForTimeInterval:second];
-        if(onMainThread)
+        if(second>0)
+        {
+            [NSThread sleepForTimeInterval:second];
+        }
+        __block DelayExecuteBlock exeBlock=block;
+        if(onMainThread && !NSThread.isMainThread)
         {
             dispatch_sync(dispatch_get_main_queue(), ^{
-                block();
+                exeBlock();
+                exeBlock=nil;
             });
         }
         else
         {
-            block();
+            exeBlock();
+            exeBlock=nil;
         }
     });
 }
 +(void)runOnMainThread:(DelayExecuteBlock)block
 {
     if(!block){return;}
-    if([NSThread isMainThread]){block();return;}
+    __block DelayExecuteBlock exeBlock=block;
+    if([NSThread isMainThread]){exeBlock();exeBlock=nil;return;}
     dispatch_sync(dispatch_get_main_queue(), ^{
-        block();
+        exeBlock();
+        exeBlock=nil;
     });
 }
 @end

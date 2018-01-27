@@ -71,7 +71,7 @@
 {
     CGFloat folderSize = 0.0f;
     //获取路径
-    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(self.directory,NSUserDomainMask,YES) firstObject];
+    NSString *cachePath = [self folderPath];
     //获取所有文件的数组
     NSArray *files = [[NSFileManager defaultManager] subpathsAtPath:cachePath];
     //    NSLog(@"文件数：%ld",files.count);
