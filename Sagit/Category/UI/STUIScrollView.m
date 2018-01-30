@@ -37,17 +37,17 @@
     if(isPre)
     {
        // self.pagerIndex--;
-        if(self.prePager)
+        if(self.onPrePager)
         {
-            self.prePager(self);
+            self.onPrePager(self);
         }
     }
     else if(isNext)
     {
         //self.pagerIndex++;
-        if(self.nexPager)
+        if(self.onNextPager)
         {
-            self.nexPager(self);
+            self.onNextPager(self);
         }
     }
 }
@@ -109,10 +109,20 @@
 //    }
     return 0;
 }
-//-(void)setPagerIndex:(NSInteger)pagerIndex
-//{
-//     [self key:@"pagerIndex" value:@(pagerIndex)];
-//}
+-(void)setPagerIndex:(NSInteger)pagerIndex
+{
+    CGPoint offset= self.contentOffset;
+    if(self.direction==X)
+    {
+        offset.x= pagerIndex*self.frame.size.width;
+    }
+    else if(self.direction==Y)
+    {
+        offset.y=pagerIndex*self.frame.size.height;
+    }
+    self.contentOffset=offset;
+   
+}
 #pragma mark 事件
 -(UIScrollView *)onSubviewClick:(OnViewClick)block
 {
@@ -177,20 +187,20 @@
     self.contentOffset=offset;
     return self;
 }
--(OnScrollPrePager)prePager
+-(OnScrollPrePager)onPrePager
 {
-    return [self key:@"prePager"];
+    return [self key:@"onPrePager"];
 }
--(void)setPrePager:(OnScrollPrePager)prePager
+-(void)setOnPrePager:(OnScrollPrePager)onPrePager
 {
-    [self key:@"prePager" value:prePager];
+    [self key:@"onPrePager" value:onPrePager];
 }
--(OnScrollPrePager)nexPager
+-(OnScrollNextPager)onNextPager
 {
-    return [self key:@"nexPager"];
+    return [self key:@"onNextPager"];
 }
--(void)setNexPager:(OnScrollPrePager)nexPager
+-(void)setOnNextPager:(OnScrollNextPager)onNextPager
 {
-    [self key:@"nexPager" value:nexPager];
+    [self key:@"onNextPager" value:onNextPager];
 }
 @end

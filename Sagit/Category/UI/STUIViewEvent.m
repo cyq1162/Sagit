@@ -17,33 +17,45 @@
 @class STView;
 @implementation UIView (STUIViewEvent)
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)
-static char clickChar='c';
-static char longPressChar='p';
--(void)setClickBlock:(OnViewClick)block
-{
-    objc_setAssociatedObject(self, &clickChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
--(void)setLongPressBlock:(OnLongPress)block
-{
-    objc_setAssociatedObject(self, &longPressChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
+//static char clickChar='c';
+//static char longPressChar='p';
+//static char dragChar='d';
+
+//-(void)setClickBlock:(OnViewClick)block
+//{
+//    objc_setAssociatedObject(self, &clickChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+//}
+//-(void)setLongPressBlock:(OnLongPress)block
+//{
+//    objc_setAssociatedObject(self, &longPressChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+//}
+//-(void)setDragBlock:(OnViewDrag)block
+//{
+//    objc_setAssociatedObject(self, &dragChar, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+//}
 -(void)callBlock:(NSString*)eventType view:(UIView*)view
 {
     if([eventType isEqualToString:@"click"])
     {
-        OnViewClick event = (OnViewClick)objc_getAssociatedObject(self, &clickChar);
+        OnViewClick event = [self key:@"onClick"];//(OnViewClick)objc_getAssociatedObject(self, &clickChar);
         if(event)
         {
-            //STWeakObj(view);
             event(view);
         }
     }
     else if([eventType isEqualToString:@"longPress"])
     {
-        OnLongPress event = (OnLongPress)objc_getAssociatedObject(self, &longPressChar);
+        OnLongPress event = [self key:@"onLongPress"];//(OnLongPress)objc_getAssociatedObject(self, &longPressChar);
         if(event)
         {
-            //STWeakObj(view);
+            event(view);
+        }
+    }
+    else if([eventType isEqualToString:@"drag"])
+    {
+        OnViewDrag event = [self key:@"onDrag"];// (OnViewDrag)objc_getAssociatedObject(self, &dragChar);
+        if(event)
+        {
             event(view);
         }
     }
@@ -90,6 +102,13 @@ static char longPressChar='p';
         UILongPressGestureRecognizer *longPress= [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressStart:)];
         [self addGestureRecognizer:longPress];
         return longPress;
+    }
+    else if([eventType isEqualToString:@"drag"])
+    {
+        [self removeDrag];
+        UIPanGestureRecognizer *drag= [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dragStart:)];
+        [self addGestureRecognizer:drag];
+        return drag;
     }
     return nil;
 }
@@ -163,7 +182,6 @@ static char longPressChar='p';
     if(view==nil){view=self;}
     
     id target=[self key:targetKey];
-    //id target= [Sagit.Cache get:[self key:selKey]];
     if(target!=nil)
     {
         if([target isKindOfClass:[NSString class]])
@@ -244,18 +262,13 @@ static char longPressChar='p';
     return nil;
 }
 #pragma mark click 事件
--(AfterEvent)after
-{
-    return [self key:@"onAfter"];
-}
--(UIView *)onAfter:(AfterEvent)block
-{
-    [self key:@"onAfter" value:block];
-    return self;
-}
+
 -(UIView*)click
 {
-    [self exeEvent:@"click"];
+    if(self.userInteractionEnabled)
+    {
+        [self exeEvent:@"click"];
+    }
 //    if(self.userInteractionEnabled && ![self.baseView key:@"stopEvent"])
 //    {
 //        self.userInteractionEnabled=NO;
@@ -287,7 +300,8 @@ static char longPressChar='p';
     {
         [self addGesture:@"click"];//内部有清除参数，放在前面
         [self key:@"clickView" value:self];
-        [self setClickBlock:block];
+        [self key:@"onClick" value:block];
+        //[self setClickBlock:block];
         
     }
     return self;
@@ -297,8 +311,8 @@ static char longPressChar='p';
     if([self removeGesture:[UITapGestureRecognizer class]])
     {
         //移除参数
-        [self.keyValue remove:@"clickView,clickSel,clickTarget,clickPointView"];
-        [self setClickBlock:nil];
+        [self.keyValue remove:@"clickView,clickSel,clickTarget,clickPointView,onClick"];
+        //[self setClickBlock:nil];
     }
     return self;
 }
@@ -313,7 +327,7 @@ static char longPressChar='p';
 }
 -(UIView *)longPress
 {
-    if(self.userInteractionEnabled && self.baseView.userInteractionEnabled)
+    if(self.userInteractionEnabled)
     {
         return [self exeEvent:@"longPress"];
     }
@@ -333,7 +347,8 @@ static char longPressChar='p';
     {
         [self addGesture:@"longPress"];//放在前面，内部有清除参数。
         [self key:@"longPressView" value:self];
-        [self setLongPressBlock:block];
+        [self key:@"onLongPress" value:block];
+        //[self setLongPressBlock:block];
         
     }
     return self;
@@ -343,9 +358,67 @@ static char longPressChar='p';
     if([self removeGesture:[UILongPressGestureRecognizer class]])
     {
         //移除参数
-        [self.keyValue remove:@"longPressView,longPressSel,longPressTarget,longPressPointView"];
-        [self setLongPressBlock:nil];
+        [self.keyValue remove:@"longPressView,longPressSel,longPressTarget,longPressPointView,onLongPress"];
+        //[self setLongPressBlock:nil];
     }
+    return self;
+}
+#pragma mark 扩展系统事件 - 拖动
+#pragma mark longPress 事件
+- (UIView *)dragStart:(UIPanGestureRecognizer *)recognizer
+{
+    CGPoint point = [recognizer translationInView:self];
+    self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y + point.y);
+    [recognizer setTranslation:CGPointMake(0, 0) inView:self];
+    //NSLog(NSStringFromCGPoint(self.center));
+    return [self drag];
+}
+-(UIView *)drag
+{
+    if(self.userInteractionEnabled)
+    {
+        return [self exeEvent:@"drag"];
+    }
+    return self;
+}
+-(UIView *)addDrag:(NSString *)event
+{
+    return [self addDrag:event target:nil];
+}
+-(UIView *)addDrag:(NSString *)event target:(UIViewController *)target
+{
+    return [self addEvent:@"drag" event:event target:target];
+}
+-(UIView *)onDrag:(OnViewDrag)block
+{
+    if(block!=nil)
+    {
+        [self addGesture:@"drag"];//放在前面，内部有清除参数。
+        [self key:@"dragView" value:self];
+        [self key:@"onDrag" value:block];
+        //[self setDragBlock:block];
+        
+    }
+    return self;
+}
+-(UIView *)removeDrag
+{
+    if([self removeGesture:[UIPanGestureRecognizer class]])
+    {
+        //移除参数
+        [self.keyValue remove:@"dragView,dragSel,dragTarget,dragPointView,onDrag"];
+        //[self setDragBlock:nil];
+    }
+    return self;
+}
+#pragma mark 扩展的回调事件
+-(AfterEvent)onAfter
+{
+    return [self key:@"onAfter"];
+}
+-(UIView *)onAfter:(AfterEvent)block
+{
+    [self key:@"onAfter" value:block];
     return self;
 }
 #pragma mark 增加描述

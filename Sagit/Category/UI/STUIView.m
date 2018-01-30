@@ -524,6 +524,7 @@ static char keyValueChar='k';
         }
         [self removeClick];
         [self removeLongPress];
+        [self removeDrag];
         //清理事件
         for (UIGestureRecognizer *ges in self.gestureRecognizers) {
             [self removeGestureRecognizer:ges];

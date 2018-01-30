@@ -14,11 +14,11 @@ typedef void (^OnScrollPrePager)(UIScrollView *scrollView);
 //定义两个事件，上一页和下一页
 typedef void (^OnScrollNextPager)(UIScrollView *scrollView);
 //!上一页事件
-@property (nonatomic,copy)OnScrollPrePager prePager;
+@property (nonatomic,copy)OnScrollPrePager onPrePager;
 //!下一页事件
-@property (nonatomic,copy)OnScrollPrePager nexPager;
+@property (nonatomic,copy)OnScrollNextPager onNextPager;
 //!当前页的索引
-@property (readonly,nonatomic,assign)NSInteger pagerIndex;
+@property (nonatomic,assign)NSInteger pagerIndex;
 //!开始滑动的坐标
 @property (nonatomic,assign)CGPoint startPoint;
 //!手放开时的坐标
