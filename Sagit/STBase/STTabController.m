@@ -33,26 +33,45 @@
 {
     
 }
--(void)setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers
+-(void)setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated
 {
-    if(viewControllers==nil){return;}
+    if(self.viewControllers.count>0)////清空旧的
+    {
+        for (NSInteger i=self.viewControllers.count-1; i>=0; i--) {
+            [self.viewControllers[i] removeFromParentViewController];
+        }
+    }
+    if(viewControllers==nil || viewControllers.count==0)
+    {
+        return;
+    }
+    [super setViewControllers:viewControllers animated:animated];
     for (NSInteger i=0; i<viewControllers.count; i++)
     {
-        [self addChildViewController:viewControllers[i]];
+        [self setTabBar:viewControllers[i]];
     }
+}
+-(void)setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers
+{
+    [self setViewControllers:viewControllers animated:NO];
 }
 -(void)addChildViewController:(UIViewController *)childController
 {
     if(childController==nil){return;}
-    if(childController.navigationController!=nil)
+    [self setTabBar:childController];
+    [super addChildViewController:childController];
+}
+-(void)setTabBar:(UIViewController*)controller
+{
+    if(controller==nil){return;}
+    if(controller.navigationController!=nil)
     {
-        [childController.navigationController.viewControllers[0] needTabBar:YES setTabBar:YES];
+        [controller.navigationController.viewControllers[0] needTabBar:YES setTabBar:YES];
     }
     else
     {
-        [childController needTabBar:YES setTabBar:YES];
+        [controller needTabBar:YES setTabBar:YES];
     }
-    [super addChildViewController:childController];
 }
 -(void)dealloc
 {

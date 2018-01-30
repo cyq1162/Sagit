@@ -26,7 +26,7 @@
 }
 -(UITableView *)source:(NSMutableArray<id> *)dataSource
 {
-    if(self.allowDelete && ![dataSource isKindOfClass:[NSMutableArray class]])
+    if(![dataSource isKindOfClass:[NSMutableArray class]])
     {
         dataSource=[dataSource toNSMutableArray];
     }

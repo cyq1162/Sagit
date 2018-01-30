@@ -11,25 +11,25 @@
 
 @implementation NSUserDefaults(ST)
 
-+(NSString *)get:(NSString *)key
+-(NSString *)get:(NSString *)key
 {
-    NSUserDefaults *data=[NSUserDefaults standardUserDefaults];
-    return [data valueForKey:key];
+    //NSUserDefaults *data=[NSUserDefaults standardUserDefaults];
+    return [self valueForKey:key];
 }
 
-+(void)set:(NSString *)key v:(NSString *)value
+-(void)set:(NSString *)key v:(NSString *)value
 {
-    NSUserDefaults *data=[NSUserDefaults standardUserDefaults];
-    return [data setValue:value forKey:key];
+    //NSUserDefaults *data=[NSUserDefaults standardUserDefaults];
+    return [self setValue:value forKey:key];
 }
-+(BOOL)has:(NSString *)key
+-(BOOL)has:(NSString *)key
 {
     return [self get:key]!=nil;
     
 }
-+(void)remove:(NSString *)key
+-(void)remove:(NSString *)key
 {
-    NSUserDefaults *data=[NSUserDefaults standardUserDefaults];
-    return [data removeObjectForKey:key];
+    //NSUserDefaults *data=[NSUserDefaults standardUserDefaults];
+    return [self removeObjectForKey:key];
 }
 @end

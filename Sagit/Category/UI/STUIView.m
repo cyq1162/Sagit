@@ -294,7 +294,16 @@ static char keyValueChar='k';
             
             if(value!=nil && [value isKindOfClass:[NSNumber class]])
             {
-                value=[((NSNumber*)value) stringValue];
+                NSString *text=dic[[key append:@"Text"]];//约定XXXText为XXX的格式化值
+                if(text)
+                {
+                    [ui selectValue:value];//把值设置给selectValue，避免没选择就直接提交的情况。
+                    value=text;
+                }
+                else
+                {
+                    value=[((NSNumber*)value) stringValue];
+                }
             }
             [ui stValue:value];
         }
@@ -316,7 +325,7 @@ static char keyValueChar='k';
 {
     return [self formData:nil];
 }
-//!获取当前窗体的表单数据
+//!获取当前窗体的表单数据[如果是下拉，则取SelectValue]
 -(NSMutableDictionary *)formData:(id)superView
 {
     NSMutableDictionary *formData=[NSMutableDictionary new];
@@ -324,7 +333,12 @@ static char keyValueChar='k';
         UIView *ui=[self.UIList get:key];
         if([ui isFormUI] && (superView==nil || ui.superview==superView))
         {
-            [formData setObject:[ui stValue] forKey:key];
+            NSString *value=ui.selectValue;
+            if(value==nil)
+            {
+                value=ui.stValue;
+            }
+            [formData set:key value:value];
         }
     }
     return formData;
@@ -349,7 +363,11 @@ static char keyValueChar='k';
 }
 +(UIImage*)toImage:(id)imgOrName
 {
-    if([imgOrName isKindOfClass:[NSData class]])
+    if([imgOrName isKindOfClass:[NSString class]])
+    {
+        return STImage(imgOrName);
+    }
+    else if([imgOrName isKindOfClass:[NSData class]])
     {
         return [UIImage imageWithData:imgOrName];
     }
@@ -357,7 +375,11 @@ static char keyValueChar='k';
     {
         return imgOrName;
     }
-    return STImage(imgOrName);
+    else if([imgOrName isKindOfClass:[UIImageView class]])
+    {
+        return ((UIImageView*)imgOrName).image;
+    }
+    return nil;
 }
 -(UIFont *)toFont:(NSInteger)px
 {

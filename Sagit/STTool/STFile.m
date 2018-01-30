@@ -63,6 +63,10 @@
     }
     return _Temp;
 }
+-(NSUserDefaults *)Setting
+{
+    return [NSUserDefaults standardUserDefaults];
+}
 -(NSString *)fileName
 {
     return @"stfile.plist";

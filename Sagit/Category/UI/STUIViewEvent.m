@@ -78,6 +78,8 @@ static char longPressChar='p';
         [self removeClick];
         
         UITapGestureRecognizer *click = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click)];
+        click.numberOfTapsRequired=1;//设置点按次数，默认为1
+        click.numberOfTouchesRequired=1;//点按的手指数
         [self addGestureRecognizer:click];
         return click;
     }

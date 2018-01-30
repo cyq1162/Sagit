@@ -36,6 +36,7 @@
 #import "STUISwitch.h"
 #import "STUIAlertView.h"
 #import "STUIWindow.h"
+#import "STUIScrollView.h"
 //New UI
 //
 //#import "STTable.h"

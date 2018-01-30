@@ -543,7 +543,7 @@ static NSInteger nullValue=-99999;
 }
 -(CGFloat)stHeight{return self.frame.size.height*Ypx;}
 -(CGFloat)stScreenX{
-    return [self convertPoint:self.frame.origin toView:nil].x*Xpx;
+    return ([self convertPoint:self.frame.origin toView:nil].x-self.frame.origin.x)*Xpx;
 //    if(self.superview!=nil)
 //    {
 //        return self.stX+self.superview.stScreenX;
@@ -552,7 +552,7 @@ static NSInteger nullValue=-99999;
 }
 -(CGFloat)stScreenY
 {
-    return [self convertPoint:self.frame.origin toView:nil].y*Ypx;
+    return ([self convertPoint:self.frame.origin toView:nil].y-self.frame.origin.y) *Ypx;
 //    if(self.superview!=nil)
 //    {
 //        return self.stY+self.superview.stScreenY;
@@ -561,16 +561,28 @@ static NSInteger nullValue=-99999;
 }
 -(UIView*)x:(CGFloat)x
 {
-    return [self x:x y:self.stX];
+    return [self x:x y:nullValue];
 }
 -(UIView*)x:(CGFloat)x y:(CGFloat)y
 {
-    return [self relate:LeftTop v:x v2:y];
+    if(x!=nullValue && y!=nullValue)
+    {
+        return [self relate:LeftTop v:x v2:y];
+    }
+    else if(x!=nullValue)
+    {
+        return [self relate:Left v:x];
+    }
+    else if(y!=nullValue)
+    {
+        return [self relate:Top v:y];
+    }
+    return self;
 }
 
 -(UIView*)y:(CGFloat)y
 {
-    return [self x:self.stX y:y];
+    return [self x:nullValue y:y];
 }
 -(UIView*)width:(CGFloat)width
 {

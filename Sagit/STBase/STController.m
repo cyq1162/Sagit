@@ -327,26 +327,27 @@
 //- (UIView *)tableView:(nonnull UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
 //    return nil;
 //}
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return tableView.tableHeaderView.frame.size.height;
-}
--(CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section
-{
-    return 0.01;
-}
+//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 0.01f;
+//    //return tableView.tableHeaderView.frame.size.height;
+//}
+//-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section
+//{
+//    return 0.01f;
+//}
 // 返回每组的组尾
 //- (UIView *)tableView:(nonnull UITableView *)tableView viewForFooterInSection:(NSInteger)section{
 //    return nil;
 //}
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return tableView.tableFooterView.frame.size.height;
-}
--(CGFloat)tableView:(UITableView *)tableView estimatedHeightForFooterInSection:(NSInteger)section
-{
-    return 0.01;
-}
+//-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+//{
+//    return tableView.tableFooterView.frame.size.height;
+//}
+//-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForFooterInSection:(NSInteger)section
+//{
+//    return 0.01f;
+//}
 // 选中某行cell时会调用
 //- (void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
 //    // NSLog(@"选中didSelectRowAtIndexPath row = %ld", indexPath.row);

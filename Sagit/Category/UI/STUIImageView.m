@@ -188,6 +188,11 @@
 -(UIImageView *)image:(id)imgOrName
 {
     self.image=[UIView toImage:imgOrName];
+    if(CGSizeEqualToSize(CGSizeZero,self.frame.size))
+    {
+        self.image=[self.image reSize:STFullSize];
+        [self frame:CGRectMake(self.frame.origin.x, self.frame.origin.y, self.image.size.width, self.image.size.height)];
+    }
     return self;
 }
 @end

@@ -286,18 +286,28 @@
     {
         UIScrollView *scroll= (UIScrollView*)self;
         long count= self.subviews.count;//这么计算的话，ImageView必须先添加，然后才能添加其它控件。
+        if(count>0 && scroll.showsVerticalScrollIndicator){count--;}
+        if(count>0 && scroll.showsHorizontalScrollIndicator){count--;}
         CGSize size=scroll.contentSize;
         if(direction==X)
         {
             frame.origin.x=frame.size.width*(count);
-            scroll.showsHorizontalScrollIndicator=NO;
+            //scroll.showsHorizontalScrollIndicator=NO;
             size.width=size.width+frame.size.width;
+            if(size.height==0)
+            {
+                size.height=STFullSize.height;
+            }
         }
         else if(direction==Y)
         {
-            scroll.showsVerticalScrollIndicator=NO;
+            //scroll.showsVerticalScrollIndicator=NO;
             frame.origin.y=frame.size.height*(count);
             size.height=size.height+frame.size.height;
+            if(size.width==0)
+            {
+                size.width=STFullSize.width;
+            }
         }
         scroll.contentSize=size;
         tagIndex=scroll.subviews.count;
@@ -310,8 +320,18 @@
         CGSize s=ui.image.size;
         if(isScrollView)
         {
-            if(s.width>frame.size.width){s.width=frame.size.width;}
-            if(s.height>frame.size.height){s.height=frame.size.height;}
+            if(s.width>=frame.size.width){s.width=frame.size.width;}
+            else
+            {
+                //居中处理
+                [ui x:ui.stX+((frame.size.width-s.width)/2)*Xpx];
+            }
+            if(s.height>=frame.size.height){s.height=frame.size.height;}
+            else
+            {
+                //居中处理
+                [ui y:ui.stY+((frame.size.height-s.height)/2)*Ypx];
+            }
         }
         [ui width:s.width*Xpx height:s.height*Ypx];
     }
@@ -502,19 +522,22 @@
 -(UIScrollView *)addScrollView:(NSString*)name
 {
     UIScrollView *ui=[[UIScrollView alloc] initWithFrame:STFullRect];
+    //ui.contentSize=STFullSize;
     //设置边缘不弹跳
     ui.bounces = NO;
     //整页滚动
     ui.pagingEnabled = YES;
-    //    ui.backgroundColor=[UIColor redColor];
-    //ui.showsHorizontalScrollIndicator=NO;
-    ui.delegate=(id)self.stController;
+    ui.showsHorizontalScrollIndicator=NO;//需要先关掉，因为系统在后面会自动追加滚动条图片
+    ui.showsVerticalScrollIndicator=NO;
+    ui.direction=X;
+    ui.delegate=(id)ui;
     [self addView:ui name:name];
     return ui;
 }
 -(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction imgArray:(NSArray*)imgArray
 {
     UIScrollView *ui=[self addScrollView:name];
+    ui.direction=direction;
     if(imgArray && imgArray.count>0)
     {
         for (id item in imgArray) {
@@ -525,14 +548,6 @@
     {
         
         [ui.panGestureRecognizer  requireGestureRecognizerToFail:self.stController.navigationController.interactivePopGestureRecognizer];
-//        NSArray *gestureArray = self.stController.navigationController.view.gestureRecognizers;
-//        //当是侧滑手势的时候设置scrollview需要此手势失效才生效即可
-//        for (UIGestureRecognizer *gesture in gestureArray) {
-//            if ([gesture isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]) {
-//                [ui.panGestureRecognizer requireGestureRecognizerToFail:gesture];
-//            }
-//        }
-    
     }
     return ui;
 }
@@ -574,10 +589,19 @@
 {
     if(name==nil){name=@"stFirstTable";}//避免STFirstTable找不到对象。
     UITableView *ui=[[UITableView alloc] initWithFrame:STFullRect style:style];
+    ui.tableHeaderView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];
+    ui.tableFooterView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];//去掉空白行。
+    
+//    ui.estimatedSectionHeaderHeight=0.01f;
+//    ui.estimatedSectionFooterHeight=0.01f;
+//    self.stController.automaticallyAdjustsScrollViewInsets=NO;
     ui.delegate=(id)self.stController;
     ui.dataSource=(id)self.stController;
-    ui.tableHeaderView=[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f,0, 0.01f)];
-    ui.tableFooterView=[UIView new];//去掉空白行。
+//    if (STOSVersion>=11) {
+//        ui.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+////        ui.contentInset = UIEdgeInsetsMake(64, 0, 49, 0);
+////        ui.scrollIndicatorInsets = ui.contentInset;
+//    }
     [self addView:ui name:name];
     return ui;
 }
