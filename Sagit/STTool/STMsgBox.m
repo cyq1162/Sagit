@@ -106,6 +106,7 @@
             if(STScreenWidthPx-label.stWidth<150)
             {
                 [label width:STScreenWidthPx-150];
+                [label sizeToFit];
             }
             [view width:label.stWidth+100 height:label.stHeight+50];
             [label toCenter];

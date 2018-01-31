@@ -30,5 +30,8 @@ typedef void (^OnScrollNextPager)(UIScrollView *scrollView);
 -(UIScrollView*)onSubviewClick:(OnViewClick)block;
 -(UIScrollView*)removeAt:(NSInteger) index;
 -(UIScrollView *)removeAt:(NSInteger)index moveXY:(BOOL)yesNO;
-
+#pragma mark 分页组件
+@property (readonly,nonatomic,retain)UIPageControl *pager;
+-(BOOL)showPager;
+-(UIScrollView*)showPager:(BOOL)yesNo;
 @end

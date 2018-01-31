@@ -120,19 +120,23 @@
     {
         label.alpha=textView.hasText?0:1;
     }
+    if (textView.maxLength>0 && textView.text.length >=textView.maxLength)
+    {
+        textView.text=[textView.text substringWithRange:NSMakeRange(0, textView.maxLength)];
+    }
     if(self.maxRow!=1)
     {
         [self changeHeight];
     }
 }
--(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    if (textView.maxLength>0 && range.location >=textView.maxLength)
-    {
-        return NO;
-    }
-    return YES;
-}
+//-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+//{ //此方法不支持中文（只能在change事件中处理）
+//    if (textView.maxLength>0 && range.location >=textView.maxLength)
+//    {
+//        return NO;
+//    }
+//    return YES;
+//}
 
 #pragma mark 实现高度自适应变化
 //UITextView
@@ -219,7 +223,7 @@
 }
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
-    self.window.editingTextUI=textView;
+    self.window.editingTextUI=textView;//注册键盘遮挡事件
     if(self.onEdit)
     {
         self.onEdit(textView,NO);

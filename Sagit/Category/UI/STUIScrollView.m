@@ -7,7 +7,7 @@
 //
 
 #import "STUIScrollView.h"
-
+#import "STUIPageControl.h"
 @implementation UIScrollView(ST)
 
 
@@ -36,18 +36,24 @@
     }
     if(isPre)
     {
-       // self.pagerIndex--;
         if(self.onPrePager)
         {
             self.onPrePager(self);
         }
+        if(self.pager)
+        {
+            [self.pager currentPage:self.pagerIndex];
+        }
     }
     else if(isNext)
     {
-        //self.pagerIndex++;
         if(self.onNextPager)
         {
             self.onNextPager(self);
+        }
+        if(self.pager)
+        {
+            [self.pager currentPage:self.pagerIndex];
         }
     }
 }
@@ -111,6 +117,8 @@
 }
 -(void)setPagerIndex:(NSInteger)pagerIndex
 {
+    NSInteger flag=self.pagerIndex-pagerIndex;
+    
     CGPoint offset= self.contentOffset;
     if(self.direction==X)
     {
@@ -121,6 +129,19 @@
         offset.y=pagerIndex*self.frame.size.height;
     }
     self.contentOffset=offset;
+    if(self.pager && self.pager.currentPage!=pagerIndex)//加个判断，避免死循环
+    {
+        [self.pager currentPage:self.pagerIndex];
+    }
+    //触发事件
+    if(flag>0 &&self.onPrePager)
+    {
+        self.onPrePager(self);
+    }
+    else if(flag<0 && self.onNextPager)
+    {
+        self.onNextPager(self);
+    }
    
 }
 #pragma mark 事件
@@ -185,6 +206,7 @@
     
     self.contentSize=size;
     self.contentOffset=offset;
+    self.pagerIndex=self.pagerIndex;//内部调整分页组件的数字。
     return self;
 }
 -(OnScrollPrePager)onPrePager
@@ -202,5 +224,41 @@
 -(void)setOnNextPager:(OnScrollNextPager)onNextPager
 {
     [self key:@"onNextPager" value:onNextPager];
+}
+
+#pragma mark 分页组件
+-(UIPageControl *)pager
+{
+    return [self key:@"pager"];
+}
+-(BOOL)showPager
+{
+    return [self key:@"showPager"];
+}
+-(UIScrollView *)showPager:(BOOL)yesNo
+{
+    if(!yesNo)
+    {
+        UIPageControl *pager=self.pager;
+        if(pager)
+        {
+            [pager removeSelf];
+            pager=nil;
+        }
+        [self key:@"pager" valueWeak:nil];
+    }
+    else if(![self key:@"pager"] && self.superview!=nil)
+    {
+        UIPageControl *pager=[UIPageControl new];
+        pager.numberOfPages=self.subviews.count;
+        NSInteger i=self.pagerIndex;
+        pager.currentPage=i;
+        pager.allowClickPager=YES;
+        [pager key:@"scrollView" valueWeak:self];
+        [self key:@"pager" valueWeak:pager];
+        [[[self.superview addView:pager name:nil] width:self.stWidth height:40] onBottom:self y:-100];// backgroundColor:ColorRandom];
+        
+    }
+    return self;
 }
 @end

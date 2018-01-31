@@ -29,8 +29,15 @@
     }
     return 0;
 }
-- (UITextField*)maxLength:(NSInteger)length{
+- (UITextField*)maxLength:(NSInteger)length
+{
+    if(length>0 && self.maxLength==0)
+    {
+        //注册事件
+        [self addTarget:self action:@selector(onTextChange:) forControlEvents:UIControlEventEditingChanged];
+    }
     [self key:@"maxLength" value:[@(length) stringValue]];
+    
     return self;
 }
 
@@ -75,16 +82,24 @@
     return self;
 }
 #pragma mark TextFiled 协议实现
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (textField.maxLength>0 && range.location >=textField.maxLength) {
-        return NO;
+-(void)onTextChange:(UITextField*)textField
+{
+    NSString *text=textField.text;
+    if(text.length>self.maxLength)
+    {
+        textField.text=[text substringWithRange:NSMakeRange(0, self.maxLength)];
     }
-    return YES;
 }
+//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+//{//此方法不支持中文（只能在change事件中处理）
+//    if (textField.maxLength>0 && range.location >=textField.maxLength) {
+//        return NO;
+//    }
+//    return YES;
+//}
 - (void)textFieldDidBeginEditing:(UITextField *)textField           // became first responder
 {
-    self.window.editingTextUI=textField;
+    self.window.editingTextUI=textField;//注册键盘遮挡事件
     if(self.onEdit)
     {
         self.onEdit(textField,NO);
@@ -98,5 +113,11 @@
         self.onEdit(textField,YES);
     }
 }
-
+-(void)dispose
+{
+    if(self.maxLength>0)
+    {
+        [self removeTarget:self action:@selector(onTextChange:) forControlEvents:UIControlEventEditingChanged];
+    }
+}
 @end
