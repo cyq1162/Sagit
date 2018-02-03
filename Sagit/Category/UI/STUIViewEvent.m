@@ -78,6 +78,25 @@
     }
     return NO;
 }
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if(![gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){return YES;}
+    UIView *view=gestureRecognizer.view;
+    if([view isKindOfClass:[UITextField class]])
+    {
+        for (NSInteger i=view.gestureRecognizers.count-1; i>=0; i--)
+        {
+            UIGestureRecognizer *gestrue=self.gestureRecognizers[i];
+            NSString *name=NSStringFromClass([gestrue class]);
+            if([name eq:@"UITextTapRecognizer"])//该手势在10.3.1系统下，会抢占默认的Tap事件，导致点击失效
+            {
+                [view removeGestureRecognizer:gestrue];
+                gestrue=nil;
+            }
+        }
+    }
+    return YES;
+}
 -(UIGestureRecognizer*)addGesture:(NSString*)eventType
 {
     self.userInteractionEnabled=YES;
@@ -90,6 +109,7 @@
         [self removeClick];
         
         UITapGestureRecognizer *click = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click)];
+        click.delegate=(id)self;
         click.numberOfTapsRequired=1;//设置点按次数，默认为1
         click.numberOfTouchesRequired=1;//点按的手指数
         [self addGestureRecognizer:click];

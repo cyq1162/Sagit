@@ -204,6 +204,7 @@
             break;
     }
     
+    
     self.contentSize=size;
     self.contentOffset=offset;
     self.pagerIndex=self.pagerIndex;//内部调整分页组件的数字。

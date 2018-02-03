@@ -156,7 +156,7 @@
 //定义一些可被修改的默认值
 //定义两个左侧导航的默认值
 #ifndef STDefaultForNavLeftTitle
-#define STDefaultForNavLeftTitle nil
+#define STDefaultForNavLeftTitle @"STEmpty"
 #endif
 #ifndef STDefaultForNavLeftImage
 #define STDefaultForNavLeftImage nil

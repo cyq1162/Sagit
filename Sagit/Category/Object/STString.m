@@ -73,6 +73,14 @@
 -(BOOL)contains:(NSString *)value ignoreCase:(BOOL)ignoreCase{return [self indexOf:value ignoreCase:ignoreCase]>=0;}
 -(BOOL)isEmpty{return [self isEqualToString:@""];}
 +(BOOL)isNilOrEmpty:(NSString*)value{return value==nil || [value isEmpty];}
+-(BOOL)eq:(id)value
+{
+    if([value isKindOfClass:[NSNumber class]])
+    {
+        value=((NSNumber*)value).stringValue;
+    }
+    return [self isEqualToString:value];
+}
 +(NSString *)toString:(id)value{return [NSString stringWithFormat:@"%@",value];}
 +(NSString *)newGuid
 {

@@ -58,7 +58,7 @@
     {
         //找到关键，忽略全屏点击事件
         UIViewController *current=self.viewControllers[count-1];
-        [current reSetNavTabBarState:YES];
+        [current reSetBarState:YES];
 //        if(self.navigationBar.hidden!=![current needNavBar])
 //        {
 //            [self setNavigationBarHidden:![current needNavBar] animated:YES];//全部统一用这个处理

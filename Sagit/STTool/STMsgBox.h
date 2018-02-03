@@ -21,6 +21,7 @@ typedef void (^OnBeforeShow)(UIAlertView* view);
 //!弹出需要点击确定的消息框
 -(void)alert:(id)msg;
 -(void)alert:(id)msg title:(NSString*)title;
+-(void)alert:(id)msg title:(NSString *)title okText:(NSString*)okText;
 -(void)loading;
 -(void)loading:(id)text;
 -(void)hideLoading;

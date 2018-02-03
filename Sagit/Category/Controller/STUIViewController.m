@@ -146,15 +146,14 @@ static char keyValueChar='k';
 }
 -(UIViewController*)needNavBar:(BOOL)yesNo
 {
-    return [self needNavBar:yesNo setNavBar:NO];
+    return [self needNavBar:yesNo setBar:NO];
 }
--(UIViewController*)needNavBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar
+-(UIViewController*)needNavBar:(BOOL)yesNo setBar:(BOOL)setBar
 {
     [self key:@"needNavBar" value:yesNo?@"1":@"0"];
-    if(setNavBar && self.navigationController!=nil)
+    if(setBar && self.navigationController!=nil)
     {
         [self.navigationController setNavigationBarHidden:!yesNo animated:NO];
-       // self.navigationController.navigationBar.hidden=!yesNo;
     }
     return self;
 }
@@ -173,14 +172,35 @@ static char keyValueChar='k';
 }
 -(UIViewController*)needTabBar:(BOOL)yesNo
 {
-    return [self needTabBar:yesNo setTabBar:NO];
+    return [self needTabBar:yesNo setBar:NO];
 }
--(UIViewController*)needTabBar:(BOOL)yesNo setTabBar:(BOOL)setTabBar
+-(UIViewController*)needTabBar:(BOOL)yesNo setBar:(BOOL)setBar
 {
     [self key:@"needTabBar" value:yesNo?@"1":@"0"];
-    if(setTabBar && self.tabBarController!=nil)
+    if(setBar && self.tabBarController!=nil)
     {
         self.tabBarController.tabBar.hidden=!yesNo;
+    }
+    return self;
+}
+-(BOOL)needStatusBar
+{
+    if([self key:@"needStatusBar"]!=nil)
+    {
+        return [[self key:@"needStatusBar"] isEqualToString:@"1"];
+    }
+    return ![UIApplication sharedApplication].statusBarHidden;
+}
+-(UIViewController*)needStatusBar:(BOOL)yesNo
+{
+    return [self needStatusBar:yesNo setBar:NO];
+}
+-(UIViewController*)needStatusBar:(BOOL)yesNo setBar:(BOOL)setBar
+{
+    [self key:@"needStatusBar" value:yesNo?@"1":@"0"];
+    if(setBar)
+    {
+        [UIApplication sharedApplication].statusBarHidden = !yesNo;//隐藏
     }
     return self;
 }
@@ -191,30 +211,25 @@ static char keyValueChar='k';
 }
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title
 {
-    [self stPush:viewController title:title img:STDefaultForNavLeftImage];
+    [self stPush:viewController title:title img:nil];
 }
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName
 {
     UINavigationController *navC=self.navigationController;
     if(navC==nil){return;}
-    [self block:@"存档最后的Tab栏状态，用于检测是否还原。" on:^(UIViewController *controller)
+    
+    if(self.tabBarController!=nil)//存档最后的Tab栏状态，用于检测是否还原。
     {
-        if(controller.tabBarController!=nil)//存档最后的Tab栏状态，用于检测是否还原。
-        {
-            [controller key:@"needTabBar" valueIfNil:!self.tabBarController.tabBar.hidden?@"1":@"0"];
-            //[controller needTabBar:!self.tabBarController.tabBar.hidden];
-            controller.tabBarController.tabBar.hidden=YES;
-            //controller.hidesBottomBarWhenPushed=YES;//又是一个坑，fuck，如果push一次，再切换tab，再切回来，就不见了。
-        }
-    }];
-    [self block:@"存档最后的Nav栏状态，用于检测是否还原。" on:^(UIViewController *controller)
-     {
-          [controller key:@"needNavBar" valueIfNil:!navC.navigationBar.hidden?@"1":@"0"];
-         //[controller needNavBar:!controller.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
-         [navC setNavigationBarHidden:NO animated:NO];
-         //controller.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
-         navC.navigationBar.translucent=NO;//让默认View在导航工具条之下。
-     }];
+        [self key:@"needTabBar" valueIfNil:!self.tabBarController.tabBar.hidden?@"1":@"0"];
+        //[controller needTabBar:!self.tabBarController.tabBar.hidden];
+        self.tabBarController.tabBar.hidden=YES;
+        self.hidesBottomBarWhenPushed=YES;//又是一个坑，fuck，如果push一次，再切换tab，再切回来，就不见了,但成对出现在还原的时候需要设置为NO，就可以了，（不用这个在5s下10.3.1系统下，状态栏会空白不会取消。
+    }
+    [self key:@"needNavBar" valueIfNil:!navC.navigationBar.hidden?@"1":@"0"];
+    //[controller needNavBar:!controller.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
+    [navC setNavigationBarHidden:NO animated:NO];
+    //controller.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
+    navC.navigationBar.translucent=NO;//让默认View在导航工具条之下。
 
     if (navC.viewControllers.count != 0)
     {
@@ -239,18 +254,23 @@ static char keyValueChar='k';
     navC.interactivePopGestureRecognizer.delegate=(id)navC;
     [navC pushViewController:viewController animated:YES];
 }
--(void)reSetNavTabBarState:(BOOL)animated
+-(void)reSetBarState:(BOOL)animated
 {
     UINavigationController *navC=self.navigationController;
     if(navC==nil){return;}
-    if(navC.navigationBar.hidden!=![self needNavBar])
+    if(navC.navigationBar.hidden==self.needNavBar)
     {
-        [navC setNavigationBarHidden:![self needNavBar] animated:animated];//全部统一用这个处理
+        [navC setNavigationBarHidden:!self.needNavBar animated:animated];//全部统一用这个处理
     }
-    if(self.tabBarController!=nil && self.tabBarController.tabBar.hidden!=![self needTabBar])
+    if(self.tabBarController!=nil && self.tabBarController.tabBar.hidden==self.needTabBar)
     {
         //self.tabBarController.tabBar
-        self.tabBarController.tabBar.hidden=![self needTabBar];
+        self.tabBarController.tabBar.hidden=!self.needTabBar;
+        self.hidesBottomBarWhenPushed=!self.needTabBar;//这个要成对出现。。shit~~~
+    }
+    if([UIApplication sharedApplication].statusBarHidden==self.needStatusBar)
+    {
+        [UIApplication sharedApplication].statusBarHidden=!self.needStatusBar;
     }
     //检测上一个控制器有没有释放
     UIViewController *nextController=self.nextController;
@@ -269,7 +289,7 @@ static char keyValueChar='k';
         if(count>1)
         {
             UIViewController *preController=navC.viewControllers[count-2];
-            [preController reSetNavTabBarState:NO];
+            [preController reSetBarState:NO];
 //            if(navC.navigationBar.hidden!=![preController needNavBar])
 //            {
 //                [navC setNavigationBarHidden:![preController needNavBar] animated:NO];//全部统一用这个处理
@@ -309,61 +329,79 @@ static char keyValueChar='k';
     }
     return self;
 }
+-(UIViewController*)leftNav:(NSString*)title img:(id)imgOrName
+{
+    return [self leftNav:title img:imgOrName navController:nil];
+}
 -(UIViewController*)leftNav:(NSString*)title img:(id)imgOrName navController:(UINavigationController*)navController
 {
     if(self.navigationItem==nil){return self;}
-    if (title!=nil)
-    {
-        if([title isEqualToString:@""])
-        {
-            self.navigationItem.leftBarButtonItem = [UIBarButtonItem new];
-        }
-        else
-        {
-            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(stPop)];
-        }
-    }
-    else if(imgOrName)
+    if(imgOrName)
     {
         //这里引用的viewController在第二次回退时，出现了野指针问题。
         self.navigationItem.leftBarButtonItem=
-        [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(stPop)];
+        [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(leftNavClick:)];
     }
     else
     {
-        if(navController==nil){navController=self.navigationController;if(navController==nil){return self;}}
-        UIButton * btn=nil;
-        if(![navController.navigationBar.lastSubView isKindOfClass:[UIButton class]])
+        if ([NSString isNilOrEmpty:title])
         {
-            //创一张空View 显示
-            btn=[[UIButton alloc] initWithFrame:STRectMake(0, 0, 200, STNavHeightPx)];
-            [btn backgroundColor:ColorClear];
-            [navController.navigationBar addSubview:btn];
+            self.navigationItem.leftBarButtonItem = [UIBarButtonItem new];
+        }
+        else if([title eq:@"STEmpty"])
+        {
+            if(navController==nil){navController=self.navigationController;if(navController==nil){return self;}}
+            UIButton * btn=nil;
+            if(![navController.navigationBar.lastSubView isKindOfClass:[UIButton class]])
+            {
+                //创一张空View 显示
+                btn=[[UIButton alloc] initWithFrame:STRectMake(0, 0, 200, STNavHeightPx)];
+                [btn backgroundColor:ColorClear];
+                [navController.navigationBar addSubview:btn];
+            }
+            else
+            {
+                btn=(UIButton*)navController.navigationBar.lastSubView;
+                [btn height:STNavHeightPx];//重设高度,在被pop这后，为了不影响其它自定义，高度会被置为0
+            }
+            
+            //移除事件，避免target指向一个旧的viewController
+            [btn removeTarget:nil action:nil forControlEvents:UIControlEventAllEvents];
+            [btn addTarget:self action:@selector(leftNavClick:) forControlEvents:UIControlEventTouchUpInside];
+            
         }
         else
         {
-            btn=(UIButton*)navController.navigationBar.lastSubView;
-            [btn height:STNavHeightPx];//重设高度,在被pop这后，为了不影响其它自定义，高度会被置为0
+             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(leftNavClick:)];
         }
-        
-        //移除事件，避免target指向一个旧的viewController
-        [btn removeTarget:nil action:nil forControlEvents:UIControlEventAllEvents];
-        [btn addTarget:self action:@selector(stPop) forControlEvents:UIControlEventTouchUpInside];
-        
     }
     return self;
+}
+//开放给用户的
+-(BOOL)onLeftNavBarClick:(id)view
+{
+    return YES;
+}
+//系统的
+-(void)leftNavClick:(id)view
+{
+   if([self onLeftNavBarClick:view])
+   {
+       [self stPop];
+   }
+    
 }
 -(UIViewController*)rightNav:(NSString*)title img:(id)imgOrName
 {
     if(self.navigationItem==nil){return self;}
-    if(title)
-    {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(rightNavClick:)];
-    }
-    else if(imgOrName)
+    if(imgOrName)
     {
         self.navigationItem.rightBarButtonItem =
         [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(rightNavClick:)];
+    }
+    else if(![NSString isNilOrEmpty:title])
+    {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(rightNavClick:)];
     }
     else
     {
@@ -425,6 +463,18 @@ static char keyValueChar='k';
             }
         }
     }
+}
+-(UIViewController *)hideNavShadow
+{
+    if([self isKindOfClass:[UINavigationController class]])
+    {
+        [((UINavigationController*)self).navigationBar setShadowImage:[UIImage new]];
+    }
+    else if(self.navigationController)
+    {
+        [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+    }
+    return self;
 }
 #pragma mark 共用接口
 //子类重写

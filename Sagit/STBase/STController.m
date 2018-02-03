@@ -30,26 +30,28 @@
     [self loadUI];
     [self loadData];
 }
-//-(void)viewDidDisappear:(BOOL)animated
-//{
-//    [self key:@"viewDidDisappear" value:@"1"];
-//    [super viewDidDisappear:animated];
-//}
-//-(void)viewWillAppear:(BOOL)animated
-//{
-//    [super viewWillAppear:animated];
-//    UIViewController *next=self.nextController;
-//    if(next && [next key:@"viewDidDisappear"])
-//    {
-//        [self reSetNavTabBarState:YES];
-//    }
-//}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if(!self.needStatusBar)
+    {
+        [UIApplication sharedApplication].statusBarHidden = NO;//隐藏
+    }
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if(!self.needStatusBar)
+    {
+        [UIApplication sharedApplication].statusBarHidden = YES;//隐藏
+    }
+}
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     if(self.nextController)
     {
-        [self reSetNavTabBarState:YES];
+        [self reSetBarState:YES];
     }
 }
 
@@ -93,19 +95,19 @@
 {
     return self.stView.UIList;
 }
--(STMsgBox *)box
+-(STMsgBox *)msgBox
 {
-    if(_box==nil)
+    if(_msgBox==nil)
     {
-        _box=[STMsgBox new];
+        _msgBox=[STMsgBox new];
     }
-    return _box;
+    return _msgBox;
 }
 -(STHttp *)http
 {
     if(_http==nil)
     {
-        _http=[[STHttp alloc]init:self.box];//不用单例，延时加载
+        _http=[[STHttp alloc]init:self.msgBox];//不用单例，延时加载
     }
     return _http;
 }
@@ -129,7 +131,7 @@
     NSString *tip=items.firstObject;
     if([NSString isNilOrEmpty:value])
     {
-        [self.box prompt:[tip append:@"不能为空!"]];
+        [self.msgBox prompt:[tip append:@"不能为空!"]];
         return NO;
     }
     else if(pattern!=nil && ![pattern isEqualToString:@""])
@@ -141,11 +143,11 @@
             {
                 if(items.count==1)
                 {
-                    [self.box prompt:[tip append:@"格式错误!"]];
+                    [self.msgBox prompt:[tip append:@"格式错误!"]];
                 }
                 else
                 {
-                    [self.box prompt:[tipMsg replace:[tip append:@","] with:tip]];
+                    [self.msgBox prompt:[tipMsg replace:[tip append:@","] with:tip]];
                 }
                 return NO;
             }
@@ -158,7 +160,7 @@
 {
     if(!result)
     {
-        [self.box prompt:tipMsg];
+        [self.msgBox prompt:tipMsg];
     }
     return result;
 }
@@ -438,7 +440,11 @@
 -(void)dealloc
 {
     _http=nil;
-    _box=nil;
+    if(_msgBox)
+    {
+        [_msgBox hideLoading];//切换面页都将隐藏掉。
+        _msgBox=nil;
+    }
     _stView=nil;
     NSLog(@"STController relase -> %@", [self class]);
 }

@@ -12,6 +12,35 @@
 -(NSString *)toString{return [self toString:nil];}
 -(NSString *)toString:(NSString*)formatter{
     if([NSString isNilOrEmpty:formatter]){formatter=@"yyyy-MM-dd HH:mm:ss";}
+    NSDateComponents *com=self.component;
+    return [[[[[[[formatter replace:@"yyyy" with:[self intToString:com.year len:4]]
+                            replace:@"MM" with:[self intToString:com.month]]
+                            replace:@"dd" with:[self intToString:com.day]]
+                            replace:@"HH" with:[self intToString:com.hour]]
+                            replace:@"mm" with:[self intToString:com.minute]]
+                            replace:@"ss" with:[self intToString:com.second]]
+                            replace:@"SSS" with:[self intToString:com.nanosecond len:3]];
+}
+-(NSString*)intToString:(NSInteger)value
+{
+    return [self intToString:value len:2];
+}
+-(NSString*)intToString:(NSInteger)value len:(NSInteger)len
+{
+    NSString *num=STNumString(value);
+    if(num.length>len)
+    {
+        return [num substringWithRange:NSMakeRange(0, len)];
+    }
+    else if(num.length<len && len==2)
+    {
+        return [@"0" append:num];
+    }
+    return num;
+}
+-(NSString *)formatter:(NSString *)formatter
+{
+    if([NSString isNilOrEmpty:formatter]){formatter=@"yyyy-MM-dd HH:mm:ss";}
     NSDateFormatter *fm = [[NSDateFormatter alloc] init];
     [fm setDateFormat:formatter];
     return [fm stringFromDate:self];

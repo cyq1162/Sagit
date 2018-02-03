@@ -15,9 +15,9 @@ typedef void(^Error)(NSString *errMsg);
 //!提供基础的网络请求（get、post、upload(图片上传））
 @interface STHttp : NSObject
 
-@property (nonatomic,strong) STMsgBox *box;
+@property (nonatomic,strong) STMsgBox *msgBox;
 
-- (instancetype)init:(STMsgBox*)box;
+- (instancetype)init:(STMsgBox*)msgBox;
 - (void)get:(NSString *)url paras:(NSDictionary *)paras success:(Success)succese;
 - (void)get:(NSString *)url paras:(NSDictionary *)paras success:(Success)success error:(Error)error;
 

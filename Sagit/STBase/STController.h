@@ -19,9 +19,7 @@
 //!用于发起http请求
 @property (nonatomic,retain) STHttp *http;
 //!用于弹窗提示消息
-@property (nonatomic,retain) STMsgBox *box;
-//!所有name的控件的集合(指向的是view的UIList)
-//@property (nonatomic,retain) NSMutableDictionary *UIList;
+@property (nonatomic,retain) STMsgBox *msgBox;
 
 #pragma mark 通用的三个事件方法：onInit、initUI、initData(还有一个位于基类的：reloadData)
 //!事件在UI初始化之前执行

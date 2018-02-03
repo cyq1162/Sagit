@@ -29,18 +29,25 @@
 -(BOOL)needNavBar;
 //!设置当前视图是否需要导航栏（默认并不设置显示或隐藏）
 -(UIViewController*)needNavBar:(BOOL)yesNo;
-//!设置当前视图是否需要导航栏 setNavBar:同时是否设置隐藏或显示
--(UIViewController*)needNavBar:(BOOL)yesNo setNavBar:(BOOL)setNavBar;
-
+//!设置当前视图是否需要导航栏 setBar:同时是否设置隐藏或显示
+-(UIViewController*)needNavBar:(BOOL)yesNo setBar:(BOOL)setBar;
 
 //!返回当前视图是否需要Tab栏
 -(BOOL)needTabBar;
 //!设置当前视图是否需要Tab栏
 -(UIViewController*)needTabBar:(BOOL)yesNo;
-//!设置当前视图是否需要Tab栏 setTabBar:同时是否设置隐藏或显示
--(UIViewController*)needTabBar:(BOOL)yesNo setTabBar:(BOOL)setTabBar;
+//!设置当前视图是否需要Tab栏 setBar:同时是否设置隐藏或显示
+-(UIViewController*)needTabBar:(BOOL)yesNo setBar:(BOOL)setBar;
+
+//!返回当前视图是否需要Status栏
+-(BOOL)needStatusBar;
+//!设置当前视图是否需要Status栏
+-(UIViewController*)needStatusBar:(BOOL)yesNo;
+//!设置当前视图是否需要Status栏 setBar:同时是否设置隐藏或显示
+-(UIViewController*)needStatusBar:(BOOL)yesNo setBar:(BOOL)setBar;
 //系统内部调用的方法（用于还原导航栏和状态栏和Tab栏）
--(void)reSetNavTabBarState:(BOOL)animated;
+-(void)reSetBarState:(BOOL)animated;
+
 #pragma mark keyvalue
 //!扩展一个字典属性，方便存档及数据传递
 -(NSMutableDictionary<NSString*,id>*)keyValue;
@@ -65,13 +72,19 @@ typedef void(^ControllerDescription)(UIViewController *controller);
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title img:(id)imgOrName;
 //!退弹出视图并返回上一个页面(对应stPush方法)
 - (void)stPop;
+
+//!设置左侧导航栏的按钮为文字或图片
+-(UIViewController*)leftNav:(NSString*)title img:(id)imgOrName;
+//!左侧导航栏的默认点击事件 return YES 则系统调stPop返回方法。
+-(BOOL)onLeftNavBarClick:(id)view;
 //!设置右侧导航栏的按钮为文字或图片
 -(UIViewController*)rightNav:(NSString*)title img:(id)imgOrName;
 //!右侧导航栏的默认点击事件
 -(void)onRightNavBarClick:(UIBarButtonItem*)view;
 //系统内部调用的方法
 -(UIViewController*)reSetNav:(UINavigationController*)navController;
-
+//!隐藏导航条下面的阴线
+-(UIViewController*)hideNavShadow;
 //!跳转到其它页面(内部方法)
 -(void)redirect:(UITapGestureRecognizer*)recognizer;
 #pragma mark 共用接口

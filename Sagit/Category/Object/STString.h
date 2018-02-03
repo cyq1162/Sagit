@@ -27,6 +27,7 @@
 -(BOOL)contains:(NSString*)value;
 -(BOOL)contains:(NSString*)value ignoreCase:(BOOL)ignoreCase;
 -(BOOL)isEmpty;
+-(BOOL)eq:(id)value;
 +(BOOL)isNilOrEmpty:(NSString*)value;
 +(NSString*)toString:(id)value;
 +(NSString *)newGuid;

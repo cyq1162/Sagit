@@ -77,7 +77,7 @@
         if(moveY>0)
         {
             CGRect frame=baseView.frame;
-            frame.origin.y-=moveY;//+textHeight+8);
+            frame.origin.y-=(moveY+8);
             [baseView moveTo:frame];
             //注册键盘回收事件
             //注册键盘出现与隐藏时候的通知

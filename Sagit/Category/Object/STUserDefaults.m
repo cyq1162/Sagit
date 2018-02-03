@@ -17,7 +17,7 @@
     return [self valueForKey:key];
 }
 
--(void)set:(NSString *)key v:(NSString *)value
+-(void)set:(NSString *)key value:(NSString *)value
 {
     //NSUserDefaults *data=[NSUserDefaults standardUserDefaults];
     return [self setValue:value forKey:key];

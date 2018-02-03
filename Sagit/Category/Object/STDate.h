@@ -9,8 +9,12 @@
 #import <Foundation/Foundation.h>
 
 @interface NSDate(ST)
+//!自己处理的格式化，只处理年月日时分秒毫秒
 -(NSString*)toString:(NSString*)formatter;
+//!自己处理的格式化，只处理年月日时分秒毫秒
 -(NSString*)toString;
+//!系统的格式化（包括星期等信息）
+-(NSString*)formatter:(NSString*)formatter;
 //!返回类型可以取更多日期属性
 -(NSDateComponents *)component;
 //!获取北京的当前时间。

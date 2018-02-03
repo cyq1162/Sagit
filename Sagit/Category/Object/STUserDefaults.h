@@ -10,7 +10,7 @@
 
 
 @interface NSUserDefaults(ST)
--(void)set:(NSString*)key v:(NSString*)value;
+-(void)set:(NSString*)key value:(NSString*)value;
 -(NSString*)get:(NSString*)key;
 -(BOOL)has:(NSString*)key;
 -(void)remove:(NSString *)key;

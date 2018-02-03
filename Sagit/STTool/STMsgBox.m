@@ -28,9 +28,11 @@
     return obj;
 }
 - (UIWindow*)window {
-    if (!_window) {
-        _window = [[UIApplication sharedApplication].delegate window];
-        
+    if (!_window)
+    {
+        [Sagit runOnMainThread:^{
+            _window = [UIApplication sharedApplication].delegate.window;
+        }];
     }
     return _window;
 }
@@ -99,27 +101,30 @@
 }
 -(void)prompt:(id)msg second:(NSInteger)second
 {
-    [[[self.window addUIView:nil] backgroundColor:[UIColor colorWithWhite:0.0f alpha:0.4f]] block:nil on:^(UIView* view) {
+    [Sagit runOnMainThread:^{
         
-        [[view addLabel:nil text:msg font:30 color:@"ffffff" row:0] block:nil on:^(UILabel *label)
-        {
-            if(STScreenWidthPx-label.stWidth<150)
-            {
-                [label width:STScreenWidthPx-150];
-                [label sizeToFit];
-            }
-            [view width:label.stWidth+100 height:label.stHeight+50];
-            [label toCenter];
-        }];
-        
-        [[view layerCornerRadius:10.f] toCenter];
-        [UIView animateWithDuration:second animations:^{
-            view.alpha = 0.0f;//动画消失
-        } completion:^(BOOL finished) {
-            if(finished)
-            {
-                [view removeSelf];
-            }
+        [[[self.window addUIView:nil] backgroundColor:[UIColor colorWithWhite:0.0f alpha:0.4f]] block:nil on:^(UIView* view) {
+            
+            [[view addLabel:nil text:msg font:30 color:@"ffffff" row:0] block:nil on:^(UILabel *label)
+             {
+                 if(STScreenWidthPx-label.stWidth<150)
+                 {
+                     [label width:STScreenWidthPx-150];
+                     [label sizeToFit];
+                 }
+                 [view width:label.stWidth+100 height:label.stHeight+50];
+                 [label toCenter];
+             }];
+            
+            [[view layerCornerRadius:10.f] toCenter];
+            [UIView animateWithDuration:second animations:^{
+                view.alpha = 0.0f;//动画消失
+            } completion:^(BOOL finished) {
+                if(finished)
+                {
+                    [view removeSelf];
+                }
+            }];
         }];
     }];
 }
@@ -131,6 +136,10 @@
 {
     [self confirm:msg title:nil click:nil okText:@"确定" cancelText:nil];
 }
+-(void)alert:(id)msg title:(NSString *)title okText:(NSString*)okText
+{
+    [self confirm:msg title:nil click:nil okText:okText cancelText:nil];
+}
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click
 {
     [self confirm:msg title:title click:click okText:@"确定" cancelText:@"取消"];
@@ -141,44 +150,51 @@
 }
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText
 {
-   UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title
-                                              message:msg
-                                             delegate:self
-                                    cancelButtonTitle:cancelText
-                                    otherButtonTitles:nil];
-    
-    if(okText)
-    {
-        NSArray<NSString*> *items=[okText split:@","];
-        for (NSString *item in items) {
-            [alertView addButtonWithTitle:item];
+    [Sagit runOnMainThread:^{
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title
+                                                            message:msg
+                                                           delegate:self
+                                                  cancelButtonTitle:cancelText
+                                                  otherButtonTitles:nil];
+        
+        if(okText)
+        {
+            NSArray<NSString*> *items=[okText split:@","];
+            for (NSString *item in items) {
+                [alertView addButtonWithTitle:item];
+            }
         }
-    }
-    [alertView key:@"click" value:[click copy]];
-    [alertView show];
+        [alertView key:@"click" value:[click copy]];
+        [alertView show];
+    }];
 }
 -(void)custom:(id)title before:(OnBeforeShow)beforeShow click:(OnConfirmClick)click okText:(NSString *)okText cancelText:(NSString *)cancelText
 {
-   UIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
-                                              message:nil
-                                             delegate:self
-                                    cancelButtonTitle:cancelText
-                                      otherButtonTitles:nil];
-    if(okText)
-    {
-        NSArray<NSString*> *items=[okText split:@","];
-        for (NSString *item in items) {
-            [alertView addButtonWithTitle:item];
+    [Sagit runOnMainThread:^{
+        UIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
+                                                              message:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:cancelText
+                                                    otherButtonTitles:nil];
+        if(okText)
+        {
+            NSArray<NSString*> *items=[okText split:@","];
+            for (NSString *item in items) {
+                [alertView addButtonWithTitle:item];
+            }
         }
-    }
-    alertView.alertViewStyle=UIAlertViewStylePlainTextInput;
+        alertView.alertViewStyle=UIAlertViewStylePlainTextInput;
+        if(beforeShow)
+        {
+            beforeShow(alertView);
+        }
+        [alertView key:@"click" value:[click copy]];
+        [alertView show];
+    }];
     if(beforeShow)
     {
-        beforeShow(alertView);
         beforeShow=nil;
     }
-    [alertView key:@"click" value:[click copy]];
-    [alertView show];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

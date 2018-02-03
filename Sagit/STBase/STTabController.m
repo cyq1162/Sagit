@@ -48,7 +48,7 @@
     [super setViewControllers:viewControllers animated:animated];
     for (NSInteger i=0; i<viewControllers.count; i++)
     {
-        [self setTabBar:viewControllers[i]];
+        [self setBar:viewControllers[i]];
     }
 }
 -(void)setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers
@@ -58,19 +58,19 @@
 -(void)addChildViewController:(UIViewController *)childController
 {
     if(childController==nil){return;}
-    [self setTabBar:childController];
+    [self setBar:childController];
     [super addChildViewController:childController];
 }
--(void)setTabBar:(UIViewController*)controller
+-(void)setBar:(UIViewController*)controller
 {
     if(controller==nil){return;}
     if(controller.navigationController!=nil)
     {
-        [controller.navigationController.viewControllers[0] needTabBar:YES setTabBar:YES];
+        [controller.navigationController.viewControllers[0] needTabBar:YES setBar:YES];
     }
     else
     {
-        [controller needTabBar:YES setTabBar:YES];
+        [controller needTabBar:YES setBar:YES];
     }
 }
 -(void)dealloc

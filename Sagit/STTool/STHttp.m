@@ -34,8 +34,8 @@
     });
     return _share;
 }
--(instancetype)init:(STMsgBox*)box{
-    _box=box;
+-(instancetype)init:(STMsgBox*)msgBox{
+    _msgBox=msgBox;
     return self;
 }
 -(AFHTTPSessionManager*)http
@@ -189,16 +189,16 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
 }
 
 -(void)showLoading{
-    if(self.box!=nil){[self.box loading];}
+    if(self.msgBox!=nil){[self.msgBox loading];}
 }
 -(void)hideLoading{
-    if(self.box!=nil){[self.box hideLoading];}
+    if(self.msgBox!=nil){[self.msgBox hideLoading];}
 }
 -(void)showError:(NSString*)errMsg
 {
-    if(self.box!=nil)
+    if(self.msgBox!=nil)
     {
-        [self.box alert:[@"网络连接错误:" append:errMsg]];
+        [self.msgBox alert:[@"网络连接错误:" append:errMsg]];
     }
     else{
         [Sagit.MsgBox alert:[@"网络连接错误:" append:errMsg]];

@@ -26,7 +26,7 @@
 +(STCache*)Cache;
 //!用于发起网络请求的单例类,，在STController中时用self.http调用
 +(STHttp*)Http;
-//!用于弹窗消息的单例类，在STController中时用self.box调用
+//!用于弹窗消息的单例类，在STController中时用self.msgBox调用
 +(STMsgBox*)MsgBox;
 
 #pragma mark 扩展一些全局的方法
