@@ -98,6 +98,8 @@
 -(UIView*)contentMode:(UIViewContentMode)contentMode;
 -(UIView*)userInteractionEnabled:(BOOL)yesNO;
 #pragma mark 扩展系统方法
+-(UITextField*)bottomLine:(id)colorOrHex;
+-(UITextField*)bottomLine:(id)colorOrHex height:(NSInteger)px;
 //!框架自动释放资源（不需要人工调用）
 -(void)dispose;
 @end

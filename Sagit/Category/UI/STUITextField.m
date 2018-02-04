@@ -81,6 +81,12 @@
     self.placeholder=text;
     return self;
 }
+-(UITextField*)borderStyle:(UITextBorderStyle)style
+{
+    self.borderStyle=style;
+    return self;
+}
+
 #pragma mark TextFiled 协议实现
 -(void)onTextChange:(UITextField*)textField
 {

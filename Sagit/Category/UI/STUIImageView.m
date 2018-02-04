@@ -69,38 +69,38 @@
 
 -(UIImageView *)url:(NSString *)url
 {
-    return [self url:url maxKb:256 default:nil after:nil];
+    return [self url:url default:nil maxKb:256];
 }
--(UIImageView *)url:(NSString *)url after:(AfterSetImageUrl)block
-{
-    return [self url:url maxKb:256 default:nil after:block];
-}
+//-(UIImageView *)url:(NSString *)url after:(AfterSetImageUrl)block
+//{
+//    return [self url:url maxKb:256 default:nil after:block];
+//}
 -(UIImageView *)url:(NSString *)url default:(id)imgOrName
 {
-    return [self url:url maxKb:256 default:imgOrName  after:nil];
+    return [self url:url default:imgOrName maxKb:256 ];
 }
--(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress
+//-(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress
+//{
+//    return [self url:url maxKb:compress default:nil  after:nil];
+//}
+//-(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress default:(id)imgOrName
+//{
+//    return [self url:url maxKb:compress default:nil after:nil];
+//}
+-(UIImageView *)url:(NSString *)url default:(id)imgOrName maxKb:(NSInteger)compress //after:(AfterSetImageUrl)block
 {
-    return [self url:url maxKb:compress default:nil  after:nil];
-}
--(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress default:(id)imgOrName
-{
-    return [self url:url maxKb:compress default:nil after:nil];
-}
--(UIImageView *)url:(NSString *)url maxKb:(NSInteger)compress default:(id)imgOrName after:(AfterSetImageUrl)block
-{
+    AfterEvent block=self.onAfter;
     if([NSString isNilOrEmpty:url])
     {
-        self.image=nil;
-        [self.keyValue remove:@"url"];
-        if(block){block(self);block=nil;}
+        
+        if(block){block(@"url",self);block=nil;}
         return self;
     }
     [self key:@"url" value:url];
     if(![url startWith:@"http"])
     {
         [self image:url];
-        if(block){block(self);block=nil;}
+        if(block){block(@"url",self);block=nil;}
         return self;
     }
     NSString *cacheKey=[@"STImgUrl_" append:[@([url hash]) stringValue]];
@@ -109,7 +109,7 @@
     if(cacheImg)
     {
         [self image:cacheImg];
-        if(block){block(self);block=nil;}
+        if(block){block(@"url",self);block=nil;}
         return self;
     }
     if(imgOrName)
@@ -132,12 +132,12 @@
                 //在这里做UI操作(UI操作都要放在主线程中执行)
                 if(data)
                 {
-                    self.image=[[UIImage alloc]initWithData:data];
+                    [self image:data];
                     [Sagit.File set:cacheKey value:data];
                 }
                 if(block)
                 {
-                    block(self);
+                    block(@"url",self);
                 }
             });
         }

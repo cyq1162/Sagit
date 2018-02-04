@@ -503,6 +503,14 @@ static char keyValueChar='k';
     self.userInteractionEnabled=yesNO;
     return self;
 }
+-(UITextField *)bottomLine:(id)colorOrHex
+{
+    return [self bottomLine:colorOrHex height:2];
+}
+-(UITextField *)bottomLine:(id)colorOrHex height:(NSInteger)px
+{
+    return [[[self addLine:nil color:colorOrHex] height:px] relate:Bottom v:-px];
+}
 //!框架自动释放资源（不需要人工调用）
 -(void)dispose
 {

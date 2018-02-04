@@ -27,4 +27,7 @@ typedef void (^OnTextFieldEdit)(UITextField*textField,BOOL isEnd);
 -(UITextField*)textColor:(id)colorOrHex;
 -(UITextField*)textAlignment:(NSTextAlignment)value;
 -(UITextField*)placeholder:(NSString*)text;
+-(UITextField*)borderStyle:(UITextBorderStyle)style;
+
+
 @end

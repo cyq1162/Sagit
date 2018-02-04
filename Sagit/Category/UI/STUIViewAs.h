@@ -23,4 +23,5 @@
 -(UIPickerView*)asPickerView;
 -(STView*)asSTView;
 -(UIView*)asBaseView;
+-(UIImage*)asImage;
 @end
