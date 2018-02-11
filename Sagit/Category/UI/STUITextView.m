@@ -105,7 +105,7 @@
 {
     if([self key:@"placeholder"]==nil)
     {
-        UILabel *placeholer=[[self addLabel:nil text:text font:self.font.pointSize*Ypx color:@"#cccccc"] relate:LeftTop v:8 v2:16];
+        UILabel *placeholer=[[self addLabel:nil text:text font:self.font.pointSize*Ypx color:@"#cccccc"] relate:LeftTop v:8 v2:18];
         [self key:@"placeholderLabel" value:placeholer];
     }
     [self key:@"placeholder" value:text];

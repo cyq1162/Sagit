@@ -346,7 +346,7 @@ static char keyValueChar='k';
     {
         if ([NSString isNilOrEmpty:title])
         {
-            self.navigationItem.leftBarButtonItem = [UIBarButtonItem new];
+            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStyleDone target:self action:nil];
         }
         else if([title eq:@"STEmpty"])
         {

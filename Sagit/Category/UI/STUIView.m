@@ -175,7 +175,7 @@ static char keyValueChar='k';
     }
     else if([self isMemberOfClass:[UIButton class]])
     {
-        ((UIButton*)self).titleLabel.text=value;
+        [((UIButton*)self) title:value];
     }
         else if([self isMemberOfClass:[UIImageView class]])
         {
@@ -505,11 +505,11 @@ static char keyValueChar='k';
 }
 -(UITextField *)bottomLine:(id)colorOrHex
 {
-    return [self bottomLine:colorOrHex height:2];
+    return [self bottomLine:colorOrHex  height:2];
 }
 -(UITextField *)bottomLine:(id)colorOrHex height:(NSInteger)px
 {
-    return [[[self addLine:nil color:colorOrHex] height:px] relate:Bottom v:-px];
+    return [[[self addLine:nil color:colorOrHex] width:1 height:px] relate:Bottom v:-px-8];
 }
 //!框架自动释放资源（不需要人工调用）
 -(void)dispose

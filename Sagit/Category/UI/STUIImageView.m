@@ -273,4 +273,8 @@ static char afterImageSaveBlockChar='c';
     UIGraphicsEndPDFContext();
     return image;
 }
+-(NSData *)data
+{
+   return UIImagePNGRepresentation(self);
+}
 @end
