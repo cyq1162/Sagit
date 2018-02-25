@@ -16,7 +16,10 @@ typedef  void(^OnViewDrag)(id view);
 typedef  void(^OnLongPress)(id view);
 typedef  void(^ViewDescription)(id view);
 #pragma mark 扩展系统事件 - 点击
-
+//!点击事件的间隔（单位秒s)
+-(NSInteger)clickInterval;
+//!设置点击事件的间隔（单位秒s)
+-(UIView*)clickInterval:(NSInteger)sencond;
 //!执行点击事件
 -(UIView*)click;
 //!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name）

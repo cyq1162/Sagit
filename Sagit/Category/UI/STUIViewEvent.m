@@ -282,28 +282,39 @@
     return nil;
 }
 #pragma mark click 事件
-
+-(NSInteger)clickInterval
+{
+    NSString *second=[self key:@"clickInterval"];
+    if(second!=nil)
+    {
+        return  second.integerValue;
+    }
+    return 0;
+}
+-(UIView *)clickInterval:(NSInteger)sencond
+{
+    [self key:@"clickInterval" value:STNumString(sencond)];
+    return  self;
+}
 -(UIView*)click
 {
+//    if(self.userInteractionEnabled)
+//    {
+//        [self exeEvent:@"click"];
+//    }
     if(self.userInteractionEnabled)
     {
+        self.userInteractionEnabled=NO;
         [self exeEvent:@"click"];
+        [Sagit delayExecute:self.clickInterval onMainThread:YES block:^{
+            @try
+            {
+              self.userInteractionEnabled=YES;
+            }
+            @catch(NSException *err){}
+        }];
+
     }
-//    if(self.userInteractionEnabled && ![self.baseView key:@"stopEvent"])
-//    {
-//        self.userInteractionEnabled=NO;
-//
-//        [Sagit delayExecute:1 onMainThread:YES block:^{
-//            @try
-//            {
-//                if(self)
-//                {
-//                    self.userInteractionEnabled=YES;
-//                }
-//            }@catch(NSException *err){}
-//        }];
-//
-//    }
     return self;
 }
 -(UIView*)addClick:(NSString *)event
