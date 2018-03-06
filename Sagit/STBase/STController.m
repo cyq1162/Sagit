@@ -304,7 +304,12 @@
         }
         if(tableView.afterReload)
         {
-            tableView.afterReload(tableView);
+            //兼容IOS系统10.3.1(闪退的情况，所以延时0.05秒处理）
+            //闪退的情况发现生在OS 10.3.1(在此事件中对TextView赋值,同时该TextView自适应高度又引发TableView BeginUpdate/EndUpdate事件时，系统崩溃
+            //报错内容为系统的索引超出范围。
+            [Sagit delayExecute:0.05 onMainThread:YES block:^{
+                 tableView.afterReload(tableView);
+            }];
         }
     }
 }

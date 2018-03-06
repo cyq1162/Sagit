@@ -187,6 +187,7 @@
             }
             else //加载完后的修改
             {
+               
                 [table beginUpdates];
                 [table endUpdates];
                 [table height:table.stHeight+fixHeight*Ypx];

@@ -32,7 +32,7 @@
 #pragma mark 扩展一些全局的方法
 typedef void (^DelayExecuteBlock)();
 //延时N秒后执行
-+(void)delayExecute:(NSInteger)second onMainThread:(BOOL)onMainThread block:(DelayExecuteBlock)block;
++(void)delayExecute:(double)second onMainThread:(BOOL)onMainThread block:(DelayExecuteBlock)block;
 //回主线程处理代码
 +(void)runOnMainThread:(DelayExecuteBlock)block;
 @end

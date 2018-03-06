@@ -35,7 +35,7 @@
     return [STMsgBox share];
 }
 #pragma mark 扩展一些全局的方法
-+(void)delayExecute:(NSInteger)second onMainThread:(BOOL)onMainThread block:(DelayExecuteBlock)block
++(void)delayExecute:(double)second onMainThread:(BOOL)onMainThread block:(DelayExecuteBlock)block
 {
     if(!block){return;}
     
