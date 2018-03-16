@@ -86,7 +86,20 @@ static char keyValueChar='k';
 {
     return[self isKindOfClass:[STView class]];
 }
-
+-(UIView *)statusBar
+{
+    UIApplication *app=UIApplication.sharedApplication;
+    if(app)
+    {
+        UIWindow *win=[app valueForKey:@"statusBarWindow"];
+        if(win && win.subviews.count>0)
+        {
+            //UIView *view=[win valueForKey:@"statusBar"];
+            return win.subviews[0];
+        }
+    }
+    return nil;
+}
 //-(BOOL)isOnSTView
 //{
 //    return self.superview!=nil && [self.superview isSTView];
@@ -418,11 +431,16 @@ static char keyValueChar='k';
     self.backgroundColor=[self toColor:colorOrHex];
     return self;
 }
+-(UIImage*)backgroundImage
+{
+    return [self key:@"backgroundImage"];
+}
 -(UIView *)backgroundImage:(id)imgOrName
 {
     if(!imgOrName)
     {
         self.layer.contents=nil;
+        [self key:@"backgroundImage" value:nil];
     }
     else
     {
@@ -431,7 +449,7 @@ static char keyValueChar='k';
         {
             img=[img reSize:self.frame.size];
         }
-       // [[self addImageView:nil img:imgOrName] width:1 height:1];
+        [self key:@"backgroundImage" value:img];
         self.layer.contents=(id)img.CGImage;
     }
     return self;

@@ -111,7 +111,7 @@
 //#define UIEdgeInsetsMake(top, left, bottom, right) UIEdgeInsetsMake(top*Ypt, left*Xpt, bottom*Ypt, right*Xpt)
 //(770,100)
 
-//字体
+//字体像素
 #define STFont(px) [UIFont systemFontOfSize:px*Ypt]
 //加粗
 #define STFontBold(px) [UIFont boldSystemFontOfSize:px*Ypt]

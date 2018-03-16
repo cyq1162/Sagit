@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 
 @interface NSString(ST)
+//+ (instancetype)format:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 
 -(NSString*)reverse;
 -(BOOL)isInt;

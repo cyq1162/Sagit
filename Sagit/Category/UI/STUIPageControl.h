@@ -3,7 +3,7 @@
 //  IT恋
 //
 //  Created by 陈裕强 on 2018/2/1.
-//  Copyright © 2018年 Silan Xie. All rights reserved.
+//  Copyright © 2018年 . All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

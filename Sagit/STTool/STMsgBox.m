@@ -134,11 +134,11 @@
 }
 -(void)alert:(id)msg title:(NSString *)title
 {
-    [self confirm:msg title:nil click:nil okText:@"确定" cancelText:nil];
+    [self confirm:msg title:title click:nil okText:@"确定" cancelText:nil];
 }
 -(void)alert:(id)msg title:(NSString *)title okText:(NSString*)okText
 {
-    [self confirm:msg title:nil click:nil okText:okText cancelText:nil];
+    [self confirm:msg title:title click:nil okText:okText cancelText:nil];
 }
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click
 {
@@ -168,7 +168,7 @@
         [alertView show];
     }];
 }
--(void)custom:(id)title before:(OnBeforeShow)beforeShow click:(OnConfirmClick)click okText:(NSString *)okText cancelText:(NSString *)cancelText
+-(void)input:(id)title before:(OnBeforeShow)beforeShow click:(OnConfirmClick)click okText:(NSString *)okText cancelText:(NSString *)cancelText
 {
     [Sagit runOnMainThread:^{
         UIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
@@ -211,6 +211,28 @@
         }
         click=nil;
     }
+}
+- (void)dialog:(OnDialogShow)dialog
+{
+    UIWindow *window=self.window;
+    UIView *statusView=window.statusBar;
+    
+    UIImage*bgImage=statusView.backgroundImage;
+    UIColor*bgColor=statusView.backgroundColor;
+    [[statusView backgroundImage:nil] backgroundColor:[ColorBlack alpha:0.5]];
+    __block OnDialogShow block=dialog;
+    [[[[window addUIView:nil] x:0 y:0 width:1 height:1] backgroundColor:[ColorBlack alpha:0.5]] block:nil on:^(UIView* winView) {
+        [winView onClick:^(id view) {
+            [winView hidden:YES];
+            [winView removeSelf];
+           [[statusView backgroundImage:bgImage] backgroundColor:bgColor];
+        }];
+        if(block)
+        {
+            block(winView);
+            block=nil;
+        }
+    }];
 }
 @end
 

@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 typedef BOOL (^OnConfirmClick)(NSInteger btnIndex,UIAlertView* view);
 typedef void (^OnBeforeShow)(UIAlertView* view);
+typedef void (^OnDialogShow)(UIView* winView);
 //!提供基础的消息弹窗
 @interface STMsgBox : NSObject
 + (STMsgBox*)share;
@@ -30,5 +31,7 @@ typedef void (^OnBeforeShow)(UIAlertView* view);
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText;
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText  cancelText:(NSString*)cancelText;
 //!弹出一个可以(自定义)输入内容的对话框
--(void)custom:(id)title before:(OnBeforeShow)beforeShow click:(OnConfirmClick)click okText:(NSString*)okText  cancelText:(NSString*)cancelText;
+-(void)input:(id)title before:(OnBeforeShow)beforeShow click:(OnConfirmClick)click okText:(NSString*)okText  cancelText:(NSString*)cancelText;
+//!弹出自定义界面的对话框
+- (void)dialog:(OnDialogShow)dialog;
 @end

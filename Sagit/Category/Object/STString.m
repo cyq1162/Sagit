@@ -9,7 +9,22 @@
 #import "STString.h"
 #import "STDefine.h"
 @implementation NSString(ST)
-
+//+(instancetype)format:(NSString *)format, ...
+//{
+//    va_list ap;
+//    va_start(ap, format);
+//    NSString *item;
+//    while ((item = va_arg(ap, NSString *)))
+//    {
+//        if(item==nil)
+//        {
+//            item=@"";
+//        }
+//    }
+//    NSString *result=[[NSString alloc] initWithFormat:format arguments:ap];
+//    va_end(ap);
+//    return result;
+//}
 -(NSString *)reverse
 {
     NSMutableString *newString = [[NSMutableString alloc] initWithCapacity:self.length];

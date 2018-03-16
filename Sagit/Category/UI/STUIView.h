@@ -19,7 +19,8 @@
 -(STController*)stController;
 //!获取当前UI的STView，如果当前UI的根视图没有继承自STView，则返回nil
 -(STView*)stView;
-
+//!获取当前应用的状态栏
+-(UIView*)statusBar;
 //!获取当前UI的根控制器UIViewController
 //-(UIViewController*)baseController;
 //!获取当前UI的根视图，如果当前的UI没有根视图或根视图为UIWindow，则返回自身。
@@ -84,6 +85,7 @@
 
 -(UIView*)hidden:(BOOL)yesNo;
 -(UIView*)backgroundColor:(id)colorOrHex;
+-(UIImage*)backgroundImage;
 -(UIView*)backgroundImage:(id)imgOrName;
 -(UIView*)clipsToBounds:(BOOL)value;
 -(UIView*)tag:(NSInteger)tag;
