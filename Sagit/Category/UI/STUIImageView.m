@@ -259,12 +259,12 @@ static char afterImageSaveBlockChar='c';
     if (image.size.width > maxSize.width)
     {
         k = image.size.width / maxSize.width;
-        imageH = image.size.height / k;
+        imageH = ceil(image.size.height / k);
         size = CGSizeMake(maxSize.width, imageH);
     }
     if (imageH > maxSize.height) {
         k = image.size.height / maxSize.height;
-        imageW = image.size.width / k;
+        imageW = ceil(image.size.width / k);
         size = CGSizeMake(imageW, maxSize.height);
     }
     UIGraphicsBeginImageContext(size);
