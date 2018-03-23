@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 typedef BOOL (^OnConfirmClick)(NSInteger btnIndex,UIAlertView* view);
+typedef BOOL (^OnBeforeDialogHide)(UIView* winView,UIView* clickView);
 typedef void (^OnBeforeShow)(UIAlertView* view);
 typedef void (^OnDialogShow)(UIView* winView);
 //!提供基础的消息弹窗
@@ -34,4 +35,5 @@ typedef void (^OnDialogShow)(UIView* winView);
 -(void)input:(id)title before:(OnBeforeShow)beforeShow click:(OnConfirmClick)click okText:(NSString*)okText  cancelText:(NSString*)cancelText;
 //!弹出自定义界面的对话框
 - (void)dialog:(OnDialogShow)dialog;
+- (void)dialog:(OnDialogShow)dialog beforeHide:(OnBeforeDialogHide) beforeHide;
 @end

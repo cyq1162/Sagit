@@ -63,4 +63,6 @@ typedef  void(^ViewDescription)(id view);
 #pragma mark 增加描述
 //!提供一个代码块，方便代码规范 description处可以写代码块的说明文字
 -(UIView*)block:(NSString*)description on:(ViewDescription)descBlock;
+//!块写法，用于包含添加子视图
+-(UIView*)block:(ViewDescription)descBlock;
 @end

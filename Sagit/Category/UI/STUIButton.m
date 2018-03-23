@@ -65,9 +65,9 @@
 }
 -(UIButton*)image:(id)img forState:(UIControlState)state
 {
-
+    
     [self setImage:[self toImage:img] forState:state];
-
+    
     return self;
 }
 -(UIButton*)title:(NSString*)title
@@ -115,26 +115,58 @@
     [self width:width];
     return self;
 }
+
+
 -(UIButton *)showTime:(NSInteger)second
 {
     if(second>0)
     {
-        NSString*title=self.currentTitle;
+        if([self key:@"NSTimer"])
+        {
+            [self key:@"newSecond" value:STNumString(second)];
+            return self;//直接返回
+        }
+        
         [self enabled:NO];
-        __block NSInteger s=second;
-        [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-            [self title:[[@(s)stringValue] append:@"s"]];
-            s--;
-            if(s==-1)//==0的话到2s就恢复了，也不解为什么少了1。
-            {
-                [self title:title];
-                [self enabled:YES];
-                [timer invalidate];
-                timer=nil;
-                
-            }
-        }];
+        NSTimer *timer=[NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+        
+        [self key:@"NSTimer" value:timer];
+        [self key:@"defaultTitle" value:self.currentTitle];
+        interval=second;
+        [timer fire];//开启
     }
     return self;
+}
+static int interval=0;
+-(void)onTimer
+{
+    
+    NSString *newSecond=[self key:@"newSecond"];
+    if(newSecond)
+    {
+        interval=newSecond.integerValue;
+        [self key:@"newSecond" value:nil];//移除key
+    }
+    else
+    {
+        [self title:[[@(interval)stringValue] append:@"s"]];
+    }
+    interval--;
+    if(interval<=-1)//==0的话到2s就恢复了，也不解为什么少了1。
+    {
+        [self title:[self key:@"defaultTitle"]];
+        [self enabled:YES];
+        NSTimer *timer=[self key:@"NSTimer"];
+        if(timer)
+        {
+            [timer invalidate];
+            timer=nil;
+            [self key:@"NSTimer" value:nil];
+        }
+        if(self.onAfter)
+        {
+            self.onAfter(@"showTime",self);
+        }
+    }
 }
 @end

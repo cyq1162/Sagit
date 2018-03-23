@@ -377,7 +377,7 @@ static char keyValueChar='k';
     }
     return self;
 }
-//开放给用户的
+//开放给用户的,左侧导航栏的默认点击事件 return YES 则系统调stPop返回方法。
 -(BOOL)onLeftNavBarClick:(id)view
 {
     return YES;

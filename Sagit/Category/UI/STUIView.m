@@ -184,16 +184,23 @@ static char keyValueChar='k';
     }
     else if([self isMemberOfClass:[UILabel class]])
     {
-        [((UILabel*)self) text:value];
+        UILabel*label=(UILabel*)self;
+        NSInteger width=label.stWidth;
+        [label text:value];
+        [label sizeToFit];
+        if(label.stWidth<width)
+        {
+            [label width:width];//还原宽度
+        }
     }
     else if([self isMemberOfClass:[UIButton class]])
     {
         [((UIButton*)self) title:value];
     }
-        else if([self isMemberOfClass:[UIImageView class]])
-        {
-            [((UIImageView*)self) url:value];
-        }
+    else if([self isMemberOfClass:[UIImageView class]])
+    {
+        [((UIImageView*)self) url:value];
+    }
     else if([self isMemberOfClass:[UISlider class]])
     {
         ((UISlider*)self).value=[value floatValue];

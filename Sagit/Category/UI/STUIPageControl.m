@@ -56,26 +56,42 @@
     if(!self.isTimering)
     {
         [self key:@"isTimering" value:@"1"];
-        [NSTimer scheduledTimerWithTimeInterval:second repeats:YES block:^(NSTimer * _Nonnull timer) {
-            if(!self.isTimering)
-            {
-                [timer invalidate];
-                return;
-            }
-            NSInteger pagerIndex=self.currentPage;
-            pagerIndex=pagerIndex+1;
-            if(pagerIndex>=self.numberOfPages)
-            {
-                pagerIndex=0;
-            }
-            [self currentPage:pagerIndex];
-            if(onTimer)
-            {
-                onTimer(timer);
-            }
-        }];
+         NSTimer *timer=[NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(onTimering) userInfo:nil repeats:YES];
+        [self key:@"NSTimer" value:timer];
+        if(onTimer)
+        {
+            [self key:@"OnTimerEvent" value:onTimer];
+        }
+        [timer fire];
     }
     return self;
+}
+-(void)onTimering
+{
+    if(!self.isTimering)
+    {
+        NSTimer *timer=[self key:@"NSTimer"];
+        if(timer)
+        {
+            [timer invalidate];
+            timer=nil;
+            [self key:@"NSTimer" value:nil];
+            [self key:@"OnTimerEvent" value:nil];
+        }
+        return;
+    }
+    NSInteger pagerIndex=self.currentPage;
+    pagerIndex=pagerIndex+1;
+    if(pagerIndex>=self.numberOfPages)
+    {
+        pagerIndex=0;
+    }
+    [self currentPage:pagerIndex];
+    OnPageTimer event=[self key:@"OnTimerEvent"];
+    if(event)
+    {
+        event([self key:@"NSTimer"]);
+    }
 }
 -(UIPageControl *)stopTimer
 {

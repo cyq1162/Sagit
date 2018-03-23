@@ -464,4 +464,8 @@
     }
     return self;
 }
+-(UIView *)block:(ViewDescription)descBlock
+{
+    return [self block:nil on:descBlock];
+}
 @end

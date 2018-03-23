@@ -18,4 +18,14 @@
 @property (nonatomic,assign) CGFloat v2;
 @property (nonatomic,assign) CGFloat v3;
 @property (nonatomic,assign) CGFloat v4;
+
+#pragma mark 属性方法
+-(BOOL) hasRelateLeft;
+-(CGFloat)relateLeftPx;
+-(BOOL) hasRelateTop;
+-(CGFloat)relateTopPx;
+-(BOOL) hasRelateRight;
+-(CGFloat)relateRightPx;
+-(BOOL) hasRelateBottom;
+-(CGFloat)relateBottomPx;
 @end

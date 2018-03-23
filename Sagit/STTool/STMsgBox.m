@@ -12,8 +12,6 @@
 
 @interface STMsgBox()
 @property (nonatomic,assign) UIWindow *window;
-//@property (nonatomic,copy) OnConfirmClick click;
-//@property (retain)UIAlertView *confirmView;
 @property (nonatomic,retain)UIView *lodingView;
 @property (nonatomic,assign) NSInteger hiddenFlag;
 @end
@@ -140,6 +138,7 @@
 {
     [self confirm:msg title:title click:nil okText:okText cancelText:nil];
 }
+
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click
 {
     [self confirm:msg title:title click:click okText:@"确定" cancelText:@"取消"];
@@ -214,6 +213,10 @@
 }
 - (void)dialog:(OnDialogShow)dialog
 {
+    [self dialog:dialog beforeHide:nil];
+}
+- (void)dialog:(OnDialogShow)dialog beforeHide:(OnBeforeDialogHide) beforeHide
+{
     UIWindow *window=self.window;
     UIView *statusView=window.statusBar;
     
@@ -221,11 +224,21 @@
     UIColor*bgColor=statusView.backgroundColor;
     [[statusView backgroundImage:nil] backgroundColor:[ColorBlack alpha:0.5]];
     __block OnDialogShow block=dialog;
+    __block OnBeforeDialogHide hideBlock=beforeHide;
     [[[[window addUIView:nil] x:0 y:0 width:1 height:1] backgroundColor:[ColorBlack alpha:0.5]] block:nil on:^(UIView* winView) {
-        [winView onClick:^(id view) {
-            [winView hidden:YES];
-            [winView removeSelf];
-           [[statusView backgroundImage:bgImage] backgroundColor:bgColor];
+        [winView onClick:^(UIView* view) {
+            BOOL result=YES;
+            if(hideBlock)
+            {
+                result=hideBlock(winView,view);
+                hideBlock=nil;
+            }
+            if(result)
+            {
+                [winView hidden:YES];
+                [winView removeSelf];
+               [[statusView backgroundImage:bgImage] backgroundColor:bgColor];
+            }
         }];
         if(block)
         {

@@ -75,6 +75,10 @@ static NSInteger nullValue=-99999;
     {
         size=self.superview.frame.size;
     }
+    else if([self isKindOfClass:[UITableViewCell class]])
+    {
+        size=((UITableViewCell*)self).table.frame.size;
+    }
     
     if(size.height==STScreeHeightPt || size.height==STScreeHeightPt-STNavHeightPt-STStatusHeightPt)
     {

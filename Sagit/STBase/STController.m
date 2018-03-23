@@ -290,8 +290,15 @@
         //cell.separatorInset = UIEdgeInsetsMake(0, STScreeWidthPt , 0, 0);//去掉最后一条线的
         if(tableView.autoHeight)
         {
+            NSInteger relateBottomPx=0;
+            //检测是否有向下的约束
+            STLayoutTracer *tracer= tableView.LayoutTracer[@"relate"];
+            if(tracer && tracer.hasRelateBottom)
+            {
+                relateBottomPx=tracer.relateBottomPx;
+            }
             //检测是否高度超过屏
-            NSInteger passValue=tableView.frame.origin.y+tableView.contentSize.height-tableView.superview.frame.size.height;
+            NSInteger passValue=tableView.frame.origin.y+tableView.contentSize.height-tableView.superview.frame.size.height+relateBottomPx*Ypt;
             if(passValue>0)
             {
                 tableView.scrollEnabled=YES;
