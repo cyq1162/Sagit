@@ -169,4 +169,14 @@ static int interval=0;
         }
     }
 }
+-(void)dispose
+{
+    NSTimer *timer=[self key:@"NSTimer"];
+    if(timer)
+    {
+        [timer invalidate];
+        timer=nil;
+    }
+    [super dispose];
+}
 @end
