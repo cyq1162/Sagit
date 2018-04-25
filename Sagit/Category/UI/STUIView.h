@@ -99,6 +99,8 @@
 -(UIView*)corner:(BOOL)yesNo;
 -(UIView*)contentMode:(UIViewContentMode)contentMode;
 -(UIView*)userInteractionEnabled:(BOOL)yesNO;
+//!克隆复制一份UIView
+-(UIView*)clone;
 #pragma mark 扩展系统方法
 -(UITextField*)bottomLine:(id)colorOrHex;
 -(UITextField*)bottomLine:(id)colorOrHex height:(NSInteger)px;

@@ -15,46 +15,54 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {    //拖动前的起始坐标
     self.startPoint=self.contentOffset;
+    //NSLog(@"begin");
 }
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{    //将要停止前的坐标
     self.endPoint=self.contentOffset;
+    //NSLog(@"willEnd...");
 }
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    //NSLog(@"DidEnd...");//用户加速不停刷过的过程，此时未结束，本该未被触发，导致下一页事件未触发(有待优化)。
     CGPoint nowPoint= scrollView.contentOffset;
     //滑动的方向是：
     BOOL isPre=NO,isNext=NO;
+    CGPoint endPoint=self.endPoint;
+    CGPoint startPoint=self.startPoint;
     if(self.direction==X)
     {
-        isPre=nowPoint.x < self.endPoint.x && self.endPoint.x < self.startPoint.x;
-        isNext=nowPoint.x > self.endPoint.x && self.endPoint.x > self.startPoint.x;
+        isPre=nowPoint.x < endPoint.x && endPoint.x < startPoint.x;
+        isNext=nowPoint.x > endPoint.x && endPoint.x > startPoint.x;
     }
     else if(self.direction==Y)
     {
-        isPre=nowPoint.y < self.endPoint.y && self.endPoint.y < self.startPoint.y;
-        isNext=nowPoint.y > self.endPoint.y && self.endPoint.y > self.startPoint.y;
+        isPre=nowPoint.y < endPoint.y && endPoint.y < startPoint.y;
+        isNext=nowPoint.y > endPoint.y && endPoint.y > startPoint.y;
     }
     if(isPre)
     {
+        if(self.pager)//先修正索引
+        {
+            [self.pager currentPage:self.pagerIndex];
+        }
         if(self.onPrePager)
         {
             self.onPrePager(self);
         }
-        if(self.pager)
-        {
-            [self.pager currentPage:self.pagerIndex];
-        }
+        
     }
     else if(isNext)
     {
+        //NSLog(@"next");
+        if(self.pager)//先修正索引
+        {
+            [self.pager currentPage:self.pagerIndex];
+        }
         if(self.onNextPager)
         {
             self.onNextPager(self);
         }
-        if(self.pager)
-        {
-            [self.pager currentPage:self.pagerIndex];
-        }
+        
     }
 }
 #pragma mark 属性、方法

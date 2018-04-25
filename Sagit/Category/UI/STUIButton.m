@@ -116,8 +116,11 @@
     return self;
 }
 
-
 -(UIButton *)showTime:(NSInteger)second
+{
+    return [self showTime:second resetStateOnEnd:YES];
+}
+-(UIButton *)showTime:(NSInteger)second resetStateOnEnd:(BOOL)resetStateOnEnd
 {
     if(second>0)
     {
@@ -131,7 +134,10 @@
         NSTimer *timer=[NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
         
         [self key:@"NSTimer" value:timer];
-        [self key:@"defaultTitle" value:self.currentTitle];
+        if(resetStateOnEnd)
+        {
+            [self key:@"defaultTitle" value:self.currentTitle];
+        }
         interval=second;
         [timer fire];//开启
     }
@@ -154,7 +160,11 @@ static int interval=0;
     interval--;
     if(interval<=-1)//==0的话到2s就恢复了，也不解为什么少了1。
     {
-        [self title:[self key:@"defaultTitle"]];
+        if([self key:@"defaultTitle"])
+        {
+            [self title:[self key:@"defaultTitle"]];
+            [self key:@"defaultTitle" value:nil];
+        }
         [self enabled:YES];
         NSTimer *timer=[self key:@"NSTimer"];
         if(timer)

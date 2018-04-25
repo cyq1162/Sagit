@@ -24,6 +24,8 @@
 -(UIButton*)adjustsImageWhenHighlighted:(BOOL)yesNo;
 //!当button在动态设置文字或图片之后，宽度自适应
 -(UIButton*)stWidthToFit;
-//!显示Ns的倒计时状态
+//!显示Ns的倒计时状态(秒），时间到了，默认恢复初始文字
 -(UIButton*)showTime:(NSInteger)second;
+//!显示Ns的倒计时状态(秒） resetStateOnEnd Yes(时间到了，恢复初始文字） NO （时间到了，不恢复初始文字）
+-(UIButton *)showTime:(NSInteger)second resetStateOnEnd:(BOOL)resetStateOnEnd;
 @end

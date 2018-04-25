@@ -528,6 +528,11 @@ static char keyValueChar='k';
     self.userInteractionEnabled=yesNO;
     return self;
 }
+-(UIView *)clone
+{
+    NSData * archiveData = [NSKeyedArchiver archivedDataWithRootObject:self];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:archiveData];
+}
 -(UITextField *)bottomLine:(id)colorOrHex
 {
     return [self bottomLine:colorOrHex  height:2];
