@@ -29,7 +29,7 @@
     if(block)
     {
         
-        [self key:@"event" valueWeak:block];
+        [self key:@"event" value:block];
         [self addTarget:self action:@selector(exeAction) forControlEvents:event];
     }
     return self;

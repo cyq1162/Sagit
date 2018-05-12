@@ -34,7 +34,7 @@
 #define Xpx (STScreenWidthPx/STScreeWidthPt) // 1242/750
 #define Ypx (STScreenHeightPx/STScreeHeightPt) //2208/1334
 
-//得到的是750下转换的像素
+//得到的是750下转换的像素 88+40+98
 #define STNavHeightPt 44.0f
 #define STStatusHeightPt (STIsIPhoneX?44.0f:20.0f)
 #define STTabHeightPt 49.0f

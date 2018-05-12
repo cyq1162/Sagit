@@ -185,6 +185,14 @@
     return self;
 }
 #pragma mark 扩展属性
+-(NSString *)imageName
+{
+    if(self.image)
+    {
+        return self.image.name;
+    }
+    return nil;
+}
 -(UIImageView *)image:(id)imgOrName
 {
     self.image=[UIView toImage:imgOrName];
@@ -200,7 +208,15 @@
 
 
 @implementation UIImage(ST)
-
+static char nameChar='n';
+-(NSString *)name
+{
+    return (NSString*)objc_getAssociatedObject(self, &nameChar);
+}
+-(void)setName:(NSString *)name
+{
+    objc_setAssociatedObject(self, &nameChar, name, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
 -(NSData*)compress:(NSInteger)maxKb
 {
     // Compress by quality

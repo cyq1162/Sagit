@@ -11,7 +11,8 @@
 @interface STModel : STModelBase
 @property (nonatomic, assign) BOOL success;
 @property (retain, nonatomic) id<NSObject> msg;
-
+//将msg转成dictionary返回
+@property (retain, nonatomic,readonly) NSDictionary* msgDic;
 @end
 
 

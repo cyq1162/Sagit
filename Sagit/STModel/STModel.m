@@ -9,5 +9,9 @@
 #import "STModel.h"
 
 @implementation STModel
-
+-(NSDictionary *)msgDic
+{
+    NSDictionary *dic=(NSDictionary*)self.msg;
+    return dic;
+}
 @end

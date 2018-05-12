@@ -385,7 +385,9 @@ static char keyValueChar='k';
 {
     if([imgOrName isKindOfClass:[NSString class]])
     {
-        return STImage(imgOrName);
+        UIImage *img=STImage(imgOrName);
+        img.name=imgOrName;
+        return img;
     }
     else if([imgOrName isKindOfClass:[NSData class]])
     {

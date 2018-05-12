@@ -40,10 +40,14 @@ typedef void (^OnPick)(NSData *data,UIImagePickerController *picker,NSDictionary
 //!将图片压缩到指定的宽高，当前图片受变化
 -(UIImageView*)reSize:(CGSize)maxSize;
 #pragma mark 扩展属性
+//!获取图片的名称
+-(NSString*)imageName;
 -(UIImageView*)image:(id)imgOrName;
 @end
 
 @interface UIImage(ST)
+//!为每个UI都扩展有一个name
+@property (nonatomic,copy) NSString* name;
 typedef void (^AfterImageSave)(NSError *err);
 @property (nonatomic,copy) AfterImageSave afterImageSaveBlock;
 //!获取图片压缩后的字节数据，当前图片不受变化
