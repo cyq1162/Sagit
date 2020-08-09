@@ -91,11 +91,18 @@ static char keyValueChar='k';
     UIApplication *app=UIApplication.sharedApplication;
     if(app)
     {
+        if (@available(iOS 13.0, *)) {
+        // iOS 13  弃用keyWindow属性  从所有windowl数组中取
+            return [[UIView alloc]initWithFrame:app.keyWindow.windowScene.statusBarManager.statusBarFrame] ;
+        }
+        else{
         UIWindow *win=[app valueForKey:@"statusBarWindow"];
         if(win && win.subviews.count>0)
         {
             //UIView *view=[win valueForKey:@"statusBar"];
             return win.subviews[0];
+        }
+            
         }
     }
     return nil;
