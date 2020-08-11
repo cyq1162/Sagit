@@ -99,7 +99,7 @@
 }
 -(void)set:(NSString*)key value:(id)value
 {
-   return [self.cacheObj set:key value:value];
+   [self.cacheObj set:key value:value];
 }
 -(void)set:(NSString *)key value:(id)value second:(NSInteger)timeOutSecond
 {
@@ -120,7 +120,10 @@
 }
 -(void)remove:(NSString*)key
 {
-    return [self.cacheObj remove:key];
+    [self.cacheObj remove:key];
 }
-
+- (void)clear
+{
+    [self.cacheObj removeAllObjects];
+}
 @end

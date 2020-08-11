@@ -12,10 +12,16 @@
 
 +(instancetype)share;
 @property (readonly,nonatomic,retain)NSMutableDictionary*cacheObj;
+//!获取缓存：
 -(id)get:(NSString*)key;
+//!是否存在指定的缓存。
 -(BOOL)has:(NSString*)key;
+//!设置缓存。
 -(void)set:(NSString*)key value:(id)value;
-//!可以设置过期的时间。
+//!设置缓存：可以设置过期的时间。
 -(void)set:(NSString*)key value:(id)value second:(NSInteger)timeOutSecond;
+//!移除指定缓存
 -(void)remove:(NSString*)key;
+//!清除所有缓存
+-(void)clear;
 @end
