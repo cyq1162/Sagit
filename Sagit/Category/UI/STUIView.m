@@ -88,24 +88,28 @@ static char keyValueChar='k';
 }
 -(UIView *)statusBar
 {
-    UIApplication *app=UIApplication.sharedApplication;
-    if(app)
-    {
         if (@available(iOS 13.0, *)) {
-        // iOS 13  弃用keyWindow属性  从所有windowl数组中取
-            return [[UIView alloc]initWithFrame:app.keyWindow.windowScene.statusBarManager.statusBarFrame] ;
+            UIWindow *win=self.keyWindow;
+            UIView *statusView=[win key:@"customeStatus"];
+            if(!statusView)
+            {
+                statusView=[[[UIView alloc] initWithFrame:STEmptyRect]width:STScreenWidthPx height:STStatusHeightPx];
+                 [win key:@"customeStatus" value:statusView];
+                [win addSubview:statusView];
+            }
+            return statusView;
+        
         }
         else{
-        UIWindow *win=[app valueForKey:@"statusBarWindow"];
+        UIWindow *win=[UIApplication.sharedApplication valueForKey:@"statusBarWindow"];
         if(win && win.subviews.count>0)
         {
             //UIView *view=[win valueForKey:@"statusBar"];
             return win.subviews[0];
         }
-            
-        }
-    }
+
     return nil;
+        }
 }
 //-(BOOL)isOnSTView
 //{
@@ -175,10 +179,28 @@ static char keyValueChar='k';
     }
     return nil;
 }
-//-(UIWindow*)window
-//{
-//   return [[UIApplication sharedApplication].delegate window];
-//}
+-(UIWindow*)keyWindow
+{
+   if (@available(iOS 13.0, *)) {
+        // 获取keywindow
+        NSArray *array = [UIApplication sharedApplication].windows;
+        UIWindow *window = [array objectAtIndex:0];
+     
+         //  判断取到的window是不是keywidow
+        if (!window.hidden || window.isKeyWindow) {
+            return window;
+        }
+     
+        //  如果上面的方式取到的window 不是keywidow时  通过遍历windows取keywindow
+        for (UIWindow *window in array) {
+            if (!window.hidden || window.isKeyWindow) {
+                return window;
+            }
+        }
+        return nil;
+   }
+   return [UIApplication sharedApplication].keyWindow;
+}
 -(UIView*)stValue:(NSString*)value
 {
     if([self isMemberOfClass:[UITextField class]])
