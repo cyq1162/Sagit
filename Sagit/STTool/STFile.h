@@ -26,7 +26,7 @@
 
 
 + (instancetype)share;
-//!获取文件的大小
+//!获取文件的大小(单位：MB)
 - (CGFloat)size;
 //!清除所有文件缓存
 - (void)clear:(void(^)(BOOL success))block;
