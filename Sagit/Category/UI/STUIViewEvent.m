@@ -56,13 +56,25 @@
         OnViewDrag event = [self key:@"onDrag"];// (OnViewDrag)objc_getAssociatedObject(self, &dragChar);
         if(event)
         {
-            event(view);
+            UIPanGestureRecognizer *recognizer= (UIPanGestureRecognizer*)[self key:@"dragRecognizer"];
+            event(view,recognizer);
+        }
+    }
+    else if([eventType isEqualToString:@"slide"])
+    {
+        OnViewSlide event = [self key:@"onSlide"];// (OnViewDrag)objc_getAssociatedObject(self, &dragChar);
+        if(event)
+        {
+            //NSString * to= [self key:@"slideTo"];
+            UISwipeGestureRecognizer *recognizer=(UISwipeGestureRecognizer*)[self key:@"slideRecognizer"];
+            event(view,recognizer);
         }
     }
 }
 #pragma mark 系统公用方法
 -(BOOL)removeGesture:(Class)class
 {
+    BOOL result=NO;
     if(self.gestureRecognizers!=nil)
     {
         for (NSInteger i=0; i<self.gestureRecognizers.count; i++)
@@ -70,14 +82,16 @@
             UIGestureRecognizer *gestrue=self.gestureRecognizers[i];
             if([gestrue isKindOfClass:class])
             {
+                //gestrue.name
                 [self removeGestureRecognizer:gestrue];
                 gestrue=nil;
-                return YES;
+                result=YES;
             }
         }
     }
-    return NO;
+    return result;
 }
+#pragma 处理手势冲突
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     if(![gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){return YES;}
@@ -96,6 +110,14 @@
         }
     }
     return YES;
+}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+//    if ([gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIRotationGestureRecognizer class]]) {
+//        return YES;
+//    }
+//    return NO;
 }
 -(UIGestureRecognizer*)addGesture:(NSString*)eventType
 {
@@ -130,6 +152,27 @@
         [self addGestureRecognizer:drag];
         return drag;
     }
+        else if([eventType isEqualToString:@"slide"])
+        {
+            [self removeSlide];
+            UISwipeGestureRecognizer *slideLeft= [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
+            [slideLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+            [self addGestureRecognizer:slideLeft];
+            
+            UISwipeGestureRecognizer *slideRight= [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
+            [slideRight setDirection:UISwipeGestureRecognizerDirectionRight];
+            [self addGestureRecognizer:slideRight];
+            
+            UISwipeGestureRecognizer *slideUp =[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
+            [slideUp setDirection:UISwipeGestureRecognizerDirectionUp];
+            [self addGestureRecognizer:slideUp];
+            
+            UISwipeGestureRecognizer *slideDown= [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
+            [slideDown setDirection:UISwipeGestureRecognizerDirectionDown];
+            [self addGestureRecognizer:slideDown];
+            
+            return slideLeft;
+        }
     return nil;
 }
 -(UIView*)addEvent:(NSString*)eventType event:(NSString *)eventName target:(UIViewController*)eventTarget
@@ -395,14 +438,14 @@
     return self;
 }
 #pragma mark 扩展系统事件 - 拖动
-#pragma mark longPress 事件
 - (UIView *)dragStart:(UIPanGestureRecognizer *)recognizer
 {
+    [self key:@"dragRecognizer" value:recognizer];
+    [self drag];
     CGPoint point = [recognizer translationInView:self];
     self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y + point.y);
     [recognizer setTranslation:CGPointMake(0, 0) inView:self];
-    //NSLog(NSStringFromCGPoint(self.center));
-    return [self drag];
+    return self;
 }
 -(UIView *)drag
 {
@@ -437,8 +480,50 @@
     if([self removeGesture:[UIPanGestureRecognizer class]])
     {
         //移除参数
-        [self.keyValue remove:@"dragView,dragSel,dragTarget,dragPointView,onDrag"];
+        [self.keyValue remove:@"dragView,dragSel,dragTarget,dragPointView,onDrag,dragRecognizer"];
         //[self setDragBlock:nil];
+    }
+    return self;
+}
+
+#pragma mark 扩展系统事件 - slide 滑动事件
+- (UIView *)slideStart:(UISwipeGestureRecognizer *)recognizer
+{
+    [self key:@"slideRecognizer" value:recognizer];
+    return [self slide];
+}
+-(UIView *)slide
+{
+    if(self.userInteractionEnabled)
+    {
+        return [self exeEvent:@"slide"];
+    }
+    return self;
+}
+-(UIView *)addSlide:(NSString *)event
+{
+    return [self addSlide:event target:nil];
+}
+-(UIView *)addSlide:(NSString *)event target:(UIViewController *)target
+{
+    return [self addEvent:@"slide" event:event target:target];
+}
+-(UIView *)onSlide:(OnViewSlide)block
+{
+    if(block!=nil)
+    {
+        [self addGesture:@"slide"];//放在前面，内部有清除参数。
+        [self key:@"slideView" value:self];
+        [self key:@"onSlide" value:block];
+    }
+    return self;
+}
+-(UIView *)removeSlide
+{
+    if([self removeGesture:[UISwipeGestureRecognizer class]])
+    {
+        //移除参数
+        [self.keyValue remove:@"slideView,slideSel,slideTarget,slidePointView,onSlide,slideRecognizer"];
     }
     return self;
 }
