@@ -222,15 +222,15 @@ static char keyValueChar='k';
     }
     
     [[UIApplication sharedApplication] setStatusBarHidden:!yesNo animated:NO];//隐藏
-//        if (@available(ios 13.0, *)) {
-//            if(yesNo)
-//            {
-//                [self.view.statusBar width:STScreenWidthPx height:STStatusHeightPx];
-//            }
-//            else{
-//                [self.view.statusBar width:0 height:0];
-//            }
-//        }
+        if (@available(ios 13.0, *)) {
+            if(yesNo)
+            {
+                [self.view.statusBar width:STScreenWidthPx height:STStatusHeightPx];
+            }
+            else{
+                [self.view.statusBar width:0 height:0];
+            }
+        }
 
     return self;
 }
