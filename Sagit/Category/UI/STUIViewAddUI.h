@@ -86,8 +86,10 @@
 
 -(UIView*)addLine:name color:(id)colorOrHex;
 -(UIScrollView*)addScrollView:(NSString*)name;
--(UIScrollView *)addScrollView:(NSString*)name direction:(XYFlag)direction img:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION;
--(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction imgArray:(NSArray*)imgArray;
+-(UIScrollView *)addScrollView:(NSString*)name direction:(XYFlag)direction;
+-(UIScrollView *)addScrollView:(NSString*)name direction:(XYFlag)direction isImageFull:(BOOL)isImageFull;
+//-(UIScrollView *)addScrollView:(NSString*)name direction:(XYFlag)direction img:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION;
+//-(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction imgArray:(NSArray*)imgArray;
 -(UIPickerView*)addPickerView:(NSString*)name;
 -(UITableView*)addTableView:(NSString*)name;
 -(UITableView*)addTableView:(NSString*)name style:(UITableViewStyle)style;

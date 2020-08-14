@@ -282,9 +282,10 @@
     CGRect frame=self.frame;
     NSInteger tagIndex=0;
     BOOL isScrollView=[self isKindOfClass:[UIScrollView class]];
+    UIScrollView *scroll=nil;
     if(isScrollView)//计算ImageView的位置和UIScrollView的contentSize
     {
-        UIScrollView *scroll= (UIScrollView*)self;
+        scroll= (UIScrollView*)self;
         long count= self.subviews.count;//这么计算的话，ImageView必须先添加，然后才能添加其它控件。
         if(count>0 && scroll.showsVerticalScrollIndicator){count--;}
         if(count>0 && scroll.showsHorizontalScrollIndicator){count--;}
@@ -317,23 +318,30 @@
     if(imgOrName)
     {
         [ui image:imgOrName];
-        CGSize s=ui.image.size;
-        if(isScrollView)
+        if(isScrollView && scroll.isImageFull)
         {
-            if(s.width>=frame.size.width){s.width=frame.size.width;}
-            else
-            {
-                //居中处理
-                [ui x:ui.stX+((frame.size.width-s.width)/2)*Xpx];
-            }
-            if(s.height>=frame.size.height){s.height=frame.size.height;}
-            else
-            {
-                //居中处理
-                [ui y:ui.stY+((frame.size.height-s.height)/2)*Ypx];
-            }
+            [ui reSize:frame.size];
         }
-        [ui width:s.width*Xpx height:s.height*Ypx];
+        else
+        {
+            CGSize s=ui.image.size;
+            if(isScrollView)
+            {
+                if(s.width>=frame.size.width){s.width=frame.size.width;}
+                else
+                {
+                    //居中处理
+                    [ui x:ui.stX+((frame.size.width-s.width)/2)*Xpx];
+                }
+                if(s.height>=frame.size.height){s.height=frame.size.height;}
+                else
+                {
+                    //居中处理
+                    [ui y:ui.stY+((frame.size.height-s.height)/2)*Ypx];
+                }
+            }
+            [ui width:s.width*Xpx height:s.height*Ypx];
+        }
     }
     [self addView:ui name:name];
     return ui;
@@ -518,8 +526,15 @@
     [self addView:ui name:name];
     return ui;
 }
-
 -(UIScrollView *)addScrollView:(NSString*)name
+{
+    return [self addScrollView:name direction:X isImageFull:NO];
+}
+-(UIScrollView *)addScrollView:(NSString*)name direction:(XYFlag)direction
+{
+    return [self addScrollView:name direction:direction isImageFull:NO];
+}
+-(UIScrollView *)addScrollView:(NSString*)name direction:(XYFlag)direction isImageFull:(BOOL)isImageFull
 {
     UIScrollView *ui=[[UIScrollView alloc] initWithFrame:STFullRect];
     //ui.contentSize=STFullSize;
@@ -529,52 +544,40 @@
     ui.pagingEnabled = YES;
     ui.showsHorizontalScrollIndicator=NO;//需要先关掉，因为系统在后面会自动追加滚动条图片
     ui.showsVerticalScrollIndicator=NO;
-    ui.direction=X;
+    ui.direction=direction;
+    ui.isImageFull=isImageFull;
     ui.delegate=(id)ui;
+    if(direction!=Y && self.stController && self.stController.navigationController)
+    {
+        //禁用
+        [ui.panGestureRecognizer  requireGestureRecognizerToFail:self.stController.navigationController.interactivePopGestureRecognizer];
+    }
     [self addView:ui name:name];
     return ui;
 }
--(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction imgArray:(NSArray*)imgArray
-{
-    UIScrollView *ui=[self addScrollView:name];
-    ui.direction=direction;
-    if(imgArray && imgArray.count>0)
-    {
-        for (id item in imgArray) {
-            [ui addImageView:nil img:item direction:direction];//内部会重设contentSize属性
-        }
-    }
-    if(self.stController && self.stController.navigationController)
-    {
-        
-        [ui.panGestureRecognizer  requireGestureRecognizerToFail:self.stController.navigationController.interactivePopGestureRecognizer];
-    }
-    return ui;
-}
--(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction img:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION
-{
-    NSMutableArray *imgArray=[NSMutableArray new];
-//
+//-(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction imgArray:(NSArray*)imgArray
+//{
 //    UIScrollView *ui=[self addScrollView:name];
-    if(imgOrName)
-    {
-        va_list args;
-        va_start(args, imgOrName);
-        [imgArray addObject:imgOrName];
-       // [ui addImageView:nil img:imgOrName direction:direction];//内部会重设contentSize属性
-        NSString *otherImgName;
-
-        while ((otherImgName = va_arg(args, NSString *)))
-        {
-             [imgArray addObject:otherImgName];
-            //[ui addImageView:nil img:otherImgName direction:direction];
-        }
-        va_end(args);
-    }
+//    ui.direction=direction;
+//    if(imgArray && imgArray.count>0)
+//    {
+//        for (id item in imgArray) {
+//            [ui addImageView:nil img:item direction:direction];//内部会重设contentSize属性
+//        }
+//    }
 //
 //    return ui;
-    return [self addScrollView:name direction:direction imgArray:imgArray];
-}
+//}
+//-(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction  img:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION
+//{
+//    return [self addScrollView:name direction:direction img:imgOrName, nil];
+//}
+//-(UIScrollView *)addScrollView:(NSString*)name  direction:(XYFlag)direction isImageFull:(BOOL)yesNo img:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION
+//{
+//
+//    return self;
+//    //return [self addScrollView:name direction:direction imgArray:imgArray];
+//}
 -(UIPickerView *)addPickerView:(NSString *)name
 {
     UIPickerView *ui=[[UIPickerView alloc]initWithFrame:STEmptyRect];

@@ -106,6 +106,14 @@
 {
     [self key:@"direction" value:@(direction)];
 }
+-(BOOL)isImageFull
+{
+     return [[self key:@"isImageFull"] isEqualToString:@"1"];
+}
+-(void)setIsImageFull:(BOOL)isStretchFull
+{
+    [self key:@"isImageFull" value:isStretchFull?@"1":@"0"];
+}
 -(NSInteger)pagerIndex
 {
     if(self.direction==X)
@@ -267,6 +275,38 @@
         [self key:@"pager" valueWeak:pager];
         [[[self.superview addView:pager name:nil] width:self.stWidth height:40] onBottom:self y:-100];// backgroundColor:ColorRandom];
         
+    }
+    return self;
+}
+#pragma mark Add Images
+- (UIScrollView *)addImages:(id)imgOrName, ...
+{
+    
+    if(imgOrName)
+    {
+        if([imgOrName isKindOfClass:[NSMutableArray class]])
+        {
+            NSMutableArray *imgArray=imgOrName;
+             for (id item in imgArray)
+             {
+                [self addImageView:nil img:item direction:self.direction];
+             }
+        }
+        else
+        {
+            va_list args;
+            va_start(args, imgOrName);
+           [self addImageView:imgOrName img:imgOrName direction:self.direction];
+            NSString *otherImgName;
+
+            while ((otherImgName = va_arg(args, NSString *)))
+            {
+                 //[imgArray addObject:otherImgName];
+                [self addImageView:otherImgName img:otherImgName direction:self.direction];
+                //[ui addImageView:nil img:otherImgName direction:direction];
+            }
+            va_end(args);
+        }
     }
     return self;
 }

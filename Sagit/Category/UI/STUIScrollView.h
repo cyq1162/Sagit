@@ -23,9 +23,11 @@ typedef void (^OnScrollNextPager)(UIScrollView *scrollView);
 @property (nonatomic,assign)CGPoint startPoint;
 //!手放开时的坐标
 @property (nonatomic,assign)CGPoint endPoint;
-//!最后定位的坐标
-//@property (nonatomic,assign)CGPoint endPoint;
+//!滑动的方向
 @property (nonatomic,assign)XYFlag direction;
+//!图片是否全屏
+@property (nonatomic,assign)BOOL isImageFull;
+
 //!绑定事件 用代码块的形式，为所有子View添加事件
 -(UIScrollView*)onSubviewClick:(OnViewClick)block;
 -(UIScrollView*)removeAt:(NSInteger) index;
@@ -34,4 +36,7 @@ typedef void (^OnScrollNextPager)(UIScrollView *scrollView);
 @property (readonly,nonatomic,retain)UIPageControl *pager;
 -(BOOL)showPager;
 -(UIScrollView*)showPager:(BOOL)yesNo;
+
+#pragma mark Add Images
+-(UIScrollView *)addImages:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION;
 @end
