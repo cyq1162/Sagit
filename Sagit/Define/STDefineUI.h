@@ -13,16 +13,18 @@
 #define STDefineUI_h
 
 
-//全屏 以IPhone6的像素为标准参考 750*1334，其他标准修改此参数，如：1125*2001
-#define STStandardWidthPx 750
-#define STStandardHeightPx 1334
+//选择编码标准：1倍（375*667）、2倍（750*1334）、3倍（1125*2001）
+#define STStandardScale 2
+
+#define STStandardWidthPx [UIScreen mainScreen].bounds.size.width*STStandardScale
+#define STStandardHeightPx [UIScreen mainScreen].bounds.size.height*STStandardScale
 
 //状态栏、导航栏、Tab栏 默认显示定义
 #define STDefaultShowStatus YES //默认显示
 #define STDefaultShowNav YES   // 有NavController 的默认显示
 #define STDefaultShowTab YES   // 有TabController 的默认显示
 
-#define STIsIPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
+#define STIsIPhoneX ([UIScreen mainScreen].bounds.size.height>800)
 
 #define STScreenScale [UIScreen mainScreen].scale
 #define STScreeWidthPt [UIScreen mainScreen].bounds.size.width
