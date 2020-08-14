@@ -11,7 +11,18 @@
 @implementation STModel
 -(NSDictionary *)msgDic
 {
-    NSDictionary *dic=(NSDictionary*)self.msg;
-    return dic;
+    if(self.msg && [self.msg isKindOfClass:[NSDictionary class]])
+    {
+        return (NSDictionary*)self.msg;
+    }
+    return nil;
+}
+-(NSString *)msgString
+{
+    if(self.msg && [self.msg isKindOfClass:[NSString class]])
+    {
+        return (NSString*)self.msg;
+    }
+    return nil;
 }
 @end

@@ -27,24 +27,24 @@
 #pragma mark 扩展导航栏事件
 //!返回当前视图是否需要导航栏
 -(BOOL)needNavBar;
-//!设置当前视图是否需要导航栏（默认并不设置显示或隐藏）
+//!设置当前视图是否需要导航栏
 -(UIViewController*)needNavBar:(BOOL)yesNo;
-//!设置当前视图是否需要导航栏 setBar:同时是否设置隐藏或显示
--(UIViewController*)needNavBar:(BOOL)yesNo setBar:(BOOL)setBar;
+//!设置当前视图是否需要导航栏 forThisView:标记当前UIView是否设置隐藏或显示
+-(UIViewController*)needNavBar:(BOOL)yesNo forThisView:(BOOL)forThisView;
 
 //!返回当前视图是否需要Tab栏
 -(BOOL)needTabBar;
 //!设置当前视图是否需要Tab栏
 -(UIViewController*)needTabBar:(BOOL)yesNo;
-//!设置当前视图是否需要Tab栏 setBar:同时是否设置隐藏或显示
--(UIViewController*)needTabBar:(BOOL)yesNo setBar:(BOOL)setBar;
+//!设置当前视图是否需要Tab栏  forThisView:标记当前UIView是否设置隐藏或显示
+-(UIViewController*)needTabBar:(BOOL)yesNo forThisView:(BOOL)forThisView;
 
 //!返回当前视图是否需要Status栏
 -(BOOL)needStatusBar;
 //!设置当前视图是否需要Status栏
 -(UIViewController*)needStatusBar:(BOOL)yesNo;
-//!设置当前视图是否需要Status栏 setBar:同时是否设置隐藏或显示
--(UIViewController*)needStatusBar:(BOOL)yesNo setBar:(BOOL)setBar;
+//!设置当前视图是否需要Status栏  forThisView:标记当前UIView是否设置隐藏或显示
+-(UIViewController*)needStatusBar:(BOOL)yesNo forThisView:(BOOL)forThisView;
 //系统内部调用的方法（用于还原导航栏和状态栏和Tab栏）
 -(void)reSetBarState:(BOOL)animated;
 

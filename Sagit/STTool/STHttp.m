@@ -47,8 +47,8 @@
         AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
         [securityPolicy setAllowInvalidCertificates:YES];
         _http.securityPolicy = securityPolicy;
-        _http.responseSerializer = [AFJSONResponseSerializer serializer];//以字典格式返回数据
-       // _http.responseSerializer = [AFHTTPResponseSerializer serializer];//以字典格式返回数据
+       _http.responseSerializer = [AFJSONResponseSerializer serializer];//以字典格式返回数据
+       //  _http.responseSerializer = [AFHTTPResponseSerializer serializer];//以字典格式返回数据
         // 设置超时时间(设置有效)
         [_http.requestSerializer willChangeValueForKey:@"timeoutInterval"];
         _http.requestSerializer.timeoutInterval = 30;

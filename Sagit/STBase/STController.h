@@ -22,12 +22,20 @@
 @property (nonatomic,retain) STMsgBox *msgBox;
 
 #pragma mark 通用的三个事件方法：onInit、initUI、initData(还有一个位于基类的：reloadData)
-//!事件在UI初始化之前执行
+//!事件在UI初始化之前执行【只执行1次】
 -(void)onInit;
-//!UI初始化
+//!UI初始化【只执行1次】
 -(void)initUI;
-//!事件在UI初始化之后执行
+//!事件在UI初始化之后执行【只执行1次】
 -(void)initData;
+
+#pragma mark 系统的2个事件方法
+//呈现UI之前【执行N次】
+-(void)beforeViewAppear;
+//UI消失之前【执行N次】
+-(void)beforeViewDisappear;
+
+
 //!执行view的stValue属性
 -(NSString*)stValue:(NSString*)name;
 //!执行view的stValue属性

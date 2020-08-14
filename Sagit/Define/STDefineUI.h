@@ -17,6 +17,11 @@
 #define STStandardWidthPx 750
 #define STStandardHeightPx 1334
 
+//状态栏、导航栏、Tab栏 默认显示定义
+#define STDefaultShowStatus YES //默认显示
+#define STDefaultShowNav YES   // 有NavController 的默认显示
+#define STDefaultShowTab YES   // 有TabController 的默认显示
+
 #define STIsIPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
 
 #define STScreenScale [UIScreen mainScreen].scale

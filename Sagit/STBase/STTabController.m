@@ -29,9 +29,20 @@
 //加载UI时处理的
 -(void)initUI{}
 //加载UI后处理的
--(void)initData
+-(void)initData{}
+-(void)beforeViewAppear{}
+-(void)beforeViewDisappear{}
+
+
+-(void)viewWillDisappear:(BOOL)animated
 {
-    
+    [super viewWillDisappear:animated];
+    [self beforeViewDisappear];
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self beforeViewAppear];
 }
 -(void)setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated
 {
@@ -66,11 +77,11 @@
     if(controller==nil){return;}
     if(controller.navigationController!=nil)
     {
-        [controller.navigationController.viewControllers[0] needTabBar:YES setBar:YES];
+        [controller.navigationController.viewControllers[0] needTabBar:YES];
     }
     else
     {
-        [controller needTabBar:YES setBar:YES];
+        [controller needTabBar:YES];
     }
 }
 -(void)dealloc

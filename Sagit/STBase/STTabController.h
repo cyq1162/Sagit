@@ -15,4 +15,11 @@
 -(void)initUI;
 //!事件在UI初始化之后执行
 -(void)initData;
+
+#pragma mark 系统的2个事件方法
+//呈现UI之前【执行N次】
+-(void)beforeViewAppear;
+//UI消失之前【执行N次】
+-(void)beforeViewDisappear;
+
 @end

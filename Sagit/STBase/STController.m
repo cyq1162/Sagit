@@ -23,6 +23,11 @@
     [self onInit];
     return self;
 }
+
+//局部状态栏隐藏(t)
+//- (BOOL)prefersStatusBarHidden{
+//   return ![self needStatusBar];
+//}
 - (void)viewDidLoad
 {
     //检测上一个Controller
@@ -32,27 +37,37 @@
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
+    //NSLog(@"viewWillDisappear...%@", [self class]);
     if(!self.needStatusBar)
     {
-        [UIApplication sharedApplication].statusBarHidden = NO;//隐藏
+        [self needStatusBar:YES forThisView:NO];
+        [self needNavBar:NO forThisView:NO];
     }
+    [self beforeViewDisappear];
+    [super viewWillDisappear:animated];
+   
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    //NSLog(@"viewWillAppear...%@", [self class]);
     if(!self.needStatusBar)
     {
-        [UIApplication sharedApplication].statusBarHidden = YES;//隐藏
+        [self needStatusBar:NO forThisView:NO];
     }
+    if(self.needNavBar)
+    {
+        [self needNavBar:YES forThisView:NO];
+    }
+    [self beforeViewAppear];
+    [super viewWillAppear:animated];
 }
 -(void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
     if(self.nextController)
     {
         [self reSetBarState:YES];
     }
+    [super viewDidAppear:animated];
 }
 
 //内部私有方法
@@ -91,6 +106,9 @@
 {
     [self.stView initData];
 }
+-(void)beforeViewAppear{}
+-(void)beforeViewDisappear{}
+
 -(NSMapTable*)UIList
 {
     return self.stView.UIList;

@@ -127,11 +127,21 @@ static char keyValueChar='k';
     if(rootViewControllerType==RootViewNavigationType)
     {
         controller = [[UINavigationController alloc]initWithRootViewController:self];
+        ////让默认View在导航工具条之下。
+        self.navigationController.navigationBar.translucent=NO;
     }
-    [UIApplication sharedApplication].delegate.window.rootViewController=controller;
+//    if (@available(ios 13.0, *)) {
+//        UIWindow *win=[UIApplication sharedApplication].windows[0];
+//        win.rootViewController=controller;
+//    }
+//    else{
+        UIWindow *win=[UIApplication sharedApplication].delegate.window;
+        win.rootViewController=controller;
+   // }
+    //
     return self;
 }
-#pragma mark 扩展导航栏事件
+#pragma mark 导航栏、状态栏、Tab栏 显示隐藏
 -(BOOL)needNavBar
 {
     if([self key:@"needNavBar"]!=nil)
@@ -140,18 +150,22 @@ static char keyValueChar='k';
     }
     if(self.navigationController && self.navigationController.navigationBar)
     {
-        return !self.navigationController.navigationBar.hidden;
+        return STDefaultShowNav;
+        //return !self.navigationController.navigationBar.hidden;
     }
     return NO;
 }
 -(UIViewController*)needNavBar:(BOOL)yesNo
 {
-    return [self needNavBar:yesNo setBar:NO];
+    return [self needNavBar:yesNo forThisView:YES];
 }
--(UIViewController*)needNavBar:(BOOL)yesNo setBar:(BOOL)setBar
+-(UIViewController*)needNavBar:(BOOL)yesNo forThisView:(BOOL)forThisView
 {
-    [self key:@"needNavBar" value:yesNo?@"1":@"0"];
-    if(setBar && self.navigationController!=nil)
+    if(forThisView)
+    {
+        [self key:@"needNavBar" value:yesNo?@"1":@"0"];
+    }
+    if(self.navigationController!=nil)
     {
         [self.navigationController setNavigationBarHidden:!yesNo animated:NO];
     }
@@ -166,18 +180,22 @@ static char keyValueChar='k';
     }
     if(self.tabBarController && self.tabBarController.tabBar)
     {
-        return !self.tabBarController.tabBar.hidden;
+        return STDefaultShowTab;
+        //return !self.tabBarController.tabBar.hidden;
     }
     return NO;
 }
 -(UIViewController*)needTabBar:(BOOL)yesNo
 {
-    return [self needTabBar:yesNo setBar:NO];
+    return [self needTabBar:yesNo forThisView:YES];
 }
--(UIViewController*)needTabBar:(BOOL)yesNo setBar:(BOOL)setBar
+-(UIViewController*)needTabBar:(BOOL)yesNo forThisView:(BOOL)forThisView
 {
-    [self key:@"needTabBar" value:yesNo?@"1":@"0"];
-    if(setBar && self.tabBarController!=nil)
+    if(forThisView)
+    {
+        [self key:@"needTabBar" value:yesNo?@"1":@"0"];
+    }
+    if(self.tabBarController!=nil)
     {
         self.tabBarController.tabBar.hidden=!yesNo;
     }
@@ -189,31 +207,34 @@ static char keyValueChar='k';
     {
         return [[self key:@"needStatusBar"] isEqualToString:@"1"];
     }
-    return ![UIApplication sharedApplication].statusBarHidden;
+    return STDefaultShowStatus;
+    //return ![UIApplication sharedApplication].statusBarHidden;
 }
 -(UIViewController*)needStatusBar:(BOOL)yesNo
 {
-    return [self needStatusBar:yesNo setBar:NO];
+    return [self needStatusBar:yesNo forThisView:YES];
 }
--(UIViewController*)needStatusBar:(BOOL)yesNo setBar:(BOOL)setBar
+-(UIViewController*)needStatusBar:(BOOL)yesNo forThisView:(BOOL)forThisView
 {
-    [self key:@"needStatusBar" value:yesNo?@"1":@"0"];
-    if(setBar)
+    if(forThisView)
     {
-        [UIApplication sharedApplication].statusBarHidden = !yesNo;//隐藏
-        if (@available(ios 13.0, *)) {
-            if(yesNo)
-            {
-                [self.view.statusBar width:STScreenWidthPx height:STStatusHeightPx];
-            }
-            else{
-                [self.view.statusBar width:0 height:0];
-            }
-        }
+        [self key:@"needStatusBar" value:yesNo?@"1":@"0"];
     }
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:!yesNo animated:NO];//隐藏
+//        if (@available(ios 13.0, *)) {
+//            if(yesNo)
+//            {
+//                [self.view.statusBar width:STScreenWidthPx height:STStatusHeightPx];
+//            }
+//            else{
+//                [self.view.statusBar width:0 height:0];
+//            }
+//        }
+
     return self;
 }
-#pragma mark 导航栏功能
+#pragma mark 导航栏：进入、退出
 - (void)stPush:(UIViewController *)viewController
 {
     [self stPush:viewController title:STDefaultForNavLeftTitle img:STDefaultForNavLeftImage];
@@ -230,14 +251,15 @@ static char keyValueChar='k';
     if(self.tabBarController!=nil)//存档最后的Tab栏状态，用于检测是否还原。
     {
         [self key:@"needTabBar" valueIfNil:!self.tabBarController.tabBar.hidden?@"1":@"0"];
-        //[controller needTabBar:!self.tabBarController.tabBar.hidden];
         self.tabBarController.tabBar.hidden=YES;
-        self.hidesBottomBarWhenPushed=YES;//又是一个坑，fuck，如果push一次，再切换tab，再切回来，就不见了,但成对出现在还原的时候需要设置为NO，就可以了，（不用这个在5s下10.3.1系统下，状态栏会空白不会取消。
+        self.hidesBottomBarWhenPushed=YES;
+        //又是一个坑，fuck，如果push一次，再切换tab，再切回来，就不见了,但成对出现在还原的时候需要设置为NO，就可以了，
+        //（不用这个在5s下10.3//.1系统下，状态栏会空白不会取消。
     }
     [self key:@"needNavBar" valueIfNil:!navC.navigationBar.hidden?@"1":@"0"];
-    //[controller needNavBar:!controller.navigationController.navigationBar.hidden];//存档最后的导航栏状态，用于检测是否还原。
+
     [navC setNavigationBarHidden:NO animated:NO];
-    //controller.navigationController.navigationBar.hidden=NO;//显示返回导航工具条。
+
     navC.navigationBar.translucent=NO;//让默认View在导航工具条之下。
 
     if (navC.viewControllers.count != 0)
@@ -263,10 +285,26 @@ static char keyValueChar='k';
     navC.interactivePopGestureRecognizer.delegate=(id)navC;
     [navC pushViewController:viewController animated:YES];
 }
+
+//-(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer
+//
+//{
+//    [Sagit delayExecute:2 onMainThread:YES block:^{
+//        [self reSetBarState:NO];
+//    }];
+//    return YES;
+//}
+
 -(void)reSetBarState:(BOOL)animated
 {
     UINavigationController *navC=self.navigationController;
     if(navC==nil){return;}
+    
+    if([UIApplication sharedApplication].statusBarHidden==self.needStatusBar)//状态必须在导航之前
+    {
+        [UIApplication sharedApplication].statusBarHidden=!self.needStatusBar;
+    }
+    
     if(navC.navigationBar.hidden==self.needNavBar)
     {
         [navC setNavigationBarHidden:!self.needNavBar animated:animated];//全部统一用这个处理
@@ -277,10 +315,7 @@ static char keyValueChar='k';
         self.tabBarController.tabBar.hidden=!self.needTabBar;
         self.hidesBottomBarWhenPushed=!self.needTabBar;//这个要成对出现。。shit~~~
     }
-    if([UIApplication sharedApplication].statusBarHidden==self.needStatusBar)
-    {
-        [UIApplication sharedApplication].statusBarHidden=!self.needStatusBar;
-    }
+
     //检测上一个控制器有没有释放
     UIViewController *nextController=self.nextController;
     if(nextController)
@@ -299,18 +334,7 @@ static char keyValueChar='k';
         {
             UIViewController *preController=navC.viewControllers[count-2];
             [preController reSetBarState:NO];
-//            if(navC.navigationBar.hidden!=![preController needNavBar])
-//            {
-//                [navC setNavigationBarHidden:![preController needNavBar] animated:NO];//全部统一用这个处理
-//            }
-//            [preController key:@"nextController" valueWeak:nil];
-//
-//            if(self.tabBarController!=nil)
-//            {
-//                self.tabBarController.tabBar.hidden=![preController needTabBar];
-//            }
         }
-        //[self dispose];
         [navC popViewControllerAnimated:YES];
     }
     else if([self isKindOfClass:[UINavigationController class]])

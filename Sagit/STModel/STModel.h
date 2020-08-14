@@ -13,6 +13,8 @@
 @property (retain, nonatomic) id<NSObject> msg;
 //将msg转成dictionary返回
 @property (retain, nonatomic,readonly) NSDictionary* msgDic;
+//将msg转成string返回
+@property (copy, nonatomic,readonly) NSString* msgString;
 @end
 
 
