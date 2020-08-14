@@ -23,7 +23,8 @@
  @param rootType 设置的根类型
  */
 -(UIViewController*)asRoot:(RootViewControllerType) rootType;
-
+//!获取当前主Window
+-(UIWindow*)keyWindow;
 #pragma mark 扩展导航栏事件
 //!返回当前视图是否需要导航栏
 -(BOOL)needNavBar;

@@ -17,7 +17,10 @@
 #import "Sagit.h"
 
 @implementation UIViewController(ST)
-
+//ios 13 弹新窗兼容
+- (UIModalPresentationStyle)modalPresentationStyle{
+    return UIModalPresentationFullScreen;
+}
 //-(UIView *)view
 //{
 //    UIView *view=[self key:@"view"];
@@ -130,17 +133,42 @@ static char keyValueChar='k';
         ////让默认View在导航工具条之下。
         self.navigationController.navigationBar.translucent=NO;
     }
-//    if (@available(ios 13.0, *)) {
-//        UIWindow *win=[UIApplication sharedApplication].windows[0];
-//        win.rootViewController=controller;
-//    }
-//    else{
-        UIWindow *win=[UIApplication sharedApplication].delegate.window;
-        win.rootViewController=controller;
-   // }
-    //
+    UIWindow *win= [self keyWindow];
+    UIViewController *root=win.rootViewController;
+    if(root)//ios13 释放后才能添加。
+    {
+        [root dispose];
+        root=nil;
+    }
+    win.rootViewController=controller;
     return self;
 }
+-(UIWindow*)keyWindow
+{
+     if (@available(iOS 13.0, *)) {
+         // 获取keywindow
+         NSArray *array = [UIApplication sharedApplication].windows;
+         UIWindow *window = [array objectAtIndex:0];
+      
+          //  判断取到的window是不是keywidow
+         if (!window.hidden || window.isKeyWindow) {
+             return window;
+         }
+      
+         //  如果上面的方式取到的window 不是keywidow时  通过遍历windows取keywindow
+         for (UIWindow *window in array) {
+             if (!window.hidden || window.isKeyWindow) {
+                 return window;
+             }
+         }
+    }
+    UIApplication *app=[UIApplication sharedApplication];
+    UIWindow *win=app.keyWindow;
+    if(win!=nil)
+    {
+        return win;
+    }
+    return app.delegate.window;}
 #pragma mark 导航栏、状态栏、Tab栏 显示隐藏
 -(BOOL)needNavBar
 {
@@ -195,9 +223,10 @@ static char keyValueChar='k';
     {
         [self key:@"needTabBar" value:yesNo?@"1":@"0"];
     }
-    if(self.tabBarController!=nil)
+    if(self.tabBarController && self.tabBarController.tabBar)
     {
         self.tabBarController.tabBar.hidden=!yesNo;
+        //self.hidesBottomBarWhenPushed=!yesNo;
     }
     return self;
 }

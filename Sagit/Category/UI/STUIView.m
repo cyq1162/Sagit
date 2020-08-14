@@ -181,25 +181,7 @@ static char keyValueChar='k';
 }
 -(UIWindow*)keyWindow
 {
-   if (@available(iOS 13.0, *)) {
-        // 获取keywindow
-        NSArray *array = [UIApplication sharedApplication].windows;
-        UIWindow *window = [array objectAtIndex:0];
-     
-         //  判断取到的window是不是keywidow
-        if (!window.hidden || window.isKeyWindow) {
-            return window;
-        }
-     
-        //  如果上面的方式取到的window 不是keywidow时  通过遍历windows取keywindow
-        for (UIWindow *window in array) {
-            if (!window.hidden || window.isKeyWindow) {
-                return window;
-            }
-        }
-        return nil;
-   }
-   return [UIApplication sharedApplication].keyWindow;
+    return self.stController.keyWindow;
 }
 -(UIView*)stValue:(NSString*)value
 {
