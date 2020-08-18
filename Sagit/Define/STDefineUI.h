@@ -9,12 +9,12 @@
 
 
 
-#ifndef STDefineUI_h
+#ifndef STDefineUI_h
 #define STDefineUI_h
 
 
 //选择编码标准：1倍（375*667）、2倍（750*1334）、3倍（1125*2001）
-#define STStandardScale 3
+#define STStandardScale 2
 
 #define STStandardWidthPx [UIScreen mainScreen].bounds.size.width*STStandardScale
 #define STStandardHeightPx [UIScreen mainScreen].bounds.size.height*STStandardScale

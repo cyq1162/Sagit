@@ -108,7 +108,16 @@
 {
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
-
+-(NSString *)trimStart:(NSString *)value
+{
+    if(value==nil || ![self startWith:value]){return self;}
+    return [self substringFromIndex:value.length];
+}
+-(NSString *)trimEnd:(NSString *)value
+{
+    if(value==nil || ![self endWith:value]){return self;}
+    return [self substringToIndex:self.length-value.length];
+}
 -(NSInteger)indexOf:(NSString*)searchString
 {
     return [self indexOf:searchString ignoreCase:NO];

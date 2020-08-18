@@ -9,6 +9,14 @@
 #import "STModel.h"
 
 @implementation STModel
+-(NSArray*)msgArray
+{
+    if(self.msg && [self.msg isKindOfClass:[NSArray class]])
+    {
+        return (NSArray*)self.msg;
+    }
+    return nil;
+}
 -(NSDictionary *)msgDic
 {
     if(self.msg && [self.msg isKindOfClass:[NSDictionary class]])

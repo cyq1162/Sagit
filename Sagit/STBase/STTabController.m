@@ -11,6 +11,11 @@
 #import "STUIViewController.h"
 @implementation STTabController
 
+//ios 13.6 弹新窗兼容(13.6不能用扩展属性。。)
+- (UIModalPresentationStyle)modalPresentationStyle{
+    return UIModalPresentationFullScreen;
+}
+
 -(instancetype)init
 {
     self=[super init];

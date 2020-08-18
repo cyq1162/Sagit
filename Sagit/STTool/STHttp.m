@@ -9,186 +9,223 @@
 #import "STHttp.h"
 #import "STMsgBox.h"
 #import "STCategory.h"
-#import <AFNetworking.h>
+#import "STDefine.h"
 #import "STSagit.h"
-@interface STHttp()
-@property (nonatomic,strong) AFHTTPSessionManager *http;
+
+#define Boundary @"sagitframework"
+#define Start @"--sagitframework"
+#define End @"--sagitframework--"
+#define NewLine @"\r\n"
+
+@interface STHttp()<NSURLSessionDelegate>
+@property (nonatomic,strong) NSURLSession *session;
 
 @end
 
 @implementation STHttp
 
-+ (instancetype)share {
-    static STHttp *_share = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _share = [[STHttp alloc] init:nil];
-    });
-    return _share;
-}
-+ (instancetype)shareWithLoading {
-    static STHttp *_share = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _share = [[STHttp alloc] init:Sagit.MsgBox];
-    });
-    return _share;
-}
 -(instancetype)init:(STMsgBox*)msgBox{
     _msgBox=msgBox;
     return self;
 }
--(AFHTTPSessionManager*)http
-{
-    if(_http==nil)
-    {
-        _http=[AFHTTPSessionManager new];
-        //增加这几行代码；
-        AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
-        [securityPolicy setAllowInvalidCertificates:YES];
-        _http.securityPolicy = securityPolicy;
-       _http.responseSerializer = [AFJSONResponseSerializer serializer];//以字典格式返回数据
-       //  _http.responseSerializer = [AFHTTPResponseSerializer serializer];//以字典格式返回数据
-        // 设置超时时间(设置有效)
-        [_http.requestSerializer willChangeValueForKey:@"timeoutInterval"];
-        _http.requestSerializer.timeoutInterval = 30;
-        [_http.requestSerializer didChangeValueForKey:@"timeoutInterval"];
-    }
-    return _http;
++(STHttp*)share {
+    static STHttp *obj = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        obj = [STHttp new];
+    });
+    return obj;
 }
+#pragma mark 全局实例
+-(NSStringEncoding)defautEncoding
+{
+    return NSUTF8StringEncoding;
+}
+-(NSURLSession *)session
+{
+    if(_session==nil)
+    {
+        /**NSURLSessionConfiguration(会话配置)
+         defaultSessionConfiguration;       // 磁盘缓存,适用于大的文件上传下载
+         ephemeralSessionConfiguration;     // 内存缓存,以用于小的文件交互,GET一个头像
+         backgroundSessionConfiguration:(NSString *)identifier; // 后台上传和下载      */
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        // config.connectionProxyDictionary=@{ @"HTTPEnable":@YES,@"HTTPProxy":@"192.168.0.116", @"HTTPPort":@(8888)};
+        _session=[NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:[NSOperationQueue new]];
+    }
+    return _session;
+}
+-(NSMutableURLRequest*)createRequest:(NSString*)method url:(NSString*)url timeout:(NSInteger)timeout
+{
+    url=[self globalSetUrl:url];
+    NSURL *nsUrl=[NSURL URLWithString:url];
+    NSMutableURLRequest *request=[NSMutableURLRequest requestWithURL:nsUrl cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:timeout];
+    request.HTTPMethod=method;
+    [self globalHeader:request];
+    return request;
+}
+#pragma mark 调用方法
 -(void)get:(NSString *)url paras:(NSDictionary *)paras success:(Success)success
 {
-    [self get:url paras:paras success:success error:nil];
+    [self get:url paras:paras before:nil success:success error:nil];
 }
 -(void)get:(NSString *)url paras:(NSDictionary *)paras success:(Success)success error:(Error)error{
-    [self reSetHeader];
-    [self showLoading];
-    url=[self reSetUrl:url];
-    [self.http GET:url parameters:paras progress:nil
-       success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-           [self onSucess:responseObject success:success];
-       }
-       failure:^(NSURLSessionDataTask *task, NSError *errorMsg) {
-           [self onError:errorMsg error:error];
-       }];
+    [self get:url paras:paras before:nil success:success error:error];
+}
+-(void)get:(NSString *)url paras:(NSDictionary *)paras before:(Before)before success:(Success)success
+{
+    [self get:url paras:paras before:before success:success error:nil];
+}
+- (void)get:(NSString *)url paras:(NSDictionary *)paras before:(Before)before success:(Success)success error:(Error)error{
+    url=[self reSetGetUrl:url paras:paras];
+    NSMutableURLRequest *request=[self createRequest:@"GET" url:url timeout:10];
+    [self exeTask:request before:before success:success error:error];
 }
 -(void)post:(NSString *)url paras:(NSDictionary *)paras success:(Success)success
 {
-    [self post:url paras:paras success:success error:nil];
+    [self post:url paras:paras before:nil success:success error:nil];
 }
--(void)post:(NSString *)url paras:(NSDictionary *)paras success:(Success)success error:(Error)error{
-    [self reSetHeader];
-    [self showLoading];
-    url=[self reSetUrl:url];
-    [self.http POST:url parameters:paras progress:nil
-        success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            [self onSucess:responseObject success:success];
-        }
-        failure:^(NSURLSessionDataTask *task, NSError *errorMsg) {
-            [self onError:errorMsg error:error];
-        }];
-}
--(void)upload:(NSString *)url data:(NSData *)data success:(Success)success
+- (void)post:(NSString *)url paras:(NSDictionary *)paras success:(Success)success error:(Error)error
 {
-    [self upload:url data:data success:success error:nil];
+    [self post:url paras:paras before:nil success:success error:error];
 }
--(void)upload:(NSString *)url data:(NSData *)data success:(Success)success error:(Error)error
+-(void)post:(NSString *)url paras:(NSDictionary *)paras before:(Before)before success:(Success)success
 {
-    if(data!=nil)
+    [self post:url paras:paras before:before success:success error:nil];
+}
+-(void)post:(NSString *)url paras:(NSDictionary *)paras before:(Before)before success:(Success)success error:(Error)error
+{
+    NSMutableURLRequest *request=[self createRequest:@"POST" url:url timeout:20];
+    [request setHTTPBody:[self toPostData:paras]];
+    [self exeTask:request before:before success:success error:error];
+}
+
+-(void)upload:(NSString *)url paras:(id)dicOrNSData success:(Success)success
+{
+    [self upload:url paras:dicOrNSData before:nil success:success error:nil];
+}
+-(void)upload:(NSString *)url paras:(id)dicOrNSData success:(Success)success error:(Error)error{
+    [self upload:url paras:dicOrNSData before:nil success:success error:error];
+}
+-(void)upload:(NSString *)url paras:(id)dicOrNSData before:(Before)before success:(Success)success{
+    [self upload:url paras:dicOrNSData before:before success:success error:nil];
+}
+-(void)upload:(NSString *)url paras:(id)dicOrNSData before:(Before)before success:(Success)success error:(Error)error
+{
+    NSDictionary *paras=nil;
+    if([paras isKindOfClass:[NSData class]])
     {
-        NSDictionary *paras=[NSDictionary dictionaryWithObjectsAndKeys:data,@"photo", nil];
-        [self upload:url paras:paras success:success error:error];
+        paras=@{@"img":dicOrNSData};
     }
     else
     {
-        [self showError:@"data is nil"];
+        paras=dicOrNSData;
     }
+    
+    NSMutableURLRequest *request=[self createRequest:@"POST" url:url timeout:20];
+    [request addValue:[@"multipart/form-data; boundary=" append:Boundary] forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:[self toUploadData:paras]];
+    [self exeTask:request before:before success:success error:error];
+    
 }
--(void)upload:(NSString *)url paras:(NSDictionary *)paras success:(Success)success
-{
-    [self upload:url paras:paras success:success error:nil];
-}
--(void)upload:(NSString *)url paras:(NSDictionary *)paras success:(Success)success error:(Error)error{
-    [self reSetHeader];
-    [self showLoading];
-    url=[self reSetUrl:url];
-    NSMutableDictionary *dic=[NSMutableDictionary new];
-    if(paras)
+-(void)exeTask:(NSMutableURLRequest*)request before:(Before)before success:(Success)success error:(Error)error{
+    if(before!=nil)
     {
-        for (NSString*key in paras) {
-            id v=paras[key];
-            if(![v isKindOfClass:[NSData class]])
-            {
-                [dic setValue:paras[key] forKey:key];
-            }
-        }
-        if(dic.count==0){dic=nil;}
+        before(request);
+        before = nil;
     }
-    [self.http POST:url
-     parameters:dic
-constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
-     {
-         if(paras!=nil)
-         {
-             for (NSString*key in paras) {
-                 id v=paras[key];
-                 if([v isKindOfClass:[NSData class]])
-                 {
-                     [formData appendPartWithFileData:paras[key] name:key fileName:[key append:@".jpg"] mimeType:@"image/jpeg"];
-                 }
-             }
-         }
-     }
-       progress:nil
-        success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-     {
-         [self onSucess:responseObject success:success];
-     }
-     
-        failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull errorMsg) {
-            [self onError:errorMsg error:error];
-            
-        }];
+    [self showLoading];
+    NSURLSessionDataTask *task= [self.session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable err) {
+        if(err!=nil)
+        {
+            [self onError:err error:error];
+        }
+        else
+        {
+            if(data==nil || data.length==0)
+            {
+                [self onSucess:@{@"success":@"YES",@"msg":@""} success:success];
+                return;
+            }
+            NSDictionary *dic=nil;
+            NSString *result=[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            if([result startWith:@"{"] && [result endWith:@"}"])
+            {
+                dic= [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            }
+            else if([result startWith:@"["] && [result endWith:@"]"])
+            {
+                NSArray<NSDictionary*> *array=[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                dic=@{@"success":@"YES",@"msg":array};
+            }
+            else
+            {
+                dic= @{@"success":@"YES",@"msg":result};
+            }
+            [self onSucess:dic success:success];
+        }
+        
+        
+    }];
+    [task resume];
+    
 }
 
 -(void)onSucess:(NSDictionary*) response success:(Success)success
 {
-    [self hideLoading];
-    if(success!=nil)
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self hideLoading];
+        if(success!=nil)
+        {
+            STModel *model=[[STModel alloc] initWithObject:response];
+            success(model);
+        }
+    });
+    if(success)
     {
-        
-        STModel *model=[[STModel alloc] initWithObject:response];
-        success(model);
         success=nil;
     }
 }
 -(void)onError:(NSError*)errorMsg error:(Error)error
 {
-    [self hideLoading];
-    if(error!=nil)
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self hideLoading];
+        if(error!=nil)
+        {
+            error([NSString toString:errorMsg]);
+        }
+        else
+        {
+            [self showError:[NSString toString:errorMsg]];
+        }
+    });
+    if(error)
     {
-        error([NSString toString:errorMsg]);
         error=nil;
     }
-    else
-    {
-        [self showError:[NSString toString:errorMsg]];
-    }
-}
--(NSString*)reSetUrl:(NSString*)url
-{
-//    if(![url hasPrefix:@"http://"] && ![url hasPrefix:@"https://"] && self.BaseUrl!=nil)
-//    {
-//        url=[self.BaseUrl append:url];
-//    }
-    return  url;
-}
--(void)setHeader:(NSString *)key v:(NSString *)value{
-    [self.http.requestSerializer setValue:value forHTTPHeaderField:key];
 }
 //可以扩展此方法，以便增加初始的请求头。
--(void)reSetHeader{
-
+-(void)globalHeader:(NSMutableURLRequest*)request{}
+-(NSString*)globalSetUrl:(NSString*)url{return url;}
+-(NSString*)reSetGetUrl:(NSString*)url paras:(NSDictionary*)paras
+{
+    if(paras!=nil && paras.count>0)
+    {
+        NSString *query=@"";
+        for (NSString *key in paras) {
+            query=[query append:STString(@"&%@=%@",key,paras[key])];
+        }
+        if(![url contains:@"?"])
+        {
+            url=[url append:@"?"];
+            url=[url append:[query trimStart:@"&"]];
+        }
+        else
+        {
+            url=[url append:query];
+        }
+    }
+    return  url;
 }
 
 -(void)showLoading{
@@ -207,5 +244,116 @@ constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
         [Sagit.MsgBox alert:[@"网络连接错误:" append:errMsg]];
     }
 }
+#pragma mark 特殊字符处理
+//文件、图片上传。
+- (NSData *)toUploadData:(NSDictionary *)paras{
+    NSMutableData *postData=[NSMutableData new];
+    if(paras)
+    {
+        for (NSString*key in paras) {
+            id v=paras[key];
+            if([v isKindOfClass:[NSData class]])
+            {
+                [postData appendData:[self getImageBody:v imgName:key]];
+            }
+            else
+            {
+                [postData appendData:[self getStringBody:key v:v]];
+            }
+        }
+        //10.请求体的结束 --AaB03x
+        [postData appendData:[self toNsData:End]];
+        //11.换行
+        [postData appendData:[self toNsData:NewLine]];
+        
+    }
+    return postData;
+}
+- (NSData*)toPostData:(NSDictionary *)params{
+    if(params==nil || params.count==0){return nil;}
+    NSMutableString *returnValue = [[NSMutableString alloc]initWithCapacity:0];
+    
+    NSArray *paramsAllKeys = [params allKeys];
+    for(int i = 0;i < paramsAllKeys.count;i++)
+    {
+        NSString *value=STString(@"%@",[params objectForKey:[paramsAllKeys objectAtIndex:i]]);
+        [returnValue appendFormat:@"%@=%@",[paramsAllKeys objectAtIndex:i],[self encodeURIComponent:value]];
+        if(i < paramsAllKeys.count - 1)
+        {
+            [returnValue appendString:@"&"];
+        }
+    }
+    return [self toNsData:returnValue];
+}
+//特殊字符处理
+-(NSString*)encodeURIComponent:(NSString*)str{
+    
+    return CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)str, NULL, (__bridge CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ", CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding)));
+}
+
+#pragma mark -------开始拼接 ---------
+-(NSMutableData*)getStringBody:(NSString*)key v:(NSString*)v
+{
+    NSMutableData *bodyData=[NSMutableData new];
+    [bodyData appendData:[self toNsData:Start]];
+    [bodyData appendData:[self toNsData:NewLine]];
+    NSString *contentDisposition=STString(@"Content-Disposition: form-data; name=\"%@\"",key);
+    //3.设置数据对应的字段
+    [bodyData appendData:[self toNsData:contentDisposition]];
+    [bodyData appendData:[self toNsData:NewLine]];
+    [bodyData appendData:[self toNsData:NewLine]];
+    [bodyData appendData:[self toNsData:v]];
+    [bodyData appendData:[self toNsData:NewLine]];
+    return bodyData;
+}
+-(NSMutableData*)getImageBody:(NSData*) imgData imgName:(NSString*)imgName
+{
+    NSString *contentType=@"Content-Type: image/";
+    if(imgName==nil)
+    {
+        imgName=@"img.jpg";
+    }
+    else if(![imgName contains:@"."])
+    {
+        imgName= [imgName append:@".jpg"];
+    }
+    contentType=[contentType append:[imgName pathExtension]];
+    NSMutableData *bodyData=[NSMutableData new];
+    //1.请求体的开始 --AaB03x
+    [bodyData appendData:[self toNsData:Start]];
+    
+    //2.换行
+    [bodyData appendData:[self toNsData:NewLine]];
+    
+    NSString *contentDisposition=STString(@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"",[imgName stringByDeletingPathExtension],imgName);
+    //3.设置数据对应的字段
+    [bodyData appendData:[self toNsData:contentDisposition]];
+    
+    //4.换行
+    [bodyData appendData:[self toNsData:NewLine]];
+    
+    //5.设置文件的类型image/png   image/jpeg video/mp4
+    [bodyData appendData:[self toNsData:contentType]];
+    
+    //6.换行
+    [bodyData appendData:[self toNsData:NewLine]];
+    
+    //7.换行 真正的数据开始
+    [bodyData appendData:[self toNsData:NewLine]];
+    
+    //8.设置数据
+    [bodyData appendData:imgData];
+    
+    //9.换行 设置数据完毕
+    [bodyData appendData:[self toNsData:NewLine]];
+    
+    
+    return bodyData;
+}
+-(NSData*)toNsData:(NSString*)str
+{
+    return [str dataUsingEncoding:self.defautEncoding];
+}
+#pragma mark -------回调事件 ---------
 
 @end

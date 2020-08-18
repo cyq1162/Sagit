@@ -33,7 +33,8 @@
 +(NSString*)toString:(id)value;
 +(NSString *)newGuid;
 -(NSString*)trim;
-
+-(NSString*)trimStart:(NSString*)value;
+-(NSString*)trimEnd:(NSString*)value;
 -(NSInteger)indexOf:(NSString*)searchString;
 -(NSInteger)indexOf:(NSString*)searchString ignoreCase:(BOOL)ignoreCase;
 -(NSString*)firstCharUpper;

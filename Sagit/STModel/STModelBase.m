@@ -10,12 +10,52 @@
 
 @implementation STModelBase
 
-//默认全部可选。
-+ (BOOL)propertyIsOptional:(NSString *)propertyName {
+-(BOOL)isIgnoreCase
+{
     return YES;
+}
+-(BOOL)isIgnore:(NSString *)namel
+{
+    return NO;
+}
+-(id)init
+{
+    return self;
 }
 -(id)initWithObject:(id<NSObject>)msg
 {
-    return [self initWithDictionary:(NSMutableDictionary*)msg error:nil];
+    return [self initWithDictionary:(NSDictionary*)msg];
 }
+-(id)initWithDictionary:(NSDictionary *)dic
+{
+    self=[self init];
+    [NSDictionary dictionaryToEntity:dic to:self];
+    return self;
+}
+-(NSDictionary *)toDictionary{
+    NSDictionary *dic=[NSMutableDictionary initWithJsonOrEntity:self];
+    return dic;
+}
+-(NSString *)toJson
+{
+   return [[self toDictionary] toJson];
+}
++(NSArray<id>* )toArrayEntityFrom:(NSArray*)array
+{
+    if(array==nil || array.count==0)
+    {
+        return nil;
+    }
+    NSMutableArray *returnArray=[NSMutableArray new];
+    //NSString *name=NSStringFromClass([self class]);
+    for (int i=0; i<array.count; i++) {
+        Class class=[self class];
+        id obj=[[class alloc] init];
+        [NSDictionary dictionaryToEntity:array[i] to:obj];
+        [returnArray addObject:obj];
+    }
+    return returnArray;
+    
+}
+
 @end

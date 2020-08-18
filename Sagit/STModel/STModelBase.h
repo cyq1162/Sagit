@@ -6,8 +6,19 @@
 //  Copyright © 2017-2027年. All rights reserved.
 //
 
-#import <JSONModel/JSONModel.h>
-
-@interface STModelBase : JSONModel
+@interface STModelBase:NSObject
+-(id)init;
 -(id)initWithObject:(id<NSObject>)msg;
+-(id)initWithDictionary:(NSDictionary*)dic;
+-(NSDictionary*)toDictionary;
+
+//!指定的属性名称是否忽略。
+-(BOOL)isIgnore:(NSString*)name;
+//!是否忽略大小写。
+-(BOOL)isIgnoreCase;
+//转JSON。
+-(NSString*)toJson;
+//!NSArray<NSDictionary> 转 NSArray<Model>
++(NSArray<id>* )toArrayEntityFrom:(NSArray*)array;
 @end
+

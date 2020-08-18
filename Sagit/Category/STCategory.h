@@ -10,6 +10,8 @@
 #import "STString.h"
 #import "STArray.h"
 #import "STDictionary.h"
+#import "STNSMutableDictionary.h"
+#import "STNSMapTable.h"
 #import "STDate.h"
 #import "STNumber.h"
 #import "STUserDefaults.h"

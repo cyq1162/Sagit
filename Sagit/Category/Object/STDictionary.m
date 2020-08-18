@@ -7,75 +7,9 @@
 //
 #import "STDictionary.h"
 #import "STString.h"
-@implementation NSMutableDictionary(ST)
 
-+(instancetype)share
-{
-    static NSMutableDictionary *_share = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _share = [NSMutableDictionary new];
-    });
-    return _share;
-}
-
--(BOOL)has:(NSString*)key{
-    return self[key]!=nil;
-}
--(id)get:(NSString*)key
-{
-    return self[key];
-}
--(void)set:(NSString*)key value:(id)value
-{
-    if(value!=nil)
-    {
-        [self setObject:value forKey:key];
-    }
-    else
-    {
-        [self remove:key];
-    }
-}
-//-(void)set:(NSString*)key valueWeak:(id)value
-//{
-//    NSMapTable *dic=self[@"NSMutableDictionaryWeak"];
-//    if(dic==nil)
-//    {
-//        dic=[NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory valueOptions:NSPointerFunctionsWeakMemory];
-//        [self set:@"NSMutableDictionaryWeak" value:dic];
-//    }
-//    if(value!=nil)
-//    {
-//        [dic setObject:value forKey:key];
-//    }
-//    else
-//    {
-//        [dic remove:key];
-//    }
-//}
--(void)remove:(NSString*)key
-{
-    NSArray *items=[key split:@","];
-    for (NSString* item in items)
-    {
-        [self removeObjectForKey:item];
-    }
-    
-}
--(NSString*)toJson
-{
-    NSString *json = nil;
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:0 error:&error];
-    if (jsonData)
-    {
-        json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
-    return json;
-}
-@end
 @implementation NSDictionary(ST)
+
 -(NSMutableDictionary *)toNSMutableDictionary
 {
     NSMutableDictionary*dic=[NSMutableDictionary new];
@@ -98,67 +32,119 @@
 {
     return self[key];
 }
+-(id)getWithIgnoreCase:(NSString *)key
+{
+    id v=self[key];
+    if(v!=nil)
+    {
+        return v;
+    }
+    NSString *lowerKey=[key toLower];
+    for (NSString* k in self) {
+        if([lowerKey isEqual:[k toLower]])
+        {
+            return self[key];
+        }
+    }
+    return nil;
+}
+
 -(BOOL)has:(NSString*)key{
     return self[key]!=nil;
 }
 -(NSString*)toJson{
+    return [NSJSONSerialization dicToJson:self];
+}
+//!把格式化的JSON格式的字符串转换成字典
++(id)initWithJsonOrEntity:(id)jsonOrEntity
+{
+    return [NSMutableDictionary initWithJsonOrEntity:jsonOrEntity];
+}
+
+#pragma mark ToEntity
++(void)dictionaryToEntity:(NSDictionary*)dic to:(id)entity
+{
+    if(entity==nil || dic==nil || dic.count==0){return;}
+    unsigned int propsCount;
+    objc_property_t *props = class_copyPropertyList([entity class], &propsCount);//获得属性列表
+    Class superClass=class_getSuperclass([entity class]);
+    //判断属性是否需要忽略
+    SEL sel = NSSelectorFromString(@"isIgnore:");
+    BOOL hasMethod=[entity respondsToSelector:sel];
+ 
+    for(int i = 0;i < propsCount; i++)
+    {
+        objc_property_t prop = props[i];
+        NSString *propName = [NSString stringWithUTF8String:property_getName(prop)];//获得属性的名称
+        id v=[dic getWithIgnoreCase:propName];
+        if(v==nil || [v isKindOfClass:[NSNull class]])
+        {
+            continue;
+        }
+        if (hasMethod && [entity performSelector:sel withObject:propName]) {
+            continue;
+        }
+        NSString *atts= [NSString stringWithUTF8String:property_getAttributes(prop)];
+        if([atts startWith:@"R"]){continue;}
+        
+        if([atts contains:@"\"NS"] || [atts contains:@"<NS"])
+        {
+            //NSArray
+            if(([atts contains:@"Array\""] || [atts contains:@"Array<"])
+               && [v isKindOfClass:[NSArray class]])//@"T@\"NSMutableArray<PersonalPhoto>\",&,N,V_photos"    0x0000600002e9a200
+            {
+                NSString *className= [[[atts split:@","][0] split:@"<"][1] trimEnd:@">\""];
+                Class class=NSClassFromString(className);
+                if(class!=nil)//view
+                {
+                    NSMutableArray<id> *arr=[NSMutableArray new];
+                    NSArray *arrValue=(NSArray*)v;
+                    for (int i=0; i<arrValue.count; i++) {
+                        id obj=[[class alloc] init];
+                        [self dictionaryToEntity:arrValue[i] to:obj];
+                        [arr addObject:obj];
+                    }
+                    [entity setValue:arr forKey:propName];
+                    continue;
+                }
+                }
+        }
+        else if([atts contains:@"@"] && [v isKindOfClass:[NSDictionary class]])//自定义实体
+        {
+            NSString *className=[[[atts split:@","][0] substringFromIndex:3] trimEnd:@"\""];
+            className=[className split:@"<"][0];//@"T@\"PersonalUser<PersonalUser>\",&,N,V_user"    0x0000600000df0e80
+            Class class=NSClassFromString(className);
+            if(class!=nil)//view
+            {
+                id obj=[[class alloc] init];
+                [self dictionaryToEntity:v to:obj];
+                [entity setValue:obj forKey:propName];
+            }
+            continue;;
+        }
+
+        [entity setValue:v forKey:propName];
+
+    }
+
+}
+@end
+
+@implementation NSJSONSerialization(ST)
+
++(NSString *)dicToJson:(NSDictionary*)dic
+{
+    if(dic==nil || dic.count==0)
+    {
+        return @"{}";
+    }
     NSString *json = nil;
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:0 error:&error];
+    NSData *jsonData = [self dataWithJSONObject:self options:0 error:&error];
     if (jsonData)
     {
         json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
     return json;
-}
-//!把格式化的JSON格式的字符串转换成字典
-+ (NSDictionary *)dictionaryWithJson:(NSString *)json {
-    if (json == nil) {
-        return nil;
-    }
-    
-    NSData *jsonData = [json dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                        options:NSJSONReadingMutableContainers
-                                                          error:&err];
-    if(err) {
-        NSLog(@"json解析失败：%@",err);
-        return nil;
-    }
-    return dic;
-}
-@end
-
-@implementation NSMapTable(ST)
-
--(id)get:(NSString*)key
-{
-    return [self objectForKey:key];
-}
--(BOOL)has:(NSString*)key
-{
-    return [self objectForKey:key]!=nil;
-}
--(void)set:(NSString*)key value:(id)value
-{
-    if(value!=nil)
-    {
-        [self setObject:value forKey:key];
-    }
-    else
-    {
-        [self remove:key];
-    }
-}
-
--(void)remove:(NSString*)key
-{
-    NSArray *items=[key split:@","];
-    for (NSString* item in items)
-    {
-        [self removeObjectForKey:item];
-    }
-    
 }
 @end

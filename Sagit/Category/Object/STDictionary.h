@@ -8,30 +8,26 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSMutableDictionary(ST)
-+(instancetype)share;
--(id)get:(NSString*)key;
--(BOOL)has:(NSString*)key;
--(void)set:(NSString*)key value:(id)value;
-//-(void)set:(NSString*)key valueWeak:(id)value;
--(void)remove:(NSString*)key;
--(NSString*)toJson;
-
-@end
-
 @interface NSDictionary(ST)
+@property (nonatomic,retain)NSDictionary* caseDic;
+//!把格式化的JSON格式的字符串转换成字典
++(id)initWithJsonOrEntity:(id)jsonOrEntity;
+
 -(NSMutableDictionary*)toNSMutableDictionary;
 -(id)get:(NSString*)key;
+//!取值并忽略大小写。
+-(id)getWithIgnoreCase:(NSString*)key;
 -(id)firstObject;
 -(BOOL)has:(NSString*)key;
 -(NSString*)toJson;
-//!把格式化的JSON格式的字符串转换成字典
-+ (NSDictionary *)dictionaryWithJson:(NSString *)json;
+//!转成实体类（Model）
++(void)dictionaryToEntity:(NSDictionary*)dic to:(id<NSObject>)entity;
+
 @end
 
-@interface NSMapTable(ST)
--(id)get:(NSString*)key;
--(BOOL)has:(NSString*)key;
--(void)set:(NSString*)key value:(id)value;
--(void)remove:(NSString*)key;
+
+@interface NSJSONSerialization(ST)
++(NSString*)dicToJson:(NSDictionary*)dic;
 @end
+
+

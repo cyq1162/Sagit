@@ -17,10 +17,10 @@
 #import "Sagit.h"
 
 @implementation UIViewController(ST)
-//ios 13 弹新窗兼容
-- (UIModalPresentationStyle)modalPresentationStyle{
-    return UIModalPresentationFullScreen;
-}
+//ios 13.2 弹新窗兼容（13.2 可以用）
+//- (UIModalPresentationStyle)modalPresentationStyle{
+//    return UIModalPresentationFullScreen;
+//}
 //-(UIView *)view
 //{
 //    UIView *view=[self key:@"view"];
@@ -632,5 +632,5 @@ static char keyValueChar='k';
 //{
 //    //self.view=nil;//处理内存释放后的异常。
 //    NSLog(@"UIViewController relase -> %@", [self class]);
-//}
+//}redire
 @end

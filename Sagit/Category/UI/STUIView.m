@@ -309,7 +309,7 @@ static char keyValueChar='k';
     }
     else if([data isKindOfClass:[NSString class]])
     {
-        dic=[NSDictionary dictionaryWithJson:data];
+        dic=[NSDictionary initWithJsonOrEntity:data];
     }
     else if([data isKindOfClass:[STModelBase class]])
     {
