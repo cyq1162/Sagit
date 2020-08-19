@@ -137,8 +137,10 @@ static char keyValueChar='k';
     UIViewController *root=win.rootViewController;
     if(root)//ios13 释放后才能添加。
     {
-        [root dispose];
-        root=nil;
+        if (@available(iOS 13.0, *)) {
+            [root dispose];
+            root=nil;
+        }
     }
     win.rootViewController=controller;
     return self;
