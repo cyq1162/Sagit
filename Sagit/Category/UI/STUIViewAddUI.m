@@ -286,63 +286,88 @@
     if(isScrollView)//计算ImageView的位置和UIScrollView的contentSize
     {
         scroll= (UIScrollView*)self;
-        long count= self.subviews.count;//这么计算的话，ImageView必须先添加，然后才能添加其它控件。
-        if(count>0 && scroll.showsVerticalScrollIndicator){count--;}
-        if(count>0 && scroll.showsHorizontalScrollIndicator){count--;}
-        CGSize size=scroll.contentSize;
+        tagIndex=scroll.subviews.count;
+        [scroll addPageSizeContent:1];
         if(direction==X)
         {
-            frame.origin.x=frame.size.width*(count);
-            //scroll.showsHorizontalScrollIndicator=NO;
-            size.width=size.width+frame.size.width;
-            if(size.height==0)
-            {
-                size.height=STFullSize.height;
-            }
+            frame.origin.x=frame.size.width*(scroll.subviews.count);
         }
         else if(direction==Y)
         {
-            //scroll.showsVerticalScrollIndicator=NO;
-            frame.origin.y=frame.size.height*(count);
-            size.height=size.height+frame.size.height;
-            if(size.width==0)
+            frame.origin.y=frame.size.height*(scroll.subviews.count);
+        }
+    }
+    UIImageView *ui =nil;
+    if([imgOrName isKindOfClass:[UIImageView class]])
+    {
+        ui=(UIImageView*)imgOrName;
+    }
+    else
+    {
+        ui=[[UIImageView alloc] initWithFrame:frame];
+        BOOL isUrl=NO;
+        if([imgOrName isKindOfClass:[NSString class]])
+        {
+            NSString *name=(NSString*)imgOrName;
+            if([name startWith:@"http://"] || [name startWith:@"https://"])
             {
-                size.width=STFullSize.width;
+                [ui onAfter:^(NSString *eventType, UIImageView* para) {
+                   [para reSize:ui.frame.size];
+                    if(isScrollView)
+                    {
+                        CGSize s=ui.image.size;
+                        if(s.width>=frame.size.width){s.width=frame.size.width;}
+                        else
+                        {
+                            //居中处理
+                            [ui x:ui.stX+((frame.size.width-s.width)/2)*Xpx];
+                        }
+                        if(s.height>=frame.size.height){s.height=frame.size.height;}
+                        else
+                        {
+                            //居中处理
+                            [ui y:ui.stY+((frame.size.height-s.height)/2)*Ypx];
+                        }
+                    }
+                    
+                }];
+                [ui url:name];
+                isUrl=YES;
             }
         }
-        scroll.contentSize=size;
-        tagIndex=scroll.subviews.count;
-    }
-    UIImageView *ui = [[UIImageView alloc] initWithFrame:frame];
-    ui.tag=tagIndex;//设置tag，方便后续点击事件通过索引找到对应的UI
-    if(imgOrName)
-    {
-        [ui image:imgOrName];
-        if(isScrollView && scroll.isImageFull)
+        if(!isUrl && imgOrName)
         {
-            [ui reSize:frame.size];
-        }
-        else
-        {
-            CGSize s=ui.image.size;
+            [ui image:imgOrName];
             if(isScrollView)
             {
-                if(s.width>=frame.size.width){s.width=frame.size.width;}
-                else
+                if(scroll.isImageFull)
                 {
-                    //居中处理
-                    [ui x:ui.stX+((frame.size.width-s.width)/2)*Xpx];
+                    [ui width:self.frame.size.width*Xpx height:self.frame.size.height*Ypx];
                 }
-                if(s.height>=frame.size.height){s.height=frame.size.height;}
                 else
                 {
-                    //居中处理
-                    [ui y:ui.stY+((frame.size.height-s.height)/2)*Ypx];
+                        CGSize s=ui.image.size;
+                        if(s.width>=frame.size.width){s.width=frame.size.width;}
+                        else
+                        {
+                            //居中处理
+                            [ui x:ui.stX+((frame.size.width-s.width)/2)*Xpx];
+                        }
+                        if(s.height>=frame.size.height){s.height=frame.size.height;}
+                        else
+                        {
+                            //居中处理
+                            [ui y:ui.stY+((frame.size.height-s.height)/2)*Ypx];
+                        }
                 }
             }
-            [ui width:s.width*Xpx height:s.height*Ypx];
+            else
+            {
+                [ui reSize:ui.image.size];
+            }
         }
     }
+    ui.tag=tagIndex;//设置tag，方便后续点击事件通过索引找到对应的UI
     [self addView:ui name:name];
     return ui;
 }

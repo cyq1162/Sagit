@@ -74,6 +74,19 @@ static NSInteger nullValue=-99999;
     if(self.superview)
     {
         size=self.superview.frame.size;
+        if([self.superview isKindOfClass:[UIScrollView class]])
+        {
+            UIScrollView *scroll=(UIScrollView*)self.superview;
+            if(scroll.direction==X)
+            {
+                size.height=scroll.contentSize.height;
+            }
+            else if(scroll.direction==Y)
+            {
+                size.width=scroll.contentSize.width;
+            }
+        }
+        
     }
     else if([self isKindOfClass:[UITableViewCell class]])
     {

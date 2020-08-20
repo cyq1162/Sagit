@@ -12,8 +12,9 @@
 
 @interface STMsgBox()
 @property (nonatomic,assign) UIWindow *window;
-@property (nonatomic,retain)UIView *lodingView;
+@property (nonatomic,retain) UIView *lodingView;
 @property (nonatomic,assign) NSInteger hiddenFlag;
+
 @end
 
 @implementation STMsgBox
@@ -28,9 +29,7 @@
 - (UIWindow*)window {
     if (!_window)
     {
-        [Sagit runOnMainThread:^{
-            _window = [UIApplication sharedApplication].delegate.window;
-        }];
+       _window = [UIWindow keyWindow];
     }
     return _window;
 }
@@ -59,7 +58,7 @@
                 }
                 [self.lodingView alpha:1];
             });
-           
+            
         }
         
     });
@@ -77,21 +76,21 @@
             
             [[view addLabel:nil text:@"Loding..." font:30 color:@"ffffff"] block:nil on:^(UILabel *label)
              {
-                 if(STScreenWidthPx-label.stWidth<200)
-                 {
-                     [label width:STScreenWidthPx-200];
-                     [[label numberOfLines:0] sizeToFit];
-                 }
-                 [view width:label.stWidth+100 height:label.stHeight+50];
-                 [label toCenter];
-             }];
+                if(STScreenWidthPx-label.stWidth<200)
+                {
+                    [label width:STScreenWidthPx-200];
+                    [[label numberOfLines:0] sizeToFit];
+                }
+                [view width:label.stWidth+100 height:label.stHeight+50];
+                [label toCenter];
+            }];
             
             [[view layerCornerRadius:10.f] toCenter];
             [view alpha:0];//默认隐藏
             _lodingView=view;
         }];
     }
-   return _lodingView;
+    return _lodingView;
 }
 #pragma mark 消息提示
 -(void)prompt:(id)msg {
@@ -105,14 +104,14 @@
             
             [[view addLabel:nil text:msg font:30 color:@"ffffff" row:0] block:nil on:^(UILabel *label)
              {
-                 if(STScreenWidthPx-label.stWidth<150)
-                 {
-                     [label width:STScreenWidthPx-150];
-                     [label sizeToFit];
-                 }
-                 [view width:label.stWidth+100 height:label.stHeight+50];
-                 [label toCenter];
-             }];
+                if(STScreenWidthPx-label.stWidth<150)
+                {
+                    [label width:STScreenWidthPx-150];
+                    [label sizeToFit];
+                }
+                [view width:label.stWidth+100 height:label.stHeight+50];
+                [label toCenter];
+            }];
             
             [[view layerCornerRadius:10.f] toCenter];
             [UIView animateWithDuration:second animations:^{
@@ -217,28 +216,38 @@
 }
 - (void)dialog:(OnDialogShow)dialog beforeHide:(OnBeforeDialogHide) beforeHide
 {
+    self.isDailoging=YES;
     UIWindow *window=self.window;
     UIView *statusView=window.statusBar;
     
-    UIImage*bgImage=statusView.backgroundImage;
-    UIColor*bgColor=statusView.backgroundColor;
-    [[statusView backgroundImage:nil] backgroundColor:[ColorBlack alpha:0.5]];
+    UIImage *bgImage=statusView.backgroundImage;
+    UIColor *bgColor=statusView.backgroundColor;
+    __block OnBeforeDialogHide beforeHideBlock=beforeHide;
     __block OnDialogShow block=dialog;
-    __block OnBeforeDialogHide hideBlock=beforeHide;
+    [[statusView backgroundImage:nil] backgroundColor:[ColorBlack alpha:0.5]];
     [[[[window addUIView:nil] x:0 y:0 width:1 height:1] backgroundColor:[ColorBlack alpha:0.5]] block:nil on:^(UIView* winView) {
         [winView onClick:^(UIView* view) {
             BOOL result=YES;
-            if(hideBlock)
+            if(beforeHideBlock)
             {
-                result=hideBlock(winView,view);
-                hideBlock=nil;
+                result=beforeHideBlock(winView,[self getSubClickView:view allowNil:NO]);
+            }
+            else if(!winView.isHidden)//[ImageView show]
+            {
+                UIView *subViewClick=[self getSubClickView:view allowNil:NO];
+                result=[view isEqual:subViewClick];
             }
             if(result)
             {
+                self.isDailoging=NO;
+                beforeHideBlock=nil;
                 [winView hidden:YES];
                 [winView removeSelf];
-               [[statusView backgroundImage:bgImage] backgroundColor:bgColor];
+                [[statusView backgroundImage:bgImage] backgroundColor:bgColor];
             }
+        }];
+        [winView onDbClick:^(id view) {
+            //双击事件存在是，屏蔽单击事件触发。
         }];
         if(block)
         {
@@ -246,6 +255,40 @@
             block=nil;
         }
     }];
+}
+-(UIView*)getSubClickView:(UIView*)winView allowNil:(BOOL)allowNil
+{
+    UIView *returnView=nil;
+    for (int i=0; i<winView.subviews.count; i++) {
+        UIView *view=winView.subviews[i];
+        if(view.userInteractionEnabled)
+        {
+            if(view.gestureRecognizers.count==0)
+            {
+                returnView=[self getSubClickView:view allowNil:YES];
+            }
+            else
+            {
+                for (int k=0; k<view.gestureRecognizers.count; k++) {
+                    
+                    if(view.gestureRecognizers[k].state!=UIGestureRecognizerStatePossible)
+                    {
+                        returnView=[self getSubClickView:view allowNil:NO];
+                        break;
+                    }
+                }
+            }
+            if(returnView!=nil)
+            {
+                return returnView;
+            }
+        }
+    }
+    if(allowNil)
+    {
+        return nil;
+    }
+    return winView;
 }
 @end
 

@@ -15,7 +15,7 @@ typedef void (^OnPick)(NSData *data,UIImagePickerController *picker,NSDictionary
 //!长按时提示用户保存图片
 -(UIImageView*)longPressSave:(BOOL)yesNo;
 //!执行保存图片事件
--(UIImageView*)save;
+-(void)save;
 //!设置图片是否圆角
 -(UIImageView*)corner:(BOOL)yesNo;
 //!获取图片的地址
@@ -43,17 +43,12 @@ typedef void (^OnPick)(NSData *data,UIImagePickerController *picker,NSDictionary
 //!获取图片的名称
 -(NSString*)imageName;
 -(UIImageView*)image:(id)imgOrName;
-@end
-
-@interface UIImage(ST)
-//!为每个UI都扩展有一个name
-@property (nonatomic,copy) NSString* name;
-typedef void (^AfterImageSave)(NSError *err);
-@property (nonatomic,copy) AfterImageSave afterImageSaveBlock;
-//!获取图片压缩后的字节数据，当前图片不受变化
--(NSData*)compress:(NSInteger)maxKb;
--(void)save:(AfterImageSave)afterSave;
-//!检测最大宽高的等比缩放
--(UIImage *)reSize:(CGSize)maxSize;
--(NSData*)data;
+#pragma mark 浏览查看大图、（去掉第3方图片查看）
+//!双击切换放大查看
+-(void)zoom;
+-(UIImageView *)zoom:(BOOL)yesNo;
+//!点击发大查看
+-(void)show;
+-(UIImageView *)show:(BOOL)yesNo;
++(void)show:(NSInteger)startIndex images:(id)imgOrNameOrArray,...NS_REQUIRES_NIL_TERMINATION;
 @end

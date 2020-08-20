@@ -181,7 +181,7 @@ static char keyValueChar='k';
 }
 -(UIWindow*)keyWindow
 {
-    return self.stController.keyWindow;
+    return [UIWindow keyWindow];
 }
 -(UIView*)stValue:(NSString*)value
 {
@@ -396,9 +396,17 @@ static char keyValueChar='k';
 {
     if([imgOrName isKindOfClass:[NSString class]])
     {
-        UIImage *img=STImage(imgOrName);
-        img.name=imgOrName;
-        return img;
+        NSString* name=(NSString*)imgOrName;
+        if([name startWith:@"http://"] || [name startWith:@"https://"])
+        {
+            return nil;//-------------------------------------------------------------------------------------
+        }
+        else
+        {
+            UIImage *img=STImage(imgOrName);
+            img.name=imgOrName;
+            return img;
+        }
     }
     else if([imgOrName isKindOfClass:[NSData class]])
     {

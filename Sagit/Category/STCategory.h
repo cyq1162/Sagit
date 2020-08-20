@@ -33,6 +33,7 @@
 #import "STUITableViewCell.h"
 #import "STUICollectionView.h"
 #import "STUICollectionViewCell.h"
+#import "STUIImage.h"
 #import "STUIImageView.h"
 #import "STUIControl.h"
 #import "STUISwitch.h"

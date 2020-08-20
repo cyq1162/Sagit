@@ -36,7 +36,12 @@ typedef void (^OnScrollNextPager)(UIScrollView *scrollView);
 @property (readonly,nonatomic,retain)UIPageControl *pager;
 -(BOOL)showPager;
 -(UIScrollView*)showPager:(BOOL)yesNo;
+//!图片是否允许保存
+-(BOOL)isAllowSaveImage;
+-(UIScrollView*)isAllowSaveImage:(BOOL)yesNo;
 
 #pragma mark Add Images
--(UIScrollView *)addImages:(id)imgOrName,...NS_REQUIRES_NIL_TERMINATION;
+-(UIScrollView *)addImages:(id)imgOrNameOrArray,...NS_REQUIRES_NIL_TERMINATION;
+//扩展N页内容大小
+-(UIScrollView *)addPageSizeContent:(NSInteger)num;
 @end

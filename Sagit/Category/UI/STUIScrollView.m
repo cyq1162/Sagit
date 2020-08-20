@@ -15,7 +15,8 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {    //拖动前的起始坐标
     self.startPoint=self.contentOffset;
-    //NSLog(@"begin");
+   
+    NSLog(STString(@"begin:%@",@(self.userInteractionEnabled)));
 }
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{    //将要停止前的坐标
     self.endPoint=self.contentOffset;
@@ -113,6 +114,14 @@
 -(void)setIsImageFull:(BOOL)isStretchFull
 {
     [self key:@"isImageFull" value:isStretchFull?@"1":@"0"];
+}
+-(BOOL)isAllowSaveImage{
+    return [[self key:@"isAllowSaveImage"] isEqualToString:@"1"];
+}
+-(UIScrollView *)isAllowSaveImage:(BOOL)yesNo
+{
+    [self key:@"isAllowSaveImage" value:yesNo?@"1":@"0"];
+    return self;
 }
 -(NSInteger)pagerIndex
 {
@@ -279,35 +288,70 @@
     return self;
 }
 #pragma mark Add Images
-- (UIScrollView *)addImages:(id)imgOrName, ...
+-(void)addEvent:(UIImageView*)view
+{
+    if(self.isAllowSaveImage)
+    {
+        [view longPressSave:YES];
+    }
+}
+- (UIScrollView *)addImages:(id)imgOrNameOrArray, ...
 {
     
-    if(imgOrName)
+    if(imgOrNameOrArray)
     {
-        if([imgOrName isKindOfClass:[NSMutableArray class]])
+        if([imgOrNameOrArray isKindOfClass:[NSMutableArray class]] || [imgOrNameOrArray isKindOfClass:[NSArray class]])
         {
-            NSMutableArray *imgArray=imgOrName;
+             NSArray *imgArray=imgOrNameOrArray;
              for (id item in imgArray)
              {
-                [self addImageView:nil img:item direction:self.direction];
+                 [self addEvent:[self addImageView:nil img:item direction:self.direction]];
+                 
              }
         }
         else
         {
             va_list args;
-            va_start(args, imgOrName);
-           [self addImageView:imgOrName img:imgOrName direction:self.direction];
-            NSString *otherImgName;
-
-            while ((otherImgName = va_arg(args, NSString *)))
+            va_start(args, imgOrNameOrArray);
+            [self addEvent:[self addImageView:nil img:imgOrNameOrArray direction:self.direction]];
+            id otherImgName;
+            while ((otherImgName = va_arg(args, id)))
             {
-                 //[imgArray addObject:otherImgName];
-                [self addImageView:otherImgName img:otherImgName direction:self.direction];
-                //[ui addImageView:nil img:otherImgName direction:direction];
+                [self addEvent:[self addImageView:nil img:otherImgName direction:self.direction]];
             }
             va_end(args);
         }
     }
+    return self;
+}
+-(UIScrollView *)addPageSizeContent:(NSInteger)num
+{
+    CGRect frame=self.frame;
+    long count= self.subviews.count;//这么计算的话，ImageView必须先添加，然后才能添加其它控件。
+    if(count>0 && self.showsVerticalScrollIndicator){count--;}
+    if(count>0 && self.showsHorizontalScrollIndicator){count--;}
+    CGSize size=self.contentSize;
+    if(self.direction==X)
+    {
+        //frame.origin.x=frame.size.width*(count);
+        //scroll.showsHorizontalScrollIndicator=NO;
+        size.width=size.width+(frame.size.width*num);
+        if(size.height==0)
+        {
+            size.height=STFullSize.height;
+        }
+    }
+    else if(self.direction==Y)
+    {
+        //scroll.showsVerticalScrollIndicator=NO;
+        //frame.origin.y=frame.size.height*(count);
+        size.height=size.height+(frame.size.height*num);
+        if(size.width==0)
+        {
+            size.width=STFullSize.width;
+        }
+    }
+    self.contentSize=size;
     return self;
 }
 @end

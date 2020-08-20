@@ -43,6 +43,14 @@
             event(view);
         }
     }
+    else if([eventType isEqualToString:@"dbClick"])
+    {
+        OnViewDbClick event = [self key:@"onDbClick"];
+        if(event)
+        {
+            event(view);
+        }
+    }
     else if([eventType isEqualToString:@"longPress"])
     {
         OnLongPress event = [self key:@"onLongPress"];//(OnLongPress)objc_getAssociatedObject(self, &longPressChar);
@@ -72,7 +80,7 @@
     }
 }
 #pragma mark 系统公用方法
--(BOOL)removeGesture:(Class)class
+-(BOOL)removeGesture:(Class)class flag:(NSInteger)flag
 {
     BOOL result=NO;
     if(self.gestureRecognizers!=nil)
@@ -82,6 +90,14 @@
             UIGestureRecognizer *gestrue=self.gestureRecognizers[i];
             if([gestrue isKindOfClass:class])
             {
+                if(flag==1 || flag==2)//click、dbClick
+                {
+                    UITapGestureRecognizer *re=(UITapGestureRecognizer*)gestrue;
+                    if(re.numberOfTapsRequired!=flag)
+                    {
+                        continue;
+                    }
+                }
                 //gestrue.name
                 [self removeGestureRecognizer:gestrue];
                 gestrue=nil;
@@ -91,7 +107,7 @@
     }
     return result;
 }
-#pragma 处理手势冲突
+#pragma mark 处理手势冲突
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     if(![gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){return YES;}
@@ -114,6 +130,12 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+//    BOOL isSame=[[gestureRecognizer class] isEqual: [otherGestureRecognizer class]];
+//    if(isSame)
+//    {
+//       return [gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]];
+//    }
+//    return !isSame;
 //    if ([gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIRotationGestureRecognizer class]]) {
 //        return YES;
 //    }
@@ -134,8 +156,43 @@
         click.delegate=(id)self;
         click.numberOfTapsRequired=1;//设置点按次数，默认为1
         click.numberOfTouchesRequired=1;//点按的手指数
+        for (int i=0; i<self.gestureRecognizers.count; i++) {
+            if([self.gestureRecognizers[i] isKindOfClass:[UITapGestureRecognizer class]])
+            {
+                //UITapGestureRecognizer *tap=(UITapGestureRecognizer*)self.gestureRecognizers[i];
+                [click requireGestureRecognizerToFail:self.gestureRecognizers[i]];
+            }
+        }
+        
         [self addGestureRecognizer:click];
+        
         return click;
+    }
+    else if([eventType isEqualToString:@"dbClick"])
+    {
+          [self removeDbClick];
+          
+          UITapGestureRecognizer *dbClick = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dbClick)];
+          dbClick.delegate=(id)self;
+          dbClick.numberOfTapsRequired=2;//设置点按次数，默认为2
+          dbClick.numberOfTouchesRequired=1;//点按的手指数
+            for (int i=0; i<self.gestureRecognizers.count; i++) {
+                if([self.gestureRecognizers[i] isKindOfClass:[UITapGestureRecognizer class]])
+                {
+                    UITapGestureRecognizer *tap=(UITapGestureRecognizer*)self.gestureRecognizers[i];
+                    if(tap.numberOfTapsRequired==1)
+                    {
+                        [tap requireGestureRecognizerToFail:dbClick];
+                    }
+                    else if(tap.numberOfTapsRequired>2)
+                    {
+                        [dbClick requireGestureRecognizerToFail:tap];
+                    }
+                   
+                }
+            }
+          [self addGestureRecognizer:dbClick];
+          return dbClick;
     }
     else if([eventType isEqualToString:@"longPress"])
     {
@@ -324,7 +381,7 @@
     }
     return nil;
 }
-#pragma mark click 事件
+#pragma mark click 点击事件
 -(NSInteger)clickInterval
 {
     NSString *second=[self key:@"clickInterval"];
@@ -339,6 +396,14 @@
     [self key:@"clickInterval" value:STNumString(sencond)];
     return  self;
 }
+//-(UIView*)clickStart:(UITapGestureRecognizer*)recognizer
+//{
+//    if(recognizer.numberOfTapsRequired==1)
+//    {
+//        return [self click];
+//    }
+//    return self;
+//}
 -(UIView*)click
 {
 //    if(self.userInteractionEnabled)
@@ -347,15 +412,21 @@
 //    }
     if(self.userInteractionEnabled)
     {
-        self.userInteractionEnabled=NO;
+        if(self.clickInterval>0)
+        {
+            self.userInteractionEnabled=NO;
+        }
         [self exeEvent:@"click"];
-        [Sagit delayExecute:self.clickInterval onMainThread:YES block:^{
-            @try
-            {
-              self.userInteractionEnabled=YES;
-            }
-            @catch(NSException *err){}
-        }];
+        if(self.clickInterval>0)
+        {
+            [Sagit delayExecute:self.clickInterval onMainThread:YES block:^{
+                @try
+                {
+                  self.userInteractionEnabled=YES;
+                }
+                @catch(NSException *err){}
+            }];
+        }
 
     }
     return self;
@@ -382,7 +453,7 @@
 }
 -(UIView *)removeClick
 {
-    if([self removeGesture:[UITapGestureRecognizer class]])
+    if([self removeGesture:[UITapGestureRecognizer class] flag:1])
     {
         //移除参数
         [self.keyValue remove:@"clickView,clickSel,clickTarget,clickPointView,onClick"];
@@ -390,7 +461,55 @@
     }
     return self;
 }
+#pragma mark click 双击事件
 
+-(UIView*)dbClick
+{
+    if(self.userInteractionEnabled)
+    {
+        self.userInteractionEnabled=NO;
+        [self exeEvent:@"dbClick"];
+        [Sagit delayExecute:self.clickInterval onMainThread:YES block:^{
+            @try
+            {
+              self.userInteractionEnabled=YES;
+            }
+            @catch(NSException *err){}
+        }];
+
+    }
+    return self;
+}
+-(UIView*)addDbClick:(NSString *)event
+{
+    return [self addClick:event target:nil];
+}
+-(UIView*)addDbClick:(NSString *)event target:(UIViewController*)target
+{
+    return [self addEvent:@"dbClick" event:event target:target];
+}
+-(UIView*)onDbClick:(OnViewDbClick)block
+{
+    if(block!=nil)
+    {
+        [self addGesture:@"dbClick"];//内部有清除参数，放在前面
+        [self key:@"dbClickView" value:self];
+        [self key:@"onDbClick" value:block];
+        //[self setClickBlock:block];
+        
+    }
+    return self;
+}
+-(UIView *)removeDbClick
+{
+    if([self removeGesture:[UITapGestureRecognizer class] flag:2])
+    {
+        //移除参数
+        [self.keyValue remove:@"dbClickView,dbClickSel,dbClickTarget,dbClickPointView,onDbClick"];
+        //[self setClickBlock:nil];
+    }
+    return self;
+}
 #pragma mark longPress 事件
 - (UIView *)longPressStart:(UILongPressGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan)
@@ -429,7 +548,7 @@
 }
 -(UIView *)removeLongPress
 {
-    if([self removeGesture:[UILongPressGestureRecognizer class]])
+    if([self removeGesture:[UILongPressGestureRecognizer class] flag:0])
     {
         //移除参数
         [self.keyValue remove:@"longPressView,longPressSel,longPressTarget,longPressPointView,onLongPress"];
@@ -477,7 +596,7 @@
 }
 -(UIView *)removeDrag
 {
-    if([self removeGesture:[UIPanGestureRecognizer class]])
+    if([self removeGesture:[UIPanGestureRecognizer class] flag:0])
     {
         //移除参数
         [self.keyValue remove:@"dragView,dragSel,dragTarget,dragPointView,onDrag,dragRecognizer"];
@@ -520,7 +639,7 @@
 }
 -(UIView *)removeSlide
 {
-    if([self removeGesture:[UISwipeGestureRecognizer class]])
+    if([self removeGesture:[UISwipeGestureRecognizer class] flag:0])
     {
         //移除参数
         [self.keyValue remove:@"slideView,slideSel,slideTarget,slidePointView,onSlide,slideRecognizer"];

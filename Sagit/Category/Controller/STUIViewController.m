@@ -147,30 +147,9 @@ static char keyValueChar='k';
 }
 -(UIWindow*)keyWindow
 {
-     if (@available(iOS 13.0, *)) {
-         // 获取keywindow
-         NSArray *array = [UIApplication sharedApplication].windows;
-         UIWindow *window = [array objectAtIndex:0];
-      
-          //  判断取到的window是不是keywidow
-         if (!window.hidden || window.isKeyWindow) {
-             return window;
-         }
-      
-         //  如果上面的方式取到的window 不是keywidow时  通过遍历windows取keywindow
-         for (UIWindow *window in array) {
-             if (!window.hidden || window.isKeyWindow) {
-                 return window;
-             }
-         }
-    }
-    UIApplication *app=[UIApplication sharedApplication];
-    UIWindow *win=app.keyWindow;
-    if(win!=nil)
-    {
-        return win;
-    }
-    return app.delegate.window;}
+    return [UIWindow keyWindow];
+    
+}
 #pragma mark 导航栏、状态栏、Tab栏 显示隐藏
 -(BOOL)needNavBar
 {

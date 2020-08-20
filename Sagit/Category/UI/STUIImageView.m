@@ -48,7 +48,7 @@
     return self;
 }
 
--(UIImageView*)save
+-(void)save
 {
     [Sagit.MsgBox confirm:@"是否保存图片？" title:@"消息提示" click:^BOOL(NSInteger isOK,UIAlertView* view) {
         if(isOK>0)
@@ -59,7 +59,6 @@
         }
         return YES;
     }];
-    return self;
 }
 
 -(NSString *)url
@@ -89,6 +88,13 @@
 //}
 -(UIImageView *)url:(NSString *)url default:(id)imgOrName maxKb:(NSInteger)compress //after:(AfterSetImageUrl)block
 {
+    if(imgOrName==nil)
+    {
+        UIView *defaultView=[[[UIView new] backgroundColor:ColorBlack] width:self.stWidth height:self.stHeight];
+        [[[[defaultView addLabel:nil text:@"Loading..." font:46 color:ColorWhite] textAlignment:NSTextAlignmentCenter ] stSizeToFit] toCenter];
+        imgOrName= defaultView.asImage;
+        
+    }
     AfterEvent block=self.onAfter;
     if([NSString isNilOrEmpty:url])
     {
@@ -181,7 +187,8 @@
 }
 -(UIImageView *)reSize:(CGSize)maxSize
 {
-    self.image=[self.image reSize:maxSize];;
+    self.image=[self.image reSize:maxSize];
+    [self setFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y, self.image.size.width, self.image.size.height)];
     return self;
 }
 #pragma mark 扩展属性
@@ -203,94 +210,121 @@
     }
     return self;
 }
-@end
-
-
-
-@implementation UIImage(ST)
-static char nameChar='n';
--(NSString *)name
+#pragma mark 浏览查看大图、（去掉第3方图片查看）
+-(void)zoom
 {
-    return (NSString*)objc_getAssociatedObject(self, &nameChar);
-}
--(void)setName:(NSString *)name
-{
-    objc_setAssociatedObject(self, &nameChar, name, OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
--(NSData*)compress:(NSInteger)maxKb
-{
-    // Compress by quality
-    NSInteger maxLength=maxKb*1024;//转字节处理
-    CGFloat quality = 1;
-    NSData *data = UIImageJPEGRepresentation(self, quality);
-    if (data.length < maxLength) return data;
-    
-    CGFloat max = 1;
-    CGFloat min = 0;
-    for (int i = 0; i < 6; ++i)
+    if(!Sagit.MsgBox.isDailoging)
     {
-        quality = (max + min) / 2;
-        data = UIImageJPEGRepresentation(self, quality);
-        if (data.length < maxLength * 0.9) {
-            min = quality;
-        } else if (data.length > maxLength) {
-            max = quality;
-        } else {
-            break;
+        [self show];
+    }
+    else
+    {
+        NSString *zoomScale=[self key:@"zoomScale"];
+        if(zoomScale==nil)
+        {
+            [self key:@"oldX" value:@(self.stX)];
+            [self key:@"oldY" value:@(self.stY)];
+            zoomScale=@"2";
         }
+        else if ([zoomScale isEqual:@"0.5"])
+        {
+            zoomScale=@"2";
+        }
+        else
+        {
+            zoomScale=@"0.5";
+        }
+        [self key:@"zoomScale" value:zoomScale];
+        float scale=zoomScale.floatValue;
+        //动画放大所展示的ImageView
+        [UIView animateWithDuration:0.4 animations:^{
+            self.transform=CGAffineTransformScale(self.transform, scale,scale);
+            
+           if([self.superview isKindOfClass:[UIScrollView class]])
+           {
+               UIScrollView *scroll=(UIScrollView*)self.superview;
+               for (int i=0; i<scroll.gestureRecognizers.count; i++) {
+                   scroll.gestureRecognizers[i].enabled=scale!=2;
+               }
+               [scroll bringSubviewToFront:self];
+               if(scale!=2)
+               {
+                   NSString *oldX= [self key:@"oldX"];
+                   NSString *oldY= [self key:@"oldY"];
+                   [self x:oldX.floatValue y:oldY.floatValue];
+               }
+           }
+
+        } completion:^(BOOL finished) {
+            if(finished)
+            {
+                if(scale==2)
+                {
+                    [self onDrag:^(id view, UIPanGestureRecognizer *recognizer) {
+
+                    }];
+                }
+                else
+                {
+                    [self removeDrag];
+                    
+                }
+            }
+        }];
     }
-    return data;
 }
-static char afterImageSaveBlockChar='c';
--(AfterImageSave)afterImageSaveBlock
+-(UIImageView *)zoom:(BOOL)yesNo
 {
-    return (AfterImageSave)objc_getAssociatedObject(self, &afterImageSaveBlockChar);
+        if(yesNo)
+       {
+           [self addDbClick:@"zoom" target:self];
+       }
+       else
+       {
+           [self removeDbClick];
+       }
+       return self;
 }
--(void)setAfterImageSaveBlock:(AfterImageSave)afterImageSaveBlock
+-(void)show
 {
-     objc_setAssociatedObject(self, &afterImageSaveBlockChar, afterImageSaveBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [UIImageView show:0 images:self, nil];
 }
--(void)save:(AfterImageSave)afterSaveBlock
+-(UIImageView *)show:(BOOL)yesNo
 {
-    self.afterImageSaveBlock=afterSaveBlock;
-    UIImageWriteToSavedPhotosAlbum(self, self, @selector(afterImageSave:error:contextInfo:),nil);
+        if(yesNo)
+          {
+              [self addClick:@"show" target:self];
+          }
+          else
+          {
+              [self removeClick];
+          }
+          return self;
 }
-- (void)afterImageSave:(UIImage *)image error:(NSError *)error contextInfo:(void *)contextInfo
++(void)show:(NSInteger)startIndex images:(id)imgOrNameOrArray, ...
 {
-    if(self.afterImageSaveBlock)
-    {
-        self.afterImageSaveBlock(error);
-        self.afterImageSaveBlock = nil;
-    }
-}
--(UIImage *)reSize:(CGSize)maxSize
-{
-    //[self width:maxSize.width height:maxSize.height];
-    UIImage *image=self;
-    if (image.size.width < maxSize.width && image.size.height < maxSize.height) return image;
-    CGFloat imageW = image.size.width;
-    CGFloat imageH = image.size.height;
-    CGFloat k = 0.0f;
-    CGSize size = CGSizeMake(maxSize.width, maxSize.height);
-    if (image.size.width > maxSize.width)
-    {
-        k = image.size.width / maxSize.width;
-        imageH = ceil(image.size.height / k);
-        size = CGSizeMake(maxSize.width, imageH);
-    }
-    if (imageH > maxSize.height) {
-        k = image.size.height / maxSize.height;
-        imageW = ceil(image.size.width / k);
-        size = CGSizeMake(imageW, maxSize.height);
-    }
-    UIGraphicsBeginImageContext(size);
-    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-    image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndPDFContext();
-    return image;
-}
--(NSData *)data
-{
-   return UIImagePNGRepresentation(self);
+    if(imgOrNameOrArray==nil){return;}
+    [Sagit.MsgBox dialog:^(UIView *winView) {
+        [[[winView addScrollView:nil direction:X]  addImages:imgOrNameOrArray, nil]block:^(UIScrollView* scrollView) {
+            [scrollView setPagerIndex:startIndex];
+            [[scrollView showPager:YES] backgroundColor:ColorBlack];
+            scrollView.onPrePager = ^(UIScrollView *scrollView) {
+
+            };
+            scrollView.onNextPager = ^(UIScrollView *scrollView) {
+                
+            };
+            for (int i=0; i<scrollView.subviews.count; i++) {
+                UIImageView *imgView=(UIImageView*)scrollView.subviews[i];
+                [[imgView longPressSave:YES] zoom:YES];
+                [imgView onClick:^(id view) {
+                    [[winView hidden:YES] click];
+                }];
+            }
+        }];
+    }];
 }
 @end
+
+
+

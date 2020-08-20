@@ -13,5 +13,6 @@
 //当前编辑的文本框
 @property (nonatomic,retain) UIView *editingTextUI;
 @property (nonatomic,assign) CGFloat keyboardHeight;
++(id)keyWindow;
 @end
 

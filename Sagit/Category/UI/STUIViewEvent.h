@@ -12,6 +12,8 @@
 typedef  void(^AfterEvent)(NSString *eventType, id para);
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)
 typedef  void(^OnViewClick)(id view);
+//!双击事件
+typedef  void(^OnViewDbClick)(id view);
 typedef  void(^OnViewDrag)(id view,UIPanGestureRecognizer *recognizer);
 typedef  void(^OnViewSlide)(id view,UISwipeGestureRecognizer *recognizer);
 typedef  void(^OnLongPress)(id view);
@@ -31,7 +33,17 @@ typedef  void(^ViewDescription)(id view);
 -(UIView*)onClick:(OnViewClick)block;
 //!移除绑定点击事件
 -(UIView*)removeClick;
-
+#pragma mark 扩展系统事件 - 双击
+//!执行双击事件
+-(UIView*)dbClick;
+//!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name）
+-(UIView*)addDbClick:(NSString*)event;
+//!绑定事件 并指定target
+-(UIView*)addDbClick:(NSString *)event target:(UIViewController*)target;
+//!绑定事件 用代码块的形式
+-(UIView*)onDbClick:(OnViewClick)block;
+//!移除绑定双击事件
+-(UIView*)removeDbClick;
 #pragma mark 扩展系统事件 - 长按
 //!执行长按事件
 -(UIView*)longPress;

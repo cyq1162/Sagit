@@ -114,5 +114,39 @@
        [baseView backToOrigin];
     }
 }
+
++(id)keyWindow
+{
+    
+    UIApplication *app=[UIApplication sharedApplication];
+    if(app.delegate && app.delegate.window)
+    {
+        return app.delegate.window;
+    }
+    if (@available(iOS 13.0, *)) {
+         // 获取keywindow
+         NSArray *array = app.windows;
+         UIWindow *window = [array objectAtIndex:0];
+      
+          //  判断取到的window是不是keywidow
+         if (!window.hidden || window.isKeyWindow) {
+             return window;
+         }
+      
+         //  如果上面的方式取到的window 不是keywidow时  通过遍历windows取keywindow
+         for (UIWindow *window in array) {
+             if (!window.hidden || window.isKeyWindow) {
+                 return window;
+             }
+         }
+    }
+    
+    UIWindow *win=app.keyWindow;
+    if(win!=nil)
+    {
+        return win;
+    }
+    return app.delegate.window;
+}
 @end
 

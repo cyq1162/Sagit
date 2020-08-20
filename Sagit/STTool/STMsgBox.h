@@ -15,7 +15,8 @@ typedef void (^OnDialogShow)(UIView* winView);
 //!提供基础的消息弹窗
 @interface STMsgBox : NSObject
 + (STMsgBox*)share;
-
+//!dialog 状态。
+@property (nonatomic,assign) BOOL isDailoging;
 #pragma AlertView
 //!提示消息
 -(void)prompt:(id)msg;
