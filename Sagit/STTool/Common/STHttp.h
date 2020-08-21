@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STModel.h"
+#import "STHttpModel.h"
 #import "STMsgBox.h"
 
-typedef void(^Success)(STModel *result);
+typedef void(^Success)(STHttpModel *result);
 typedef void(^Error)(NSString *errMsg);
 typedef void(^Before)(NSMutableURLRequest *request);
 

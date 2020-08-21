@@ -15,10 +15,10 @@
 #import "STEnum.h"
 #import "STDefine.h"
 #import "STDefineUI.h"
-#import "STModel.h"
+#import "STHttpModel.h"
 #import "STModelBase.h"
 #import "STLayoutTracer.h"
-#import "STCityModel.h"
+#import "STLocationModel.h"
 
 //STCategory
 #import "STCategory.h"

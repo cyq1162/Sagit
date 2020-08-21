@@ -177,7 +177,7 @@
         [self hideLoading];
         if(success!=nil)
         {
-            STModel *model=[[STModel alloc] initWithObject:response];
+            STHttpModel *model=[[STHttpModel alloc] initWithObject:response];
             success(model);
         }
     });

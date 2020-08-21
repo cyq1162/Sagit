@@ -6,12 +6,12 @@
 
 
 #import <Foundation/Foundation.h>
-#import "STCityModel.h"
+#import "STLocationModel.h"
 #import "LocationConverter.h"
 
 @interface STLocation : NSObject
-typedef void (^OnLocationEnd)(STCityModel *model);
-@property (nonatomic,retain) STCityModel *cityModel;
+typedef void (^OnLocationEnd)(STLocationModel *model);
+@property (nonatomic,retain) STLocationModel *cityModel;
 + (instancetype)share;
 -(void)runOnce;
 -(void)start:(OnLocationEnd)locationEnd;
@@ -25,5 +25,5 @@ typedef void (^OnLocationEnd)(STCityModel *model);
 -(void)redirectToSetting;
 //!跳转到第3方地图
 -(void)redirectToMap;
--(void)redirectToMap:(STCityModel*)mode;
+-(void)redirectToMap:(STLocationModel*)mode;
 @end

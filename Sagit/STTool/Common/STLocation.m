@@ -16,11 +16,11 @@
 }
 @end
 @implementation STLocation
--(STCityModel *)cityModel
+-(STLocationModel *)cityModel
 {
     if(!_cityModel)
     {
-        _cityModel=[STCityModel new];
+        _cityModel=[STLocationModel new];
     }
     return _cityModel;
 }
@@ -144,11 +144,11 @@
 {
     [self redirectToMap:self.cityModel];
 }
--(void)redirectToMap:(STCityModel *)model
+-(void)redirectToMap:(STLocationModel *)model
 {
     if(model==nil || !model.Latitude)
     {
-        [self start:^(STCityModel *model) {
+        [self start:^(STLocationModel *model) {
             [self showMap:model];
         }];
     }
@@ -158,7 +158,7 @@
     }
 }
 
-- (void)showMap:(STCityModel*)city {
+- (void)showMap:(STLocationModel*)city {
     NSDictionary *maps=@{@"百度地图":@"baidumap://",@"高德地图":@"iosamap://",@"谷歌地图":@"comgooglemaps://",@"腾讯地图":@"qqmap://"};
     NSString *canUseMap=@"苹果地图";
     for (NSString* key in maps) {
@@ -183,7 +183,7 @@
 //百度地图使用的是BD-09坐标系
 //苹果自带地图在国内使用高德提供的数据,所以使用的是GCJ-02坐标系
 
--(void)baiduMap:(STCityModel*)city
+-(void)baiduMap:(STLocationModel*)city
 {
     CLLocationCoordinate2D gps= [LocationConverter gcj02ToBd09:CLLocationCoordinate2DMake(city.Latitude.doubleValue,city.Longitude.doubleValue)];
 
@@ -192,22 +192,22 @@
    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
 }
 
--(void)iosaMap:(STCityModel*)city
+-(void)iosaMap:(STLocationModel*)city
 {
     NSString *urlString = [[NSString stringWithFormat:@"iosamap://navi?sourceApplication=%@&backScheme=%@&lat=%f&lon=%f&dev=0&style=2",@"导航功能",@"poapoaaldoerccbadersvsruhdk",city.Latitude,city.Longitude] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
 }
--(void)comgoogleMaps:(STCityModel*)city
+-(void)comgoogleMaps:(STLocationModel*)city
 {
    NSString *urlString = [[NSString stringWithFormat:@"comgooglemaps://?x-source=%@&x-success=%@&saddr=&daddr=%f,%f&directionsmode=driving",@"驾车导航",@"poapoaaldoerccbadersvsruhdk",city.Latitude,city.Longitude] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
 }
--(void)qqMap:(STCityModel*)city
+-(void)qqMap:(STLocationModel*)city
 {
      NSString *urlString = [[NSString stringWithFormat:@"qqmap://map/routeplan?from=我的位置&type=drive&tocoord=%f,%f&to=终点&coord_type=1&policy=0",city.Latitude,city.Longitude] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
 }
--(void)appleMap:(STCityModel*)city
+-(void)appleMap:(STLocationModel*)city
 {
 
     CLLocationCoordinate2D gps= CLLocationCoordinate2DMake(city.Latitude.doubleValue,city.Longitude.doubleValue);
