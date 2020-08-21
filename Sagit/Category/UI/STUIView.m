@@ -181,7 +181,7 @@ static char keyValueChar='k';
 }
 -(UIWindow*)keyWindow
 {
-    return [UIWindow keyWindow];
+    return [UIWindow mainWindow];
 }
 -(UIView*)stValue:(NSString*)value
 {

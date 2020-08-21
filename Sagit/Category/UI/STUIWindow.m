@@ -115,7 +115,7 @@
     }
 }
 
-+(id)keyWindow
++(id)mainWindow
 {
     
     UIApplication *app=[UIApplication sharedApplication];

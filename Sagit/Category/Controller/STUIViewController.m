@@ -147,7 +147,7 @@ static char keyValueChar='k';
 }
 -(UIWindow*)keyWindow
 {
-    return [UIWindow keyWindow];
+    return [UIWindow mainWindow];
     
 }
 #pragma mark 导航栏、状态栏、Tab栏 显示隐藏
@@ -189,6 +189,10 @@ static char keyValueChar='k';
     }
     if(self.tabBarController && self.tabBarController.tabBar)
     {
+        if(self.tabBarController.tabBar.hidden && self.navigationController && self.preController!=nil)
+        {
+            return NO;
+        }
         return STDefaultShowTab;
         //return !self.tabBarController.tabBar.hidden;
     }
@@ -262,6 +266,7 @@ static char keyValueChar='k';
     {
         [self key:@"needTabBar" valueIfNil:!self.tabBarController.tabBar.hidden?@"1":@"0"];
         self.tabBarController.tabBar.hidden=YES;
+        //self.tabBarController.tabBar.translucent=NO;
         self.hidesBottomBarWhenPushed=YES;
         //又是一个坑，fuck，如果push一次，再切换tab，再切回来，就不见了,但成对出现在还原的时候需要设置为NO，就可以了，
         //（不用这个在5s下10.3//.1系统下，状态栏会空白不会取消。

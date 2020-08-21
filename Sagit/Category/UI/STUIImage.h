@@ -5,7 +5,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <objc/runtime.h>
 
 @interface UIImage(ST)
 //!为每个UI都扩展有一个name

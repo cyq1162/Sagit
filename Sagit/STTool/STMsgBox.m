@@ -29,7 +29,7 @@
 - (UIWindow*)window {
     if (!_window)
     {
-       _window = [UIWindow keyWindow];
+       _window = [UIWindow mainWindow];
     }
     return _window;
 }
