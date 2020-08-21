@@ -50,14 +50,13 @@
 
 -(void)save
 {
-    [Sagit.MsgBox confirm:@"是否保存图片？" title:@"消息提示" click:^BOOL(NSInteger isOK,UIAlertView* view) {
+    [Sagit.MsgBox confirm:@"是否保存图片？" title:@"消息提示" click:^void(NSInteger isOK,UIAlertView* view) {
         if(isOK>0)
         {
             [self.image save:^(NSError *err) {
                 [Sagit.MsgBox prompt:!err?@"保存成功":@"保存失败:保存照片权限被拒绝，您需要重新设置才能保存！"];
             }];
         }
-        return YES;
     }];
 }
 
@@ -213,7 +212,7 @@
 #pragma mark 浏览查看大图、（去掉第3方图片查看）
 -(void)zoom
 {
-    if(!Sagit.MsgBox.isDailoging)
+    if(!Sagit.MsgBox.isDialoging)
     {
         [self show];
     }

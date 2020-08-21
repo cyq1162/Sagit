@@ -34,6 +34,10 @@
 {
     return [STMsgBox share];
 }
++(STLocation *)Location
+{
+    return [STLocation share];
+}
 #pragma mark 扩展一些全局的方法
 +(void)delayExecute:(double)second onMainThread:(BOOL)onMainThread block:(DelayExecuteBlock)block
 {

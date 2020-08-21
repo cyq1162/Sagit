@@ -16,7 +16,7 @@
 {    //拖动前的起始坐标
     self.startPoint=self.contentOffset;
    
-    NSLog(STString(@"begin:%@",@(self.userInteractionEnabled)));
+   // NSLog(STString(@"begin:%@",@(self.userInteractionEnabled)));
 }
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{    //将要停止前的坐标
     self.endPoint=self.contentOffset;

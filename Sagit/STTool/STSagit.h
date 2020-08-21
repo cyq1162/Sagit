@@ -12,7 +12,7 @@
 #import "STHttp.h"
 #import "STCache.h"
 #import "STMsgBox.h"
-
+#import "STLocation.h"
 
 //!所有单例的入口，可以扩展此类，来增加不同的方法，达到如：Sagit.Global之类的用法。
 @interface Sagit : NSObject
@@ -28,7 +28,8 @@
 +(STHttp*)Http;
 //!用于弹窗消息的单例类，在STController中时用self.msgBox调用
 +(STMsgBox*)MsgBox;
-
+//!用于GPS坐标定位
++(STLocation*)Location;
 #pragma mark 扩展一些全局的方法
 typedef void (^DelayExecuteBlock)();
 //延时N秒后执行
