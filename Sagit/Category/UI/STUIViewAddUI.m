@@ -622,11 +622,14 @@
     
 //    ui.estimatedSectionHeaderHeight=0.01f;
 //    ui.estimatedSectionFooterHeight=0.01f;
-//    self.stController.automaticallyAdjustsScrollViewInsets=NO;
+ //   self.stController.automaticallyAdjustsScrollViewInsets=NO;
     ui.delegate=(id)self.stController;
     ui.dataSource=(id)self.stController;
 //    if (STOSVersion>=11) {
-//        ui.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    if(![self.stController needNavBar])//无导航栏时多了状态栏高度偏移。
+    {
+        ui.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
 ////        ui.contentInset = UIEdgeInsetsMake(64, 0, 49, 0);
 ////        ui.scrollIndicatorInsets = ui.contentInset;
 //    }
