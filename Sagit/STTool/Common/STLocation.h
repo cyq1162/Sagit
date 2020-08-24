@@ -6,6 +6,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import <MapKit/Mapkit.h>
 #import "STLocationModel.h"
 #import "LocationConverter.h"
 
