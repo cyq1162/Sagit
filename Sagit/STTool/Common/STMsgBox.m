@@ -244,7 +244,7 @@
             {
                 result=beforeHideBlock(winView,[self getSubClickView:view allowNil:NO]);
             }
-            else if(!winView.isHidden)//[ImageView show]
+            else if([winView key:@"clickPoint"]!=nil)//[ImageView show]
             {
                 UIView *subViewClick=[self getSubClickView:view allowNil:NO];
                 result=[view isEqual:subViewClick];
@@ -275,11 +275,7 @@
         UIView *view=winView.subviews[i];
         if(view.userInteractionEnabled)
         {
-            if(view.gestureRecognizers.count==0)
-            {
-                returnView=[self getSubClickView:view allowNil:YES];
-            }
-            else
+            if(view.gestureRecognizers.count>0)
             {
                 for (int k=0; k<view.gestureRecognizers.count; k++) {
                     
@@ -289,6 +285,10 @@
                         break;
                     }
                 }
+            }
+            if(returnView==nil)
+            {
+                returnView=[self getSubClickView:view allowNil:YES];
             }
             if(returnView!=nil)
             {

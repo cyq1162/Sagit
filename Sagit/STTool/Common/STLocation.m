@@ -175,7 +175,6 @@
         else if([name isEqual:@"谷歌地图"]){[self comgoogleMaps:city];}
         else if([name isEqual:@"腾讯地图"]){[self qqMap:city];}
         else if([name isEqual:@"苹果地图"]){[self appleMap:city];}
-        else if([name isEqual:@""]){}
     } okText:canUseMap cancelText:nil];
 }
 //国内拿到的是：中国国测局地理坐标（GCJ-02）<火星坐标>

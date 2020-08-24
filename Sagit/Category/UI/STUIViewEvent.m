@@ -152,7 +152,7 @@
     {
         [self removeClick];
         
-        UITapGestureRecognizer *click = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(click)];
+        UITapGestureRecognizer *click = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickStart:)];
         click.delegate=(id)self;
         click.numberOfTapsRequired=1;//设置点按次数，默认为1
         click.numberOfTouchesRequired=1;//点按的手指数
@@ -172,7 +172,7 @@
     {
           [self removeDbClick];
           
-          UITapGestureRecognizer *dbClick = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dbClick)];
+        UITapGestureRecognizer *dbClick = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dbClickStart:)];
           dbClick.delegate=(id)self;
           dbClick.numberOfTapsRequired=2;//设置点按次数，默认为2
           dbClick.numberOfTouchesRequired=1;//点按的手指数
@@ -396,20 +396,14 @@
     [self key:@"clickInterval" value:STNumString(sencond)];
     return  self;
 }
-//-(UIView*)clickStart:(UITapGestureRecognizer*)recognizer
-//{
-//    if(recognizer.numberOfTapsRequired==1)
-//    {
-//        return [self click];
-//    }
-//    return self;
-//}
+-(UIView*)clickStart:(UITapGestureRecognizer*)recognizer
+{
+        CGPoint p=[recognizer locationInView:recognizer.view];
+        [self key:@"clickPoint" value:@(p)];
+        return [self click];
+}
 -(UIView*)click
 {
-//    if(self.userInteractionEnabled)
-//    {
-//        [self exeEvent:@"click"];
-//    }
     if(self.userInteractionEnabled)
     {
         if(self.clickInterval>0)
@@ -417,6 +411,7 @@
             self.userInteractionEnabled=NO;
         }
         [self exeEvent:@"click"];
+         [self key:@"clickPoint" value:nil];
         if(self.clickInterval>0)
         {
             [Sagit delayExecute:self.clickInterval onMainThread:YES block:^{
@@ -456,27 +451,38 @@
     if([self removeGesture:[UITapGestureRecognizer class] flag:1])
     {
         //移除参数
-        [self.keyValue remove:@"clickView,clickSel,clickTarget,clickPointView,onClick"];
+        [self.keyValue remove:@"clickView,clickSel,clickTarget,clickPointView,onClick,clickPoint"];
         //[self setClickBlock:nil];
     }
     return self;
 }
 #pragma mark click 双击事件
-
+-(UIView*)dbClickStart:(UITapGestureRecognizer*)recognizer
+{
+        CGPoint p=[recognizer locationInView:recognizer.view];
+        [self key:@"dbClickPoint" value:@(p)];
+        return [self dbClick];
+}
 -(UIView*)dbClick
 {
     if(self.userInteractionEnabled)
     {
-        self.userInteractionEnabled=NO;
+        if(self.clickInterval>0)
+        {
+            self.userInteractionEnabled=NO;
+        }
         [self exeEvent:@"dbClick"];
-        [Sagit delayExecute:self.clickInterval onMainThread:YES block:^{
-            @try
-            {
-              self.userInteractionEnabled=YES;
-            }
-            @catch(NSException *err){}
-        }];
-
+        [self key:@"dbClickPoint" value:nil];
+        if(self.clickInterval>0)
+        {
+            [Sagit delayExecute:self.clickInterval onMainThread:YES block:^{
+                @try
+                {
+                  self.userInteractionEnabled=YES;
+                }
+                @catch(NSException *err){}
+            }];
+        }
     }
     return self;
 }

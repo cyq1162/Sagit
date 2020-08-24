@@ -307,17 +307,12 @@
         [[[winView addScrollView:nil direction:X]  addImages:imgOrNameOrArray, nil]block:^(UIScrollView* scrollView) {
             [scrollView setPagerIndex:startIndex];
             [[scrollView showPager:YES] backgroundColor:ColorBlack];
-            scrollView.onPrePager = ^(UIScrollView *scrollView) {
 
-            };
-            scrollView.onNextPager = ^(UIScrollView *scrollView) {
-                
-            };
             for (int i=0; i<scrollView.subviews.count; i++) {
                 UIImageView *imgView=(UIImageView*)scrollView.subviews[i];
                 [[imgView longPressSave:YES] zoom:YES];
                 [imgView onClick:^(id view) {
-                    [[winView hidden:YES] click];
+                    [winView  click];
                 }];
             }
         }];

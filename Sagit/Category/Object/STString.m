@@ -96,7 +96,10 @@
     }
     return [self isEqualToString:value];
 }
-+(NSString *)toString:(id)value{return [NSString stringWithFormat:@"%@",value];}
++(NSString *)toString:(id)value
+{
+    return [NSString stringWithFormat:@"%@",value];
+}
 +(NSString *)newGuid
 {
     CFUUIDRef theUUID = CFUUIDCreate(NULL);
