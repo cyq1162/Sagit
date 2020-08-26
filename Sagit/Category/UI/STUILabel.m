@@ -124,4 +124,9 @@
     self.numberOfLines=value;
     return self;
 }
+-(UILabel *)adjustsFontSizeToFitWidth:(BOOL)yesNo
+{
+    self.adjustsFontSizeToFitWidth=yesNo;
+    return self;
+}
 @end

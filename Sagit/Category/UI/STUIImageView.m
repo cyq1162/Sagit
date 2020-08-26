@@ -318,6 +318,64 @@
         }];
     }];
 }
+
+#pragma mark 本地验证码
+-(NSString *)VerifyCode
+{
+    return [self key:@"VerifyCode"];
+}
+-(UIImageView *)VerifyCode:(NSInteger)length
+{
+    NSString *text=[self getRandomText:length];
+    [self key:@"VerifyCoce" value:text];
+    UIView *bgView=[self drawBackgroud:length];
+    [[[[bgView addLabel:nil text:text font:88 color:ColorRandom] adjustsFontSizeToFitWidth:YES] textAlignment:NSTextAlignmentCenter] block:^(UILabel* view) {
+        [view x:0 y:0 width:bgView.stWidth height:bgView.stHeight];
+    }];
+    self.image=nil;
+    self.image=bgView.asImage;
+    if([self key:@"click"]==nil)
+    {
+        [self onClick:^(UIImageView* view) {
+            [view VerifyCode:length];
+        }];
+    }
+    return self;
+}
+-(NSString*)getRandomText:(NSInteger)length
+{
+    NSArray *arr=@[@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"A",@"B",@"C",@"D",@"E",@"F",@"G",@"H",@"J",@"K",@"L",@"M",@"N",@"P",@"R",@"S",@"T",@"W",@"X",@"Y",@"Z",@"a",@"b",@"c",@"d",@"e",@"f",@"g",@"h",@"j",@"k",@"m",@"n",@"p",@"r",@"s",@"t",@"w",@"x",@"y",@"z"];
+     NSMutableString *newString = [[NSMutableString alloc] initWithCapacity:length];
+       for (int i = 0 ; i<length ; i ++) {
+          int index = arc4random() % arr.count;
+           [newString appendFormat:@"%@",arr[index]];
+       }
+       return newString;
+}
+-(UIView*)drawBackgroud:(NSInteger)length
+{
+    UIView *view=[[UIView alloc]initWithFrame:self.frame];
+    NSInteger splitHeight=3;
+    NSInteger width=view.stWidth/length;
+    NSInteger height=view.stHeight/splitHeight;
+    NSInteger x=0,y=0;
+    UIColor *cornerColor=ColorBlack;
+    UIColor *y1Color=ColorWhite;
+    for (int i=0; i<length*splitHeight; i++) {
+        UIColor *color= ((x==0 && y==0) || (x==0 && y==splitHeight-1) || (x==length-1 && y==0) ||(x==length-1 && y==splitHeight-1))?cornerColor:[ColorRandom alpha:0.2];
+        if(y==1){color=y1Color;}
+        [[[[view addUIView:nil]  width:width height:height] relate:LeftTop v:x*width v2:y*height] block:^(UIView* bgView) {
+            [bgView backgroundColor:color];
+        }];
+        x++;
+               if(x/length==1)
+               {
+                   y++;
+                   x=0;
+               }
+    }
+    return view;
+}
 @end
 
 

@@ -51,4 +51,7 @@ typedef void (^OnPick)(NSData *data,UIImagePickerController *picker,NSDictionary
 -(void)show;
 -(UIImageView *)show:(BOOL)yesNo;
 +(void)show:(NSInteger)startIndex images:(id)imgOrNameOrArray,...NS_REQUIRES_NIL_TERMINATION;
+#pragma mark 本地验证码
+-(NSString*)VerifyCode;
+-(UIImageView*)VerifyCode:(NSInteger)length;
 @end

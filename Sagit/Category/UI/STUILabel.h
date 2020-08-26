@@ -22,4 +22,5 @@
 -(UILabel*)textAlignment:(NSTextAlignment)align;
 -(UILabel*)font:(NSInteger)px;
 -(UILabel*)numberOfLines:(NSInteger)value;
+-(UILabel*)adjustsFontSizeToFitWidth:(BOOL)yesNo;
 @end
