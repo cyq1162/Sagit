@@ -10,7 +10,7 @@
 #import "STCategory.h"
 #import "STDefineUI.h"
 
-@interface STMsgBox()
+@interface STMsgBox()<UIActionSheetDelegate>
 @property (nonatomic,assign) UIWindow *window;
 @property (nonatomic,retain) UIView *lodingView;
 @property (nonatomic,assign) NSInteger hiddenFlag;
@@ -29,7 +29,7 @@
 - (UIWindow*)window {
     if (!_window)
     {
-       _window = [UIWindow mainWindow];
+        _window = [UIWindow mainWindow];
     }
     return _window;
 }
@@ -221,6 +221,51 @@
             click=nil;
         }
     }
+}
+-(void)menu:(OnMenuClick)click names:(id)names, ...
+{
+
+        UIActionSheet * actiongSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil,nil];
+        
+        if([names isKindOfClass:[NSMutableArray class]] || [names isKindOfClass:[NSArray class]])
+        {
+            NSArray *array=names;
+            for (id item in array)
+            {
+                [actiongSheet addButtonWithTitle:item];
+            }
+        }
+        else
+        {
+            va_list args;
+            va_start(args, names);
+            [actiongSheet addButtonWithTitle:names];
+            id otherName;
+            while ((otherName = va_arg(args, id)))
+            {
+                [actiongSheet addButtonWithTitle:otherName];
+            }
+            va_end(args);
+        }
+        [actiongSheet key:@"click" value:[click copy]];
+        /////添加cancel 按钮
+        [actiongSheet addButtonWithTitle:@"取消"];
+        //////设置刚添加的 取消 按钮为系统默认的 cancel 按钮
+        actiongSheet.cancelButtonIndex = actiongSheet.numberOfButtons-1;
+        actiongSheet.actionSheetStyle = UIActionSheetStyleDefault;
+[Sagit runOnMainThread:^{
+        [actiongSheet showInView:self.window];
+  }];
+}
+///////点击触发方法
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+
+        OnMenuClick click=[actionSheet key:@"click"];
+        if(click!=nil)
+        {
+            click(buttonIndex,actionSheet);
+            click=nil;
+        }
 }
 - (void)dialog:(OnDialogShow)dialog
 {
