@@ -36,7 +36,7 @@
     for (NSString* k in self) {
         if([lowerKey isEqual:[k toLower]])
         {
-            return self[key];
+            return self[k];
         }
     }
     return nil;

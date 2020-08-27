@@ -248,7 +248,7 @@
         return NO;
     }
     NSString *groupName=[self key:@"requireGroup"];
-    for (NSString*key in self.UIList) {
+    for (NSString*key in self.UIList.keys) {
         UIView *ui=[self.UIList get:key];
         if([ui isFormUI])
         {

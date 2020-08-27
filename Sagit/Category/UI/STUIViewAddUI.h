@@ -37,7 +37,7 @@
 //!设置当前UI是否表单UI
 - (UIView*)isFormUI:(BOOL)yesNo;
 //!有name的控件的集合
-- (NSMapTable *)UIList;
+- (STMapTable *)UIList;
 
 #pragma mark 添置UI
 //!移除自身（前会修改前后视图的指向关系）

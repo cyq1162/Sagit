@@ -63,7 +63,7 @@
 -(void)initData
 {
     //触发子控件事件
-    for (NSString *key in self.UIList)
+    for (NSString *key in self.UIList.keys)
     {
         STView*view=[self.UIList get:key];
         if([view isKindOfClass:[STView class]])
@@ -75,7 +75,7 @@
 -(void)reloadData
 {
     //触发子控件事件
-    for (NSString *key in self.UIList)
+    for (NSString *key in self.UIList.keys)
     {
         STView*view=[self.UIList get:key];
         if([view isKindOfClass:[STView class]])

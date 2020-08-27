@@ -58,18 +58,26 @@
 {
     return [self key:@"isFormUI" value:yesNo?@"1":@"0"];
 }
--(NSMapTable *)UIList
+-(STMapTable *)UIList
 {
     UIView *baseView=self.baseView;
     if(baseView==nil){return nil;}
-    NSMapTable *dic=[baseView key:@"UIList"];
+    STMapTable *dic=[baseView key:@"UIList"];
     if(dic==nil)
     {
-        dic=[NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsStrongMemory];
+        dic=[STMapTable new];
         [baseView key:@"UIList" value:dic];
+//        NSArray<NSString*> * dicKeys=[NSArray<NSString*> new];
+//        [baseView key:@"UIListKeys" value:dicKeys];
     }
     return dic;
 }
+//-(NSArray<NSString*>*)UIListKeys
+//{
+//    UIView *baseView=self.baseView;
+//    if(baseView==nil){return nil;}
+//    return [baseView key:@"UIListKeys"];
+//}
 // Name
 - (UIView*)preView{
     return [self key:@"preView"];
@@ -101,7 +109,7 @@
 }
 -(UIView *)firstView:(NSString *)className
 {
-    for (NSString *key in self.UIList)
+    for (NSString *key in self.UIList.keys)
     {
         UIView *view=[self.UIList get:key];
         if([NSStringFromClass([view class]) isEqualToString:className])
