@@ -133,19 +133,29 @@
     }
     return _http;
 }
+
+-(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name
+{
+    return [self isMatch:tipMsg name:name regex:nil require:YES];
+}
+-(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name regex:(NSString*)pattern
+{
+    return [self isMatch:tipMsg value:name regex:pattern require:YES];
+}
+-(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name regex:(NSString*)pattern require:(BOOL)yesNo
+{
+    return [self isMatch:tipMsg value:[self stValue:name] regex:pattern require:yesNo];
+}
+
 -(BOOL)isMatch:(NSString*)tipMsg value:(NSString*)value
 {
     return [self isMatch:tipMsg value:value regex:nil];
 }
--(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name
-{
-    return [self isMatch:tipMsg name:name regex:nil];
-}
--(BOOL)isMatch:(NSString*)tipMsg name:(NSString*)name regex:(NSString*)pattern
-{
-    return [self isMatch:tipMsg value:[self stValue:name] regex:pattern];
-}
 -(BOOL)isMatch:(NSString*)tipMsg value:(NSString*)value regex:(NSString*)pattern
+{
+    return [self isMatch:tipMsg value:value regex:pattern require:YES];
+}
+-(BOOL)isMatch:(NSString*)tipMsg value:(NSString*)value regex:(NSString*)pattern require:(BOOL)yesNo
 {
     if([NSString isNilOrEmpty:tipMsg]){return NO;}
     
@@ -153,28 +163,55 @@
     NSString *tip=items.firstObject;
     if([NSString isNilOrEmpty:value])
     {
-        [self.msgBox prompt:[tip append:@"不能为空!"]];
-        return NO;
+        if(yesNo)
+        {
+            [self.msgBox prompt:[tip append:@"不能为空!"]];
+            return NO;
+        }
     }
     else if(pattern!=nil && ![pattern isEqualToString:@""])
     {
-        NSPredicate *match = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", pattern];
-        if(match)
+        if([pattern startWith:@"^"] && [pattern endWith:@"$"])
         {
-            if(![match evaluateWithObject:value])
+            NSPredicate *match = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", pattern];
+            if(match)
             {
-                if(items.count==1)
+                if(![match evaluateWithObject:value])
                 {
-                    [self.msgBox prompt:[tip append:@"格式错误!"]];
+                    if(items.count==1)
+                    {
+                        [self.msgBox prompt:[tip append:@"格式错误!"]];
+                    }
+                    else
+                    {
+                        [self.msgBox prompt:[tipMsg replace:[tip append:@","] with:tip]];
+                    }
+                    return NO;
                 }
-                else
+            }
+            match=nil;
+        }
+        else
+        {
+            UIView *view=STUIView(pattern);
+            if([view isKindOfClass:[UIImageView class]])
+            {
+                NSString * vc=view.asImageView.VerifyCode;
+                if(vc!=nil && ![value isEqual:vc])
                 {
-                    [self.msgBox prompt:[tipMsg replace:[tip append:@","] with:tip]];
+                    [self.msgBox prompt:[tip append:@"错误!"]];
+                    return NO;
                 }
-                return NO;
+            }
+            else if(view.isFormUI)
+            {
+                if(![value isEqual:view.stValue])
+                {
+                    [self.msgBox prompt:[tip append:@"不一致!"]];
+                    return NO;
+                }
             }
         }
-        match=nil;
     }
     return YES;
 }

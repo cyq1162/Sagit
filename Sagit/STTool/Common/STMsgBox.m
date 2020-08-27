@@ -94,7 +94,7 @@
 }
 #pragma mark 消息提示
 -(void)prompt:(id)msg {
-    [self prompt:msg second:2];
+    [self prompt:msg second:3];
 }
 -(void)prompt:(id)msg second:(NSInteger)second
 {

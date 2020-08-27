@@ -60,11 +60,13 @@
 }
 -(NSMapTable *)UIList
 {
-    NSMapTable *dic=[self key:@"UIList"];
+    UIView *baseView=self.baseView;
+    if(baseView==nil){return nil;}
+    NSMapTable *dic=[baseView key:@"UIList"];
     if(dic==nil)
     {
         dic=[NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsStrongMemory];
-        [self key:@"UIList" value:dic];
+        [baseView key:@"UIList" value:dic];
     }
     return dic;
 }

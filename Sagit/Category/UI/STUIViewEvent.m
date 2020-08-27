@@ -398,9 +398,17 @@
 }
 -(UIView*)clickStart:(UITapGestureRecognizer*)recognizer
 {
-        CGPoint p=[recognizer locationInView:recognizer.view];
-        [self key:@"clickPoint" value:@(p)];
-        return [self click];
+    NSNumber *value= [self key:@"requireBeforeClick"];
+    if(value!=nil && value.boolValue)
+    {
+        if(![self exeRequire])
+        {
+            return self;
+        }
+    }
+    CGPoint p=[recognizer locationInView:recognizer.view];
+    [self key:@"clickPoint" value:@(p)];
+    return [self click];
 }
 -(UIView*)click
 {

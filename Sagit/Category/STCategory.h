@@ -17,6 +17,7 @@
 
 //UI
 #import "STUIView.h"
+#import "STUIViewValue.h"
 #import "STUIViewAs.h"
 #import "STUIViewEvent.h"
 #import "STUIViewAutoLayout.h"
