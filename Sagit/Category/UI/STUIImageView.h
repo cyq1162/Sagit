@@ -53,5 +53,10 @@ typedef void (^OnPick)(NSData *data,UIImagePickerController *picker,NSDictionary
 +(void)show:(NSInteger)startIndex images:(id)imgOrNameOrArray,...NS_REQUIRES_NIL_TERMINATION;
 #pragma mark 本地验证码
 -(NSString*)VerifyCode;
+//!生成指定长度验证码（随机背景色）。
 -(UIImageView*)VerifyCode:(NSInteger)length;
+//!生成指定长度验证码（指定背景色，随机字体颜色）。
+-(UIImageView*)VerifyCode:(NSInteger)length fixBgColor:(UIColor*)fixBgColor;
+//!生成指定长度验证码（指定背景色，指定字体颜色）。
+-(UIImageView *)VerifyCode:(NSInteger)length fixBgColor:(UIColor *)fixBgColor fixFontColor:(UIColor *)fixFontColor;
 @end

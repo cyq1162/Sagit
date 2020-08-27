@@ -165,7 +165,7 @@
     {
         if(yesNo)
         {
-            [self.msgBox prompt:[tip append:@"不能为空!"]];
+            [self showTip:[tip append:@"不能为空!"]];
             return NO;
         }
     }
@@ -180,11 +180,11 @@
                 {
                     if(items.count==1)
                     {
-                        [self.msgBox prompt:[tip append:@"格式错误!"]];
+                        [self showTip:[tip append:@"格式错误!"]];
                     }
                     else
                     {
-                        [self.msgBox prompt:[tipMsg replace:[tip append:@","] with:tip]];
+                        [self showTip:[tipMsg replace:[tip append:@","] with:tip]];
                     }
                     return NO;
                 }
@@ -199,7 +199,7 @@
                 NSString * vc=view.asImageView.VerifyCode;
                 if(vc!=nil && ![value isEqual:vc])
                 {
-                    [self.msgBox prompt:[tip append:@"错误!"]];
+                    [self showTip:[tip append:@"错误!"]];
                     return NO;
                 }
             }
@@ -207,7 +207,7 @@
             {
                 if(![value isEqual:view.stValue])
                 {
-                    [self.msgBox prompt:[tip append:@"不一致!"]];
+                    [self showTip:[tip append:@"不一致!"]];
                     return NO;
                 }
             }
@@ -219,9 +219,32 @@
 {
     if(!result)
     {
-        [self.msgBox prompt:tipMsg];
+        [self showTip:tipMsg];
     }
     return result;
+}
+-(void)showTip:(NSString*)tip
+{
+    id label=[self key:@"requireTipLabel"];
+    if(label!=nil)
+    {
+        UILabel *uiLabel=nil;
+        if([label isKindOfClass:[NSString class]])
+        {
+            uiLabel=STLabel((NSString*)label);
+        }
+        else if([label isKindOfClass:[UILabel class]])
+        {
+            uiLabel=(UILabel*)label;
+        }
+        if(uiLabel!=nil)
+        {
+            [uiLabel text:tip];
+            return;
+        }
+    }
+   
+    [self.msgBox prompt:tip];
 }
 -(void)stValue:(NSString*)name value:(NSString *)value
 {

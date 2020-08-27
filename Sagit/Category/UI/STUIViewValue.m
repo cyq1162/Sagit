@@ -234,6 +234,11 @@
     [self key:@"requireBeforeClick" value:@(yesNo)];
     return self;
 }
+-(UIView *)requireTipLabel:(id)nameOrLabel
+{
+    [self key:@"requireTipLabel" value:nameOrLabel];
+    return self;
+}
 -(BOOL)exeRequire
 {
     STController *stc=self.stController;

@@ -46,9 +46,11 @@
 //!用于校验的分组触发（表单、按钮可设置）。
 -(UIView*)requireGroup:(NSString*)name;
 
-#pragma mark 触发数据校验
+#pragma mark 触发数据校验[按钮]
 //!【按钮设置】点击事件设置是否触发验证。
 -(UIView*)requireBeforeClick:(BOOL)yesNo;
+//!【按钮设置】若需要将提示语显示在指定人UILabel中。
+-(UIView*)requireTipLabel:(id)nameOrLabel;
 //!触发验证。（内部点击触发）
 -(BOOL)exeRequire;
 @end

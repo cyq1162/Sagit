@@ -326,10 +326,19 @@
 }
 -(UIImageView *)VerifyCode:(NSInteger)length
 {
+    return [self VerifyCode:length fixBgColor:nil fixFontColor:nil];
+}
+-(UIImageView *)VerifyCode:(NSInteger)length fixBgColor:(UIColor *)fixColor
+{
+    return [self VerifyCode:length fixBgColor:fixColor fixFontColor:nil];
+}
+-(UIImageView *)VerifyCode:(NSInteger)length fixBgColor:(UIColor *)fixBgColor fixFontColor:(UIColor *)fixFontColor
+{
     NSString *text=[self getRandomText:length];
     [self key:@"VerifyCoce" value:text];
-    UIView *bgView=[self drawBackgroud:length];
-    [[[[bgView addLabel:nil text:text font:88 color:ColorRandom] adjustsFontSizeToFitWidth:YES] textAlignment:NSTextAlignmentCenter] block:^(UILabel* view) {
+    UIView *bgView=[self drawBackgroud:length fixBgColor:fixBgColor];
+    UIColor *fontColor=fixFontColor!=nil?fixFontColor:ColorRandom;
+    [[[[bgView addLabel:nil text:text font:88 color:fontColor] adjustsFontSizeToFitWidth:YES] textAlignment:NSTextAlignmentCenter] block:^(UILabel* view) {
         [view x:0 y:0 width:bgView.stWidth height:bgView.stHeight];
     }];
     self.image=nil;
@@ -352,9 +361,13 @@
        }
        return newString;
 }
--(UIView*)drawBackgroud:(NSInteger)length
+-(UIView*)drawBackgroud:(NSInteger)length fixBgColor:(UIColor *)fixBgColor
 {
     UIView *view=[[UIView alloc]initWithFrame:self.frame];
+    if(fixBgColor!=nil)
+    {
+       return [view backgroundColor:fixBgColor];
+    }
     NSInteger splitHeight=3;
     NSInteger width=view.stWidth/length;
     NSInteger height=view.stHeight/splitHeight;
