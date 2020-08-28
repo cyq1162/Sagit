@@ -391,9 +391,15 @@ static char keyValueChar='k';
             [dic removeAllObjects];
             dic=nil;
         }
+        if(self.name!=nil)
+        {
+            [self.UIList remove:self.name];
+        }
         [self removeClick];
+        [self removeDbClick];
         [self removeLongPress];
         [self removeDrag];
+        [self removeSlide];
         //清理事件
         for (UIGestureRecognizer *ges in self.gestureRecognizers) {
             [self removeGestureRecognizer:ges];

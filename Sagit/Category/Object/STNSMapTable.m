@@ -48,9 +48,6 @@
 {
     _keys=[NSMutableArray<NSString*> new];
     _mapTable=[NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsStrongMemory];
-    //self=[super initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsStrongMemory capacity:64];
-      //    NSPointerFunctionsCopyIn valuePointerFunctions:NSPointerFunctionsStrongMemory capacity:64];
-   // [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsStrongMemory];
     return self;
 }
 - (NSMutableArray<NSString *> *)keys
