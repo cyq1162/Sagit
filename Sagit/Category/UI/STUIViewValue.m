@@ -191,7 +191,7 @@
 -(NSMutableDictionary *)formData:(id)superView
 {
     NSMutableDictionary *formData=[NSMutableDictionary new];
-    for (NSString*key in self.UIList) {
+    for (NSString*key in self.UIList.keys) {
         UIView *ui=[self.UIList get:key];
         if([ui isFormUI] && (superView==nil || ui.superview==superView))
         {
