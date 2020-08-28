@@ -197,7 +197,7 @@
             if([view isKindOfClass:[UIImageView class]])
             {
                 NSString * vc=view.asImageView.VerifyCode;
-                if(vc!=nil && ![value isEqual:vc])
+                if(vc!=nil && ![vc isEqual:[value toLower]])
                 {
                     [self showTip:[tip append:@"错误!"]];
                     return NO;

@@ -335,7 +335,7 @@
 -(UIImageView *)VerifyCode:(NSInteger)length fixBgColor:(UIColor *)fixBgColor fixFontColor:(UIColor *)fixFontColor
 {
     NSString *text=[self getRandomText:length];
-    [self key:@"VerifyCode" value:text];
+    [self key:@"VerifyCode" value:[text toLower]];
     UIView *bgView=[self drawBackgroud:length fixBgColor:fixBgColor];
     UIColor *fontColor=fixFontColor!=nil?fixFontColor:ColorRandom;
     [[[[bgView addLabel:nil text:text font:88 color:fontColor] adjustsFontSizeToFitWidth:YES] textAlignment:NSTextAlignmentCenter] block:^(UILabel* view) {
