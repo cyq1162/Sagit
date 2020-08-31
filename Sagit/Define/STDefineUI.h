@@ -112,7 +112,7 @@
 #define STCollectionView(name) ((UICollectionView*)STUIView(name))
 #define STFirstTable ((UITableView*)[sagit firstView:@"UITableView"])
 #define STFirstCollection ((UICollectionView*)[sagit firstView:@"UICollectionView"])
-#define STScrollView ((UIScrollView*)[sagit firstView:@"UIScrollView"])
+#define STFirstScroll ((UIScrollView*)[sagit firstView:@"UIScrollView"])
 
 //获取UI值
 # define STValue(name) [STUIView(name) stValue]
