@@ -24,6 +24,8 @@
 #pragma mark 通用的三个事件方法：onInit、initUI、initData(还有一个位于基类的：reloadData)
 //!事件在UI初始化之前执行【只执行1次】
 -(void)onInit;
+//!内部使用。
+-(void)initView;
 //!UI初始化【只执行1次】
 -(void)initUI;
 //!事件在UI初始化之后执行【只执行1次】

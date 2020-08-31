@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "STCategory.h"
+#import "STDefineUI.h"
 typedef void (^OnConfirmClick)(NSInteger btnIndex,UIAlertView* view);
 typedef BOOL (^OnInputClick)(NSInteger btnIndex,UIAlertView* view);
 typedef void (^OnMenuClick)(NSInteger btnIndex,UIActionSheet* view);
@@ -19,6 +21,8 @@ typedef void (^OnDialogShow)(UIView* winView);
 + (STMsgBox*)share;
 //!dialog 状态。
 @property (nonatomic,assign) BOOL isDialoging;
+//!dialog 控制器（内部使用）
+@property (nonatomic,strong) STController *dialogController;
 #pragma AlertView
 //!提示消息
 -(void)prompt:(id)msg;

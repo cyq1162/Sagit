@@ -126,12 +126,24 @@ static char keyValueChar='k';
 //        return self.STController.stView;
 //
 //    }
+    //优先级1
+    UIView *superView=[self key:@"baseView"];//对于TableCell这一类的，在创建时先指定其指向的baseView)
+    if(superView!=nil)
+    {
+        return superView;
+    }
+    //优先级2
+    if(Sagit.MsgBox.isDialoging)
+    {
+        return Sagit.MsgBox.dialogController.view;
+    }
+    //优先级3
     if([self isSTView] || [self key:@"isBaseView"])
     {
         return self;
     }
-    
-    UIView *superView=[self superview];
+    //优先级4
+    superView=[self superview];
     if(superView!=nil)
     {
         //Controller.view，在不同的环境，会被挂载到不同的视图下，导致superView不一定是UIWindow
@@ -142,13 +154,6 @@ static char keyValueChar='k';
             return self;
         }
         return [superView baseView];
-    }
-    
-    superView=[self key:@"baseView"];//对于TableCell这一类的，在创建时先指定其指向的baseView)
-    if(superView!=nil)
-    {
-        return superView;
-        
     }
     return self;
 }

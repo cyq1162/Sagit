@@ -7,13 +7,12 @@
 //
 
 #import "STMsgBox.h"
-#import "STCategory.h"
-#import "STDefineUI.h"
 
 @interface STMsgBox()<UIActionSheetDelegate>
 @property (nonatomic,assign) UIWindow *window;
 @property (nonatomic,retain) UIView *lodingView;
 @property (nonatomic,assign) NSInteger hiddenFlag;
+
 
 @end
 
@@ -33,7 +32,15 @@
     }
     return _window;
 }
-
+-(STController*)dialogController{
+    if(!_dialogController)
+    {
+        _dialogController=[STController new];
+        [_dialogController initView];
+        [_dialogController needStatusBar:NO];
+    }
+    return _dialogController;
+}
 #pragma mark loding...
 -(void)loading
 {
@@ -282,7 +289,10 @@
     __block OnBeforeDialogHide beforeHideBlock=beforeHide;
     __block OnDialogShow block=dialog;
     [[statusView backgroundImage:nil] backgroundColor:[ColorBlack alpha:0.5]];
-    [[[[window addUIView:nil] x:0 y:0 width:1 height:1] backgroundColor:[ColorBlack alpha:0.5]] block:nil on:^(UIView* winView) {
+    STView *view=self.dialogController.stView;
+    [statusView alpha:0];
+    [window addSubview:view];
+    [[[view x:0 y:0 width:1 height:1] backgroundColor:[ColorBlack alpha:0.5]] block:nil on:^(UIView* winView) {
         [winView onClick:^(UIView* view) {
             BOOL result=YES;
             if(beforeHideBlock)
@@ -299,13 +309,15 @@
                 self.isDialoging=NO;
                 beforeHideBlock=nil;
                 [winView hidden:YES];
-                [winView removeSelf];
+                [winView removeSelf];//内部有dispose
                 [[statusView backgroundImage:bgImage] backgroundColor:bgColor];
+                [statusView alpha:1];
             }
         }];
         [winView onDbClick:^(id view) {
             //双击事件存在是，屏蔽单击事件触发。
         }];
+        [winView hidden:NO];
         if(block)
         {
             block(winView);

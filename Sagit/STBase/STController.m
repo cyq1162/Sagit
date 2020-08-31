@@ -23,11 +23,28 @@
 -(instancetype)init
 {
     self=[super init];
+    
     //初始化全局设置，必须要在UI初始之前。
     [self onInit];
+
     return self;
 }
-
+-(void)initView{
+    //获取当前的类名
+    NSString* className= NSStringFromClass([self class]);
+    NSString* viewClassName=[className replace:@"Controller" with:@"View"];
+    Class viewClass=NSClassFromString(viewClassName);
+    if(viewClass!=nil)//view
+    {
+        self.view=self.stView=[[viewClass alloc] initWithController:self];
+        //[self.stView loadUI];
+    }
+    else
+    {   //这一步，在ViewController中的loadView做了处理，默认self.view就是STView
+        self.view=self.stView=[[STView alloc] initWithController:self];//将view换成STView
+        //self.stView=self.view;
+    }
+}
 //局部状态栏隐藏(t)
 //- (BOOL)prefersStatusBarHidden{
 //   return ![self needStatusBar];
@@ -76,20 +93,8 @@
 
 //内部私有方法
 -(void)loadUI{
-    //获取当前的类名
-    NSString* className= NSStringFromClass([self class]);
-    NSString* viewClassName=[className replace:@"Controller" with:@"View"];
-    Class viewClass=NSClassFromString(viewClassName);
-    if(viewClass!=nil)//view
-    {
-        self.view=self.stView=[[viewClass alloc] initWithController:self];
-        //[self.stView loadUI];
-    }
-    else
-    {   //这一步，在ViewController中的loadView做了处理，默认self.view就是STView
-        self.view=self.stView=[[STView alloc] initWithController:self];//将view换成STView
-        //self.stView=self.view;
-    }
+
+    [self initView];
     [self initUI];
 }
 //内部私有方法
