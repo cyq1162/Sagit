@@ -297,7 +297,10 @@
             BOOL result=YES;
             if(beforeHideBlock)
             {
-                result=beforeHideBlock(winView,[self getSubClickView:view allowNil:NO]);
+                UIView *clickView=[self getSubClickView:view allowNil:NO];
+                self.isDialoging=NO;
+                result=beforeHideBlock(winView,clickView);
+                self.isDialoging=!result;
             }
             else if([winView key:@"clickPoint"]!=nil)//[ImageView show]
             {
