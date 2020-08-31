@@ -93,6 +93,8 @@
 #define STLastProgressView ((UIProgressView*)STLastView)
 #define STLastTableView ((UITableView*)STLastView)
 #define STLastCollectoinView ((UICollectionView*)STLastView)
+#define STLastScrollView ((UIScrollView*)STLastView)
+
 //获取控件
 #define STUIView(name)    [sagit find:name]
 #define STSTView(name)    ((STView*)STUIView(name))
@@ -110,6 +112,7 @@
 #define STCollectionView(name) ((UICollectionView*)STUIView(name))
 #define STFirstTable ((UITableView*)[sagit firstView:@"UITableView"])
 #define STFirstCollection ((UICollectionView*)[sagit firstView:@"UICollectionView"])
+#define STScrollView ((UIScrollView*)[sagit firstView:@"UIScrollView"])
 
 //获取UI值
 # define STValue(name) [STUIView(name) stValue]
