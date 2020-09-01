@@ -119,9 +119,14 @@
 {
     
     UIApplication *app=[UIApplication sharedApplication];
-    if(app.delegate && app.delegate.window)
+    Class c= NSClassFromString(@"SceneDelegate");
+    if(c==nil)
     {
-        return app.delegate.window;
+        if(app.delegate && app.delegate.window)
+        {
+            return app.delegate.window;
+        }
+        
     }
     if (@available(iOS 13.0, *)) {
          // 获取keywindow

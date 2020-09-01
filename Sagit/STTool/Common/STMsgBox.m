@@ -284,11 +284,11 @@
     UIWindow *window=self.window;
     UIView *statusView=window.statusBar;
     
-    UIImage *bgImage=statusView.backgroundImage;
-    UIColor *bgColor=statusView.backgroundColor;
+//    UIImage *bgImage=statusView.backgroundImage;
+//    UIColor *bgColor=statusView.backgroundColor;
     __block OnBeforeDialogHide beforeHideBlock=beforeHide;
     __block OnDialogShow block=dialog;
-    [[statusView backgroundImage:nil] backgroundColor:[ColorBlack alpha:0.5]];
+    //[[statusView backgroundImage:nil] backgroundColor:[ColorBlack alpha:0.5]];
     STView *view=self.dialogController.stView;
     [statusView alpha:0];
     [window addSubview:view];
@@ -313,7 +313,7 @@
                 beforeHideBlock=nil;
                 [winView hidden:YES];
                 [winView removeSelf];//内部有dispose
-                [[statusView backgroundImage:bgImage] backgroundColor:bgColor];
+                //[[statusView backgroundImage:bgImage] backgroundColor:bgColor];
                 [statusView alpha:1];
             }
         }];
