@@ -74,6 +74,10 @@
 }
 -(UITextView*)text:(NSString*)text
 {
+    if([text isKindOfClass:[NSNull class]])
+    {
+        text=@"";
+    }
     if(self.maxLength>0 && text.length>self.maxLength)
     {
         text=[text substringToIndex:self.maxLength-1];
@@ -103,6 +107,10 @@
 }
 -(UITextView*)placeholder:(NSString*)text
 {
+    if([text isKindOfClass:[NSNull class]])
+    {
+        text=@"";
+    }
     if([self key:@"placeholder"]==nil)
     {
         UILabel *placeholer=[[self addLabel:nil text:text font:self.font.pointSize*Ypx color:@"#cccccc"] relate:LeftTop v:8 v2:18];

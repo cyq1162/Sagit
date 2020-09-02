@@ -101,7 +101,14 @@
 
 -(UILabel*)text:(NSString*)text
 {
-    self.text=text;
+    if([text isKindOfClass:[NSNull class]])
+    {
+        self.text=nil;
+    }
+    else
+    {
+        self.text=text;
+    }
     return self;
 }
 -(UILabel*)textColor:(id)colorOrHex

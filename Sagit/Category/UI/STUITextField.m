@@ -54,6 +54,10 @@
 }
 -(UITextField*)text:(NSString*)text
 {
+    if([text isKindOfClass:[NSNull class]])
+    {
+        text=@"";
+    }
     if(self.maxLength>0 && text.length>self.maxLength)
     {
         text=[text substringToIndex:self.maxLength-1];
@@ -78,6 +82,10 @@
 }
 -(UITextField*)placeholder:(NSString*)text
 {
+    if([text isKindOfClass:[NSNull class]])
+    {
+        text=@"";
+    }
     self.placeholder=text;
     return self;
 }
