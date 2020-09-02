@@ -11,6 +11,10 @@
 @implementation UIView (STUIViewValue)
 -(UIView*)stValue:(NSString*)value
 {
+    if([value isKindOfClass:[NSNull class]])
+    {
+        value=nil;
+    }
     if([self isMemberOfClass:[UITextField class]])
     {
         [((UITextField*)self) text:value];
@@ -153,7 +157,10 @@
         if(ui!=nil)
         {
             id value=dic[key];
-            
+            if([value isKindOfClass:[NSNull class]])
+            {
+                value=nil;
+            }
             if(value!=nil && [value isKindOfClass:[NSNumber class]])
             {
                 NSString *text=dic[[key append:@"Text"]];//约定XXXText为XXX的格式化值
