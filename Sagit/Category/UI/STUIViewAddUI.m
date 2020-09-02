@@ -242,7 +242,7 @@
 -(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex row:(NSInteger)num
 {
     UILabel *ui = [[UILabel alloc] initWithFrame:STEmptyRect];
-    if(text!=nil)
+    if(![NSString isNilOrEmpty:text])
     {
         ui.text = text;
     }
@@ -401,7 +401,7 @@
     {
         [ui font:px];
     }
-    if(placeholder!=nil)
+    if(![NSString isNilOrEmpty:placeholder])
     {
         [ui placeholder:placeholder];
     }
@@ -433,7 +433,7 @@
     {
         [ui font:px];
     }
-    if(placeholder!=nil)
+    if(![NSString isNilOrEmpty:placeholder])
     {
         [ui placeholder:placeholder];
     }

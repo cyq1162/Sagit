@@ -87,7 +87,7 @@
 -(BOOL)contains:(NSString *)value{return [self containsString:value];}
 -(BOOL)contains:(NSString *)value ignoreCase:(BOOL)ignoreCase{return [self indexOf:value ignoreCase:ignoreCase]>=0;}
 -(BOOL)isEmpty{return [self isEqualToString:@""];}
-+(BOOL)isNilOrEmpty:(NSString*)value{return value==nil || [value isEmpty];}
++(BOOL)isNilOrEmpty:(NSString*)value{return value==nil || [value isEmpty] || [value isKindOfClass:[NSNull class]];}
 -(BOOL)eq:(id)value
 {
     if([value isKindOfClass:[NSNumber class]])

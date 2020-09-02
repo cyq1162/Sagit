@@ -67,7 +67,7 @@
     if(entity==nil || dic==nil || dic.count==0){return;}
     unsigned int propsCount;
     objc_property_t *props = class_copyPropertyList([entity class], &propsCount);//获得属性列表
-    Class superClass=class_getSuperclass([entity class]);
+    //Class superClass=class_getSuperclass([entity class]);
     //判断属性是否需要忽略
     SEL sel = NSSelectorFromString(@"isIgnore:");
     BOOL hasMethod=[entity respondsToSelector:sel];
