@@ -324,6 +324,15 @@ static char keyValueChar='k';
     self.layer.cornerRadius=px*Xpt;
     return self;
 }
+-(UIView*)layerCornerRadius:(CGFloat)px byRoundingCorners:(UIRectCorner)byRoundingCorners
+{
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:byRoundingCorners cornerRadii:STSizeMake(px, px)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.layer.mask = maskLayer;
+    return self;;
+}
 -(UIView*)layerBorderWidth:(NSInteger)px
 {
     return [self layerBorderWidth:px color:nil];

@@ -68,7 +68,10 @@
 -(UIView*)alpha:(CGFloat)value;
 //!将圆角半径设为宽度的一半
 -(UIView*)layerCornerRadiusToHalf;
+//!将圆角半径设为指定的值（px）
 -(UIView*)layerCornerRadius:(CGFloat)px;
+//!将圆角半径设为指定的值（px），byRoundingCorners：指定要圆角的边。多个用 | 符号。
+-(UIView*)layerCornerRadius:(CGFloat)px byRoundingCorners:(UIRectCorner)byRoundingCorners;
 -(UIView*)layerBorderWidth:(NSInteger)px;
 -(UIView*)layerBorderWidth:(NSInteger)px color:(id)colorOrHex;
 -(UIView*)layerBorderColor:(id)colorOrHex;
