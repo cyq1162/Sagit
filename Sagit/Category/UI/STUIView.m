@@ -88,28 +88,29 @@ static char keyValueChar='k';
 }
 -(UIView *)statusBar
 {
-        if (@available(iOS 13.0, *)) {
-            UIWindow *win=self.keyWindow;
-            UIView *statusView=[win key:@"customeStatus"];
-            if(!statusView)
-            {
-                statusView=[[[UIView alloc] initWithFrame:STEmptyRect]width:STScreenWidthPx height:STStatusHeightPx];
-                 [win key:@"customeStatus" value:statusView];
-                [win addSubview:statusView];
-            }
-            return statusView;
-        
+    if (@available(iOS 13.0, *)) {
+        UIWindow *win=self.keyWindow;
+        UIView *statusView=[win key:@"customeStatus"];
+        if(!statusView)
+        {
+            statusView=[[[UIView alloc] initWithFrame:STEmptyRect]width:STScreenWidthPx height:STStatusHeightPx];
+            [win key:@"customeStatus" value:statusView];
+            [win addSubview:statusView];
         }
-        else{
+        [win bringSubviewToFront:statusView];
+        return statusView;
+        
+    }
+    else{
         UIWindow *win=[UIApplication.sharedApplication valueForKey:@"statusBarWindow"];
         if(win && win.subviews.count>0)
         {
             //UIView *view=[win valueForKey:@"statusBar"];
             return win.subviews[0];
         }
-
-    return nil;
-        }
+        
+        return nil;
+    }
 }
 //-(BOOL)isOnSTView
 //{
