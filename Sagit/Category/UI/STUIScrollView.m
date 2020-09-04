@@ -127,17 +127,12 @@
 {
     if(self.direction==X)
     {
-        return self.contentOffset.x/self.frame.size.width;
+        return self.contentOffset.x/self.pagerPx;
     }
     else if(self.direction==Y)
     {
-        return self.contentOffset.y/self.frame.size.height;
+        return self.contentOffset.y/self.pagerPx;
     }
-//    NSNumber *num=[self key:@"pagerIndex"];
-//    if(num!=nil)
-//    {
-//        return num.integerValue;
-//    }
     return 0;
 }
 -(void)setPagerIndex:(NSInteger)pagerIndex
@@ -147,11 +142,11 @@
     CGPoint offset= self.contentOffset;
     if(self.direction==X)
     {
-        offset.x= pagerIndex*self.frame.size.width;
+        offset.x= pagerIndex*self.pagerPx;
     }
     else if(self.direction==Y)
     {
-        offset.y=pagerIndex*self.frame.size.height;
+        offset.y=pagerIndex*self.pagerPx;
     }
     self.contentOffset=offset;
     if(self.pager && self.pager.currentPage!=pagerIndex)//加个判断，避免死循环
@@ -168,6 +163,26 @@
         self.onNextPager(self);
     }
    
+}
+-(NSInteger)pagerPx
+{
+    NSString *len=[self key:@"pagerPx"];
+    if(len==nil)
+    {
+        if(self.direction==X)
+        {
+            return self.frame.size.width;
+        }
+        else
+        {
+            return self.frame.size.height;
+        }
+    }
+    return len.intValue;
+}
+-(void)setPagerPx:(NSInteger)pagerPx
+{
+    [self key:@"pagerPx" value:@(pagerPx)];
 }
 #pragma mark 事件
 -(UIScrollView *)onSubviewClick:(OnViewClick)block
@@ -326,16 +341,14 @@
 }
 -(UIScrollView *)addPageSizeContent:(NSInteger)num
 {
-    CGRect frame=self.frame;
-    long count= self.subviews.count;//这么计算的话，ImageView必须先添加，然后才能添加其它控件。
-    if(count>0 && self.showsVerticalScrollIndicator){count--;}
-    if(count>0 && self.showsHorizontalScrollIndicator){count--;}
+//    CGRect frame=self.frame;
+//    long count= self.subviews.count;//这么计算的话，ImageView必须先添加，然后才能添加其它控件。
+//    if(count>0 && self.showsVerticalScrollIndicator){count--;}
+//    if(count>0 && self.showsHorizontalScrollIndicator){count--;}
     CGSize size=self.contentSize;
     if(self.direction==X)
     {
-        //frame.origin.x=frame.size.width*(count);
-        //scroll.showsHorizontalScrollIndicator=NO;
-        size.width=size.width+(frame.size.width*num);
+        size.width=size.width+(self.pagerPx*num);
         if(size.height==0)
         {
             size.height=STFullSize.height;
@@ -343,9 +356,7 @@
     }
     else if(self.direction==Y)
     {
-        //scroll.showsVerticalScrollIndicator=NO;
-        //frame.origin.y=frame.size.height*(count);
-        size.height=size.height+(frame.size.height*num);
+        size.height=size.height+(self.pagerPx*num);
         if(size.width==0)
         {
             size.width=STFullSize.width;

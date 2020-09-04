@@ -22,12 +22,12 @@
 #pragma mark 扩展系统属性
 -(UINavigationBarSetting*)tintColor:(id)colorOrHex
 {
-    [UINavigationBar appearance].tintColor=[UIView toColor:(colorOrHex)];
+    [UINavigationBar appearance].tintColor=[UIColor toColor:(colorOrHex)];
     return self;
 }
 -(UINavigationBarSetting*)barTintColor:(id)colorOrHex
 {
-    [UINavigationBar appearance].barTintColor=[UIView toColor:(colorOrHex)];
+    [UINavigationBar appearance].barTintColor=[UIColor toColor:(colorOrHex)];
     return self;
 }
 -(UINavigationBarSetting*)backgroundImage:(id)img
@@ -43,7 +43,7 @@
     }
     else
     {
-        uiImg=[UIView toImage:img];
+        uiImg=[UIImage toImage:img];
     }
     if(stretch)
     {
@@ -58,7 +58,7 @@
     {
         [[UINavigationBar appearance] setShadowImage: [[UIImage alloc] init]];
     }
-    else{[[UINavigationBar appearance] setShadowImage:[UIView toImage:img]];}
+    else{[[UINavigationBar appearance] setShadowImage:[UIImage toImage:img]];}
     return self;
 }
 -(UINavigationBarSetting*)titleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)dic

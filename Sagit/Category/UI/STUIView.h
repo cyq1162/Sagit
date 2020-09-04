@@ -52,13 +52,6 @@
 
 #pragma mark 扩展系统属性
 
--(UIColor*)toColor:(id)hexOrColor;
-+(UIColor*)toColor:(id)hexOrColor;
--(UIImage*)toImage:(id)imgOrName;
-+(UIImage*)toImage:(id)imgOrName;
--(UIFont *)toFont:(NSInteger)px;
-+(UIFont *)toFont:(NSString*)name size:(NSInteger)px;
-
 -(UIView*)hidden:(BOOL)yesNo;
 -(UIView*)backgroundColor:(id)colorOrHex;
 -(UIImage*)backgroundImage;

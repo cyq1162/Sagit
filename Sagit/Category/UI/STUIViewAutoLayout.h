@@ -93,4 +93,12 @@
 -(UIView*)stretch:(CGFloat)x;
 //!图片拉伸（一般适用于背景拉伸或聊天图片的拉伸） x、y: 都是px值
 -(UIView*)stretch:(CGFloat)x y:(CGFloat)y;
+
+//#pragma mark 【px<=>pt】动态转换系数
+//+(NSInteger)stStandardWidthPt:(id)viewOrController;
+//+(NSInteger)stStandardHeightPt:(id)viewOrController;
+//+(CGFloat)xToPt;
+//+(CGFloat)yToPt;
+//+(CGFloat)xToPx;
+//+(CGFloat)yToPx;
 @end

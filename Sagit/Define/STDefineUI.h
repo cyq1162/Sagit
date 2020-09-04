@@ -15,43 +15,55 @@
 
 //选择编码标准：1倍（375*667）、2倍（750*1334）、3倍（1125*2001）
 #define STStandardScale 2
+//-其他：
+//iphone se分辨率：320 * 568  640 *1136
+//iphone 6s分辨率：375 * 667  750 *1334  ----多数机型、设计稿。
+//iphone xs分辨率：375 * 812  1125 *2436
+//ip xs max分辨率：414 * 896  1242 *2688
 
-#define STStandardWidthPx [UIScreen mainScreen].bounds.size.width*STStandardScale
-#define STStandardHeightPx [UIScreen mainScreen].bounds.size.height*STStandardScale
+//定义私有变量
+#define _STScreenScale [UIScreen mainScreen].scale
+#define _STScreenSize [UIScreen mainScreen].bounds.size
+#define _STIsIPhoneX (_STScreenSize.height>800 || _STScreenSize.width>800)
+#define _STIsLandscape (_STScreenSize.width>_STScreenSize.height)
+
+//当前屏幕的参数
+//#define STScreeWidthPt _STScreenSize.width
+//#define STScreeHeightPt _STScreenSize.height
+
+
+//特别说明，本系素不用能用于frame，因为frame不是标准
+#define _STStandardWidthPt 375
+#define _STStandardHeightPt (_STIsIPhoneX?_STScreenSize.height:667)//;[UIView stStandardHeightPt:self]
+#define _STStandardWidthPx (_STStandardWidthPt*STStandardScale)
+#define _STStandardHeightPx (_STStandardHeightPt*STStandardScale)
+
+//比例系数 (标准)像素px*比例系数，得到对应的pt
+#define Xpt (_STScreenSize.width/_STStandardWidthPx) // 1242/750
+#define Ypt (_STScreenSize.height/_STStandardHeightPx) //2208/1334
+
+//比例系数  pt*比例系数,得到对应的px(标准)
+#define Xpx (_STStandardWidthPx/_STScreenSize.width) // 1242/750    320 *
+#define Ypx (_STStandardHeightPx/_STScreenSize.height) //2208/1334
+
+//用于表示全屏（标准px)
+#define STScreenWidthPx (!_STIsLandscape?_STStandardWidthPx:_STStandardHeightPx)
+#define STScreenHeightPx (!_STIsLandscape?_STStandardHeightPx:_STStandardWidthPx)
 
 //状态栏、导航栏、Tab栏 默认显示定义
 #define STDefaultShowStatus YES //默认显示
 #define STDefaultShowNav YES   // 有NavController 的默认显示
 #define STDefaultShowTab YES   // 有TabController 的默认显示
 
-#define STIsIPhoneX ([UIScreen mainScreen].bounds.size.height>800)
-
-#define STScreenScale [UIScreen mainScreen].scale
-#define STScreeWidthPt [UIScreen mainScreen].bounds.size.width
-#define STScreeHeightPt [UIScreen mainScreen].bounds.size.height
-
-#define STScreenWidthPx (STScreeWidthPt<STScreeHeightPt?STStandardWidthPx:STStandardHeightPx)
-#define STScreenHeightPx (STScreeWidthPt<STScreeHeightPt?STStandardHeightPx:STStandardWidthPx)
-
-//#define STIsIPhoneX (STScreeWidthPt==812 || STScreeHeightPt==812)
-
-//比例系数 750下的像素 px*比例像素，得到对应的pt
-//特别说明，本系素不用能用于frame，因为frame不是标准
-#define Xpt (STScreeWidthPt/STScreenWidthPx) // 1242/750
-#define Ypt (STScreeHeightPt/STScreenHeightPx) //2208/1334
-
-//pt*比例像素,得到对于750标准下的px(以便后续都是用750标准计算）
-#define Xpx (STScreenWidthPx/STScreeWidthPt) // 1242/750
-#define Ypx (STScreenHeightPx/STScreeHeightPt) //2208/1334
-
 //得到的是750下转换的像素 88+40+98
 #define STNavHeightPt 44.0f
-#define STStatusHeightPt (STIsIPhoneX?44.0f:20.0f)
+#define STStatusHeightPt (_STIsIPhoneX?44.0f:20.0f)
 #define STTabHeightPt 49.0f
 
-#define STNavHeightPx STNavHeightPt*Ypx
-#define STStatusHeightPx STStatusHeightPt*Ypx
-#define STTabHeightPx STTabHeightPt*Ypx
+//固定的，不会被等比而改变。
+#define STNavHeightPx STNavHeightPt*STStandardScale
+#define STStatusHeightPx STStatusHeightPt*STStandardScale
+#define STTabHeightPx STTabHeightPt*STStandardScale
 
 //750,1334        414,736 *3
 
@@ -63,9 +75,9 @@
 #define STEmptyRect CGRectMake(0,0,0,0)
 
 //坐标系
-#define STRectMake(x,y,width,height) CGRectMake(x*Xpt,y*Ypt,width*Xpt,height*Ypt)
-#define STSizeMake(width,height) CGSizeMake(width*Xpt,height*Ypt)
-#define STPointMake(x,y) CGPointMake(x*Xpt,y*Ypt)
+#define STRectMake(x,y,width,height) CGRectMake(round(x*Xpt),round(y*Ypt),round(width*Xpt),round(height*Ypt))
+#define STSizeMake(width,height) CGSizeMake(round(width*Xpt),round(height*Ypt))
+#define STPointMake(x,y) CGPointMake(round(x*Xpt),round(y*Ypt))
 #define STRectCopy(frame) CGRectMake(frame.origin.x,frame.origin.y, frame.size.width, frame.size.height);
 
 //定义两个布局的宽高参数 (用于自动布局时可以刷新约束)
@@ -125,7 +137,7 @@
 //(770,100)
 
 //字体像素
-#define STFont(px) [UIFont systemFontOfSize:px*Ypt]
+#define STFont(px) [UIFont toFont:px]
 //加粗
 #define STFontBold(px) [UIFont boldSystemFontOfSize:px*Ypt]
 #pragma mark 颜色

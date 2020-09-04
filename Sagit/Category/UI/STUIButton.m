@@ -55,7 +55,7 @@
 }
 -(UIButton*)backgroundImage:(id)img forState:(UIControlState)state
 {
-    [self setBackgroundImage:[self toImage:img] forState:state];
+    [self setBackgroundImage:[UIImage toImage:img] forState:state];
     return self;
 }
 -(UIButton*)image:(id)img
@@ -66,7 +66,7 @@
 -(UIButton*)image:(id)img forState:(UIControlState)state
 {
     
-    [self setImage:[self toImage:img] forState:state];
+    [self setImage:[UIImage toImage:img] forState:state];
     
     return self;
 }
@@ -87,12 +87,12 @@
 }
 -(UIButton*)titleColor:(id)colorOrHex forState:(UIControlState)state
 {
-    [self setTitleColor:[self toColor:colorOrHex] forState:state];
+    [self setTitleColor:[UIColor toColor:colorOrHex] forState:state];
     return self;
 }
 -(UIButton*)titleFont:(NSInteger)px
 {
-    self.titleLabel.font=STFont(px);
+    self.titleLabel.font=[UIFont toFont:px];
     return self;
 }
 -(UIButton*)adjustsImageWhenHighlighted:(BOOL)yesNo

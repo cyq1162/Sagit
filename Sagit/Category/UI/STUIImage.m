@@ -91,4 +91,35 @@ static char afterImageSaveBlockChar='c';
 {
    return UIImagePNGRepresentation(self);
 }
+
++(UIImage*)toImage:(id)imgOrName
+{
+    if([imgOrName isKindOfClass:[NSString class]])
+    {
+        NSString* name=(NSString*)imgOrName;
+        if([name startWith:@"http://"] || [name startWith:@"https://"])
+        {
+            return nil;//-------------------------------------------------------------------------------------
+        }
+        else
+        {
+            UIImage *img=[UIImage imageNamed:imgOrName];
+            img.name=imgOrName;
+            return img;
+        }
+    }
+    else if([imgOrName isKindOfClass:[NSData class]])
+    {
+        return [UIImage imageWithData:imgOrName];
+    }
+    else if([imgOrName isKindOfClass:[UIImage class]])
+    {
+        return imgOrName;
+    }
+    else if([imgOrName isKindOfClass:[UIImageView class]])
+    {
+        return ((UIImageView*)imgOrName).image;
+    }
+    return nil;
+}
 @end

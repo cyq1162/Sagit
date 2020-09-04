@@ -56,7 +56,7 @@ typedef void (^OnPick)(NSData *data,UIImagePickerController *picker,NSDictionary
 //!生成指定长度验证码（随机背景色）。
 -(UIImageView*)VerifyCode:(NSInteger)length;
 //!生成指定长度验证码（指定背景色，随机字体颜色）。
--(UIImageView*)VerifyCode:(NSInteger)length fixBgColor:(UIColor*)fixBgColor;
+-(UIImageView*)VerifyCode:(NSInteger)length fixBgColor:(id)fixBgColor;
 //!生成指定长度验证码（指定背景色，指定字体颜色）。
--(UIImageView *)VerifyCode:(NSInteger)length fixBgColor:(UIColor *)fixBgColor fixFontColor:(UIColor *)fixFontColor;
+-(UIImageView *)VerifyCode:(NSInteger)length fixBgColor:(id)fixBgColor fixFontColor:(id)fixFontColor;
 @end

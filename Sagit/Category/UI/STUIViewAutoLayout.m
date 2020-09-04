@@ -92,15 +92,15 @@ static NSInteger nullValue=-99999;
     {
         size=((UITableViewCell*)self).table.frame.size;
     }
-    
-    if(size.height==STScreeHeightPt || size.height==STScreeHeightPt-STNavHeightPt-STStatusHeightPt)
+    CGFloat screenHeight= [UIScreen mainScreen].bounds.size.height;
+    if(size.height==screenHeight || size.height==screenHeight-STNavHeightPt-STStatusHeightPt)
     {
         //计算去掉超出父窗体或屏幕的部分
         //检测页面有没有导航条或Tarbar条
         if(self.stView && self.stView.stController)
         {
             UIViewController *controller=self.stView.stController;
-            if(size.height==STScreeHeightPt && [controller needNavBar])
+            if(size.height==screenHeight && [controller needNavBar])
             {
                 size.height-=(STNavHeightPt+STStatusHeightPt);
             }
@@ -815,4 +815,50 @@ static NSInteger nullValue=-99999;
     return self;
     
 }
+
+//#pragma mark 【px<=>pt】动态转换系数
+//+(NSInteger)stStandardWidthPt:(id)viewOrController
+//{
+//   return 375;
+//}
+//+(NSInteger)stStandardHeightPt:(id)viewOrController
+//{
+//    NSInteger hpt=_STIsIPhoneX?_STScreenSize.height:667;
+//    if(viewOrController!=nil)
+//    {
+//        UIViewController *c=viewOrController;
+//        if([viewOrController isKindOfClass:[UIView class]])
+//        {
+//            c=((UIView*)viewOrController).stController;
+//        }
+//        if(c!=nil)
+//        {
+//            if(c.needNavBar)
+//            {
+//                hpt=hpt-STNavHeightPt-STStatusHeightPt;
+//            }
+//            if(c.needTabBar)
+//            {
+//                hpt=hpt-STTabHeightPt;
+//            }
+//        }
+//    }
+//    return hpt;
+//}
+//+(CGFloat)xToPx
+//{
+//    return 0;
+//}
+//+(CGFloat)yToPx
+//{
+//   return 0;
+//}
+//+(CGFloat)xToPt
+//{
+//   return 0;
+//}
+//+(CGFloat)yToPt
+//{
+//   return 0;
+//}
 @end

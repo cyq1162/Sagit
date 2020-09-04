@@ -88,12 +88,12 @@
 }
 -(UITextView*)font:(NSInteger)px
 {
-    self.font=STFont(px);
+    self.font=[UIFont toFont:px];
     return self;
 }
 -(UITextView*)textColor:(id)colorOrHex
 {
-    self.textColor=[self toColor:colorOrHex];
+    self.textColor=[UIColor toColor:colorOrHex];
     return self;
 }
 -(UITextView*)textAlignment:(NSTextAlignment)value

@@ -19,6 +19,8 @@ typedef void (^OnScrollNextPager)(UIScrollView *scrollView);
 @property (nonatomic,copy)OnScrollNextPager onNextPager;
 //!当前页的索引
 @property (nonatomic,assign)NSInteger pagerIndex;
+//!分页的长度、或高度（px单位）。
+@property (nonatomic,assign) NSInteger pagerPx;
 //!开始滑动的坐标
 @property (nonatomic,assign)CGPoint startPoint;
 //!手放开时的坐标

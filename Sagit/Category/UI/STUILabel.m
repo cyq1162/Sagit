@@ -113,7 +113,7 @@
 }
 -(UILabel*)textColor:(id)colorOrHex
 {
-    self.textColor=[self toColor:colorOrHex];
+    self.textColor=[UIColor toColor:colorOrHex];
     return self;
 }
 -(UILabel*)textAlignment:(NSTextAlignment)align
@@ -123,7 +123,7 @@
 }
 -(UILabel*)font:(NSInteger)px
 {
-    self.font=[self toFont:px];
+    self.font=[UIFont toFont:px];
     return self;
 }
 -(UILabel*)numberOfLines:(NSInteger)value

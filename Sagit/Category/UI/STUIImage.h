@@ -18,5 +18,8 @@ typedef void (^AfterImageSave)(NSError *err);
 //!检测最大宽高的等比缩放
 -(UIImage *)reSize:(CGSize)maxSize;
 -(NSData*)data;
+
++(UIImage*)toImage:(id)imgOrName;
+
 @end
 

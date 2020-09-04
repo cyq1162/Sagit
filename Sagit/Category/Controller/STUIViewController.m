@@ -388,7 +388,7 @@ static char keyValueChar='k';
     {
         //这里引用的viewController在第二次回退时，出现了野指针问题。
         self.navigationItem.leftBarButtonItem=
-        [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(leftNavClick:)];
+        [[UIBarButtonItem alloc] initWithImage:[UIImage toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(leftNavClick:)];
     }
     else
     {
@@ -445,7 +445,7 @@ static char keyValueChar='k';
     if(imgOrName)
     {
         self.navigationItem.rightBarButtonItem =
-        [[UIBarButtonItem alloc] initWithImage:[UIView toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(rightNavClick:)];
+        [[UIBarButtonItem alloc] initWithImage:[UIImage toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(rightNavClick:)];
     }
     else if(![NSString isNilOrEmpty:title])
     {
@@ -560,7 +560,7 @@ static char keyValueChar='k';
     }
     else
     {
-        self.tabBarItem.image=[UIView toImage:imgOrName];
+        self.tabBarItem.image=[UIImage toImage:imgOrName];
     }
     return self;
 }
@@ -572,7 +572,7 @@ static char keyValueChar='k';
     }
     else
     {
-        self.tabBarItem.selectedImage=[UIView toImage:imgOrName];
+        self.tabBarItem.selectedImage=[UIImage toImage:imgOrName];
     }
     return self;
 }
@@ -583,7 +583,7 @@ static char keyValueChar='k';
 }
 -(UIViewController*)tabBadgeColor:(id)colorOrHex
 {
-    self.tabBarItem.badgeColor=[self.view toColor:colorOrHex];
+    self.tabBarItem.badgeColor=[UIColor toColor:colorOrHex];
     return self;
 }
 -(UINavigationController*)toUINavigationController

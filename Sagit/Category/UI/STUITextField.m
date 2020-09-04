@@ -67,12 +67,12 @@
 }
 -(UITextField*)font:(NSInteger)px
 {
-    self.font=STFont(px);
+    self.font=[UIFont toFont:px];
     return self;
 }
 -(UITextField*)textColor:(id)colorOrHex
 {
-    self.textColor=[self toColor:colorOrHex];
+    self.textColor=[UIColor toColor:colorOrHex];
     return self;
 }
 -(UITextField*)textAlignment:(NSTextAlignment)value

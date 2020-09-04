@@ -17,12 +17,12 @@
 }
 -(UISwitch*)tintColor:(id)colorOrHex
 {
-    self.tintColor=[self toColor:colorOrHex];
+    self.tintColor=[UIColor toColor:colorOrHex];
     return self;
 }
 -(UISwitch*)onTintColor:(id)colorOrHex
 {
-    self.onTintColor=[self toColor:colorOrHex];
+    self.onTintColor=[UIColor toColor:colorOrHex];
     return self;
 }
 -(UISwitch*)enabled:(BOOL)yesNo
@@ -32,12 +32,12 @@
 }
 -(UISwitch*)onImage:(id)imgOrName
 {
-    [self setOnImage:[self toImage:imgOrName]];
+    [self setOnImage:[UIImage toImage:imgOrName]];
     return self;
 }
 -(UISwitch*)offImage:(id)imgOrName
 {
-    [self setOffImage:[self toImage:imgOrName]];
+    [self setOffImage:[UIImage toImage:imgOrName]];
     return self;
 }
 

@@ -93,11 +93,14 @@ static char keyValueChar='k';
         UIView *statusView=[win key:@"customeStatus"];
         if(!statusView)
         {
-            statusView=[[[UIView alloc] initWithFrame:STEmptyRect]width:STScreenWidthPx height:STStatusHeightPx];
+            statusView=[[[UIView alloc] initWithFrame:STEmptyRect] width:STScreenWidthPx height:STStatusHeightPx];
             [win key:@"customeStatus" value:statusView];
             [win addSubview:statusView];
         }
-        [win bringSubviewToFront:statusView];
+        if(!Sagit.MsgBox.isDialoging)
+        {
+            [win bringSubviewToFront:statusView];
+        }
         return statusView;
         
     }
@@ -192,87 +195,13 @@ static char keyValueChar='k';
 
 #pragma mark 扩展系统属性
 
--(UIColor*)toColor:(id)hexOrColor
-{
-    return [UIView toColor:hexOrColor];
-}
-+(UIColor*)toColor:(id)hexOrColor
-{
-    if([hexOrColor isKindOfClass:([NSString class])])
-    {
-        return STColor(hexOrColor);
-    }
-    return (UIColor*)hexOrColor;
-}
--(UIImage*)toImage:(id)imgOrName
-{
-    return [UIView toImage:imgOrName];
-}
-+(UIImage*)toImage:(id)imgOrName
-{
-    if([imgOrName isKindOfClass:[NSString class]])
-    {
-        NSString* name=(NSString*)imgOrName;
-        if([name startWith:@"http://"] || [name startWith:@"https://"])
-        {
-            return nil;//-------------------------------------------------------------------------------------
-        }
-        else
-        {
-            UIImage *img=STImage(imgOrName);
-            img.name=imgOrName;
-            return img;
-        }
-    }
-    else if([imgOrName isKindOfClass:[NSData class]])
-    {
-        return [UIImage imageWithData:imgOrName];
-    }
-    else if([imgOrName isKindOfClass:[UIImage class]])
-    {
-        return imgOrName;
-    }
-    else if([imgOrName isKindOfClass:[UIImageView class]])
-    {
-        return ((UIImageView*)imgOrName).image;
-    }
-    return nil;
-}
--(UIFont *)toFont:(NSInteger)px
-{
-    NSString*name=nil;//IOS默认字体
-    if(px>100)
-    {
-        NSString*value=[@(px) stringValue];
-        px=[[value substringWithRange:NSMakeRange(0, 2)] integerValue];
-        NSInteger type=[[value substringFromIndex:2] integerValue];//type
-        if(type==0)
-        {
-            return STFontBold(px);
-        }
-        else if(type==1)
-        {
-            name=@"SFUIText-Light";
-        }
-    }
-    return [UIView toFont:name size:px];
-}
-+(UIFont *)toFont:(NSString*)name size:(NSInteger)px
-{
-    if (name)
-    {
-        return [UIFont fontWithName:name size:px*Ypt];
-    }
-    return STFont(px);
-}
-
 -(UIView*)hidden:(BOOL)yesNo
 {
     [self setHidden:yesNo];
     return self;
 }
 -(UIView*)backgroundColor:(id)colorOrHex{
-    self.backgroundColor=[self toColor:colorOrHex];
+    self.backgroundColor=[UIColor toColor:colorOrHex];
     return self;
 }
 -(UIImage*)backgroundImage
@@ -288,7 +217,7 @@ static char keyValueChar='k';
     }
     else
     {
-        UIImage *img=[self toImage:imgOrName];
+        UIImage *img=[UIImage toImage:imgOrName];
         if(self.frame.size.width>0 && self.frame.size.height>0)
         {
             img=[img reSize:self.frame.size];
@@ -348,7 +277,7 @@ static char keyValueChar='k';
     return self;
 }
 -(UIView*)layerBorderColor:(id)colorOrHex{
-    self.layer.borderColor=[[self toColor:colorOrHex] CGColor];
+    self.layer.borderColor=[[UIColor toColor:colorOrHex] CGColor];
     return self;
 }
 -(UIView*)corner:(BOOL)yesNo

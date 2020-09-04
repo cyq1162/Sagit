@@ -211,7 +211,7 @@
 {
     UISwitch *ui=[[UISwitch alloc] initWithFrame:STEmptyRect];
     [ui setOn:yesNo];
-    ui.onTintColor=[self toColor:colorOrHex];
+    ui.onTintColor=[UIColor toColor:colorOrHex];
     [self addView:ui name:name];
     [ui isFormUI:YES];
     return ui;
@@ -300,11 +300,11 @@
         [scroll addPageSizeContent:1];
         if(direction==X)
         {
-            frame.origin.x=frame.size.width*(scroll.subviews.count);
+            frame.origin.x=scroll.pagerPx*(scroll.subviews.count);
         }
         else if(direction==Y)
         {
-            frame.origin.y=frame.size.height*(scroll.subviews.count);
+            frame.origin.y=scroll.pagerPx*(scroll.subviews.count);
         }
     }
     UIImageView *ui =nil;
@@ -352,7 +352,7 @@
             {
                 if(scroll.isImageFull)
                 {
-                    [ui width:self.frame.size.width*Xpx height:self.frame.size.height*Ypx];
+                    [ui width:1 height:1];
                 }
                 else
                 {

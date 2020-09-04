@@ -11,5 +11,6 @@
 
 @interface UIColor(ST)
 + (UIColor *)hex:(NSString *)hexColor;
++(UIColor *)toColor:(id)hexOrColor;
 -(UIColor*)alpha:(CGFloat)value;
 @end

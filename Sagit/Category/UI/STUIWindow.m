@@ -73,7 +73,7 @@
     {
         NSInteger screenY=textView.stScreenY*Ypt;
         NSInteger textHeight=textView.frame.size.height;
-        NSInteger moveY=screenY+textHeight+kbHeight-STScreeHeightPt;
+        NSInteger moveY=screenY+textHeight+kbHeight-[UIScreen mainScreen].bounds.size.height;
         if(moveY>0)
         {
             CGRect frame=baseView.frame;

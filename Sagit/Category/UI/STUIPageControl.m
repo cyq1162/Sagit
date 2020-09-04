@@ -25,12 +25,12 @@
 }
 -(UIPageControl*)pageColor:(id)colorOrHex
 {
-    self.pageIndicatorTintColor=[self toColor:colorOrHex];
+    self.pageIndicatorTintColor=[UIColor toColor:colorOrHex];
     return self;
 }
 -(UIPageControl*)currentColor:(id)colorOrHex
 {
-    self.currentPageIndicatorTintColor=[self toColor:colorOrHex];
+    self.currentPageIndicatorTintColor=[UIColor toColor:colorOrHex];
     return self;
 }
 #pragma mark 扩展

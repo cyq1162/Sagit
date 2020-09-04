@@ -119,7 +119,7 @@
     }
     if(imgOrName)
     {
-        self.image=[self toImage:imgOrName];
+        self.image=[UIImage toImage:imgOrName];
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       NSData * data = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:url]];
@@ -201,7 +201,7 @@
 }
 -(UIImageView *)image:(id)imgOrName
 {
-    self.image=[UIView toImage:imgOrName];
+    self.image=[UIImage toImage:imgOrName];
     if(CGSizeEqualToSize(CGSizeZero,self.frame.size))
     {
         self.image=[self.image reSize:STFullSize];
@@ -332,12 +332,12 @@
 {
     return [self VerifyCode:length fixBgColor:fixColor fixFontColor:nil];
 }
--(UIImageView *)VerifyCode:(NSInteger)length fixBgColor:(UIColor *)fixBgColor fixFontColor:(UIColor *)fixFontColor
+-(UIImageView *)VerifyCode:(NSInteger)length fixBgColor:(id)fixBgColor fixFontColor:(id)fixFontColor
 {
     NSString *text=[self getRandomText:length];
     [self key:@"VerifyCode" value:[text toLower]];
-    UIView *bgView=[self drawBackgroud:length fixBgColor:fixBgColor];
-    UIColor *fontColor=fixFontColor!=nil?fixFontColor:ColorRandom;
+    UIView *bgView=[self drawBackgroud:length fixBgColor:[UIColor toColor:fixBgColor]];
+    UIColor *fontColor=fixFontColor!=nil?[UIColor toColor:fixFontColor]:ColorRandom;
     [[[[bgView addLabel:nil text:text font:88 color:fontColor] adjustsFontSizeToFitWidth:YES] textAlignment:NSTextAlignmentCenter] block:^(UILabel* view) {
         [view x:0 y:0 width:bgView.stWidth height:bgView.stHeight];
     }];
@@ -346,7 +346,7 @@
     if([self key:@"click"]==nil)
     {
         [self onClick:^(UIImageView* view) {
-            [view VerifyCode:length];
+            [view VerifyCode:length fixBgColor:fixBgColor fixFontColor:fixFontColor];
         }];
     }
     return self;
