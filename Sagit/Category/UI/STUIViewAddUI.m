@@ -300,11 +300,11 @@
         [scroll addPageSizeContent:1];
         if(direction==X)
         {
-            frame.origin.x=scroll.pagerPx*(scroll.subviews.count);
+            frame.origin.x=scroll.pagerPx*Xpt*(scroll.subviews.count);
         }
         else if(direction==Y)
         {
-            frame.origin.y=scroll.pagerPx*(scroll.subviews.count);
+            frame.origin.y=scroll.pagerPx*Ypt*(scroll.subviews.count);
         }
     }
     UIImageView *ui =nil;

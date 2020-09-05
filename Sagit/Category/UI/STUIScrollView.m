@@ -127,11 +127,11 @@
 {
     if(self.direction==X)
     {
-        return self.contentOffset.x/self.pagerPx;
+        return ceil(self.contentOffset.x/(self.pagerPx*Xpt));
     }
     else if(self.direction==Y)
     {
-        return self.contentOffset.y/self.pagerPx;
+        return ceil(self.contentOffset.y/(self.pagerPx*Ypt));
     }
     return 0;
 }
@@ -142,11 +142,11 @@
     CGPoint offset= self.contentOffset;
     if(self.direction==X)
     {
-        offset.x= pagerIndex*self.pagerPx;
+        offset.x= pagerIndex*(self.pagerPx*Xpt);
     }
     else if(self.direction==Y)
     {
-        offset.y=pagerIndex*self.pagerPx;
+        offset.y=pagerIndex*(self.pagerPx*Ypt);
     }
     self.contentOffset=offset;
     if(self.pager && self.pager.currentPage!=pagerIndex)//加个判断，避免死循环
@@ -171,11 +171,11 @@
     {
         if(self.direction==X)
         {
-            return self.frame.size.width;
+            return self.stWidth;
         }
         else
         {
-            return self.frame.size.height;
+            return self.stHeight;
         }
     }
     return len.intValue;
@@ -348,7 +348,7 @@
     CGSize size=self.contentSize;
     if(self.direction==X)
     {
-        size.width=size.width+(self.pagerPx*num);
+        size.width=size.width+(self.pagerPx*Xpt*num);
         if(size.height==0)
         {
             size.height=STFullSize.height;
@@ -356,7 +356,7 @@
     }
     else if(self.direction==Y)
     {
-        size.height=size.height+(self.pagerPx*num);
+        size.height=size.height+(self.pagerPx*Ypt*num);
         if(size.width==0)
         {
             size.width=STFullSize.width;
