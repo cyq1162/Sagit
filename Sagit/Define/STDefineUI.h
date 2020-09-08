@@ -34,7 +34,7 @@
 
 //特别说明，本系素不用能用于frame，因为frame不是标准
 #define _STStandardWidthPt 375
-#define _STStandardHeightPt (_STIsIPhoneX?_STScreenSize.height:667)//;[UIView stStandardHeightPt:self]
+#define _STStandardHeightPt (_STIsIPhoneX?812:667)//;[UIView stStandardHeightPt:self]
 #define _STStandardWidthPx (_STStandardWidthPt*STStandardScale)
 #define _STStandardHeightPx (_STStandardHeightPt*STStandardScale)
 

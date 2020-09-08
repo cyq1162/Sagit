@@ -130,16 +130,16 @@
     }
     if (@available(iOS 13.0, *)) {
          // 获取keywindow
-         NSArray *array = app.windows;
-         UIWindow *window = [array objectAtIndex:0];
-      
-          //  判断取到的window是不是keywidow
-         if (!window.hidden || window.isKeyWindow) {
-             return window;
-         }
-      
+//        NSArray *array = app.windows;
+//         UIWindow *window = [array objectAtIndex:0];
+//
+//          //  判断取到的window是不是keywidow
+//         if (!window.hidden || window.isKeyWindow) {
+//             return window;
+//         }
+//
          //  如果上面的方式取到的window 不是keywidow时  通过遍历windows取keywindow
-         for (UIWindow *window in array) {
+         for (UIWindow *window in app.windows) {
              if (!window.hidden || window.isKeyWindow) {
                  return window;
              }

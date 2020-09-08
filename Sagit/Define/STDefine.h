@@ -28,4 +28,6 @@
 #define STWeakSelf __weak typeof(self) selfWeak = self;__weak typeof(selfWeak) this = selfWeak;
 #define STWeakObj(o) __weak typeof(o) o##Weak = o;
 #define STStrongObj(o) __strong typeof(o) o = o##Weak;
+//日志输出。
+#define STLog(frame) NSLog(@”%@”, NSStringFromCGRect(frame));
 #endif /* Constants_h */

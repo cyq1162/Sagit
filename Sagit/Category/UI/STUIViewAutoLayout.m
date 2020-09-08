@@ -815,6 +815,11 @@ static NSInteger nullValue=-99999;
     return self;
     
 }
+-(UIView *)cut:(NSInteger)widthPx height:(NSInteger)heightPx
+{
+    [self x:self.stX+widthPx/2 y:self.stY+heightPx/2 width:self.stWidth-widthPx height:self.stHeight-heightPx];
+    return self;
+}
 
 //#pragma mark 【px<=>pt】动态转换系数
 //+(NSInteger)stStandardWidthPt:(id)viewOrController
