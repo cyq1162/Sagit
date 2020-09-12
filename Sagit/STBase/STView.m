@@ -31,30 +31,7 @@
     return self;
 }
 
-//这个方法可以重写，如果想在这里搞点事情的话
--(void)loadUI{
-    [self initUI];
-    [self regEvent];
-}
--(void)regEvent{
-    if(self.isStartRotateEvent)
-    {
-        //手机旋转通知
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(rotate:)
-                                                     name:UIDeviceOrientationDidChangeNotification
-                                                   object:nil];
-    }
-}
--(void)rotate:(NSNotification *)notify
-{
-    [self endEditing:YES];
-    if(!CGRectEqualToRect(self.frame, self.OriginFrame))//宽高反转
-    {
-        self.OriginFrame=self.frame;
-        [self refleshLayout];
-    }
-}
+
 //初始化[子类重写该方法]
 -(void)initUI
 {
@@ -103,7 +80,8 @@
 
 -(void)dealloc{
     //[[NSNotificationCenter defaultCenter] removeObserver:self];//在视图控制器消除时，移除键盘事件的通知
-    NSLog(@"STView relase -> %@", [self class]);
+    
+    NSLog(@"STView relase -> %@",[self class]);
 }
 @end
 

@@ -9,7 +9,7 @@
 #import "STHttp.h"
 #import "STMsgBox.h"
 #import "STCategory.h"
-#import "STDefine.h"
+#import "STDefineFunc.h"
 #import "STSagit.h"
 
 #define Boundary @"sagitframework"

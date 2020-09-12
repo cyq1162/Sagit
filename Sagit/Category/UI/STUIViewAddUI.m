@@ -177,7 +177,7 @@
     if([view isSTView])//子控件STView
     {
         view.stView.Controller=self.stController;
-        [view.stView loadUI];//这里才初始化（可以让事件在指定Controller后再绑定）
+        [view.stView initUI];//这里才初始化（可以让事件在指定Controller后再绑定）
     }
     [self addSubview:view];
     return view;
@@ -281,7 +281,7 @@
 }
 -(UIImageView*)addImageView:(NSString*)name
 {
-    return [self addImageView:name img:STDefaultForImageView direction:XY];
+    return [self addImageView:name img:nil direction:XY];
 }
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName
 {

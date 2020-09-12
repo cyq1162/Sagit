@@ -9,8 +9,10 @@
 #import "STUIViewController.h"
 #import <objc/runtime.h>
 #import "STDictionary.h"
-#import "STDefine.h"
+#import "STDefineFunc.h"
 #import "STDefineUI.h"
+#import "STDefineDefault.h"
+#import "STUserDefaults.h"
 #import "STUIView.h"
 #import "STUIViewAddUI.h"
 #import "STUIViewAutoLayout.h"
@@ -20,23 +22,6 @@
 //ios 13.2 弹新窗兼容（13.2 可以用）
 //- (UIModalPresentationStyle)modalPresentationStyle{
 //    return UIModalPresentationFullScreen;
-//}
-//-(UIView *)view
-//{
-//    UIView *view=[self key:@"view"];
-//    if(!view)
-//    {
-//        view=[[STView alloc]initWithController:self];
-//        [self key:@"view" value:view];
-//    }
-//    return view;
-//}
-
-//此方法在第一次view时被触发，把view修改成 STView
-//-(void)loadView
-//{
-//     // 引发UIAlertView弹窗全屏(把导航栏也占了,背景也全灰了)，所以不用了
-//   // self.view=[[STView alloc]initWithController:self];
 //}
 
 #pragma mark keyvalue
@@ -129,7 +114,7 @@ static char keyValueChar='k';
     UIViewController *controller=self;
     if(rootViewControllerType==RootViewNavigationType)
     {
-        controller = [[UINavigationController alloc]initWithRootViewController:self];
+        controller = [[STNavController alloc]initWithRootViewController:self];
         ////让默认View在导航工具条之下。
         self.navigationController.navigationBar.translucent=NO;
     }
@@ -589,7 +574,7 @@ static char keyValueChar='k';
 -(UINavigationController*)toUINavigationController
 {
     if(self.navigationController!=nil){return self.navigationController;}
-    return [[UINavigationController alloc]initWithRootViewController:self];
+    return [[STNavController alloc]initWithRootViewController:self];
 }
 //!框架自动释放资源（不需要人工调用）
 -(void)dispose

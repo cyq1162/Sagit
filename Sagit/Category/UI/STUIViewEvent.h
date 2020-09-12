@@ -16,6 +16,8 @@ typedef  void(^OnViewClick)(id view);
 typedef  void(^OnViewDbClick)(id view);
 typedef  void(^OnViewDrag)(id view,UIPanGestureRecognizer *recognizer);
 typedef  void(^OnViewSlide)(id view,UISwipeGestureRecognizer *recognizer);
+//!屏幕侧滑【只有左右事件】
+typedef  void(^OnScreenEdgeSlide)(id view,UIScreenEdgePanGestureRecognizer *recognizer);
 typedef  void(^OnLongPress)(id view);
 typedef  void(^ViewDescription)(id view);
 #pragma mark 扩展系统事件 - 点击
@@ -78,6 +80,27 @@ typedef  void(^ViewDescription)(id view);
 -(UIView*)onSlide:(OnViewSlide)block;
 //!移除绑定事件
 -(UIView*)removeSlide;
+
+#pragma mark 扩展系统事件 - 屏幕侧滑（左边缘滑动）
+//!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.drag (Age是其它UI的name）
+-(UIView*)addScreenLeftEdgeSlide:(NSString*)event;
+//!绑定事件 并指定target
+-(UIView*)addScreenLeftEdgeSlide:(NSString *)event target:(UIViewController*)target;
+//!绑定事件 用代码块的形式
+-(UIView*)onScreenLeftEdgeSlide:(OnScreenEdgeSlide)block;
+//!移除绑定事件
+-(UIView*)removeScreenLeftEdgeSlide;
+
+#pragma mark 扩展系统事件 - 屏幕侧滑（右边缘滑动）
+//!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.drag (Age是其它UI的name）
+-(UIView*)addScreenRightEdgeSlide:(NSString*)event;
+//!绑定事件 并指定target
+-(UIView*)addScreenRightEdgeSlide:(NSString *)event target:(UIViewController*)target;
+//!绑定事件 用代码块的形式
+-(UIView*)onScreenRightEdgeSlide:(OnScreenEdgeSlide)block;
+//!移除绑定事件
+-(UIView*)removeScreenRightEdgeSlide;
+
 
 #pragma mark 扩展的回调事件
 -(AfterEvent)onAfter;

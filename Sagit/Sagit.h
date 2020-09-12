@@ -11,10 +11,13 @@
 
 #import "STSagit.h"
 
+//STDefine
+#import "STDefineFunc.h"
+#import "STDefineUI.h"
+#import "STUserDefaults.h"
+
 //STModel
 #import "STEnum.h"
-#import "STDefine.h"
-#import "STDefineUI.h"
 #import "STHttpModel.h"
 #import "STModelBase.h"
 #import "STLayoutTracer.h"
@@ -33,6 +36,7 @@
 //STBase
 #import "STController.h"
 #import "STTabController.h"
+#import "STNavController.h"
 #import "STView.h"
 
 #endif /* STFramework_h */

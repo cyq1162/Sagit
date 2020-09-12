@@ -2,7 +2,6 @@
 //  开源：https://github.com/cyq1162/Sagit
 //  作者：陈裕强 create on 2017/12/12.
 //  博客：(昵称：路过秋天） http://www.cnblogs.com/cyq1162/
-//  起源：IT恋、IT连 创业App http://www.itlinks.cn
 //  Copyright © 2017-2027年. All rights reserved.
 //
 
@@ -42,10 +41,11 @@ typedef void(^AfterTableReloadData)(UITableView *tableView);
 -(BOOL)allowDelete;
 //!设置是否允许删除
 -(UITableView*)allowDelete:(BOOL)yesNo;
-//!移除数据源和数据行
+//!移除数据源和数据行（并重新计算且刷新高度）
 -(UITableView*)afterDelCell:(NSIndexPath*)indexPath;
 #pragma mark 扩展属性
 -(UITableView*)scrollEnabled:(BOOL)yesNo;
+//!分组数（默认1）
 -(UITableView*)sectionCount:(NSInteger)count;
 //!每个Section的num数：参数可以传递：@[@"1",@"2",@"2",@"1"] 或者：@"1,2,2,1"
 -(UITableView*)rowCountInSections:(id)nums;

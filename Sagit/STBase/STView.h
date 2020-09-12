@@ -13,18 +13,13 @@
 //!所对应的Controller (弱引用，不然就双向引用内存不保)
 @property (nonatomic,weak) STController *Controller;
 
-//!是否开启手机旋转刷新布局功能。
-@property (nonatomic,assign) BOOL isStartRotateEvent;
 //!初始化
 -(instancetype)initWithController:(STController*)controller;
-//!加载UI（系统内部调用）
--(void)loadUI;
+
 #pragma mark 通用的两个事件方法：initUI、initData #pragma mark (还有一个位于基类的：reloadData)
 //!UI初始化
 -(void)initUI;
 //!事件在UI初始化之后执行
 -(void)initData;
-
-
 
 @end

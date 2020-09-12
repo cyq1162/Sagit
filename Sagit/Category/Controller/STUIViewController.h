@@ -46,7 +46,7 @@
 -(UIViewController*)needStatusBar:(BOOL)yesNo;
 //!设置当前视图是否需要Status栏  forThisView:标记当前UIView是否设置隐藏或显示
 -(UIViewController*)needStatusBar:(BOOL)yesNo forThisView:(BOOL)forThisView;
-//系统内部调用的方法（用于还原导航栏和状态栏和Tab栏）
+//【系统内部方法】：用于还原导航栏和状态栏和Tab栏
 -(void)reSetBarState:(BOOL)animated;
 
 #pragma mark keyvalue
@@ -93,6 +93,8 @@ typedef void(^ControllerDescription)(UIViewController *controller);
 -(void)reloadData;
 //!重新加载数据（一般由子类重写，只是多了个参数，方便根据参数重新加载不同的数据）
 -(void)reloadData:(NSString*)para;
+
+
 #pragma mark for TabBar 属性扩展
 -(UIViewController*)title:(NSString*)title;
 -(UIViewController*)tabTitle:(NSString*)title;
@@ -101,6 +103,6 @@ typedef void(^ControllerDescription)(UIViewController *controller);
 -(UIViewController*)tabBadgeValue:(NSString*)value;
 -(UIViewController*)tabBadgeColor:(id)colorOrHex;
 -(UINavigationController*)toUINavigationController;
-//!框架自动释放资源（不需要人工调用）
+//!【系统内部方法】：框架自动释放资源（不需要人工调用）
 -(void)dispose;
 @end

@@ -8,7 +8,7 @@
 
 #import "STUIViewEvent.h"
 #import <objc/runtime.h>
-#import "STDefine.h"
+//#import "STDefine.h"
 #import "STString.h"
 #import "STUIView.h"
 #import "STUIViewAddUI.h"
@@ -78,6 +78,26 @@
             event(view,recognizer);
         }
     }
+    else if([eventType isEqualToString:@"screenLeftEdgeSlide"])
+    {
+        OnScreenEdgeSlide event = [self key:@"onScreenLeftEdgeSlide"];// (OnViewDrag)objc_getAssociatedObject(self, &dragChar);
+        if(event)
+        {
+            //NSString * to= [self key:@"slideTo"];
+            UIScreenEdgePanGestureRecognizer *recognizer=(UIScreenEdgePanGestureRecognizer*)[self key:@"screenLeftEdgeSlideRecognizer"];
+            event(view,recognizer);
+        }
+    }
+    else if([eventType isEqualToString:@"screenRightEdgeSlide"])
+    {
+        OnScreenEdgeSlide event = [self key:@"onScreenRightEdgeSlide"];// (OnViewDrag)objc_getAssociatedObject(self, &dragChar);
+        if(event)
+        {
+            //NSString * to= [self key:@"slideTo"];
+            UIScreenEdgePanGestureRecognizer *recognizer=(UIScreenEdgePanGestureRecognizer*)[self key:@"screenRightEdgeSlideRecognizer"];
+            event(view,recognizer);
+        }
+    }
 }
 #pragma mark 系统公用方法
 -(BOOL)removeGesture:(Class)class flag:(NSInteger)flag
@@ -90,14 +110,24 @@
             UIGestureRecognizer *gestrue=self.gestureRecognizers[i];
             if([gestrue isKindOfClass:class])
             {
-                if(flag==1 || flag==2)//click、dbClick
+                
+                if(flag==9998 || flag==9997)//click、dbClick
                 {
                     UITapGestureRecognizer *re=(UITapGestureRecognizer*)gestrue;
-                    if(re.numberOfTapsRequired!=flag)
+                    if(re.numberOfTapsRequired!=9999-flag)
                     {
                         continue;
                     }
                 }
+                else if(flag<10)
+                {
+                    UIScreenEdgePanGestureRecognizer *re=(UIScreenEdgePanGestureRecognizer*)gestrue;
+                    if(re.edges!=flag)
+                    {
+                        continue;
+                    }
+                }
+                
                 //gestrue.name
                 [self removeGestureRecognizer:gestrue];
                 gestrue=nil;
@@ -209,27 +239,50 @@
         [self addGestureRecognizer:drag];
         return drag;
     }
-        else if([eventType isEqualToString:@"slide"])
+    else if([eventType isEqualToString:@"slide"])
+    {
+        [self removeSlide];
+        UISwipeGestureRecognizer *slideLeft= [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
+        [slideLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+        [self addGestureRecognizer:slideLeft];
+        
+        UISwipeGestureRecognizer *slideRight= [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
+        [slideRight setDirection:UISwipeGestureRecognizerDirectionRight];
+        [self addGestureRecognizer:slideRight];
+        
+        UISwipeGestureRecognizer *slideUp =[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
+        [slideUp setDirection:UISwipeGestureRecognizerDirectionUp];
+        [self addGestureRecognizer:slideUp];
+        
+        UISwipeGestureRecognizer *slideDown= [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
+        [slideDown setDirection:UISwipeGestureRecognizerDirectionDown];
+        [self addGestureRecognizer:slideDown];
+        
+        return slideLeft;
+    }
+    else if([eventType isEqualToString:@"screenLeftEdgeSlide"])
+    {
+        [self removeScreenLeftEdgeSlide];
+        if(self.stController!=nil && self.stController.navigationController!=nil)
         {
-            [self removeSlide];
-            UISwipeGestureRecognizer *slideLeft= [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
-            [slideLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
-            [self addGestureRecognizer:slideLeft];
-            
-            UISwipeGestureRecognizer *slideRight= [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
-            [slideRight setDirection:UISwipeGestureRecognizerDirectionRight];
-            [self addGestureRecognizer:slideRight];
-            
-            UISwipeGestureRecognizer *slideUp =[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
-            [slideUp setDirection:UISwipeGestureRecognizerDirectionUp];
-            [self addGestureRecognizer:slideUp];
-            
-            UISwipeGestureRecognizer *slideDown= [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideStart:)];
-            [slideDown setDirection:UISwipeGestureRecognizerDirectionDown];
-            [self addGestureRecognizer:slideDown];
-            
-            return slideLeft;
+            self.stController.navigationController.interactivePopGestureRecognizer.enabled=NO;
         }
+        UIScreenEdgePanGestureRecognizer *edgeSlideLeft= [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(screenEdgeSlideStart:)];
+        [edgeSlideLeft setEdges:UIRectEdgeLeft];
+        [self addGestureRecognizer:edgeSlideLeft];
+
+        
+        return edgeSlideLeft;
+    }
+    else if([eventType isEqualToString:@"screenRightEdgeSlide"])
+    {
+        [self removeScreenRightEdgeSlide];
+        UIScreenEdgePanGestureRecognizer *edgeSlideRight= [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(screenEdgeSlideStart:)];
+        [edgeSlideRight setEdges:UIRectEdgeRight];
+        [self addGestureRecognizer:edgeSlideRight];
+        
+        return edgeSlideRight;
+    }
     return nil;
 }
 -(UIView*)addEvent:(NSString*)eventType event:(NSString *)eventName target:(UIViewController*)eventTarget
@@ -456,7 +509,7 @@
 }
 -(UIView *)removeClick
 {
-    if([self removeGesture:[UITapGestureRecognizer class] flag:1])
+    if([self removeGesture:[UITapGestureRecognizer class] flag:9998])
     {
         //移除参数
         [self.keyValue remove:@"clickView,clickSel,clickTarget,clickPointView,onClick,clickPoint"];
@@ -516,7 +569,7 @@
 }
 -(UIView *)removeDbClick
 {
-    if([self removeGesture:[UITapGestureRecognizer class] flag:2])
+    if([self removeGesture:[UITapGestureRecognizer class] flag:9997])
     {
         //移除参数
         [self.keyValue remove:@"dbClickView,dbClickSel,dbClickTarget,dbClickPointView,onDbClick"];
@@ -562,7 +615,7 @@
 }
 -(UIView *)removeLongPress
 {
-    if([self removeGesture:[UILongPressGestureRecognizer class] flag:0])
+    if([self removeGesture:[UILongPressGestureRecognizer class] flag:9999])
     {
         //移除参数
         [self.keyValue remove:@"longPressView,longPressSel,longPressTarget,longPressPointView,onLongPress"];
@@ -610,7 +663,7 @@
 }
 -(UIView *)removeDrag
 {
-    if([self removeGesture:[UIPanGestureRecognizer class] flag:0])
+    if([self removeGesture:[UIPanGestureRecognizer class] flag:9999])
     {
         //移除参数
         [self.keyValue remove:@"dragView,dragSel,dragTarget,dragPointView,onDrag,dragRecognizer"];
@@ -653,10 +706,113 @@
 }
 -(UIView *)removeSlide
 {
-    if([self removeGesture:[UISwipeGestureRecognizer class] flag:0])
+    if([self removeGesture:[UISwipeGestureRecognizer class] flag:9999])
     {
         //移除参数
         [self.keyValue remove:@"slideView,slideSel,slideTarget,slidePointView,onSlide,slideRecognizer"];
+    }
+    return self;
+}
+#pragma mark 扩展系统事件 - edgeSlide 侧滑事件
+- (UIView *)screenEdgeSlideStart:(UIScreenEdgePanGestureRecognizer *)recognizer
+{
+   
+    if(recognizer.edges==UIRectEdgeLeft)
+    {
+        [self key:@"screenLeftEdgeSlideRecognizer" value:recognizer];
+        [self screenLeftEdgeSlide];
+    }
+    else if (recognizer.edges==UIRectEdgeRight)
+    {
+        [self key:@"screenRightEdgeSlideRecognizer" value:recognizer];
+        [self screenRightEdgeSlide];
+    }
+    CGPoint point = [recognizer translationInView:self];
+    //NSLog(@"point %@",NSStringFromCGPoint(point));
+    if(recognizer.edges==UIRectEdgeLeft || recognizer.edges==UIRectEdgeRight)
+    {
+        if(CGRectEqualToRect(CGRectZero, self.OriginFrame))
+        {
+            self.OriginFrame=self.frame;
+        }
+        self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y);
+    }
+    [recognizer setTranslation:CGPointMake(0, 0) inView:self];
+//    if(recognizer.state==UIGestureRecognizerStateEnded || recognizer.state==UIGestureRecognizerStateCancelled)
+//    {
+//        [self backToOrigin];
+//    }
+    return self;
+}
+#pragma mark 扩展系统事件 - edgeSlide 左侧滑事件
+-(UIView *)screenLeftEdgeSlide
+{
+    if(self.userInteractionEnabled)
+    {
+        return [self exeEvent:@"screenLeftEdgeSlide"];
+    }
+    return self;
+}
+-(UIView *)addScreenLeftEdgeSlide:(NSString *)event
+{
+    return [self addScreenLeftEdgeSlide:event target:nil];
+}
+-(UIView *)addScreenLeftEdgeSlide:(NSString *)event target:(UIViewController *)target
+{
+    return [self addEvent:@"screenLeftEdgeSlide" event:event target:target];
+}
+-(UIView *)onScreenLeftEdgeSlide:(OnScreenEdgeSlide)block
+{
+    if(block!=nil)
+    {
+        [self addGesture:@"screenLeftEdgeSlide"];//放在前面，内部有清除参数。
+        [self key:@"screenLeftEdgeSlideView" value:self];
+        [self key:@"onScreenLeftEdgeSlide" value:block];
+    }
+    return self;
+}
+-(UIView *)removeScreenLeftEdgeSlide
+{
+    if([self removeGesture:[UIScreenEdgePanGestureRecognizer class] flag:UIRectEdgeLeft])
+    {
+        //移除参数
+        [self.keyValue remove:@"screenLeftEdgeSlideView,screenLeftEdgeSlideSel,screenLeftEdgeSlideTarget,screenLeftEdgeSlidePointView,onScreenLeftEdgeSlide,screenLeftEdgeSlideRecognizer"];
+    }
+    return self;
+}
+#pragma mark 扩展系统事件 - edgeSlide 右侧滑事件
+-(UIView *)screenRightEdgeSlide
+{
+    if(self.userInteractionEnabled)
+    {
+        return [self exeEvent:@"screenRightEdgeSlide"];
+    }
+    return self;
+}
+-(UIView *)addScreenRightEdgeSlide:(NSString *)event
+{
+    return [self addScreenRightEdgeSlide:event target:nil];
+}
+-(UIView *)addScreenRightEdgeSlide:(NSString *)event target:(UIViewController *)target
+{
+    return [self addEvent:@"screenRightEdgeSlide" event:event target:target];
+}
+-(UIView *)onScreenRightEdgeSlide:(OnScreenEdgeSlide)block
+{
+    if(block!=nil)
+    {
+        [self addGesture:@"screenRightEdgeSlide"];//放在前面，内部有清除参数。
+        [self key:@"screenRightEdgeSlideView" value:self];
+        [self key:@"onScreenRightEdgeSlide" value:block];
+    }
+    return self;
+}
+-(UIView *)removeScreenRightEdgeSlide
+{
+    if([self removeGesture:[UIScreenEdgePanGestureRecognizer class] flag:UIRectEdgeRight])
+    {
+        //移除参数
+        [self.keyValue remove:@"screenRightEdgeSlideView,screenRightEdgeSlideSel,screenRightEdgeSlideTarget,screenRightEdgeSlidePointView,onScreenRightEdgeSlide,screenRightEdgeSlideRecognizer"];
     }
     return self;
 }

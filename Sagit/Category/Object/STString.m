@@ -7,7 +7,7 @@
 //
 
 #import "STString.h"
-#import "STDefine.h"
+#import "STDefineFunc.h"
 @implementation NSString(ST)
 //+(instancetype)format:(NSString *)format, ...
 //{

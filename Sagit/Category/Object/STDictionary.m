@@ -126,7 +126,7 @@
         [entity setValue:v forKey:propName];
 
     }
-
+    free(props);
 }
 @end
 

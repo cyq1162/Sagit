@@ -83,6 +83,9 @@
 -(UIView*)refleshLayout:(BOOL)withWidthHeight;
 //!刷新[当前UI(可控制)]及子UI的布局 withWidthHeight:是否改变宽与高，默认是YES ignoreSelf:忽略自身，默认是NO
 -(UIView*)refleshLayout:(BOOL)withWidthHeight ignoreSelf:(BOOL)ignoreSelf;
+//!刷新布局【屏幕旋转后】
+-(void)refleshLayoutAfterRotate;
+
 //!遍历检测其子UI，如果子UI部分超过，则扩展宽与高，但不会缩小。
 -(UIView*)stSizeToFit;
 //!遍历检测其子UI，如果子UI部分超过，则扩展宽与高，但不会缩小。px参数：扩展后再追加的长度或高度，默认0

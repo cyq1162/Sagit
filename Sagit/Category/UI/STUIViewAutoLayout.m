@@ -8,6 +8,7 @@
 
 // UIView 的自动布局分离出来
 #import "STDefineUI.h"
+#import "STDefineDefault.h"
 #import "STUIViewAutoLayout.h"
 #import "STLayoutTracer.h"
 #import "STCategory.h"
@@ -681,6 +682,7 @@ static NSInteger nullValue=-99999;
         [self.LayoutTracer setObject:tracer forKey:method];
     }
 }
+#pragma mark [布局刷新] refleshLayout
 -(UIView*)refleshLayout
 {
     return [self refleshLayout:YES ignoreSelf:NO];
@@ -740,6 +742,39 @@ static NSInteger nullValue=-99999;
     }
     return self;
 }
+
+-(void)refleshLayoutAfterRotate
+{
+    
+    [self endEditing:YES];
+    STController *st=self.stController;
+    if(st!=nil)
+    {
+        if(CGRectEqualToRect(self.OriginFrame,CGRectZero))
+        {
+            self.OriginFrame=self.frame;
+            if(st.preferredInterfaceOrientationForPresentation==STDefaultOrientation)
+            {
+                return;
+            }
+        }
+        
+        //屏幕坐标变化木有屏幕旋转快。
+        [Sagit delayExecute:0.5 onMainThread:YES block:^{
+            if(!CGRectEqualToRect(self.frame, self.OriginFrame))
+            {
+                NSLog(@"retry...refleshLayout : %@ ",NSStringFromCGRect(self.frame));
+                self.OriginFrame=self.frame;
+                //检查设备
+                [UIView animateWithDuration:0.4 animations:^{
+                    [self refleshLayout];
+                }];
+            }
+        }];
+    }
+  
+}
+
 -(UIView*)stSizeToFit
 {
     return [self stSizeToFit:0 y:0];

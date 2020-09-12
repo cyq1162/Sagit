@@ -2,19 +2,23 @@
 //  开源：https://github.com/cyq1162/Sagit
 //  作者：陈裕强 create on 2017/12/12.
 //  博客：(昵称：路过秋天） http://www.cnblogs.com/cyq1162/
-//  起源：IT恋、IT连 创业App http://www.itlinks.cn
-//  Copyright © 2017-2027年. All rights reserved.
 //
 
 
 
 
-#ifndef STDefineUI_h
+
+#ifndef STStandardScale
+    //【可更改】选择编码标准：1倍（375*667）、2倍（750*1334）、3倍（1125*2001）
+    #define STStandardScale 2
+#endif
+
+
+
+#ifndef STDefineUI_h//
 #define STDefineUI_h
+#pragma mark 以下为UI布局定义：（可使用、而不可更改）
 
-
-//选择编码标准：1倍（375*667）、2倍（750*1334）、3倍（1125*2001）
-#define STStandardScale 2
 //-其他：
 //iphone se分辨率：320 * 568  640 *1136
 //iphone 6s分辨率：375 * 667  750 *1334  ----多数机型、设计稿。
@@ -38,22 +42,18 @@
 #define _STStandardWidthPx (_STStandardWidthPt*STStandardScale)
 #define _STStandardHeightPx (_STStandardHeightPt*STStandardScale)
 
-//比例系数 (标准)像素px*比例系数，得到对应的pt
-#define Xpt (_STScreenSize.width/_STStandardWidthPx) // 1242/750
-#define Ypt (_STScreenSize.height/_STStandardHeightPx) //2208/1334
-
-//比例系数  pt*比例系数,得到对应的px(标准)
-#define Xpx (_STStandardWidthPx/_STScreenSize.width) // 1242/750    320 *
-#define Ypx (_STStandardHeightPx/_STScreenSize.height) //2208/1334
-
 //用于表示全屏（标准px)
 #define STScreenWidthPx (!_STIsLandscape?_STStandardWidthPx:_STStandardHeightPx)
 #define STScreenHeightPx (!_STIsLandscape?_STStandardHeightPx:_STStandardWidthPx)
 
-//状态栏、导航栏、Tab栏 默认显示定义
-#define STDefaultShowStatus YES //默认显示
-#define STDefaultShowNav YES   // 有NavController 的默认显示
-#define STDefaultShowTab YES   // 有TabController 的默认显示
+//比例系数 (标准)像素px*比例系数，得到对应的pt
+#define Xpt (_STScreenSize.width/STScreenWidthPx) // 1242/750
+#define Ypt (_STScreenSize.height/STScreenHeightPx) //2208/1334
+
+//比例系数  pt*比例系数,得到对应的px(标准)
+#define Xpx (STScreenWidthPx/_STScreenSize.width) // 1242/750    320 *
+#define Ypx (STScreenHeightPx/_STScreenSize.height) //2208/1334
+
 
 //得到的是750下转换的像素 88+40+98
 #define STNavHeightPt 44.0f
@@ -177,16 +177,3 @@
 #define STImage(imgName) [UIImage imageNamed:imgName]
 #define STImageOriginal(imgName) [[UIImage imageNamed:imgName] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 #endif /* STDefineUI_h */
-
-//定义一些可被修改的默认值
-//定义两个左侧导航的默认值
-#ifndef STDefaultForNavLeftTitle
-#define STDefaultForNavLeftTitle @"STEmpty"
-#endif
-#ifndef STDefaultForNavLeftImage
-#define STDefaultForNavLeftImage nil
-#endif
-#ifndef STDefaultForImageView
-#define STDefaultForImageView nil
-#endif
-

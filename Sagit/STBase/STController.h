@@ -21,6 +21,18 @@
 //!用于弹窗提示消息
 @property (nonatomic,retain) STMsgBox *msgBox;
 
+#pragma mark 屏幕旋转
+//!屏幕旋转事件：【 return true 系统调用刷新布局（[self.view refleshLayoutAfterRotate];）；return false 用户自己手动控制】 @isEventRotate 是旋转屏幕、还是点击事件触发。
+typedef  BOOL(^OnRotate)(NSNotification* notify,BOOL isEventRotate);
+//!屏幕旋转事件。
+@property (nonatomic,assign) OnRotate onDeviceRotate;
+//!设置当前视图支持的屏幕旋转方向
+-(void)setSupportedInterfaceOrientations:(UIInterfaceOrientationMask)orientation;
+//!设置当前视图的屏幕显示方向（可设置默认的显示方向）
+-(void)setInterfaceOrientation:(UIInterfaceOrientation)orientation;
+//!手动调用旋转屏幕。
+-(STController*)rotateOrientation:(UIInterfaceOrientation)direction;
+
 #pragma mark 通用的三个事件方法：onInit、initUI、initData(还有一个位于基类的：reloadData)
 //!事件在UI初始化之前执行【只执行1次】
 -(void)onInit;

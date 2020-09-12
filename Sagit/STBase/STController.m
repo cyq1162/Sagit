@@ -10,20 +10,56 @@
 #import "STView.h"
 #import "STCategory.h"
 #import <objc/runtime.h>
-#import "STDefine.h"
+#import "STDefineDefault.h"
+#import "STDefineFunc.h"
 #import "STDefineUI.h"
 #import "STMsgBox.h"
 #import "STHttp.h"
 @implementation STController
 
-//ios 13.6 弹新窗兼容(13.6不能用扩展属性。。)
+#pragma mark ios 13.6 不能用扩展属性 处理的。
+// 兼容 ios 13.6 弹新窗兼容 (13.6不能用扩展属性)
 - (UIModalPresentationStyle)modalPresentationStyle{
     return UIModalPresentationFullScreen;
 }
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    NSNumber *value=[self key:@"supportedInterfaceOrientations"];
+    if(value==nil)
+    {
+        return STDefaultOrientationMask;
+    }
+    return (UIInterfaceOrientationMask)value.intValue;
+}
+
+#pragma mark 屏幕旋转
+-(void)setSupportedInterfaceOrientations:(UIInterfaceOrientationMask)orientation
+{
+    [self key:@"supportedInterfaceOrientations" value:@(orientation)];
+    [self key:@"supportedInterfaceOrientationsBackup" value:@(orientation)];
+}
+
+//!用于设置默认的显示方向。
+-(void)setInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    //独立设置，旋转太快，避免冲突。
+    NSNumber *backTo=[self key:@"supportedInterfaceOrientationsBackup"];
+    if(backTo==nil)
+    {
+        backTo=@(self.supportedInterfaceOrientations);
+        [self key:@"supportedInterfaceOrientationsBackup" value:backTo];
+    }
+    [self key:@"supportedInterfaceOrientations" value:@(1<<orientation)];
+    [Sagit delayExecute:3 onMainThread:YES block:^{
+        [self setSupportedInterfaceOrientations:(UIInterfaceOrientationMask)backTo.intValue];//还原。
+    }];
+}
+
+
 -(instancetype)init
 {
     self=[super init];
-    
+    //[self onPreInit];
     //初始化全局设置，必须要在UI初始之前。
     [self onInit];
 
@@ -51,6 +87,7 @@
 //}
 - (void)viewDidLoad
 {
+
     //检测上一个Controller
     [super viewDidLoad];
     [self loadUI];
@@ -65,11 +102,18 @@
         [self needNavBar:NO forThisView:NO];
     }
     [self beforeViewDisappear];
+    if(self.preferredInterfaceOrientationForPresentation!=STDefaultOrientation)
+    {
+        //记录用于还原的屏幕方向。
+        [self key:@"backToOrientation" value:@(self.preferredInterfaceOrientationForPresentation)];
+        [self rotateOrientation:STDefaultOrientation];
+    }
     [super viewWillDisappear:animated];
    
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    
     //NSLog(@"viewWillAppear...%@", [self class]);
     if(!self.needStatusBar)
     {
@@ -80,6 +124,12 @@
         [self needNavBar:YES forThisView:NO];
     }
     [self beforeViewAppear];
+
+    NSNumber *backTo=[self key:@"backToOrientation"];
+    if(backTo!=nil)
+    {
+       [self rotateOrientation:(UIInterfaceOrientation)backTo.intValue];
+    }
     [super viewWillAppear:animated];
 }
 -(void)viewDidAppear:(BOOL)animated
@@ -90,6 +140,90 @@
     }
     [super viewDidAppear:animated];
 }
+#pragma mark 屏幕旋转事件
+//!注册监听事件。
+-(void)regDeviceNotification
+{
+    if([self key:@"regDeviceNotification"]==nil)
+    {
+        [self key:@"regDeviceNotification" value:@"1"];
+        //手机旋转通知
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                               selector:@selector(onRotateNotification:)
+                                                                   name:UIDeviceOrientationDidChangeNotification
+                                                                 object:nil];
+    }
+}
+-(void)onRotateNotification:(NSNotification *)notify
+{
+    UIDeviceOrientation deviceOri=[UIDevice currentDevice].orientation;
+    if(deviceOri==UIDeviceOrientationUnknown || deviceOri==UIDeviceOrientationFaceUp || deviceOri==UIDeviceOrientationFaceDown)
+    {return;}
+    
+    BOOL isEventRotate=[self isEventRotate];
+    
+    if(self.onDeviceRotate!=nil)
+    {
+        if(self.onDeviceRotate(notify,isEventRotate))
+        {
+            if(!isEventRotate)
+            {
+                UIInterfaceOrientationMask mask=self.supportedInterfaceOrientations;
+                //设备方向是否支持。
+                if((mask&(1<<deviceOri))==0){return;}
+            }
+            [self.view refleshLayoutAfterRotate];
+        }
+    }
+    else if(isEventRotate)
+    {
+        [self.view refleshLayoutAfterRotate];
+    }
+  
+}
+//!用户监听设备旋转事件
+-(void)setOnDeviceRotate:(OnRotate)onDeviceRotate
+{
+    if(_onDeviceRotate==nil && onDeviceRotate!=nil)
+    {
+        [self regDeviceNotification];
+        _onDeviceRotate=onDeviceRotate;
+    }
+    else
+    {
+        _onDeviceRotate=nil;
+    }
+}
+
+//!是否（点击）事件触发旋转
+-(BOOL)isEventRotate
+{
+    NSNumber *value=[self key:@"isEventRotate"];
+    if(value==nil)
+    {
+        return NO;
+    }
+    [self key:@"isEventRotate" value:nil];//拿一次就清空。
+    return value.boolValue;
+}
+-(STController*)rotateOrientation:(UIInterfaceOrientation)direction
+{
+    [self regDeviceNotification];
+    if(direction!=UIInterfaceOrientationUnknown && direction!=self.preferredInterfaceOrientationForPresentation)
+    {
+        if ([[UIDevice currentDevice]   respondsToSelector:@selector(setOrientation:)]) {
+            [self key:@"isEventRotate" value:@(YES)];
+            
+            //设置允许旋转的方向
+            [self setInterfaceOrientation:direction];
+            //旋转设备、旋转布局。
+            [[UIDevice currentDevice] setValue:@(UIDeviceOrientationUnknown) forKey:@"orientation"];
+            [[UIDevice currentDevice] setValue:@(direction) forKey:@"orientation"];
+        }
+    }
+    return self;
+}
+
 
 //内部私有方法
 -(void)loadUI{
@@ -103,12 +237,17 @@
     [self initData];
 }
 #pragma mark 通用的三个事件方法：onInit、initUI、initData(还有一个位于基类的：reloadData)
+-(void)onPreInit
+{
+   // [self setInterfaceOrientation:STDefaultOrientation];
+    [self rotateOrientation:STDefaultOrientation];
+}
 //在UI加载之前处理的
 -(void)onInit{}
 //加载UI时处理的
 -(void)initUI
 {
-    [self.stView loadUI];
+    [self.stView initUI];
 }
 //加载UI后处理的
 -(void)initData
@@ -538,6 +677,11 @@
 }
 -(void)dealloc
 {
+    if([self key:@"regDeviceNotification"]!=nil)
+    {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+    }
+    _onDeviceRotate=nil;
     _http=nil;
     if(_msgBox)
     {

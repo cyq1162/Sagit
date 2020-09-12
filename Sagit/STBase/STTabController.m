@@ -11,10 +11,17 @@
 #import "STUIViewController.h"
 @implementation STTabController
 
-//ios 13.6 弹新窗兼容(13.6不能用扩展属性。。)
+#pragma mark ios 13.6 不能用扩展属性 处理的。
+//! Presentation 弹新窗口兼容
 - (UIModalPresentationStyle)modalPresentationStyle{
     return UIModalPresentationFullScreen;
 }
+//!屏幕旋转
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return [self.selectedViewController supportedInterfaceOrientations];
+}
+
 
 -(instancetype)init
 {

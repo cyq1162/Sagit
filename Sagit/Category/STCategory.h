@@ -48,6 +48,5 @@
 
 //Controller
 #import "STUIViewController.h"
-#import "STUINavigationController.h"
 
 
