@@ -727,14 +727,13 @@
         [self key:@"screenRightEdgeSlideRecognizer" value:recognizer];
         [self screenRightEdgeSlide];
     }
-    CGPoint point = [recognizer translationInView:self];
-    //NSLog(@"point %@",NSStringFromCGPoint(point));
     if(recognizer.edges==UIRectEdgeLeft || recognizer.edges==UIRectEdgeRight)
     {
         if(CGRectEqualToRect(CGRectZero, self.OriginFrame))
         {
             self.OriginFrame=self.frame;
         }
+        CGPoint point = [recognizer translationInView:self];
         self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y);
     }
     [recognizer setTranslation:CGPointMake(0, 0) inView:self];

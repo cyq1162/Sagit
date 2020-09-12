@@ -2,7 +2,7 @@
 //  开源：https://github.com/cyq1162/Sagit
 //  作者：陈裕强 create on 2017/12/12.
 //  博客：(昵称：路过秋天） http://www.cnblogs.com/cyq1162/
-//  起源：IT恋、IT连 创业App http://www.itlinks.cn
+//
 //  Copyright © 2017-2027年. All rights reserved.
 //
 
@@ -98,11 +98,20 @@
 #pragma mark TextFiled 协议实现
 -(void)onTextChange:(UITextField*)textField
 {
+    if(self.onEdit)
+    {
+        self.onEdit(textField,NO);
+    }
     NSString *text=textField.text;
-    if(text.length>self.maxLength)
+    if(self.maxLength>0 && text.length>self.maxLength)
     {
         textField.text=[text substringWithRange:NSMakeRange(0, self.maxLength)];
     }
+}
+//ios 13
+- (void)textFieldDidChangeSelection:(UITextField *)textField
+{
+    [self onTextChange:textField];
 }
 //- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 //{//此方法不支持中文（只能在change事件中处理）
