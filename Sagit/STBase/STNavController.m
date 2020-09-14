@@ -15,7 +15,10 @@
 {
     return [self.topViewController supportedInterfaceOrientations];
 }
-
+//设置样式
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return [self.topViewController preferredStatusBarStyle];
+}
 #pragma mark NavigationBar 的协议，这里触发
 - (void)navigationBar:(UINavigationBar *)navigationBar didPopItem:(UINavigationItem *)item
 {

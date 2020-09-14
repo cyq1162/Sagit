@@ -12,7 +12,7 @@
 //STDefine
 #import "STDefineFunc.h"
 #import "STDefineUI.h"
-#import "STUserDefaults.h"
+#import "STDefineDefault.h"
 
 //STModel
 #import "STEnum.h"

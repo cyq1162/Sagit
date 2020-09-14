@@ -344,6 +344,9 @@ static char keyValueChar='k';
         [self removeLongPress];
         [self removeDrag];
         [self removeSlide];
+        [self removeScreenLeftEdgeSlide];
+        [self removeScreenRightEdgeSlide];
+        [self removeTimer];
         //清理事件
         for (UIGestureRecognizer *ges in self.gestureRecognizers) {
             [self removeGestureRecognizer:ges];

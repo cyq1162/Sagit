@@ -13,7 +13,7 @@
 #import "STLayoutTracer.h"
 #import "STCategory.h"
 #import <objc/runtime.h>
-
+#import "Reachability.h"
 @implementation UIView(STAutoLayout)
 #pragma mark 属性定义
 static NSInteger nullValue=-99999;
@@ -758,7 +758,6 @@ static NSInteger nullValue=-99999;
                 return;
             }
         }
-        
         //屏幕坐标变化木有屏幕旋转快。
         [Sagit delayExecute:0.5 onMainThread:YES block:^{
             if(!CGRectEqualToRect(self.frame, self.OriginFrame))
@@ -767,6 +766,47 @@ static NSInteger nullValue=-99999;
                 self.OriginFrame=self.frame;
                 //检查设备
                 [UIView animateWithDuration:0.4 animations:^{
+                    if (@available(ios 13.0, *)) {
+                        if(st.needStatusBar)
+                        {
+                            UIView *status=self.statusBar;
+                            if(_STIsLandscape)
+                            {
+                                [status width:1];
+                                UIColor *color=ColorBlack;
+                                if(st.preferredStatusBarStyle==UIStatusBarStyleLightContent)
+                                {
+                                    color=ColorWhite;
+                                }
+                                // 当前的电池电量
+                                [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+                                UILabel *wifi=[[[[status addLabel:nil text:@"..." font:30 color:color] relate:Left v:60 ] toCenter:Y] width:120];
+                                UILabel *battery=[[[[status addLabel:nil text:@"100%" font:30 color:color] relate:Right v:60 ] toCenter:Y] width:120];
+                                [[[status addLabel:nil text:[NSDate.beiJinDate toString:@"HH:mm"] font:30 color:color] toCenter] onTimer:^(UILabel* view, NSInteger count) {
+                                    //时间
+                                    [view text:[NSDate.beiJinDate toString:@"HH:mm"]];
+                                    //电池
+                                    CGFloat batteryLevel = [UIDevice currentDevice].batteryLevel;
+                                    [battery text:STString(@"%.f%%",batteryLevel*100)];
+                                    //wifi
+                                    Reachability *reach=[Reachability reachabilityWithHostName:@"www.baidu.com"];
+                                    NetworkStatus status= reach.currentReachabilityStatus;
+                                    if(status==ReachableViaWiFi)
+                                    {
+                                        [wifi text:@"Wi-Fi"];
+                                    }
+                                    else
+                                    {
+                                        [wifi text:@"No Wifi"];
+                                    }
+                                } interval:60];
+                            }
+                            else
+                            {
+                                [status removeAllSubViews];
+                            }
+                        }
+                    }
                     [self refleshLayout];
                 }];
             }

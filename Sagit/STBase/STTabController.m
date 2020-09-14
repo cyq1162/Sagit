@@ -20,7 +20,10 @@
 {
     return [self.selectedViewController supportedInterfaceOrientations];
 }
-
+//设置样式
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return [self.selectedViewController preferredStatusBarStyle];
+}
 
 -(instancetype)init
 {

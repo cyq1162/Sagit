@@ -18,10 +18,11 @@
 #import "Sagit.h"
 
 @implementation UIViewController(ST)
-//ios 13.2 弹新窗兼容（13.2 可以用）
-//- (UIModalPresentationStyle)modalPresentationStyle{
-//    return UIModalPresentationFullScreen;
-//}
+
+//设置是否隐藏
+- (BOOL)prefersStatusBarHidden {
+    return ![self needStatusBar];
+}
 
 #pragma mark keyvalue
 static char keyValueChar='k';
@@ -220,16 +221,32 @@ static char keyValueChar='k';
     }
     
     [[UIApplication sharedApplication] setStatusBarHidden:!yesNo animated:NO];//隐藏
-        if (@available(ios 13.0, *)) {
-            if(yesNo)
-            {
-                [self.view.statusBar width:STScreenWidthPx height:STStatusHeightPx];
-            }
-            else{
-                [self.view.statusBar width:0 height:0];
-            }
+    if (@available(ios 13.0, *)) {
+        if(yesNo)
+        {
+            [self.view.statusBar width:STScreenWidthPx height:STStatusHeightPx];
         }
-
+        else{
+            [self.view.statusBar width:0 height:0];
+        }
+    }
+    [self setNeedsStatusBarAppearanceUpdate];//兼容View controller-based status bar appearance 为YES
+    return self;
+}
+-(UIViewController *)setStatusBarStyle:(UIStatusBarStyle)style
+{
+    [self.keyWindow key:@"statusBarStyle" value:@(style)];//全局设置。
+    return [self setStatusBarStyle:style forThisView:NO];
+}
+-(UIViewController *)setStatusBarStyle:(UIStatusBarStyle)style forThisView:(BOOL)forThisView
+{
+    if(forThisView)
+    {
+        [self key:@"statusBarStyle" value:@(style)];
+    }
+    UIApplication *app=[UIApplication sharedApplication];
+    [app setStatusBarStyle:style animated:NO];//Start中字颜色为黑,这里改白
+    [self setNeedsStatusBarAppearanceUpdate];
     return self;
 }
 #pragma mark 导航栏：进入、退出

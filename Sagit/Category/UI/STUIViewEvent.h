@@ -19,7 +19,10 @@ typedef  void(^OnViewSlide)(id view,UISwipeGestureRecognizer *recognizer);
 //!屏幕侧滑【只有左右事件】
 typedef  void(^OnScreenEdgeSlide)(id view,UIScreenEdgePanGestureRecognizer *recognizer);
 typedef  void(^OnLongPress)(id view);
+//!定时器事件。
+typedef  void(^OnTimer)(id view,NSInteger count);
 typedef  void(^ViewDescription)(id view);
+
 #pragma mark 扩展系统事件 - 点击
 //!点击事件的间隔（单位秒s)
 -(NSInteger)clickInterval;
@@ -101,6 +104,12 @@ typedef  void(^ViewDescription)(id view);
 //!移除绑定事件
 -(UIView*)removeScreenRightEdgeSlide;
 
+#pragma mark 定时器事件
+//!绑定事件 用代码块的形式
+-(UIView*)onTimer:(OnTimer)block;
+-(UIView*)onTimer:(OnTimer)block interval:(double)sencond;
+//!移除绑定事件
+-(UIView*)removeTimer;
 
 #pragma mark 扩展的回调事件
 -(AfterEvent)onAfter;

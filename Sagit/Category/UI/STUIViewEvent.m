@@ -628,6 +628,10 @@
 {
     [self key:@"dragRecognizer" value:recognizer];
     [self drag];
+    if(CGRectEqualToRect(CGRectZero, self.OriginFrame))
+    {
+        self.OriginFrame=self.frame;
+    }
     CGPoint point = [recognizer translationInView:self];
     self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y + point.y);
     [recognizer setTranslation:CGPointMake(0, 0) inView:self];
@@ -825,6 +829,54 @@
     [self key:@"onAfter" value:block];
     return self;
 }
+
+#pragma mark 定时器事件
+- (UIView *)timerStart:(NSTimer *)timer
+{
+    OnTimer timerEvent= [self key:@"onTimer"];
+    if(timerEvent)
+    {
+        NSNumber *value=[self key:@"timerCount"];
+        if(value==nil)
+        {
+            value=@(1);
+        }
+        else
+        {
+            value=@(value.intValue+1);
+        }
+         [self key:@"timerCount" value:value];
+        timerEvent(self,value.intValue);
+    }
+    return self;
+    
+}
+//!绑定事件 用代码块的形式
+-(UIView*)onTimer:(OnTimer)block
+{
+    return [self onTimer:block interval:1];
+}
+-(UIView*)onTimer:(OnTimer)block interval:(double)sencond
+{
+    NSTimer *timer=[NSTimer scheduledTimerWithTimeInterval:sencond target:self selector:@selector(timerStart:) userInfo:nil repeats:YES];
+    [self key:@"timer" value:timer];
+    [self key:@"onTimer" value:block];
+    [timer fire];//开启
+    return self;
+}
+//!移除绑定事件
+-(UIView*)removeTimer
+{
+    NSTimer *timer=[self key:@"timer"];
+    if(timer)
+    {
+        [timer invalidate];
+        timer=nil;
+        [self.keyValue remove:@"timer,onTimer,timerCount"];
+    }
+    return self;
+}
+
 #pragma mark 增加描述
 //用于格式化增加描述的方法
 -(UIView*)block:(NSString *)description on:(ViewDescription)descBlock

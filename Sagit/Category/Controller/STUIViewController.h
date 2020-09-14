@@ -36,7 +36,7 @@
 -(BOOL)needTabBar;
 //!设置当前视图是否需要Tab栏
 -(UIViewController*)needTabBar:(BOOL)yesNo;
-//!设置当前视图是否需要Tab栏  forThisView:标记当前UIView是否设置隐藏或显示
+//!设置当前视图是否需要Tab栏  forThisView:标记当前UIView是否设置隐藏或显示 默认：YES
 -(UIViewController*)needTabBar:(BOOL)yesNo forThisView:(BOOL)forThisView;
 
 //!返回当前视图是否需要Status栏
@@ -45,6 +45,10 @@
 -(UIViewController*)needStatusBar:(BOOL)yesNo;
 //!设置当前视图是否需要Status栏  forThisView:标记当前UIView是否设置隐藏或显示
 -(UIViewController*)needStatusBar:(BOOL)yesNo forThisView:(BOOL)forThisView;
+//!设置视图Status栏显示的样式：默认全局
+-(UIViewController*)setStatusBarStyle:(UIStatusBarStyle)style;
+//!设置当前视图Status栏显示的样式：默认全局 @forThisView 是否只在当前View失效  默认：NO
+-(UIViewController*)setStatusBarStyle:(UIStatusBarStyle)style forThisView:(BOOL)forThisView;
 //【系统内部方法】：用于还原导航栏和状态栏和Tab栏
 -(void)reSetBarState:(BOOL)animated;
 

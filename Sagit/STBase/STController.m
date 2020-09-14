@@ -29,6 +29,28 @@
     }
     return (UIInterfaceOrientationMask)value.intValue;
 }
+//设置样式
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    NSNumber *value=[self key:@"statusBarStyle"];//看局部优先。
+    if(value!=nil)
+    {
+        return (UIStatusBarStyle)value.intValue;
+    }
+    else
+    {
+        value=[self.keyWindow key:@"statusBarStyle"];//全局
+        if(value!=nil)
+        {
+            return (UIStatusBarStyle)value.intValue;
+        }
+    }
+    return UIStatusBarStyleDefault;
+}
+
+//设置是否隐藏
+- (BOOL)prefersStatusBarHidden {
+    return ![self needStatusBar];
+}
 
 #pragma mark 屏幕旋转
 -(void)setSupportedInterfaceOrientations:(UIInterfaceOrientationMask)orientation
@@ -117,6 +139,10 @@
     {
         [self needStatusBar:NO forThisView:NO];
     }
+    else
+    {
+        [self setStatusBarStyle:self.preferredStatusBarStyle forThisView:NO];
+    }
     if(self.needNavBar)
     {
         [self needNavBar:YES forThisView:NO];
@@ -157,6 +183,19 @@
     UIDeviceOrientation deviceOri=[UIDevice currentDevice].orientation;
     if(deviceOri==UIDeviceOrientationUnknown || deviceOri==UIDeviceOrientationFaceUp || deviceOri==UIDeviceOrientationFaceDown)
     {return;}
+    
+    if((deviceOri==UIDeviceOrientationLandscapeLeft || deviceOri==UIDeviceOrientationLandscapeRight) && self.needStatusBar)//ios 13 隐藏了状态栏。
+    {
+        [self needStatusBar:YES forThisView:NO];
+       // [self.view.statusBar alpha:0];
+//        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+//        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+        //[UIApplication sharedApplication].statusBarHidden = NO;
+        //[[UIApplication sharedApplication] setStatusBarOrientation: self.preferredInterfaceOrientationForPresentation];
+        if (@available(ios 13.0, *)) {
+            
+        }
+    }
     
     BOOL isEventRotate=[self isEventRotate];
     
