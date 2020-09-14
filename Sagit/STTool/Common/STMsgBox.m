@@ -282,6 +282,7 @@
 {
     
     UIWindow *window=self.window;
+    [window endEditing:YES];
     UIView *statusView=window.statusBar;
     self.isDialoging=YES;
     
