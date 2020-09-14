@@ -26,8 +26,8 @@ typedef  BOOL(^OnRotate)(NSNotification* notify,BOOL isEventRotate);
 @property (nonatomic,assign) OnRotate onDeviceRotate;
 //!设置当前视图支持的屏幕旋转方向
 -(void)setSupportedInterfaceOrientations:(UIInterfaceOrientationMask)orientation;
-//!设置当前视图的屏幕显示方向（可设置默认的显示方向）
--(void)setInterfaceOrientation:(UIInterfaceOrientation)orientation;
+////!设置当前视图的屏幕显示方向（可设置默认的显示方向）
+//-(void)setInterfaceOrientation:(UIInterfaceOrientation)orientation;
 //!手动调用旋转屏幕。
 -(STController*)rotateOrientation:(UIInterfaceOrientation)direction;
 

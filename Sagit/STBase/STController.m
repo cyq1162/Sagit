@@ -79,7 +79,6 @@
 -(instancetype)init
 {
     self=[super init];
-    //[self onPreInit];
     //初始化全局设置，必须要在UI初始之前。
     [self onInit];
 
@@ -274,11 +273,7 @@
     [self initData];
 }
 #pragma mark 通用的三个事件方法：onInit、initUI、initData(还有一个位于基类的：reloadData)
--(void)onPreInit
-{
-   // [self setInterfaceOrientation:STDefaultOrientation];
-    [self rotateOrientation:STDefaultOrientation];
-}
+
 //在UI加载之前处理的
 -(void)onInit{}
 //加载UI时处理的
