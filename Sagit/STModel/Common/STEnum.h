@@ -44,4 +44,14 @@ typedef NS_ENUM(NSUInteger,XYLocation)  {
     //相对四边
     LeftTopRightBottom = 1234
 };
+//!定义拖动的事件
+typedef NS_ENUM(NSUInteger,DragDirection)  {
+    DragToLeft=1,
+    DragToRight=2,
+    DragToLeftRight=DragToLeft|DragToRight,
+    DragToUp=4,
+    DragToDown=8,
+    DragToUpDown=DragToUp|DragToDown,
+    DragToAll=DragToLeft|DragToRight|DragToUp|DragToDown,
+};
 #endif /* Header_h */

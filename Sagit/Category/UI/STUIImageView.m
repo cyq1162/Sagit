@@ -259,8 +259,8 @@
             {
                 if(scale==2)
                 {
-                    [self onDrag:^(id view, UIPanGestureRecognizer *recognizer) {
-
+                    [self onDrag:^BOOL(id view, UIPanGestureRecognizer *recognizer) {
+                        return true;
                     }];
                 }
                 else

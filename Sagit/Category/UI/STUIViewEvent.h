@@ -14,7 +14,8 @@ typedef  void(^AfterEvent)(NSString *eventType, id para);
 typedef  void(^OnViewClick)(id view);
 //!双击事件
 typedef  void(^OnViewDbClick)(id view);
-typedef  void(^OnViewDrag)(id view,UIPanGestureRecognizer *recognizer);
+typedef  BOOL(^OnViewDrag)(id view,UIPanGestureRecognizer *recognizer);
+//!滑动事件：return true 滑动View；return false 不滑动View
 typedef  void(^OnViewSlide)(id view,UISwipeGestureRecognizer *recognizer);
 //!屏幕侧滑【只有左右事件】
 typedef  void(^OnScreenEdgeSlide)(id view,UIScreenEdgePanGestureRecognizer *recognizer);
@@ -70,6 +71,8 @@ typedef  void(^ViewDescription)(id view);
 -(UIView*)addDrag:(NSString *)event target:(UIViewController*)target;
 //!绑定事件 用代码块的形式
 -(UIView*)onDrag:(OnViewDrag)block;
+//!绑定事件 用代码块的形式
+-(UIView*)onDrag:(OnViewDrag)block direction:(DragDirection)direction;
 //!移除绑定拖动事件
 -(UIView*)removeDrag;
 

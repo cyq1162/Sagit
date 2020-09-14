@@ -65,7 +65,8 @@
         if(event)
         {
             UIPanGestureRecognizer *recognizer= (UIPanGestureRecognizer*)[self key:@"dragRecognizer"];
-            event(view,recognizer);
+            BOOL dragResult= event(view,recognizer);
+            [self key:@"dragResult" value:@(dragResult)];
         }
     }
     else if([eventType isEqualToString:@"slide"])
@@ -626,15 +627,69 @@
 #pragma mark 扩展系统事件 - 拖动
 - (UIView *)dragStart:(UIPanGestureRecognizer *)recognizer
 {
-    [self key:@"dragRecognizer" value:recognizer];
-    [self drag];
     if(CGRectEqualToRect(CGRectZero, self.OriginFrame))
     {
         self.OriginFrame=self.frame;
     }
-    CGPoint point = [recognizer translationInView:self];
-    self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y + point.y);
-    [recognizer setTranslation:CGPointMake(0, 0) inView:self];
+    [self key:@"dragRecognizer" value:recognizer];
+    [self drag];
+    NSNumber *slideResult=[self key:@"dragResult"];
+       if(slideResult!=nil && slideResult.boolValue)
+       {
+           
+           CGPoint point = [recognizer translationInView:self];
+           
+           NSNumber *value=[self key:@"dragDirection"];
+           DragDirection direction=(DragDirection)value.intValue;
+           
+           switch (direction) {
+               case DragToLeft:
+                   if(point.x<0)
+                   {
+                       self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y);
+                   }
+                   break;
+               case DragToRight:
+                   if(point.x>0)
+                   {
+                       self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y);
+                   }
+                   break;
+               case DragToLeftRight:
+                   self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y);
+                   break;
+               case DragToUp:
+                   if(point.y<0)
+                   {
+                       self.center = CGPointMake(recognizer.view.center.x, recognizer.view.center.y + point.y);
+                   }
+                   break;
+               case DragToDown:
+                   if(point.y>0)
+                   {
+                       self.center = CGPointMake(recognizer.view.center.x, recognizer.view.center.y + point.y);
+                   }
+                   break;
+              case DragToUpDown:
+                   self.center = CGPointMake(recognizer.view.center.x, recognizer.view.center.y + point.y);
+                   break;
+               case DragToAll:
+                   self.center = CGPointMake(recognizer.view.center.x + point.x, recognizer.view.center.y + point.y);
+                   break;
+               default:
+                   break;
+           }
+           
+           if(recognizer.state==UIGestureRecognizerStateEnded && direction!=DragToAll)
+           {
+               [self backToOrigin];
+           }
+           [recognizer setTranslation:CGPointMake(0, 0) inView:self];
+       }
+       return self;
+   
+    
+   
     return self;
 }
 -(UIView *)drag
@@ -655,12 +710,16 @@
 }
 -(UIView *)onDrag:(OnViewDrag)block
 {
+    return [self onDrag:block direction:DragToAll];
+}
+-(UIView *)onDrag:(OnViewDrag)block direction:(DragDirection)direction
+{
     if(block!=nil)
     {
         [self addGesture:@"drag"];//放在前面，内部有清除参数。
         [self key:@"dragView" value:self];
         [self key:@"onDrag" value:block];
-        //[self setDragBlock:block];
+        [self key:@"dragDirection" value:@(direction)];
         
     }
     return self;
@@ -670,7 +729,7 @@
     if([self removeGesture:[UIPanGestureRecognizer class] flag:9999])
     {
         //移除参数
-        [self.keyValue remove:@"dragView,dragSel,dragTarget,dragPointView,onDrag,dragRecognizer"];
+        [self.keyValue remove:@"dragView,dragSel,dragTarget,dragPointView,onDrag,dragRecognizer,dragDirection"];
         //[self setDragBlock:nil];
     }
     return self;
@@ -679,6 +738,10 @@
 #pragma mark 扩展系统事件 - slide 滑动事件
 - (UIView *)slideStart:(UISwipeGestureRecognizer *)recognizer
 {
+    if(CGRectEqualToRect(CGRectZero, self.OriginFrame))
+    {
+        self.OriginFrame=self.frame;
+    }
     [self key:@"slideRecognizer" value:recognizer];
     return [self slide];
 }
