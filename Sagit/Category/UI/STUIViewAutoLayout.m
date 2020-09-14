@@ -780,9 +780,9 @@ static NSInteger nullValue=-99999;
                                 }
                                 // 当前的电池电量
                                 [UIDevice currentDevice].batteryMonitoringEnabled = YES;
-                                UILabel *wifi=[[[[status addLabel:nil text:@"..." font:30 color:color] relate:Left v:60 ] toCenter:Y] width:120];
-                                UILabel *battery=[[[[status addLabel:nil text:@"100%" font:30 color:color] relate:Right v:60 ] toCenter:Y] width:120];
-                                [[[status addLabel:nil text:[NSDate.beiJinDate toString:@"HH:mm"] font:30 color:color] toCenter] onTimer:^(UILabel* view, NSInteger count) {
+                                UILabel *wifi=[[[[status addLabel:nil text:@"..." font:15*STStandardScale color:color] relate:Left v:30*STStandardScale ] toCenter:Y] width:120];
+                                UILabel *battery=[[[[status addLabel:nil text:@"100%" font:15*STStandardScale color:color] relate:Right v:30*STStandardScale ] toCenter:Y] width:120];
+                                [[[status addLabel:nil text:[NSDate.beiJinDate toString:@"HH:mm"] font:15*STStandardScale color:color] toCenter] onTimer:^(UILabel* view,NSTimer *timer, NSInteger count) {
                                     //时间
                                     [view text:[NSDate.beiJinDate toString:@"HH:mm"]];
                                     //电池

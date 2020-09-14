@@ -819,16 +819,7 @@
     }
     return self;
 }
-#pragma mark 扩展的回调事件
--(AfterEvent)onAfter
-{
-    return [self key:@"onAfter"];
-}
--(UIView *)onAfter:(AfterEvent)block
-{
-    [self key:@"onAfter" value:block];
-    return self;
-}
+
 
 #pragma mark 定时器事件
 - (UIView *)timerStart:(NSTimer *)timer
@@ -845,8 +836,8 @@
         {
             value=@(value.intValue+1);
         }
-         [self key:@"timerCount" value:value];
-        timerEvent(self,value.intValue);
+        [self key:@"timerCount" value:value];
+        timerEvent(self,timer,value.intValue);
     }
     return self;
     
@@ -877,6 +868,16 @@
     return self;
 }
 
+#pragma mark 扩展的回调事件
+-(AfterEvent)onAfter
+{
+    return [self key:@"onAfter"];
+}
+-(UIView *)onAfter:(AfterEvent)block
+{
+    [self key:@"onAfter" value:block];
+    return self;
+}
 #pragma mark 增加描述
 //用于格式化增加描述的方法
 -(UIView*)block:(NSString *)description on:(ViewDescription)descBlock

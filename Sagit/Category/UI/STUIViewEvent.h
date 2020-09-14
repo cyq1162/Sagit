@@ -20,7 +20,7 @@ typedef  void(^OnViewSlide)(id view,UISwipeGestureRecognizer *recognizer);
 typedef  void(^OnScreenEdgeSlide)(id view,UIScreenEdgePanGestureRecognizer *recognizer);
 typedef  void(^OnLongPress)(id view);
 //!定时器事件。
-typedef  void(^OnTimer)(id view,NSInteger count);
+typedef  void(^OnTimer)(id view,NSTimer *timer, NSInteger count);
 typedef  void(^ViewDescription)(id view);
 
 #pragma mark 扩展系统事件 - 点击
