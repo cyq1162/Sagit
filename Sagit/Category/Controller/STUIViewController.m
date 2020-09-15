@@ -245,7 +245,17 @@ static char keyValueChar='k';
         [self key:@"statusBarStyle" value:@(style)];
     }
     UIApplication *app=[UIApplication sharedApplication];
-    [app setStatusBarStyle:style animated:NO];//Start中字颜色为黑,这里改白
+    if(style==UIStatusBarStyleDarkContent)
+    {
+        if (@available(iOS 13.0, *)) {
+        
+        }
+        else
+        {
+            style=UIStatusBarStyleDefault;
+        }
+    }
+    [app setStatusBarStyle:style animated:YES];//Start中字颜色为黑,这里改白
     [self setNeedsStatusBarAppearanceUpdate];
     return self;
 }

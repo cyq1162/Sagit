@@ -32,19 +32,29 @@
 //设置样式
 - (UIStatusBarStyle)preferredStatusBarStyle {
     NSNumber *value=[self key:@"statusBarStyle"];//看局部优先。
+    UIStatusBarStyle style=UIStatusBarStyleDefault;
     if(value!=nil)
     {
-        return (UIStatusBarStyle)value.intValue;
+        style= (UIStatusBarStyle)value.intValue;
     }
     else
     {
         value=[self.keyWindow key:@"statusBarStyle"];//全局
         if(value!=nil)
         {
-            return (UIStatusBarStyle)value.intValue;
+            style= (UIStatusBarStyle)value.intValue;
         }
     }
-    return UIStatusBarStyleDefault;
+    
+    if (@available(iOS 13.0, *)) {
+        return style;
+    }
+    else if(style==UIStatusBarStyleDarkContent)
+    {
+        return UIStatusBarStyleDefault;
+    }
+    
+    return style;
 }
 
 //设置是否隐藏
