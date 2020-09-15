@@ -172,6 +172,22 @@
 //    }
 //    return NO;
 }
+-(void)failSuper:(Class)superRecclass thisRec:(UIGestureRecognizer*)thisRec
+{
+    UIView *superView=self.superview;
+    if(superView!=nil && superView.userInteractionEnabled)
+    {
+        //禁用
+        for (int i=0; i<superView.gestureRecognizers.count; i++) {
+            UITapGestureRecognizer *rec=superView.gestureRecognizers[i];
+            if([rec isKindOfClass:superRecclass])
+            {
+                [rec requireGestureRecognizerToFail:thisRec];//和super比，thisRec优先级更高。
+            }
+        }
+        [superView failSuper:superRecclass thisRec:thisRec];//一直往上。
+    }
+}
 -(UIGestureRecognizer*)addGesture:(NSString*)eventType
 {
     self.userInteractionEnabled=YES;
@@ -188,48 +204,49 @@
         click.numberOfTapsRequired=1;//设置点按次数，默认为1
         click.numberOfTouchesRequired=1;//点按的手指数
         for (int i=0; i<self.gestureRecognizers.count; i++) {
-            if([self.gestureRecognizers[i] isKindOfClass:[UITapGestureRecognizer class]])
+            UITapGestureRecognizer *rec=self.gestureRecognizers[i];
+            if([rec isKindOfClass:[UITapGestureRecognizer class]])
             {
-                //UITapGestureRecognizer *tap=(UITapGestureRecognizer*)self.gestureRecognizers[i];
-                [click requireGestureRecognizerToFail:self.gestureRecognizers[i]];
+                [click requireGestureRecognizerToFail:rec];//只要有点击，rec优先级更高。
             }
         }
-        
+        [self failSuper:[UITapGestureRecognizer class] thisRec:click];
         [self addGestureRecognizer:click];
         
         return click;
     }
     else if([eventType isEqualToString:@"dbClick"])
     {
-          [self removeDbClick];
-          
+        [self removeDbClick];
+        
         UITapGestureRecognizer *dbClick = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dbClickStart:)];
-          dbClick.delegate=(id)self;
-          dbClick.numberOfTapsRequired=2;//设置点按次数，默认为2
-          dbClick.numberOfTouchesRequired=1;//点按的手指数
-            for (int i=0; i<self.gestureRecognizers.count; i++) {
-                if([self.gestureRecognizers[i] isKindOfClass:[UITapGestureRecognizer class]])
+        dbClick.delegate=(id)self;
+        dbClick.numberOfTapsRequired=2;//设置点按次数，默认为2
+        dbClick.numberOfTouchesRequired=1;//点按的手指数
+        for (int i=0; i<self.gestureRecognizers.count; i++) {
+            if([self.gestureRecognizers[i] isKindOfClass:[UITapGestureRecognizer class]])
+            {
+                UITapGestureRecognizer *tap=(UITapGestureRecognizer*)self.gestureRecognizers[i];
+                if(tap.numberOfTapsRequired==1)
                 {
-                    UITapGestureRecognizer *tap=(UITapGestureRecognizer*)self.gestureRecognizers[i];
-                    if(tap.numberOfTapsRequired==1)
-                    {
-                        [tap requireGestureRecognizerToFail:dbClick];
-                    }
-                    else if(tap.numberOfTapsRequired>2)
-                    {
-                        [dbClick requireGestureRecognizerToFail:tap];
-                    }
-                   
+                    [tap requireGestureRecognizerToFail:dbClick];
                 }
+                else if(tap.numberOfTapsRequired>2)
+                {
+                    [dbClick requireGestureRecognizerToFail:tap];
+                }
+                
             }
-          [self addGestureRecognizer:dbClick];
-          return dbClick;
+        }
+        [self failSuper:[UITapGestureRecognizer class] thisRec:dbClick];
+        [self addGestureRecognizer:dbClick];
+        return dbClick;
     }
     else if([eventType isEqualToString:@"longPress"])
     {
         [self removeLongPress];
-        
         UILongPressGestureRecognizer *longPress= [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressStart:)];
+        [self failSuper:[UILongPressGestureRecognizer class] thisRec:longPress];
         [self addGestureRecognizer:longPress];
         return longPress;
     }
@@ -237,6 +254,7 @@
     {
         [self removeDrag];
         UIPanGestureRecognizer *drag= [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dragStart:)];
+        [self failSuper:[UIPanGestureRecognizer class] thisRec:drag];
         [self addGestureRecognizer:drag];
         return drag;
     }
@@ -259,6 +277,10 @@
         [slideDown setDirection:UISwipeGestureRecognizerDirectionDown];
         [self addGestureRecognizer:slideDown];
         
+        [self failSuper:[UISwipeGestureRecognizer class] thisRec:slideLeft];
+        [self failSuper:[UISwipeGestureRecognizer class] thisRec:slideRight];
+        [self failSuper:[UISwipeGestureRecognizer class] thisRec:slideUp];
+        [self failSuper:[UISwipeGestureRecognizer class] thisRec:slideDown];
         return slideLeft;
     }
     else if([eventType isEqualToString:@"screenLeftEdgeSlide"])
@@ -270,6 +292,7 @@
         }
         UIScreenEdgePanGestureRecognizer *edgeSlideLeft= [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(screenEdgeSlideStart:)];
         [edgeSlideLeft setEdges:UIRectEdgeLeft];
+        [self failSuper:[UIScreenEdgePanGestureRecognizer class] thisRec:edgeSlideLeft];
         [self addGestureRecognizer:edgeSlideLeft];
 
         
@@ -281,7 +304,7 @@
         UIScreenEdgePanGestureRecognizer *edgeSlideRight= [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(screenEdgeSlideStart:)];
         [edgeSlideRight setEdges:UIRectEdgeRight];
         [self addGestureRecognizer:edgeSlideRight];
-        
+        [self failSuper:[UIScreenEdgePanGestureRecognizer class] thisRec:edgeSlideRight];
         return edgeSlideRight;
     }
     return nil;
