@@ -31,6 +31,7 @@
 #import "STUINavigationBar.h"
 #import "STUITableView.h"
 #import "STUITableViewCell.h"
+#import "STUITableViewCellAction.h"
 #import "STUICollectionView.h"
 #import "STUICollectionViewCell.h"
 #import "STUIImage.h"

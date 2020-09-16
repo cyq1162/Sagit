@@ -43,7 +43,7 @@
 {
     if(addCell!=nil)
     {
-        addCell=[addCell copy];
+        //addCell=[addCell copy];
         [self key:@"addCell" value:addCell];
     }
     else
@@ -64,6 +64,21 @@
     else
     {
         [self key:@"delCell" value:delCell];
+    }
+}
+-(AddTableCellAction)addCellAction
+{
+    return [self key:@"addCellAction"];
+}
+-(void)setAddCellAction:(AddTableCellAction)addCellAction
+{
+    if(addCellAction==nil)
+    {
+        [self.keyValue remove:@"addCellAction"];
+    }
+    else
+    {
+        [self key:@"addCellAction" value:addCellAction];
     }
 }
 -(NSMutableDictionary*)heightForCells
@@ -128,13 +143,13 @@
     [self key:@"cellStyle" value:[@(style) stringValue]];
     return self;
 }
--(BOOL)allowDelete
+-(BOOL)allowEdit
 {
-    return [self key:@"allowDelete"]!=nil && [[self key:@"allowDelete"] isEqualToString:@"1"];
+    return [self key:@"allowEdit"]!=nil && [[self key:@"allowEdit"] isEqualToString:@"1"];
 }
--(UITableView *)allowDelete:(BOOL)yesNo
+-(UITableView *)allowEdit:(BOOL)yesNo
 {
-    [self key:@"allowDelete" value:yesNo?@"1":@"0"];
+    [self key:@"allowEdit" value:yesNo?@"1":@"0"];
     return self;
 }
 -(UITableView*)afterDelCell:(NSIndexPath*)indexPath
@@ -183,10 +198,10 @@
     [self key:@"rowCountInSections" value:items];
     return self;
 }
-//-(void)dealloc
-//{
-//    //移除全局缓存中的事件
-//    
-//    NSLog(@"%@ ->STUITableView relase", [self class]);
-//}
+-(void)dealloc
+{
+    //移除全局缓存中的事件
+    
+    NSLog(@"%@ ->STUITableView relase", [self class]);
+}
 @end

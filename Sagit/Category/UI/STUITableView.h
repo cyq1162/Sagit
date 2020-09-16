@@ -6,15 +6,18 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "STUITableViewCellAction.h"
 @interface UITableView(ST)
 
 #pragma mark 核心扩展
 typedef void(^AddTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 typedef BOOL(^DelTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
+typedef void(^AddTableCellAction)(STUITableViewCellAction *cellAction, NSIndexPath *indexPath);
 typedef void(^AfterTableReloadData)(UITableView *tableView);
 //!用于为Table追加每一行的Cell
 @property (nonatomic,copy) AddTableCell addCell;
+//!用于为Table追加每一行的Cell的滑动菜单
+@property (nonatomic,copy) AddTableCellAction addCellAction;
 //!用于为Table移除行的Cell
 @property (nonatomic,copy) DelTableCell delCell;
 //!用于为Table reloadData 加载完数据后触发
@@ -37,10 +40,10 @@ typedef void(^AfterTableReloadData)(UITableView *tableView);
 -(UITableViewCellStyle)cellStyle;
 //!设置默认的UITableViewCellStyle
 -(UITableView*)cellStyle:(UITableViewCellStyle)style;
-//!获取是否允许删除属性
--(BOOL)allowDelete;
-//!设置是否允许删除
--(UITableView*)allowDelete:(BOOL)yesNo;
+//!获取是否允许编辑【删除】属性
+-(BOOL)allowEdit;
+//!设置是否允许编辑【删除】
+-(UITableView*)allowEdit:(BOOL)yesNo;
 //!移除数据源和数据行（并重新计算且刷新高度）
 -(UITableView*)afterDelCell:(NSIndexPath*)indexPath;
 #pragma mark 扩展属性

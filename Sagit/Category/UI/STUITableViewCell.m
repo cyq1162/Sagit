@@ -78,17 +78,17 @@
 //{
 //    return [self key:@"isReused"]!=nil;
 //}
--(BOOL)allowDelete
+-(BOOL)allowEdit
 {
-    if([self key:@"allowDelete"]==nil)
+    if([self key:@"allowEdit"]==nil)
     {
-        return self.table.allowDelete;
+        return self.table.allowEdit;
     }
-    return [[self key:@"allowDelete"] isEqualToString:@"1"];
+    return [[self key:@"allowEdit"] isEqualToString:@"1"];
 }
--(UITableView *)allowDelete:(BOOL)yesNo
+-(UITableViewCell *)allowEdit:(BOOL)yesNo
 {
-    [self key:@"allowDelete" value:yesNo?@"1":@"0"];
+    [self key:@"allowEdit" value:yesNo?@"1":@"0"];
     return self;
 }
 -(NSString *)firstValue
@@ -121,8 +121,22 @@
     self.selectionStyle=style;
     return self;
 }
-//-(void)dealloc
-//{
-//    NSLog(@"%@ ->STUITableViewCell relase", [self class]);
-//}
+#pragma mark 扩展
+-(STUITableViewCellAction *)action
+{
+    return [self key:@"action"];
+}
+-(void)setAction:(STUITableViewCellAction *)action
+{
+    [self key:@"action" value:action];
+}
+-(void)dealloc
+{
+    if(self.action!=nil)
+    {
+        [self.action dispose];
+    }
+    
+    NSLog(@"%@ ->STUITableViewCell relase", [self class]);
+}
 @end

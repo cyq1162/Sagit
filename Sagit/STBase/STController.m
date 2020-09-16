@@ -647,9 +647,9 @@
     UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
     if(cell!=nil)
     {
-        return cell.allowDelete;
+        return cell.allowEdit;
     }
-    return tableView.allowDelete;
+    return tableView.allowEdit;
 }
 //定义编辑样式
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -671,7 +671,81 @@
         }
     }
 }
-
+//增加自定义菜单处理。
+-(NSArray<UITableViewRowAction*>*)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if(tableView.addCellAction) // 自定义menu
+    {
+        UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
+        cell.action=[[STUITableViewCellAction alloc] initWithCell:cell];
+        tableView.addCellAction(cell.action, indexPath);
+        NSArray *items=cell.action.items;
+        if(items.count>0)
+        {
+            NSMutableArray *array=[NSMutableArray new];
+            for (long i=items.count-1; i>=0; i--) {
+                STCellAction *swipeAction=items[i];
+                UITableViewRowActionStyle color=(i==items.count-1?UITableViewRowActionStyleDefault:UITableViewRowActionStyleNormal);
+                UITableViewRowAction *rowAction  = [UITableViewRowAction rowActionWithStyle:color title:swipeAction.title
+                                                                                    handler:^(UITableViewRowAction * _Nonnull action,NSIndexPath * _Nonnull indexPath) {
+                    
+                    if(swipeAction.onAction)
+                    {
+                        swipeAction.onAction(cell, indexPath);
+                    }
+                    
+                }];
+                if(swipeAction.bgColor!=nil)
+                {
+                    rowAction.backgroundColor=swipeAction.bgColor;
+                }
+                [array addObject:rowAction];
+            }
+            return array;
+        }
+    }
+    return nil;
+}
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
+    if(cell!=nil)
+    {
+        UIView *cellActionView=[self getCellActionView:cell];
+        if(cellActionView!=nil)
+        {
+            for (int i=0; i<cell.action.items.count; i++) {
+                STCellAction *action=cell.action.items[i];
+                if(action.onCustomView!=nil)
+                {
+                    UIView *actionView=cellActionView.subviews[i];
+                    [actionView removeAllSubViews];
+                    action.onCustomView(actionView,indexPath);
+                }
+            }
+        }
+    }
+}
+-(UIView *)getCellActionView:(UITableViewCell *)cell
+{
+    UIView *uiSwipeActionPullView=cell.superview.subviews[0]; //UISwipeActionPullView
+    if([uiSwipeActionPullView isKindOfClass:[UITableViewCell class]])
+    {
+        if(cell.table!=nil)
+        {
+            //IOS 13 以下。
+            for (UIView *view in cell.table.subviews) {
+                if([view isKindOfClass:NSClassFromString(@"UISwipeActionPullView")])
+                {
+                    uiSwipeActionPullView=view;
+                    break;
+                }
+            }
+        }
+    }
+    return uiSwipeActionPullView;
+}
 #pragma mark - UICollectionView 协议实现
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{

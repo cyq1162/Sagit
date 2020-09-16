@@ -156,7 +156,7 @@
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText
 {
     [Sagit runOnMainThread:^{
-        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title
+        STUIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
                                                             message:msg
                                                            delegate:self
                                                   cancelButtonTitle:cancelText
@@ -176,7 +176,7 @@
 -(void)input:(id)title before:(OnBeforeShow)beforeShow click:(OnInputClick)click okText:(NSString *)okText cancelText:(NSString *)cancelText
 {
     [Sagit runOnMainThread:^{
-        UIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
+        STUIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
                                                               message:nil
                                                              delegate:self
                                                     cancelButtonTitle:cancelText
