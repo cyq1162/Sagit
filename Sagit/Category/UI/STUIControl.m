@@ -28,34 +28,67 @@
 {
     if(block)
     {
-        
-        [self key:@"event" value:block];
-        [self addTarget:self action:@selector(exeAction) forControlEvents:event];
+        SEL sel=NSSelectorFromString(@"exeAction:a1");
+        NSString *eventKey=@"event1";
+        for (int i=1; i<6; i++) {
+            NSString *key=[@"event" append:STNumString(i)];
+            if(![self.keyValue has:key])
+            {
+                eventKey=key;
+                sel=NSSelectorFromString(STString(@"exeAction:a%d:",i));
+                break;
+            }
+        }
+       
+        NSString *searchKey=[@"event_"append:STNumString(event)];
+        NSString *searchValue=[self key:searchKey];//用于移除查找事件。
+        if(searchValue==nil)
+        {
+            [self key:searchKey value:eventKey];
+        }
+        else
+        {
+            [self key:searchKey value:STString(@"%@,%@",searchValue,eventKey)];//指向同一个事件。
+        }
+        [self key:eventKey value:block];
+        [self addTarget:self action:sel forControlEvents:event];
     }
     return self;
 }
-//由于无法知道事件来源，只能事先定义多个不同参方法来识别(二进制 1100),回头有时间再处理。
-//-(void)exeAction{[self exeAction:nil a:NO b:NO c:NO];}
--(void)exeAction:(id)sender{[self exeAction:sender a:NO b:NO c:NO];}
--(void)exeAction:(id)sender a:(BOOL)a{[self exeAction:sender a:YES b:NO c:NO];}
--(void)exeAction:(id)sender a:(BOOL)a b:(BOOL)b{[self exeAction:sender a:YES b:YES c:NO];}
--(void)exeAction:(id)sender a:(BOOL)a b:(BOOL)b c:(BOOL)c{}
--(void)exeAction
+//由于无法知道事件来源，只能事先定义多个不同参方法来识别。
+-(void)exeAction:(id)sender a1:(id)a{[self exeAction:1];}
+-(void)exeAction:(id)sender a2:(id)a{[self exeAction:2];}
+-(void)exeAction:(id)sender a3:(id)a{[self exeAction:3];}
+-(void)exeAction:(id)sender a4:(id)a{[self exeAction:4];}
+-(void)exeAction:(id)sender a5:(id)a{[self exeAction:5];}
+-(void)exeAction:(id)sender a6:(id)a{[self exeAction:6];}
+-(void)exeAction:(id)sender a7:(id)a{[self exeAction:7];}
+-(void)exeAction:(id)sender a8:(id)a{[self exeAction:8];}
+-(void)exeAction:(id)sender a9:(id)a{[self exeAction:9];}
+-(void)exeAction:(NSInteger)num
 {
     //目前只处理一个
-    OnAction action=[self key:@"event"];
+    OnAction action=[self key:[@"event" append:STNumString(num)]];
     if(action)
     {
-        //STWeakObj(self);
         action(self);
     }
 }
 //!移除绑定点击事件
-//-(UIControl*)removeAction:(UIControlEvents)event
-//{
-//    [self removeTarget:self action:nil forControlEvents:event];
-//    return self;
-//}
+-(UIControl*)removeAction:(UIControlEvents)event
+{
+    [self removeTarget:self action:nil forControlEvents:event];
+    NSString *key=[self key:[@"event_"append:STNumString(event)]];
+    if(key!=nil)
+    {
+        NSArray *items=[key split:@","];
+        for (NSString *item in items) {
+             [self key:item value:nil];//移除方法block
+        }
+
+    }
+    return self;
+}
 
 #pragma mark 系统属性
 -(UIControl *)enabled:(BOOL)yesNo

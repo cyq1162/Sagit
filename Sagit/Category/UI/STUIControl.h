@@ -20,8 +20,8 @@ typedef  void(^OnAction)(id control);
 //-(UIControl*)addAction:(NSString *)event target:(UIViewController*)target;
 ////!绑定事件 用代码块的形式
 //-(UIControl*)onAction:(onAction)block event:(UIControlEvents)event;
-////!移除绑定点击事件
-//-(UIControl*)removeAction;
+//!移除绑定点击事件
+-(UIControl*)removeAction:(UIControlEvents)event;
 -(UIControl*)onAction:(UIControlEvents)event on:(OnAction)block;
 #pragma mark 系统属性
 -(UIControl*)enabled:(BOOL)yesNo;
