@@ -30,7 +30,7 @@
     {
         SEL sel=NSSelectorFromString(@"exeAction:a1");
         NSString *eventKey=@"event1";
-        for (int i=1; i<6; i++) {
+        for (int i=1; i<10; i++) {
             NSString *key=[@"event" append:STNumString(i)];
             if(![self.keyValue has:key])
             {
