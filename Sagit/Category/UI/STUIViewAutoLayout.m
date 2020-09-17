@@ -396,11 +396,11 @@ static NSInteger nullValue=-99999;
 -(UIView*)relate:(XYLocation)location left:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
 {
     CGSize superSize=[self superSizeWithFix];
-    if(left>=0 && left<=1){left=superSize.width*Xpx*left;}
-    if(top>=0 && top<=1){top=superSize.height*Ypx*top;}
+    if(left>=-1 && left<=1){left=superSize.width*Xpx*left;}
+    if(top>=-1 && top<=1){top=superSize.height*Ypx*top;}
     
-    if(right>=0 && right<=1){right=superSize.width*Xpx*right;}
-    if(bottom>=0 && bottom<=1){bottom=superSize.height*Ypx*bottom;}
+    if(right>=-1 && right<=1){right=superSize.width*Xpx*right;}
+    if(bottom>=-1 && bottom<=1){bottom=superSize.height*Ypx*bottom;}
     
     
     
@@ -609,11 +609,11 @@ static NSInteger nullValue=-99999;
 -(UIView*)width:(CGFloat)width height:(CGFloat)height
 {
     
-    if((width>=0 && width<=1) || (height>=0 && height<=1) || width==STSameToHeight || height==STSameToWidth )
+    if((width>=-1 && width<=1) || (height>=-1 && height<=1) || width==STSameToHeight || height==STSameToWidth )
     {
         [self addTracer:nil method:@"widthHeight" v1:width v2:height v3:0 v4:0 location:0 xyFlag:0];
-        if(width>=0 && width<=1){width=[self superSizeWithFix].width*Xpx*width;}
-        if(height>=0 && height<=1){height=[self superSizeWithFix].height*Ypx*height;}
+        if(width>=-1 && width<=1){width=[self superSizeWithFix].width*Xpx*width;}
+        if(height>=-1 && height<=1){height=[self superSizeWithFix].height*Ypx*height;}
     }
     if(width==STSameToHeight)
     {

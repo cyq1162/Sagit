@@ -7,9 +7,14 @@
 #import <Foundation/Foundation.h>
 
 @interface STLocationModel  : STModelBase
+//!城市
 @property (nonatomic,copy) NSString *City;
+//!完整地址
 @property (nonatomic,copy) NSString *GPSAddress;
-@property (nonatomic,copy) NSString *Latitude;
+//!经度
 @property (nonatomic,copy) NSString *Longitude;
+//!纬度
+@property (nonatomic,copy) NSString *Latitude;
+
 @end
 

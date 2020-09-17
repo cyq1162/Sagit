@@ -684,10 +684,9 @@
 }
 //点击删除
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
     if(editingStyle==UITableViewCellEditingStyleDelete && tableView.delCell)
     {
-        //STWeakObj(cell);//
+        UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
         if(tableView.delCell(cell, indexPath))
         {
             [tableView afterDelCell:indexPath];
