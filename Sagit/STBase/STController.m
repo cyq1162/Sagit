@@ -640,6 +640,29 @@
 //
 //    // NSLog(@"取消选中 didDeselectRowAtIndexPath row = %ld ", indexPath.row);
 //}
+#pragma mark UITableView 处理表头：Section View
+// 设置表头的高度。如果使用自定义表头，该方法必须要实现，否则自定义表头无法执行，也不会报错
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if(tableView.addSectionView)
+    {
+        NSString *key=[@"sectionView" append:STNumString(section)];
+        UIView *view=[tableView key:key];
+        if(view==nil)
+        {
+            view=[[UIView new] width:1 height:40*STStandardScale];
+            [tableView key:key value:view];
+        }
+        tableView.addSectionView(view, section);
+        return view.frame.size.height;
+    }
+    return 0;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    NSString *key=[@"sectionView" append:STNumString(section)];
+    return [tableView key:key];
+}
 #pragma mark UITableView 编辑删除
 //先要设Cell可编辑
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

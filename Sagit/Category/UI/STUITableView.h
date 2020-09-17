@@ -10,18 +10,21 @@
 @interface UITableView(ST)
 
 #pragma mark 核心扩展
-typedef void(^AddTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
-typedef BOOL(^DelTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
-typedef void(^AddTableCellAction)(STUITableViewCellAction *cellAction, NSIndexPath *indexPath);
-typedef void(^AfterTableReloadData)(UITableView *tableView);
+typedef void(^OnAddTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
+typedef BOOL(^OnDelTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
+typedef void(^OnAddTableCellAction)(STUITableViewCellAction *cellAction, NSIndexPath *indexPath);
+typedef void(^OnAddTableSectionView)(UIView *sectionView,NSInteger section);
+typedef void(^OnAfterTableReloadData)(UITableView *tableView);
 //!用于为Table追加每一行的Cell
-@property (nonatomic,copy) AddTableCell addCell;
+@property (nonatomic,copy) OnAddTableCell addCell;
 //!用于为Table追加每一行的Cell的滑动菜单
-@property (nonatomic,copy) AddTableCellAction addCellAction;
+@property (nonatomic,copy) OnAddTableCellAction addCellAction;
+//!用于为Table追加每一组Section的标题View
+@property (nonatomic,copy) OnAddTableSectionView addSectionView;
 //!用于为Table移除行的Cell
-@property (nonatomic,copy) DelTableCell delCell;
+@property (nonatomic,copy) OnDelTableCell delCell;
 //!用于为Table reloadData 加载完数据后触发
-@property (nonatomic,copy) AfterTableReloadData afterReload;
+@property (nonatomic,copy) OnAfterTableReloadData afterReload;
 //!获取Table的数据源
 @property (nonatomic,strong) NSMutableArray<id> *source;
 //!设置Table的数据源

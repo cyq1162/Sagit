@@ -35,11 +35,11 @@
     [self key:@"source" value:dataSource];
     return self;
 }
--(AddTableCell)addCell
+-(OnAddTableCell)addCell
 {
     return [self key:@"addCell"];
 }
--(void)setAddCell:(AddTableCell)addCell
+-(void)setAddCell:(OnAddTableCell)addCell
 {
     if(addCell!=nil)
     {
@@ -51,11 +51,11 @@
         [self.keyValue remove:@"addCell"];
     }
 }
--(DelTableCell)delCell
+-(OnDelTableCell)delCell
 {
     return [self key:@"delCell"];
 }
--(void)setDelCell:(DelTableCell)delCell
+-(void)setDelCell:(OnDelTableCell)delCell
 {
     if(delCell==nil)
     {
@@ -66,11 +66,11 @@
         [self key:@"delCell" value:delCell];
     }
 }
--(AddTableCellAction)addCellAction
+-(OnAddTableCellAction)addCellAction
 {
     return [self key:@"addCellAction"];
 }
--(void)setAddCellAction:(AddTableCellAction)addCellAction
+-(void)setAddCellAction:(OnAddTableCellAction)addCellAction
 {
     if(addCellAction==nil)
     {
@@ -81,6 +81,23 @@
         [self key:@"addCellAction" value:addCellAction];
     }
 }
+
+-(OnAddTableSectionView)addSectionView
+{
+    return [self key:@"addSectionView"];
+}
+-(void)setAddSectionView:(OnAddTableSectionView)addSectionView
+{
+    if(addSectionView==nil)
+    {
+        [self.keyValue remove:@"addSectionView"];
+    }
+    else
+    {
+        [self key:@"addSectionView" value:addSectionView];
+    }
+}
+
 -(NSMutableDictionary*)heightForCells
 {
     NSMutableDictionary *heights=[self key:@"heightForCells"];
@@ -91,11 +108,11 @@
     }
     return heights;
 }
--(AfterTableReloadData)afterReload
+-(OnAfterTableReloadData)afterReload
 {
     return [self key:@"afterReload"];
 }
--(void)setAfterReload:(AfterTableReloadData)afterReload
+-(void)setAfterReload:(OnAfterTableReloadData)afterReload
 {
     [self key:@"afterReload" value:afterReload];
 }
