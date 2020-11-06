@@ -28,6 +28,6 @@ typedef void (^OnTextFieldEdit)(UITextField*textField,BOOL isEnd);
 -(UITextField*)textAlignment:(NSTextAlignment)value;
 -(UITextField*)placeholder:(NSString*)text;
 -(UITextField*)borderStyle:(UITextBorderStyle)style;
-
+-(UITextField*)enabled:(BOOL)yesNo;
 
 @end

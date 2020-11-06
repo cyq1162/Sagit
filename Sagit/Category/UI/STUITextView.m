@@ -119,7 +119,11 @@
     [self key:@"placeholder" value:text];
     return self;
 }
-
+-(UITextView*)editable:(BOOL)yesNo
+{
+    self.editable=yesNo;
+    return self;
+}
 #pragma mark TextView 协议实现
 - (void)textViewDidChange:(UITextView *)textView
 {

@@ -32,6 +32,7 @@ typedef void (^OnTextViewEdit)(UITextView*textView,BOOL isEnd);
 //!自定义扩展
 -(UITextView*)placeholder;
 -(UITextView*)placeholder:(NSString*)text;
+-(UITextView*)editable:(BOOL)yesNo;
 @end
 
 

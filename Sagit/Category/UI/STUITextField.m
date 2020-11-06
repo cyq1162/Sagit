@@ -94,7 +94,11 @@
     self.borderStyle=style;
     return self;
 }
-
+-(UITextField*)enabled:(BOOL)yesNo
+{
+    self.enabled=yesNo;
+    return self;
+}
 #pragma mark TextFiled 协议实现
 -(void)onTextChange:(UITextField*)textField
 {
