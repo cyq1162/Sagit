@@ -18,7 +18,8 @@
 -(NSDateComponents *)component;
 //!获取北京的当前时间。
 +(NSDate *)beiJinDate;
-
+//!字符串转日期
++(NSDate *)parse:(NSString*)datetime;
 @property(readonly) NSInteger year;
 @property(readonly) NSInteger month;
 @property(readonly) NSInteger day;

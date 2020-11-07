@@ -161,6 +161,12 @@
     }
     return self;
 }
+- (NSString *)remove:(NSInteger)startIndex length:(NSInteger)length
+{
+    NSMutableString *str=[NSMutableString stringWithString:self];
+    [str deleteCharactersInRange:NSMakeRange(startIndex, length)];
+    return str;
+}
 /**
  获取字符串的大小
  txt:label或button的title

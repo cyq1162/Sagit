@@ -58,6 +58,14 @@
     //转为现在时间
     return [[NSDate alloc] initWithTimeInterval:interval sinceDate:self];
 }
++ (NSDate *)parse:(NSString *)datetime
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:8]];//解决8小时时间差问题
+    return [dateFormatter dateFromString:datetime];
+}
+
 -(NSInteger)nanosecond
 {
     return [self component:NSCalendarUnitNanosecond].nanosecond;
