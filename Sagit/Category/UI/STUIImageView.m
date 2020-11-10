@@ -14,7 +14,7 @@
 #import "STUIViewEvent.h"
 #import "STString.h"
 #import "STDictionary.h"
-
+#import "CropImageView.h"
 @implementation UIImageView(ST)
 
 //static char pickChar='p';
