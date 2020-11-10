@@ -23,7 +23,7 @@ typedef void (^OnTextFieldEdit)(UITextField*textField,BOOL isEnd);
 -(UITextField*)keyboardType:(UIKeyboardType)value;
 -(UITextField*)secureTextEntry:(BOOL)value;
 -(UITextField*)text:(NSString*)text;
--(UITextField*)font:(NSInteger)px;
+-(UITextField*)font:(CGFloat)px;
 -(UITextField*)textColor:(id)colorOrHex;
 -(UITextField*)textAlignment:(NSTextAlignment)value;
 -(UITextField*)placeholder:(NSString*)text;

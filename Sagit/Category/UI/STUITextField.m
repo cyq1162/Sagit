@@ -65,7 +65,7 @@
     self.text=text;
     return self;
 }
--(UITextField*)font:(NSInteger)px
+-(UITextField*)font:(CGFloat)px
 {
     self.font=[UIFont toFont:px];
     return self;

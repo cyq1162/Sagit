@@ -59,30 +59,30 @@
 
 -(UILabel*)addLabel:(NSString*)name;
 -(UILabel*)addLabel:(NSString*)name text:(NSString*)text;
--(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px;
--(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex;
--(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex row:(NSInteger)num;
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(CGFloat)px;
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(CGFloat)px color:(id)colorOrHex;
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(CGFloat)px color:(id)colorOrHex row:(NSInteger)num;
 -(UIImageView*)addImageView:(NSString*)name;
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName;
 -(UIImageView*)addImageView:(NSString*)name img:(id)imgOrName direction:(XYFlag)direction;
 
 -(UITextField*)addTextField:(NSString*)name;
 -(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder;
--(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px;
--(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex;
+-(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(CGFloat)px;
+-(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(CGFloat)px color:(id)colorOrHex;
 -(UITextView*)addTextView:(NSString*)name;
 -(UITextView*)addTextView:(NSString*)name placeholder:(NSString*)placeholder;
--(UITextView*)addTextView:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px;
--(UITextView*)addTextView:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex;
+-(UITextView*)addTextView:(NSString*)name placeholder:(NSString*)placeholder font:(CGFloat)px;
+-(UITextView*)addTextView:(NSString*)name placeholder:(NSString*)placeholder font:(CGFloat)px color:(id)colorOrHex;
 
 -(UIButton*)addButton:(NSString*)name;
 -(UIButton*)addButton:(NSString*)name buttonType:(UIButtonType)buttonType;
 -(UIButton*)addButton:(NSString*)name img:(id)imgOrName;
 -(UIButton*)addButton:(NSString*)name title:(NSString*)title;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex img:(id)imgOrName;
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex bgImg:(id)bgImgOrName;
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(CGFloat)px;
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(CGFloat)px color:(id)colorOrHex;
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(CGFloat)px color:(id)colorOrHex img:(id)imgOrName;
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(CGFloat)px color:(id)colorOrHex bgImg:(id)bgImgOrName;
 
 -(UIView*)addLine:name color:(id)colorOrHex;
 -(UIScrollView*)addScrollView:(NSString*)name;

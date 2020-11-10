@@ -26,7 +26,7 @@ typedef void (^OnTextViewEdit)(UITextView*textView,BOOL isEnd);
 -(UITextView*)keyboardType:(UIKeyboardType)value;
 -(UITextView*)secureTextEntry:(BOOL)value;
 -(UITextView*)text:(NSString*)text;
--(UITextView*)font:(NSInteger)px;
+-(UITextView*)font:(CGFloat)px;
 -(UITextView*)textColor:(id)colorOrHex;
 -(UITextView*)textAlignment:(NSTextAlignment)value;
 //!自定义扩展

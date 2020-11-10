@@ -20,7 +20,7 @@
 -(UILabel*)text:(NSString*)text;
 -(UILabel*)textColor:(id)colorOrHex;
 -(UILabel*)textAlignment:(NSTextAlignment)align;
--(UILabel*)font:(NSInteger)px;
+-(UILabel*)font:(CGFloat)px;
 -(UILabel*)numberOfLines:(NSInteger)value;
 -(UILabel*)adjustsFontSizeToFitWidth:(BOOL)yesNo;
 @end

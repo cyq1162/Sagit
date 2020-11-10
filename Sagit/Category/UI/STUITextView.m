@@ -86,7 +86,7 @@
     [self textViewDidChange:self];//手工触发事件
     return self;
 }
--(UITextView*)font:(NSInteger)px
+-(UITextView*)font:(CGFloat)px
 {
     self.font=[UIFont toFont:px];
     return self;

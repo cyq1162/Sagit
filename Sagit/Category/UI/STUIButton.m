@@ -90,7 +90,7 @@
     [self setTitleColor:[UIColor toColor:colorOrHex] forState:state];
     return self;
 }
--(UIButton*)titleFont:(NSInteger)px
+-(UIButton*)titleFont:(CGFloat)px
 {
     self.titleLabel.font=[UIFont toFont:px];
     return self;

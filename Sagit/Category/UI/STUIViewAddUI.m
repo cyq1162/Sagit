@@ -239,7 +239,7 @@
     return ui;
 }
 
--(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex row:(NSInteger)num
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(CGFloat)px color:(id)colorOrHex row:(NSInteger)num
 {
     UILabel *ui = [[UILabel alloc] initWithFrame:STEmptyRect];
     if(![NSString isNilOrEmpty:text])
@@ -263,11 +263,11 @@
     [self addView:ui name:name];
     return ui;
 }
--(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px color:(id)colorOrHex
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(CGFloat)px color:(id)colorOrHex
 {
     return [self addLabel:name text:text font:px color:colorOrHex row:1];
 }
--(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(NSInteger)px
+-(UILabel*)addLabel:(NSString*)name text:(NSString*)text font:(CGFloat)px
 {
     return [self addLabel:name text:text font:px color:nil];
 }
@@ -389,11 +389,11 @@
 {
     return [self addTextField:name placeholder:placeholder font:0 color:nil];
 }
--(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px
+-(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(CGFloat)px
 {
     return [self addTextField:name placeholder:placeholder font:px color:nil];
 }
--(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex
+-(UITextField*)addTextField:(NSString*)name placeholder:(NSString*)placeholder font:(CGFloat)px color:(id)colorOrHex
 {
     UITextField *ui = [[UITextField alloc] initWithFrame:STEmptyRect];
     ui.delegate=(id)ui;
@@ -421,11 +421,11 @@
 {
     return [self addTextView:name placeholder:placeholder font:0 color:nil];
 }
--(UITextView *)addTextView:(NSString *)name placeholder:(NSString*)placeholder font:(NSInteger)px
+-(UITextView *)addTextView:(NSString *)name placeholder:(NSString*)placeholder font:(CGFloat)px
 {
     return [self addTextView:name placeholder:placeholder font:px color:nil];
 }
--(UITextView *)addTextView:(NSString *)name placeholder:(NSString*)placeholder font:(NSInteger)px color:(id)colorOrHex
+-(UITextView *)addTextView:(NSString *)name placeholder:(NSString*)placeholder font:(CGFloat)px color:(id)colorOrHex
 {
     UITextView* ui=[[UITextView alloc] initWithFrame:STEmptyRect];
     ui.delegate=(id)ui;
@@ -477,24 +477,24 @@
 {
     return [self addButton:name title:title font:0 color:nil img:nil bgImg:nil buttonType:0];
 }
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(CGFloat)px
 {
    return [self addButton:name title:title font:px color:nil img:nil bgImg:nil buttonType:0];
 }
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(CGFloat)px color:(id)colorOrHex
 {
     return [self addButton:name title:title font:px color:colorOrHex img:nil bgImg:nil buttonType:0];
 }
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex img:(id)imgOrName
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(CGFloat)px color:(id)colorOrHex img:(id)imgOrName
 {
     return [self addButton:name title:title font:px color:colorOrHex img:imgOrName bgImg:nil buttonType:0];
 }
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px color:(id)colorOrHex bgImg:(id)bgImgOrName
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(CGFloat)px color:(id)colorOrHex bgImg:(id)bgImgOrName
 {
     return [self addButton:name title:title font:px color:colorOrHex img:nil bgImg:bgImgOrName buttonType:0];
 }
 //此方法不对外开放。
--(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(NSInteger)px  color:(id)colorOrHex img:(id)imgOrName bgImg:(id)bgImgOrName buttonType:(UIButtonType)buttonType
+-(UIButton*)addButton:(NSString*)name title:(NSString*)title font:(CGFloat)px  color:(id)colorOrHex img:(id)imgOrName bgImg:(id)bgImgOrName buttonType:(UIButtonType)buttonType
 {
     UIButton *ui=[UIButton buttonWithType:buttonType];
     if(px>0)

@@ -11,7 +11,8 @@
 
 
 @interface UIFont(ST)
-+(UIFont *)toFont:(NSInteger)px;
+//小数位.0代表加粗。
++(UIFont *)toFont:(CGFloat)px;
 +(UIFont *)toFont:(NSInteger)px name:(NSString*)name;
 +(UIFont *)toFont:(NSInteger)px bold:(BOOL)bold;
 @end

@@ -10,8 +10,24 @@
 
 @implementation UIFont(ST)
 
-+(UIFont *)toFont:(NSInteger)px
++(UIFont *)toFont:(CGFloat)px
 {
+    NSNumber *pxNum=@(px);
+    NSString*value=[@(px) stringValue];
+    if([value containsString:@".0"])
+    {
+        //有小数点。
+        return [UIFont boldSystemFontOfSize:pxNum.integerValue*Xpt];
+    }
+    else if(px>300)
+    {
+        px=[[value substringWithRange:NSMakeRange(0, 2)] integerValue];
+        NSInteger type=[[value substringFromIndex:2] integerValue];//type
+        if(type==0)
+        {
+            return [UIFont boldSystemFontOfSize:px*Xpt];
+        }
+    }
    return [UIFont systemFontOfSize:px*Xpt];
 }
 +(UIFont *)toFont:(NSInteger)px name:(NSString*)name

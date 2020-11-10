@@ -121,7 +121,7 @@
     self.textAlignment=align;
     return self;
 }
--(UILabel*)font:(NSInteger)px
+-(UILabel*)font:(CGFloat)px
 {
     self.font=[UIFont toFont:px];
     return self;
