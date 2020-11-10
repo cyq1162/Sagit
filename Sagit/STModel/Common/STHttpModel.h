@@ -10,7 +10,8 @@
 
 @interface STHttpModel : STModelBase
 @property (nonatomic, assign) BOOL success;
-@property (retain, nonatomic) id<NSObject> msg;
+@property (nonatomic, retain) id<NSObject> msg;
+@property (nonatomic, assign) NSInteger code;
 //将msg转成dictionary返回
 @property (retain, nonatomic,readonly) NSDictionary* msgDic;
 //将msg转成Array返回

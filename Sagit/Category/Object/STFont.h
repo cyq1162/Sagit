@@ -12,7 +12,8 @@
 
 @interface UIFont(ST)
 +(UIFont *)toFont:(NSInteger)px;
-+(UIFont *)toFont:(NSString*)name size:(NSInteger)px;
++(UIFont *)toFont:(NSInteger)px name:(NSString*)name;
++(UIFont *)toFont:(NSInteger)px bold:(BOOL)bold;
 @end
 
 

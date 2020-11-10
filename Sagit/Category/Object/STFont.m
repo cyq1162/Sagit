@@ -12,31 +12,15 @@
 
 +(UIFont *)toFont:(NSInteger)px
 {
-    NSString*name=nil;//IOS默认字体
-    if(px>100)
-    {
-        NSString*value=[@(px) stringValue];
-        px=[[value substringWithRange:NSMakeRange(0, 2)] integerValue];
-        NSInteger type=[[value substringFromIndex:2] integerValue];//type
-        if(type==0)
-        {
-            return [UIFont boldSystemFontOfSize:px*Xpt];
-        }
-        else if(type==1)
-        {
-            name=@"SFUIText-Light";
-        }
-    }
-    return [UIFont toFont:name size:px];
+   return [UIFont systemFontOfSize:px*Xpt];
 }
-+(UIFont *)toFont:(NSString*)name size:(NSInteger)px
++(UIFont *)toFont:(NSInteger)px name:(NSString*)name
 {
-    //NSInteger ii=px*Xpt;
-    if (name)
-    {
-        return [UIFont fontWithName:name size:px*Xpt];
-    }
-    return [UIFont systemFontOfSize:px*Xpt];
+    return [UIFont fontWithName:name size:px*Xpt];
+}
++(UIFont *)toFont:(NSInteger)px bold:(BOOL)bold
+{
+    return bold?[UIFont boldSystemFontOfSize:px*Xpt]:[UIFont systemFontOfSize:px*Xpt];
 }
 
 @end

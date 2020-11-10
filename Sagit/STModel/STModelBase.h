@@ -7,6 +7,8 @@
 //
 
 @interface STModelBase:NSObject
+//@用于方便子类扩展属性用。
+@property(nonatomic,strong) NSMutableDictionary* stKeyValue;
 -(id)init;
 -(id)initWithObject:(id<NSObject>)msg;
 -(id)initWithDictionary:(NSDictionary*)dic;

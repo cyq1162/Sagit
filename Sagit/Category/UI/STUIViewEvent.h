@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface UIView (STUIViewEvent)
-typedef  void(^AfterEvent)(NSString *eventType, id para);
+typedef  void(^OnAfterEvent)(NSString *eventType, id para);
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)
 typedef  void(^OnViewClick)(id view);
 //!双击事件
@@ -22,7 +22,7 @@ typedef  void(^OnScreenEdgeSlide)(id view,UIScreenEdgePanGestureRecognizer *reco
 typedef  void(^OnLongPress)(id view);
 //!定时器事件。
 typedef  void(^OnTimer)(id view,NSTimer *timer, NSInteger count);
-typedef  void(^ViewDescription)(id view);
+typedef  void(^OnViewDescription)(id view);
 
 #pragma mark 扩展系统事件 - 点击
 //!点击事件的间隔（单位秒s)
@@ -115,13 +115,13 @@ typedef  void(^ViewDescription)(id view);
 -(UIView*)removeTimer;
 
 #pragma mark 扩展的回调事件
--(AfterEvent)onAfter;
+-(OnAfterEvent)onAfter;
 //!绑定事件 用代码块的形式
--(UIView*)onAfter:(AfterEvent)block;
+-(UIView*)onAfter:(OnAfterEvent)block;
 
 #pragma mark 增加描述
 //!提供一个代码块，方便代码规范 description处可以写代码块的说明文字
--(UIView*)block:(NSString*)description on:(ViewDescription)descBlock;
+-(UIView*)block:(NSString*)description on:(OnViewDescription)descBlock;
 //!块写法，用于包含添加子视图
--(UIView*)block:(ViewDescription)descBlock;
+-(UIView*)block:(OnViewDescription)descBlock;
 @end

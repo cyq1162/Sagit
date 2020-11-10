@@ -9,13 +9,24 @@
 #import "STModelBase.h"
 
 @implementation STModelBase
-
+-(NSMutableDictionary *)stKeyValue
+{
+    if(_stKeyValue==nil)
+    {
+        _stKeyValue=[NSMutableDictionary new];
+    }
+    return _stKeyValue;
+}
 -(BOOL)isIgnoreCase
 {
     return YES;
 }
--(BOOL)isIgnore:(NSString *)namel
+-(BOOL)isIgnore:(NSString *)name
 {
+    if([name isEqualToString:@"stKeyValue"])
+    {
+        return YES;
+    }
     return NO;
 }
 -(id)init

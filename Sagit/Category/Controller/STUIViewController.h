@@ -64,9 +64,10 @@
 //!为keyValue属性设置键与值 其中value为弱引用
 -(UIViewController*)key:(NSString*)key valueWeak:(id)value;
 #pragma mark 代码说明块
-typedef void(^ControllerDescription)(UIViewController *controller);
+typedef void(^OnControllerDescription)(UIViewController *controller);
 //!提供一个代码块，方便代码规范 description处可以写代码块的说明文字
--(UIViewController*)block:(NSString*)description on:(ControllerDescription)descBlock;
+-(UIViewController*)block:(OnControllerDescription)descBlock;
+-(UIViewController*)block:(NSString*)description on:(OnControllerDescription)descBlock;
 #pragma mark 导航栏功能
 //!压入视图并显示下一个页面（通过此方法跳转视图，系统会自动控制导航栏和Tab栏的显示与隐藏，以及滑动返回事件）
 - (void)stPush:(UIViewController *)viewController;

@@ -65,52 +65,52 @@
     return request;
 }
 #pragma mark 调用方法
--(void)get:(NSString *)url paras:(NSDictionary *)paras success:(Success)success
+-(void)get:(NSString *)url paras:(NSDictionary *)paras success:(OnSuccess)success
 {
     [self get:url paras:paras before:nil success:success error:nil];
 }
--(void)get:(NSString *)url paras:(NSDictionary *)paras success:(Success)success error:(Error)error{
+-(void)get:(NSString *)url paras:(NSDictionary *)paras success:(OnSuccess)success error:(OnError)error{
     [self get:url paras:paras before:nil success:success error:error];
 }
--(void)get:(NSString *)url paras:(NSDictionary *)paras before:(Before)before success:(Success)success
+-(void)get:(NSString *)url paras:(NSDictionary *)paras before:(OnBefore)before success:(OnSuccess)success
 {
     [self get:url paras:paras before:before success:success error:nil];
 }
-- (void)get:(NSString *)url paras:(NSDictionary *)paras before:(Before)before success:(Success)success error:(Error)error{
+- (void)get:(NSString *)url paras:(NSDictionary *)paras before:(OnBefore)before success:(OnSuccess)success error:(OnError)error{
     url=[self reSetGetUrl:url paras:paras];
     NSMutableURLRequest *request=[self createRequest:@"GET" url:url timeout:10];
     [self exeTask:request before:before success:success error:error];
 }
--(void)post:(NSString *)url paras:(NSDictionary *)paras success:(Success)success
+-(void)post:(NSString *)url paras:(NSDictionary *)paras success:(OnSuccess)success
 {
     [self post:url paras:paras before:nil success:success error:nil];
 }
-- (void)post:(NSString *)url paras:(NSDictionary *)paras success:(Success)success error:(Error)error
+- (void)post:(NSString *)url paras:(NSDictionary *)paras success:(OnSuccess)success error:(OnError)error
 {
     [self post:url paras:paras before:nil success:success error:error];
 }
--(void)post:(NSString *)url paras:(NSDictionary *)paras before:(Before)before success:(Success)success
+-(void)post:(NSString *)url paras:(NSDictionary *)paras before:(OnBefore)before success:(OnSuccess)success
 {
     [self post:url paras:paras before:before success:success error:nil];
 }
--(void)post:(NSString *)url paras:(NSDictionary *)paras before:(Before)before success:(Success)success error:(Error)error
+-(void)post:(NSString *)url paras:(NSDictionary *)paras before:(OnBefore)before success:(OnSuccess)success error:(OnError)error
 {
     NSMutableURLRequest *request=[self createRequest:@"POST" url:url timeout:20];
     [request setHTTPBody:[self toPostData:paras]];
     [self exeTask:request before:before success:success error:error];
 }
 
--(void)upload:(NSString *)url paras:(id)dicOrNSData success:(Success)success
+-(void)upload:(NSString *)url paras:(id)dicOrNSData success:(OnSuccess)success
 {
     [self upload:url paras:dicOrNSData before:nil success:success error:nil];
 }
--(void)upload:(NSString *)url paras:(id)dicOrNSData success:(Success)success error:(Error)error{
+-(void)upload:(NSString *)url paras:(id)dicOrNSData success:(OnSuccess)success error:(OnError)error{
     [self upload:url paras:dicOrNSData before:nil success:success error:error];
 }
--(void)upload:(NSString *)url paras:(id)dicOrNSData before:(Before)before success:(Success)success{
+-(void)upload:(NSString *)url paras:(id)dicOrNSData before:(OnBefore)before success:(OnSuccess)success{
     [self upload:url paras:dicOrNSData before:before success:success error:nil];
 }
--(void)upload:(NSString *)url paras:(id)dicOrNSData before:(Before)before success:(Success)success error:(Error)error
+-(void)upload:(NSString *)url paras:(id)dicOrNSData before:(OnBefore)before success:(OnSuccess)success error:(OnError)error
 {
     NSDictionary *paras=nil;
     if([paras isKindOfClass:[NSData class]])
@@ -128,7 +128,7 @@
     [self exeTask:request before:before success:success error:error];
     
 }
--(void)exeTask:(NSMutableURLRequest*)request before:(Before)before success:(Success)success error:(Error)error{
+-(void)exeTask:(NSMutableURLRequest*)request before:(OnBefore)before success:(OnSuccess)success error:(OnError)error{
     if(before!=nil)
     {
         before(request);
@@ -142,9 +142,11 @@
         }
         else
         {
+            NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+            NSInteger statusCode = [httpResponse statusCode];
             if(data==nil || data.length==0)
             {
-                [self onSucess:@{@"success":@"YES",@"msg":@""} success:success];
+                [self onSucess:@{@"success":statusCode==200?@"YES":@"NO",@"msg":@""} success:success];
                 return;
             }
             NSDictionary *dic=nil;
@@ -160,7 +162,7 @@
             }
             else
             {
-                dic= @{@"success":@"YES",@"msg":result};
+                dic= @{@"success":statusCode==200?@"YES":@"NO",@"msg":result};
             }
             [self onSucess:dic success:success];
         }
@@ -171,14 +173,17 @@
     
 }
 
--(void)onSucess:(NSDictionary*) response success:(Success)success
+-(void)onSucess:(NSDictionary*) response success:(OnSuccess)success
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [self hideLoading];
         if(success!=nil)
         {
             STHttpModel *model=[[STHttpModel alloc] initWithObject:response];
-            success(model);
+            if([self globalBeforeSuccess:model])
+            {
+                success(model);
+            }
         }
     });
     if(success)
@@ -186,17 +191,22 @@
         success=nil;
     }
 }
--(void)onError:(NSError*)errorMsg error:(Error)error
+-(void)onError:(NSError*)errorMsg error:(OnError)error
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
         [self hideLoading];
+        NSString *err=[NSString toString:errorMsg];
         if(error!=nil)
         {
-            error([NSString toString:errorMsg]);
+            
+            if([self globalBeforeError:err])
+            {
+                error(err);
+            }
         }
         else
         {
-            [self showError:[NSString toString:errorMsg]];
+            [self showError:err];
         }
     });
     if(error)
@@ -205,6 +215,8 @@
     }
 }
 //可以扩展此方法，以便增加初始的请求头。
+-(BOOL)globalBeforeSuccess:(STHttpModel*)model{return YES;}
+-(BOOL)globalBeforeError:(NSString*)errorMsg{return YES;}
 -(void)globalHeader:(NSMutableURLRequest*)request{}
 -(NSString*)globalSetUrl:(NSString*)url{return url;}
 -(NSString*)reSetGetUrl:(NSString*)url paras:(NSDictionary*)paras

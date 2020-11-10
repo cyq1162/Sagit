@@ -10,6 +10,7 @@
 
 @interface UIImageView(ST)<UIImagePickerControllerDelegate>
 
+typedef void (^OnImageCrop)(UIImage *image);
 typedef void (^OnPick)(NSData *data,UIImagePickerController *picker,NSDictionary<NSString *,id> *info);
 //typedef void (^AfterSetImageUrl)(UIImageView* img);
 //!长按时提示用户保存图片
@@ -36,7 +37,10 @@ typedef void (^OnPick)(NSData *data,UIImagePickerController *picker,NSDictionary
 -(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo;
 //!图片选择 edit:是否出现裁剪框 maxKb:指定压缩的大小
 -(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo maxKb:(NSInteger)maxKb;
-
+//!图片选择 edit:是否出现裁剪框 maxKb:指定压缩的大小， scaleSize 定义裁剪大小比例
+-(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo maxKb:(NSInteger)maxKb scaleSize:(CGSize)scaleSize;
+//!图片选择 edit:是否出现裁剪框 maxKb:指定压缩的大小  scaleSize 定义裁剪大小比例 editScaleSize 编辑缩放大小
+-(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo maxKb:(NSInteger)maxKb scaleSize:(CGSize)scaleSize editScaleSize:(BOOL)editScaleSize;
 //!将图片压缩到指定的宽高，当前图片受变化
 -(UIImageView*)reSize:(CGSize)maxSize;
 #pragma mark 扩展属性

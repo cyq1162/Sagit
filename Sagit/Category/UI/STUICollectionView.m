@@ -24,19 +24,19 @@
     [self key:@"source" value:dataSource];
     return self;
 }
--(AddCollectionCell)addCell
+-(OnAddCollectionCell)addCell
 {
     return [self key:@"addCell"];
 }
--(void)setAddCell:(AddCollectionCell)addCell
+-(void)setAddCell:(OnAddCollectionCell)addCell
 {
     [self key:@"addCell" value:addCell];
 }
--(DelCollectionCell)delCell
+-(OnDelCollectionCell)delCell
 {
     return [self key:@"delCell"];
 }
--(void)setDelCell:(DelCollectionCell)delCell
+-(void)setDelCell:(OnDelCollectionCell)delCell
 {
     [self key:@"delCell" value:delCell];
 }

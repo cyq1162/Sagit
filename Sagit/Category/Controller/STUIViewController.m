@@ -94,7 +94,17 @@ static char keyValueChar='k';
         NSInteger count=self.navigationController.viewControllers.count;
         if(count>1)
         {
-            return self.navigationController.viewControllers[count-2];
+            NSInteger i=count-2;
+            UIViewController *uic = self.navigationController.viewControllers[i];
+            if([self isEqual:uic])
+            {
+                i--;
+                if(i<0)
+                {
+                    return self;
+                }
+            }
+            return self.navigationController.viewControllers[i];
         }
     }
     return self;
@@ -541,7 +551,11 @@ static char keyValueChar='k';
 -(void)reloadData:(NSString*)para{}
 
 #pragma mark 代码说明块
--(UIViewController*)block:(NSString*)description on:(ControllerDescription)descBlock
+-(UIViewController *)block:(OnControllerDescription)descBlock
+{
+    return [self block:nil on:descBlock];
+}
+-(UIViewController*)block:(NSString*)description on:(OnControllerDescription)descBlock
 {
     if(descBlock!=nil)
     {

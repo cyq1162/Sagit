@@ -94,7 +94,7 @@
         imgOrName= defaultView.asImage;
         
     }
-    AfterEvent block=self.onAfter;
+    OnAfterEvent block=self.onAfter;
     if([NSString isNilOrEmpty:url])
     {
         
@@ -153,17 +153,28 @@
 
 -(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo
 {
-    return [self pick:pick edit:yesNo maxKb:256];
+    return [self pick:pick edit:yesNo maxKb:256 scaleSize:CGSizeZero editScaleSize:NO];
 }
 -(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo maxKb:(NSInteger)maxKb
+{
+    return [self pick:pick edit:yesNo maxKb:maxKb scaleSize:CGSizeZero editScaleSize:NO];
+}
+-(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo maxKb:(NSInteger)maxKb scaleSize:(CGSize)scaleSize
+{
+    return [self pick:pick edit:yesNo maxKb:maxKb scaleSize:scaleSize editScaleSize:NO];
+}
+-(UIImageView*)pick:(OnPick)pick edit:(BOOL)yesNo maxKb:(NSInteger)maxKb scaleSize:(CGSize)scaleSize editScaleSize:(BOOL)editScaleSize
 {
     if(pick==nil){return self;}
     [self key:@"maxKb" value:[@(maxKb) stringValue]];
     [self key:@"pickBlock" value:pick];
+    [self key:@"edit" value:@(yesNo)];
+    [self key:@"editScaleSize" value:@(editScaleSize)];
+    [self key:@"scaleSize" value:@(scaleSize)];
     //[self setPickBlock:pick];
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate = (id)self;
-    picker.allowsEditing = yesNo;
+    picker.allowsEditing = yesNo && CGSizeEqualToSize(scaleSize, CGSizeZero);
     [self.stController presentViewController:picker animated:YES completion:nil];
     return self;
 }
@@ -173,17 +184,61 @@
     [self key:@"picking" value:@"1"];//这里只允许一次选择一张，避免快速点击产生多选（先不开启一次性多选）
     [picker dismissViewControllerAnimated:YES completion:nil];
     UIImage *image = info[picker.allowsEditing?UIImagePickerControllerEditedImage:UIImagePickerControllerOriginalImage];
-    NSData *data = [image compress:[[self key:@"maxKb"] intValue]];//[Sagit.Tool compressImage:image toByte:250000];
-    OnPick event = [self key:@"pickBlock"];// (OnPick)objc_getAssociatedObject(self, &pickChar);
-    if(event)
+    
+    NSNumber *edit=[self key:@"edit"];
+    NSNumber *editScaleSize=[self key:@"editScaleSize"];
+    NSValue *size=[self key:@"scaleSize"];
+    if(edit.boolValue && !CGSizeEqualToSize(CGSizeZero, size.CGSizeValue))
     {
-        event(data,picker,info);
+        [self showEditView:image size:size.CGSizeValue editScaleSize:editScaleSize.boolValue onCut:^(UIImage *image) {
+            [self afterPick:picker info:info image:image];
+        }];
+    }
+    else
+    {
+        [self afterPick:picker info:info image:image];
     }
     [Sagit delayExecute:1 onMainThread:NO block:^{
         [self key:@"picking" value:nil];
     }];
     
 }
+-(void)afterPick:(UIImagePickerController *)picker info:(NSDictionary<NSString *,id> *)info image:(UIImage *)image
+{
+    NSData *data = [image compress:[[self key:@"maxKb"] intValue]];//[Sagit.Tool compressImage:image toByte:250000];
+    OnPick event = [self key:@"pickBlock"];// (OnPick)objc_getAssociatedObject(self, &pickChar);
+    if(event)
+    {
+        event(data,picker,info);
+    }
+}
+-(void)showEditView:(UIImage*)img size:(CGSize)size editScaleSize:(BOOL)editScaleSize onCut:(OnImageCrop)onCut
+{
+    if(img==nil){return;}
+    [Sagit.MsgBox dialog:^(UIView *winView) {
+        [[winView addUIView:nil] block:^(UIView* view) {
+            [[view frame:winView.frame]  onClick:^(id view) {
+                NSLog(@"...click...");
+               //禁止点击退出。
+            }];
+            [view backgroundColor:ColorBlack];
+            CropImageView *imageView=[view addSTView:@"CropImageView"];
+            [imageView setPara:img scaleSize:size editScaleSize:editScaleSize];
+            [[[view addButton:nil title:@"取消"] relate:LeftBottom v:40 v2:40] onClick:^(id view) {
+                [winView click];
+            }];
+            [[[view addButton:nil title:@"选取"] relate:RightBottom v:40 v2:40] onClick:^(id view) {
+                if(onCut)
+                {
+                    onCut([imageView cropImage]);
+                }
+                //处理回调
+                [winView click];
+            }];
+        }];
+    }];
+}
+
 -(UIImageView *)reSize:(CGSize)maxSize
 {
     self.image=[self.image reSize:maxSize];

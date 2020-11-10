@@ -21,8 +21,8 @@ static char nameChar='n';
     NSInteger maxLength=maxKb*1024;//转字节处理
     CGFloat quality = 1;
     NSData *data = UIImageJPEGRepresentation(self, quality);
-    if (data.length < maxLength) return data;
-    
+    if (data.length <= maxLength || maxKb<=0) return data;
+
     CGFloat max = 1;
     CGFloat min = 0;
     for (int i = 0; i < 6; ++i)
@@ -40,15 +40,15 @@ static char nameChar='n';
     return data;
 }
 static char afterImageSaveBlockChar='c';
--(AfterImageSave)afterImageSaveBlock
+-(OnAfterImageSave)afterImageSaveBlock
 {
-    return (AfterImageSave)objc_getAssociatedObject(self, &afterImageSaveBlockChar);
+    return (OnAfterImageSave)objc_getAssociatedObject(self, &afterImageSaveBlockChar);
 }
--(void)setAfterImageSaveBlock:(AfterImageSave)afterImageSaveBlock
+-(void)setAfterImageSaveBlock:(OnAfterImageSave)afterImageSaveBlock
 {
      objc_setAssociatedObject(self, &afterImageSaveBlockChar, afterImageSaveBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
--(void)save:(AfterImageSave)afterSaveBlock
+-(void)save:(OnAfterImageSave)afterSaveBlock
 {
     self.afterImageSaveBlock=afterSaveBlock;
     UIImageWriteToSavedPhotosAlbum(self, self, @selector(afterImageSave:error:contextInfo:),nil);
@@ -61,7 +61,11 @@ static char afterImageSaveBlockChar='c';
         self.afterImageSaveBlock = nil;
     }
 }
--(UIImage *)reSize:(CGSize)maxSize
+- (UIImage *)reSize:(CGSize)maxSize
+{
+    return [self reSize:maxSize point:CGPointZero];
+}
+-(UIImage *)reSize:(CGSize)maxSize point:(CGPoint)point
 {
     //[self width:maxSize.width height:maxSize.height];
     UIImage *image=self;
@@ -82,7 +86,7 @@ static char afterImageSaveBlockChar='c';
         size = CGSizeMake(imageW, maxSize.height);
     }
     UIGraphicsBeginImageContext(size);
-    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    [image drawInRect:CGRectMake(point.x, point.y, size.width, size.height)];
     image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndPDFContext();
     return image;
@@ -121,5 +125,9 @@ static char afterImageSaveBlockChar='c';
         return ((UIImageView*)imgOrName).image;
     }
     return nil;
+}
+-(CGSize)getMaxScale:(CGSize)scaleSize
+{
+    return scaleSize;
 }
 @end

@@ -955,18 +955,18 @@
 }
 
 #pragma mark 扩展的回调事件
--(AfterEvent)onAfter
+-(OnAfterEvent)onAfter
 {
     return [self key:@"onAfter"];
 }
--(UIView *)onAfter:(AfterEvent)block
+-(UIView *)onAfter:(OnAfterEvent)block
 {
     [self key:@"onAfter" value:block];
     return self;
 }
 #pragma mark 增加描述
 //用于格式化增加描述的方法
--(UIView*)block:(NSString *)description on:(ViewDescription)descBlock
+-(UIView*)block:(NSString *)description on:(OnViewDescription)descBlock
 {
     if(descBlock!=nil)
     {
@@ -976,7 +976,7 @@
     }
     return self;
 }
--(UIView *)block:(ViewDescription)descBlock
+-(UIView *)block:(OnViewDescription)descBlock
 {
     return [self block:nil on:descBlock];
 }

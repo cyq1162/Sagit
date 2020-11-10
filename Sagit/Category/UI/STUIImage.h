@@ -10,13 +10,14 @@
 @interface UIImage(ST)
 //!为每个UI都扩展有一个name
 @property (nonatomic,copy) NSString* name;
-typedef void (^AfterImageSave)(NSError *err);
-@property (nonatomic,copy) AfterImageSave afterImageSaveBlock;
+typedef void (^OnAfterImageSave)(NSError *err);
+@property (nonatomic,copy) OnAfterImageSave afterImageSaveBlock;
 //!获取图片压缩后的字节数据，当前图片不受变化
 -(NSData*)compress:(NSInteger)maxKb;
--(void)save:(AfterImageSave)afterSave;
+-(void)save:(OnAfterImageSave)afterSave;
 //!检测最大宽高的等比缩放
 -(UIImage *)reSize:(CGSize)maxSize;
+-(UIImage *)reSize:(CGSize)maxSize point:(CGPoint)point;
 -(NSData*)data;
 
 +(UIImage*)toImage:(id)imgOrName;
