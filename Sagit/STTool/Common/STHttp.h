@@ -40,6 +40,9 @@ typedef void(^OnBefore)(NSMutableURLRequest *request);
 - (void)upload:(NSString *)url paras:(id)dicOrNSData before:(OnBefore)before success:(OnSuccess)success error:(OnError)error;
 
 #pragma mark 全局可覆盖方法
+//可以扩展此方法，以便增加初始的请求头。
+-(BOOL)globalBeforeSuccess:(STHttpModel*)model;
+-(BOOL)globalBeforeError:(NSString*)errorMsg;
 //!全局追加默认请求头（覆盖方法）
 -(void)globalHeader:(NSMutableURLRequest*)request;
 //!全局修改默认请求URL（覆盖方法）

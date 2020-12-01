@@ -44,6 +44,8 @@ typedef  BOOL(^OnRotate)(NSNotification* notify,BOOL isEventRotate);
 #pragma mark 系统的2个事件方法
 //呈现UI之前【执行N次】
 -(void)beforeViewAppear;
+//呈现UI之后【执行N次】
+-(void)afterViewAppear;
 //UI消失之前【执行N次】
 -(void)beforeViewDisappear;
 

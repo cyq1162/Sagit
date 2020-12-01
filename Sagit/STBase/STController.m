@@ -172,6 +172,7 @@
         [self reSetBarState:YES];
     }
     [super viewDidAppear:animated];
+    [self afterViewAppear];
 }
 #pragma mark 屏幕旋转事件
 //!注册监听事件。
