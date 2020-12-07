@@ -7,7 +7,8 @@
 //
 
 #import "STUIPageControl.h"
-
+#import "STUIScrollView.h"
+#import "STCategory.h"
 @implementation UIPageControl (ST)
 -(UIPageControl*)numberOfPages:(NSInteger)num
 {

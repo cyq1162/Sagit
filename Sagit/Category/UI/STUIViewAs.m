@@ -7,6 +7,7 @@
 //
 
 #import "STUIViewAs.h"
+#import "STCategory.h"
 
 @implementation UIView(STUIViewAs)
 -(UISwitch*)asSwitch

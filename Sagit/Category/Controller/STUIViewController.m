@@ -14,7 +14,9 @@
 #import "STUIView.h"
 #import "STUIViewAddUI.h"
 #import "STUIViewAutoLayout.h"
-#import "Sagit.h"
+#import "STCategory.h"
+#import "STSagit.h"
+#import "STNavController.h"
 
 @implementation UIViewController(ST)
 

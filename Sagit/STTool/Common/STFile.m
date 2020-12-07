@@ -8,7 +8,8 @@
 
 #import "STFile.h"
 #import "STDictionary.h"
-
+#import "STSagit.h"
+#import "STCategory.h"
 @interface STFile()
 @property (nonatomic,assign)NSSearchPathDirectory directory;
 @property (nonatomic,retain)NSMutableDictionary *cacheDic;

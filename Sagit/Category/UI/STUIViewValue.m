@@ -7,7 +7,9 @@
 //
 
 #import "STUIViewValue.h"
-
+#import "STCategory.h"
+#import "STModelBase.h"
+#import "STSagit.h"
 @implementation UIView (STUIViewValue)
 -(UIView*)stValue:(NSString*)value
 {

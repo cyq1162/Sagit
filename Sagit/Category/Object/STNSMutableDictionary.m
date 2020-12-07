@@ -5,7 +5,7 @@
 //
 
 #import "STNSMutableDictionary.h"
-
+#import "STCategory.h"
 @implementation NSMutableDictionary(ST)
 
 +(instancetype)share

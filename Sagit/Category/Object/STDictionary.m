@@ -6,7 +6,7 @@
 //
 #import "STDictionary.h"
 #import "STString.h"
-
+#import "STCategory.h"
 @implementation NSDictionary(ST)
 
 -(NSMutableDictionary *)toNSMutableDictionary

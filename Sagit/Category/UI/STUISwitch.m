@@ -9,6 +9,7 @@
 #import "STUISwitch.h"
 #import "STUIView.h"
 #import "STUIControl.h"
+#import "STCategory.h"
 @implementation UISwitch(ST)
 -(UISwitch*)on:(BOOL)yesNo
 {

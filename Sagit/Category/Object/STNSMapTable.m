@@ -6,6 +6,7 @@
 //
 
 #import "STNSMapTable.h"
+#import "STCategory.h"
 #pragma mark NSMapTable(ST)
 @implementation NSMapTable(ST)
 

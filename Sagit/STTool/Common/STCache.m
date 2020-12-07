@@ -7,6 +7,7 @@
 //
 
 #import "STCache.h"
+#import "STCategory.h"
 @interface STCache()
 @property (nonatomic,retain)NSMutableDictionary*timeOutDic;
 @property (nonatomic,assign)NSInteger sleepSecond;

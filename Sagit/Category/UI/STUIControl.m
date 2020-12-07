@@ -8,7 +8,8 @@
 
 #import "STUIControl.h"
 #import "STUIView.h"
-//#import "STDefine.h"
+#import "STCategory.h"
+#import "STDefineFunc.h"
 @implementation UIControl (ST)
 
 #pragma mark 系统事件

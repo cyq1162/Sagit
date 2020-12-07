@@ -11,7 +11,7 @@
 #import "STUIView.h"
 #import "STUIViewEvent.h"
 #import "STDictionary.h"
-
+#import "STCategory.h"
 @implementation UILabel(ST)
 #pragma mark 扩展系统事件
 -(UILabel *)longPressCopy:(BOOL)yesNo

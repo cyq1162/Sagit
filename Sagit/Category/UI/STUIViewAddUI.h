@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "STEnum.h"
-
+#import "STNSMapTable.h"
 @class STView;
 //#import "STTable.h"
 @interface UIView (STUIViewAddUI)

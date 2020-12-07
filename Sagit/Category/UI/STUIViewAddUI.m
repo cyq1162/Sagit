@@ -19,6 +19,8 @@
 #import "STUIImageView.h"
 #import "STUITextView.h"
 #import "STUITextField.h"
+#import "STCategory.h"
+#import "STSagit.h"
 @implementation UIView (STUIViewAddUI)
 
 

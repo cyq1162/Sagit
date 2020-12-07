@@ -7,7 +7,7 @@
 //
 
 #import "STLayoutTracer.h"
-
+#import "STCategory.h"
 @implementation STLayoutTracer
 -(BOOL)hasRelateTop
 {

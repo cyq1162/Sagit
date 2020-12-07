@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "STUIView.h"
 @interface UIView(STUIViewAs)
 -(UISwitch*)asSwitch;
 -(UIStepper*)asStepper;

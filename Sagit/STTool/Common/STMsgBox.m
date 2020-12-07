@@ -7,7 +7,7 @@
 //
 
 #import "STMsgBox.h"
-
+#import "STSagit.h"
 @interface STMsgBox()<UIActionSheetDelegate>
 @property (nonatomic,assign) UIWindow *window;
 @property (nonatomic,retain) UIView *lodingView;

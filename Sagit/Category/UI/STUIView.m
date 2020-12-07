@@ -19,6 +19,7 @@
 #import "STUIViewAddUI.h"
 #import "STUIViewAutoLayout.h"
 #import "STModelBase.h"
+#import "STSagit.h"
 @implementation UIView(ST)
 
 #pragma mark keyvalue

@@ -5,7 +5,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "STModelBase.h"
 @interface STLocationModel  : STModelBase
 //!城市
 @property (nonatomic,copy) NSString *City;

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "STEnum.h"
+#import "STUIViewEvent.h"
 @interface UIScrollView (ST)
 //定义两个事件，上一页和下一页
 typedef void (^OnScrollPrePager)(UIScrollView *scrollView);

@@ -9,6 +9,7 @@
 #import "STUITableViewCell.h"
 #import "STUITableView.h"
 #import "STUIView.h"
+#import "STCategory.h"
 @implementation UITableViewCell(ST)
 
 +(instancetype)reuseCell:(UITableView *)tableView index:(NSIndexPath *)index

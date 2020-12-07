@@ -7,6 +7,7 @@
 //
 
 #import "STModelBase.h"
+#import "STCategory.h"
 
 @implementation STModelBase
 -(NSMutableDictionary *)stKeyValue

@@ -6,7 +6,7 @@
 //
 #import "STDate.h"
 #import "STString.h"
-
+#import "STDefineFunc.h"
 @implementation NSDate(ST)
 -(NSString *)toString{return [self toString:nil];}
 -(NSString *)toString:(NSString*)formatter{

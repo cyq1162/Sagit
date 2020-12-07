@@ -1,8 +1,9 @@
 
-#import "Sagit.h"
 #import "CropImageView.h"
 #import "CropClipAreaLayer.h"
 #import "CropPanGestureRecognizer.h"
+#import "STDefineUI.h"
+#import "STCategory.h"
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height

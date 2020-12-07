@@ -9,7 +9,7 @@
 #import "STUINavigationBar.h"
 #import "STDefineUI.h"
 #import "STUIView.h"
-
+#import "STCategory.h"
 @implementation UINavigationBar (ST)
 
 +(UINavigationBarSetting*)globalSetting

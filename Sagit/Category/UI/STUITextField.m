@@ -9,7 +9,7 @@
 #import "STUITextField.h"
 #import "STUIView.h"
 #import "STDefineUI.h"
-
+#import "STCategory.h"
 @implementation UITextField(ST)
 -(OnTextFieldEdit)onEdit
 {

@@ -8,12 +8,14 @@
 
 #import "STUIViewEvent.h"
 #import <objc/runtime.h>
-//#import "STDefine.h"
+#import "STDefineFunc.h"
 #import "STString.h"
 #import "STUIView.h"
 #import "STUIViewAddUI.h"
 #import "STDictionary.h"
-#import "Sagit.h"
+#import "STCategory.h"
+#import "STSagit.h"
+#import "STEnum.h"
 @class STView;
 @implementation UIView (STUIViewEvent)
 //可以附加的点击事件 (存档在keyvalue中时，无法传参（内存地址失效），只能针对性存runtime的属性)

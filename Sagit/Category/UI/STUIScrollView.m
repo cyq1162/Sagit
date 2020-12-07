@@ -8,6 +8,9 @@
 
 #import "STUIScrollView.h"
 #import "STUIPageControl.h"
+#import "STCategory.h"
+#import "STDefineUI.h"
+#import "STSagit.h"
 @implementation UIScrollView(ST)
 
 

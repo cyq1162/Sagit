@@ -6,7 +6,7 @@
 
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
-
+#import <UIKit/UIKit.h>
 @interface UIImage(ST)
 //!为每个UI都扩展有一个name
 @property (nonatomic,copy) NSString* name;

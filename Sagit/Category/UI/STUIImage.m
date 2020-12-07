@@ -4,7 +4,9 @@
 //  Created by 陈裕强 on 2020/8/19.
 //
 
-
+#import "STUIImage.h"
+#import "STUIViewEvent.h"
+#import "STCategory.h"
 @implementation UIImage(ST)
 static char nameChar='n';
 -(NSString *)name

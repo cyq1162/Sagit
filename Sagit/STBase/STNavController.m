@@ -5,7 +5,7 @@
 //
 
 #import "STNavController.h"
-
+#import "STUIViewController.h"
 @implementation STNavController
 
 #pragma mark ios 13.6 不能用扩展属性 处理的。

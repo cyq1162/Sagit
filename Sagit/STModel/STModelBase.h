@@ -5,6 +5,7 @@
 //
 //  Copyright © 2017-2027年. All rights reserved.
 //
+#import <Foundation/Foundation.h>
 
 @interface STModelBase:NSObject
 //@用于方便子类扩展属性用。
