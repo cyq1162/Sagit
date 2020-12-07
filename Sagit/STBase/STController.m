@@ -8,7 +8,6 @@
 #import "STView.h"
 #import "STCategory.h"
 #import <objc/runtime.h>
-#import "STDefineDefault.h"
 #import "STDefineFunc.h"
 #import "STDefineUI.h"
 #import "STMsgBox.h"
@@ -25,7 +24,7 @@
     NSNumber *value=[self key:@"supportedInterfaceOrientations"];
     if(value==nil)
     {
-        return STDefaultOrientationMask;
+        return Sagit.Define.DefaultOrientationMask;
     }
     return (UIInterfaceOrientationMask)value.intValue;
 }
@@ -131,11 +130,11 @@
         [self needNavBar:NO forThisView:NO];
     }
     [self beforeViewDisappear];
-    if(self.preferredInterfaceOrientationForPresentation!=STDefaultOrientation)
+    if(self.preferredInterfaceOrientationForPresentation!=Sagit.Define.DefaultOrientation)
     {
         //记录用于还原的屏幕方向。
         [self key:@"backToOrientation" value:@(self.preferredInterfaceOrientationForPresentation)];
-        [self rotateOrientation:STDefaultOrientation];
+        [self rotateOrientation:Sagit.Define.DefaultOrientation];
     }
     [super viewWillDisappear:animated];
    

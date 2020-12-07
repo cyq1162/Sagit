@@ -6,6 +6,7 @@
 
 #import <Foundation/Foundation.h>
 //#import <UIKit/UIKit.h>
+#import "STDefine.h"
 #import "STFile.h"
 #import "STHttp.h"
 #import "STCache.h"
@@ -17,7 +18,8 @@
 //!单例，目前没啥用。
 //+ (instancetype)share;
 //@property(nonatomic,weak)UIView* Layout;
-
+//!全局定义
++(STDefine*)Define;
 //!默认对应于NSCache沙盒目录（用于存档数据到plist文件中）
 +(STFile*)File;
 //!用于存档到内存的全局唯一字典。

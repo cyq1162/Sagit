@@ -10,7 +10,6 @@
 #import "STDictionary.h"
 #import "STDefineFunc.h"
 #import "STDefineUI.h"
-#import "STDefineDefault.h"
 #import "STUserDefaults.h"
 #import "STUIView.h"
 #import "STUIViewAddUI.h"
@@ -154,7 +153,7 @@ static char keyValueChar='k';
     }
     if(self.navigationController && self.navigationController.navigationBar)
     {
-        return STDefaultShowNav;
+        return Sagit.Define.DefaultShowNav;
         //return !self.navigationController.navigationBar.hidden;
     }
     return NO;
@@ -188,7 +187,7 @@ static char keyValueChar='k';
         {
             return NO;
         }
-        return STDefaultShowTab;
+        return Sagit.Define.DefaultShowTab;
         //return !self.tabBarController.tabBar.hidden;
     }
     return NO;
@@ -216,7 +215,7 @@ static char keyValueChar='k';
     {
         return [[self key:@"needStatusBar"] isEqualToString:@"1"];
     }
-    return STDefaultShowStatus;
+    return Sagit.Define.DefaultShowStatus;
     //return ![UIApplication sharedApplication].statusBarHidden;
 }
 -(UIViewController*)needStatusBar:(BOOL)yesNo
@@ -272,7 +271,7 @@ static char keyValueChar='k';
 #pragma mark 导航栏：进入、退出
 - (void)stPush:(UIViewController *)viewController
 {
-    [self stPush:viewController title:STDefaultForNavLeftTitle img:STDefaultForNavLeftImage];
+    [self stPush:viewController title:Sagit.Define.DefaultNavLeftTitle img:Sagit.Define.DefaultNavLeftImage];
 }
 - (void)stPush:(UIViewController *)viewController title:(NSString *)title
 {

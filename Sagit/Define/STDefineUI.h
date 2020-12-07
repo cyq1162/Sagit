@@ -9,8 +9,8 @@
 
 
 #ifndef STStandardScale
-    //【可更改】选择编码标准：1倍（375*667）、2倍（750*1334）、3倍（1125*2001）
-    #define STStandardScale 2
+    //【可手动更改，也可代码修改】选择编码标准：1倍（375*667）、2倍（750*1334）【默认】、3倍（1125*2001）
+    #define STStandardScale Sagit.Define.StandardScale
 #endif
 
 

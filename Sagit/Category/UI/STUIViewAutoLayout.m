@@ -8,7 +8,6 @@
 
 // UIView 的自动布局分离出来
 #import "STDefineUI.h"
-#import "STDefineDefault.h"
 #import "STUIViewAutoLayout.h"
 #import "STLayoutTracer.h"
 #import "STCategory.h"
@@ -753,7 +752,7 @@ static NSInteger nullValue=-99999;
         if(CGRectEqualToRect(self.OriginFrame,CGRectZero))
         {
             self.OriginFrame=self.frame;
-            if(st.preferredInterfaceOrientationForPresentation==STDefaultOrientation)
+            if(st.preferredInterfaceOrientationForPresentation==Sagit.Define.DefaultOrientation)
             {
                 return;
             }

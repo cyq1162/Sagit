@@ -25,11 +25,11 @@ static char nameChar='n';
 
     CGFloat max = 1;
     CGFloat min = 0;
-    for (int i = 0; i < 6; ++i)
+    for (int i = 0; i < 7; ++i)
     {
         quality = (max + min) / 2;
         data = UIImageJPEGRepresentation(self, quality);
-        if (data.length < maxLength * 0.9) {
+        if (data.length < maxLength * 0.8) {
             min = quality;
         } else if (data.length > maxLength) {
             max = quality;

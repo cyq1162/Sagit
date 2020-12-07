@@ -16,6 +16,10 @@
 //    });
 //    return _share;
 //}
++(STDefine *)Define
+{
+    return [STDefine share];
+}
 +(STFile *)File
 {
     return [STFile share];

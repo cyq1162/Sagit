@@ -10,9 +10,9 @@
 #import "STSagit.h"
 
 //STDefine
+#import "STDefine.h"
 #import "STDefineFunc.h"
 #import "STDefineUI.h"
-#import "STDefineDefault.h"
 
 //STModel
 #import "STEnum.h"
@@ -30,6 +30,7 @@
 #import "STFile.h"
 #import "STCache.h"
 #import "STLocation.h"
+#import "CropImageView.h"
 
 //STBase
 #import "STController.h"
