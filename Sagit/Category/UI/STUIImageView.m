@@ -408,7 +408,8 @@
 }
 -(NSString*)getRandomText:(NSInteger)length
 {
-    NSArray *arr=@[@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"A",@"B",@"C",@"D",@"E",@"F",@"G",@"H",@"J",@"K",@"L",@"M",@"N",@"P",@"R",@"S",@"T",@"W",@"X",@"Y",@"Z",@"a",@"b",@"c",@"d",@"e",@"f",@"g",@"h",@"j",@"k",@"m",@"n",@"p",@"r",@"s",@"t",@"w",@"x",@"y",@"z"];
+    //@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",
+    NSArray *arr=@[@"A",@"B",@"C",@"D",@"E",@"F",@"G",@"H",@"J",@"K",@"L",@"M",@"N",@"P",@"R",@"S",@"T",@"W",@"X",@"Y",@"Z",@"a",@"b",@"c",@"d",@"e",@"f",@"g",@"h",@"j",@"k",@"m",@"n",@"p",@"r",@"s",@"t",@"w",@"x",@"y",@"z"];
      NSMutableString *newString = [[NSMutableString alloc] initWithCapacity:length];
        for (int i = 0 ; i<length ; i ++) {
           int index = arc4random() % arr.count;
