@@ -170,6 +170,10 @@
     {
         [self reSetBarState:YES];
     }
+    if(self.navigationController)
+    {
+        self.navigationController.interactivePopGestureRecognizer.enabled=self.needNavBar;
+    }
     [super viewDidAppear:animated];
     [self afterViewAppear];
 }
@@ -297,6 +301,7 @@
     [self.stView initData];
 }
 -(void)beforeViewAppear{}
+-(void)afterViewAppear{}
 -(void)beforeViewDisappear{}
 
 -(NSMapTable*)UIList

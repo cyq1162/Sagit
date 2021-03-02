@@ -20,6 +20,18 @@
     return [self.topViewController preferredStatusBarStyle];
 }
 #pragma mark NavigationBar 的协议，这里触发
+//- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPushItem:(UINavigationItem *)item {
+//    //只有一个控制器的时候禁止手势，防止卡死现象
+//    if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+//        self.interactivePopGestureRecognizer.enabled = NO;
+//    }
+//    if (self.childViewControllers.count > 1) {
+//        if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+//            self.interactivePopGestureRecognizer.enabled = YES;
+//        }
+//    }
+//    return YES;
+//}
 - (void)navigationBar:(UINavigationBar *)navigationBar didPopItem:(UINavigationItem *)item
 {
     NSInteger count=self.viewControllers.count;
@@ -29,6 +41,12 @@
         UIViewController *current=self.viewControllers[count-1];
         [current reSetBarState:YES];
     }
+//        //只有一个控制器的时候禁止手势，防止卡死现象
+//        if (self.childViewControllers.count == 1) {
+//            if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+//                self.interactivePopGestureRecognizer.enabled = NO;
+//            }
+//        }
 }
 
 @end

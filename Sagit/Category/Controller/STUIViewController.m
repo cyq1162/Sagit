@@ -174,6 +174,10 @@ static char keyValueChar='k';
     {
         [self.navigationController setNavigationBarHidden:!yesNo animated:NO];
     }
+//    if(!yesNo)
+//    {
+ //       self.navigationController.interactivePopGestureRecognizer.enabled=yesNo;
+   // }
     return self;
 }
 
@@ -372,6 +376,10 @@ static char keyValueChar='k';
             UIViewController *preController=navC.viewControllers[count-2];
             [preController reSetBarState:NO];
         }
+//        else
+//        {
+//            navC.interactivePopGestureRecognizer.delegate=nil;
+//        }
         [navC popViewControllerAnimated:YES];
     }
     else if([self isKindOfClass:[UINavigationController class]])
