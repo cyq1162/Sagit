@@ -97,7 +97,22 @@ static char afterImageSaveBlockChar='c';
 {
    return UIImagePNGRepresentation(self);
 }
-
+-(UIImage *)drawIn:(CGSize)size point:(CGPoint)point
+{
+    // Setup a new context with the correct size
+    UIGraphicsBeginImageContextWithOptions(size,NO,0.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    UIGraphicsPushContext(context);
+     
+    // Now we can draw anything we want into this new context.
+    [self drawAtPoint:point];
+     
+    // Clean up and get the new image.
+    UIGraphicsPopContext();
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
 +(UIImage*)toImage:(id)imgOrName
 {
     if([imgOrName isKindOfClass:[NSString class]])

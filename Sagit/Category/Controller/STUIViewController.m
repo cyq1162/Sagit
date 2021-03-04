@@ -417,8 +417,13 @@ static char keyValueChar='k';
     if(imgOrName)
     {
         //这里引用的viewController在第二次回退时，出现了野指针问题。
+        UIImage *img=[UIImage toImage:imgOrName];
+        if(img.size.width*Xpx<120){
+            //扩大点击范围。
+            img= [img drawIn:STSizeMake(120, img.size.height*Ypx) point:CGPointZero];
+        }
         self.navigationItem.leftBarButtonItem=
-        [[UIBarButtonItem alloc] initWithImage:[UIImage toImage:imgOrName] style:UIBarButtonItemStyleDone target:self action:@selector(leftNavClick:)];
+        [[UIBarButtonItem alloc] initWithImage:img style:UIBarButtonItemStyleDone target:self action:@selector(leftNavClick:)];
     }
     else
     {
@@ -433,7 +438,7 @@ static char keyValueChar='k';
             if(![navController.navigationBar.lastSubView isKindOfClass:[UIButton class]])
             {
                 //创一张空View 显示
-                btn=[[UIButton alloc] initWithFrame:STRectMake(0, 0, 200, STNavHeightPx)];
+                btn=[[UIButton alloc] initWithFrame:STRectMake(0, 0, 180, STNavHeightPx)];
                 [btn backgroundColor:ColorClear];
                 [navController.navigationBar addSubview:btn];
             }
