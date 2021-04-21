@@ -10,6 +10,7 @@
 #import "STUIView.h"
 #import "STDefineUI.h"
 #import "STCategory.h"
+
 @implementation UITextField(ST)
 -(OnTextFieldEdit)onEdit
 {
@@ -115,8 +116,54 @@
 //ios 13
 - (void)textFieldDidChangeSelection:(UITextField *)textField
 {
+    [self resetCursorToEnd:textField];
     [self onTextChange:textField];
 }
+
+-(void)resetCursorToEnd:(UITextField *)textField
+{
+    if(textField.text.length>0)
+    {
+        NSRange rang= [self getRange:textField];
+        if(rang.location==0)
+        {
+            switch (textField.keyboardType)
+            {
+                case UIKeyboardTypePhonePad:
+                case UIKeyboardTypeNumberPad:
+                case UIKeyboardTypeNumbersAndPunctuation:
+                case UIKeyboardTypeDecimalPad:
+                case UIKeyboardTypeASCIICapableNumberPad:
+                     [self cursorLocation:textField index:textField.text.length];
+                    break;
+            }
+       }
+    }
+}
+
+// 获取光标位置
+-(NSRange)getRange:(UITextField *)textField
+{
+    UITextPosition* beginning = textField.beginningOfDocument;
+    
+    UITextRange* selectedRange = textField.selectedTextRange;
+    UITextPosition* selectionStart = selectedRange.start;
+    UITextPosition* selectionEnd = selectedRange.end;
+    
+    NSInteger location = [textField offsetFromPosition:beginning toPosition:selectionStart];
+    NSInteger length = [textField offsetFromPosition:selectionStart toPosition:selectionEnd];
+    
+    return NSMakeRange(location, length);
+}
+- (void)cursorLocation:(UITextField*)textField index:(NSInteger)index
+
+{
+    NSRange range =NSMakeRange(index,0);
+    UITextPosition *start = [textField positionFromPosition:[textField beginningOfDocument]offset:range.location];
+    UITextPosition *end = [textField positionFromPosition:start offset:range.length];
+    [textField setSelectedTextRange:[textField textRangeFromPosition:start toPosition:end]];
+}
+
 //- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 //{//此方法不支持中文（只能在change事件中处理）
 //    if (textField.maxLength>0 && range.location >=textField.maxLength) {
