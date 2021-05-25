@@ -172,6 +172,7 @@ static char keyValueChar='k';
     }
     if(self.navigationController!=nil)
     {
+        //self.navigationController.navigationBar.isHidden=!yesNo
         [self.navigationController setNavigationBarHidden:!yesNo animated:NO];
     }
 //    if(!yesNo)
@@ -366,6 +367,24 @@ static char keyValueChar='k';
         if(animated){nextController=nil;}
     }
 }
+-(void)stPopToTop
+{
+    UINavigationController *navC=self.navigationController;
+    if(navC)
+    {
+        NSInteger count=navC.viewControllers.count;
+        if(count>1)
+        {
+            UIViewController *preController=navC.viewControllers[0];
+            [preController reSetBarState:NO];
+        }
+        [navC popToRootViewControllerAnimated:YES];
+    }
+    else if([self isKindOfClass:[UINavigationController class]])
+    {
+        [((UINavigationController*)self) popToRootViewControllerAnimated:YES];
+    }
+}
 - (void)stPop {
     UINavigationController *navC=self.navigationController;
     if(navC)
@@ -376,17 +395,12 @@ static char keyValueChar='k';
             UIViewController *preController=navC.viewControllers[count-2];
             [preController reSetBarState:NO];
         }
-//        else
-//        {
-//            navC.interactivePopGestureRecognizer.delegate=nil;
-//        }
         [navC popViewControllerAnimated:YES];
     }
     else if([self isKindOfClass:[UINavigationController class]])
     {
         //什么鬼，升级到Xcode 9.2 二次push之后，第二次竟然已经到了Navigation了？ 修正图票事件后好了？
         [((UINavigationController*)self) popViewControllerAnimated:YES];
-        NSLog(@"发生了...");
     }
 }
 //系统内部调用的方法
@@ -414,6 +428,7 @@ static char keyValueChar='k';
 -(UIViewController*)leftNav:(NSString*)title img:(id)imgOrName navController:(UINavigationController*)navController
 {
     if(self.navigationItem==nil){return self;}
+    [self addNavButton:navController];
     if(imgOrName)
     {
         //这里引用的viewController在第二次回退时，出现了野指针问题。
@@ -431,46 +446,70 @@ static char keyValueChar='k';
         {
             self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStyleDone target:self action:nil];
         }
-        else if([title eq:@"STEmpty"])
-        {
-            if(navController==nil){navController=self.navigationController;if(navController==nil){return self;}}
-            UIButton * btn=nil;
-            if(![navController.navigationBar.lastSubView isKindOfClass:[UIButton class]])
-            {
-                //创一张空View 显示
-                btn=[[UIButton alloc] initWithFrame:STRectMake(0, 0, 180, STNavHeightPx)];
-                [btn backgroundColor:ColorClear];
-                [navController.navigationBar addSubview:btn];
-            }
-            else
-            {
-                btn=(UIButton*)navController.navigationBar.lastSubView;
-                [btn height:STNavHeightPx];//重设高度,在被pop这后，为了不影响其它自定义，高度会被置为0
-            }
-            
-            //移除事件，避免target指向一个旧的viewController
-            [btn removeTarget:nil action:nil forControlEvents:UIControlEventAllEvents];
-            [btn addTarget:self action:@selector(leftNavClick:) forControlEvents:UIControlEventTouchUpInside];
-            
-        }
-        else
+        else if(![title eq:@"STEmpty"])
         {
              self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(leftNavClick:)];
         }
     }
     return self;
 }
+-(void)addNavButton:(UINavigationController*)navController
+{
+    if(navController==nil){navController=self.navigationController;if(navController==nil){return;}}
+    UIButton * btn=nil;
+    if(![navController.navigationBar.lastSubView isKindOfClass:[UIButton class]])
+    {
+        //创一张空View 显示
+        btn=[[UIButton alloc] initWithFrame:STRectMake(0, 0, 180, STNavHeightPx)];
+        [btn backgroundColor:ColorClear];
+        //[btn backgroundColor:ColorRed];
+        [navController.navigationBar addSubview:btn];
+        //事件绑定到公用的Nav中。
+        [btn addTarget:navController action:@selector(leftNavClick:) forControlEvents:UIControlEventTouchUpInside];
+        [btn addLongPress:@"leftNavBarLongPress" target:navController];
+    }
+    else
+    {
+        btn=(UIButton*)navController.navigationBar.lastSubView;
+        [btn height:STNavHeightPx];//重设高度,在被pop这后，为了不影响其它自定义，高度会被置为0
+    }
+}
+-(BOOL)onLeftNavBarLongPress:(UIBarButtonItem*)view
+{
+    return YES;
+}
+-(void)leftNavBarLongPress
+{
+    UIViewController *vc=self;
+    if([self isKindOfClass:[UINavigationController class]])
+    {
+        UINavigationController *nc=(UINavigationController*)vc;
+        NSInteger count=nc.viewControllers.count;
+        vc=nc.viewControllers[count-1];
+    }
+    if([vc onLeftNavBarLongPress:vc.navigationItem.leftBarButtonItem])
+    {
+        [vc stPopToTop];
+    }
+}
 //开放给用户的,左侧导航栏的默认点击事件 return YES 则系统调stPop返回方法。
--(BOOL)onLeftNavBarClick:(id)view
+-(BOOL)onLeftNavBarClick:(UIBarButtonItem*)view
 {
     return YES;
 }
 //系统的
 -(void)leftNavClick:(id)view
 {
-   if([self onLeftNavBarClick:view])
+    UIViewController *vc=self;
+    if([self isKindOfClass:[UINavigationController class]])
+    {
+        UINavigationController *nc=(UINavigationController*)vc;
+        NSInteger count=nc.viewControllers.count;
+        vc=nc.viewControllers[count-1];
+    }
+    if([vc onLeftNavBarClick:vc.navigationItem.leftBarButtonItem])
    {
-       [self stPop];
+       [vc stPop];
    }
     
 }
