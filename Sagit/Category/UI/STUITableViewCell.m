@@ -23,6 +23,7 @@
     if(cell==nil)
     {
         cell=[[UITableViewCell alloc] initWithStyle:tableView.cellStyle reuseIdentifier:key];
+        [cell backgroundColor:tableView.backgroundColor];//dark 模式兼容。
         [cell key:@"table" valueWeak:tableView];
         [cell key:@"stView" valueWeak:tableView.stView];
         [cell key:@"baseView" valueWeak:tableView.baseView];//因为Cell在Add时，并没有父，所以需要提前设置，这样STLastView等宏才能找到上一个UI

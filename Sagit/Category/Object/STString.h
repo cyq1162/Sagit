@@ -34,6 +34,8 @@
 -(NSString*)trim;
 -(NSString*)trimStart:(NSString*)value;
 -(NSString*)trimEnd:(NSString*)value;
+//!去除两位小数点的尾数0，如：13.00=》13，134.30=》134.3
+-(NSString*)trimDecimalZero;
 -(NSInteger)indexOf:(NSString*)searchString;
 -(NSInteger)indexOf:(NSString*)searchString ignoreCase:(BOOL)ignoreCase;
 -(NSString*)firstCharUpper;

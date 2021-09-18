@@ -430,6 +430,7 @@
 -(UITextView *)addTextView:(NSString *)name placeholder:(NSString*)placeholder font:(CGFloat)px color:(id)colorOrHex
 {
     UITextView* ui=[[UITextView alloc] initWithFrame:STEmptyRect];
+    [ui backgroundColor:ColorWhite];//dark 模式兼容。
     ui.delegate=(id)ui;
     if(px>0)
     {
@@ -629,6 +630,7 @@
 {
     if(name==nil){name=@"stFirstTable";}//避免STFirstTable找不到对象。
     UITableView *ui=[[UITableView alloc] initWithFrame:STFullRect style:style];
+    [ui backgroundColor:ColorWhite];//dark 模式兼容。
     ui.tableHeaderView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];
     ui.tableFooterView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];//去掉空白行。
     

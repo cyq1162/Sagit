@@ -120,6 +120,16 @@
     if(value==nil || ![self endWith:value]){return self;}
     return [self substringToIndex:self.length-value.length];
 }
+//!去除两位小数点的尾数0，如：13.00=》13，134.30=》134.3
+-(NSString *)trimDecimalZero
+{
+    NSString *value= [[self trimEnd:@".00"] trimEnd:@".0"];
+    if([value contains:@"."])
+    {
+        return [value trimEnd:@"0"];
+    }
+    return value;
+}
 -(NSInteger)indexOf:(NSString*)searchString
 {
     return [self indexOf:searchString ignoreCase:NO];
