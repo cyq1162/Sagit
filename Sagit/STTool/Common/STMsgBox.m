@@ -12,7 +12,7 @@
 @property (nonatomic,assign) UIWindow *window;
 @property (nonatomic,retain) UIView *lodingView;
 @property (nonatomic,assign) NSInteger hiddenFlag;
-
+@property (nonatomic,retain) UIAlertView *alertView;
 
 @end
 
@@ -155,6 +155,20 @@
 }
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText
 {
+    if(self.alertView && !click)//合并或重置重复的消息提示。
+    {
+        self.alertView.title=title;
+        NSString *oldMsg=[self.alertView.message trimEnd:STString(@" X %@",@(self.alertView.tag))];
+        if([oldMsg eq:msg])
+        {
+            self.alertView.tag=self.alertView.tag+1;
+            msg=[msg append:STString(@" X %li",self.alertView.tag)];
+           
+        }
+        self.alertView.message=msg;
+        
+        return;
+    }
     [Sagit runOnMainThread:^{
         STUIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
                                                             message:msg
@@ -169,7 +183,15 @@
                 [alertView addButtonWithTitle:item];
             }
         }
-        [alertView key:@"click" value:[click copy]];
+        if(click)
+        {
+            [alertView key:@"click" value:[click copy]];
+        }
+        else
+        {
+            self.alertView=alertView;
+            self.alertView.tag=1;
+        }
         [alertView show];
     }];
 }
@@ -193,7 +215,10 @@
         {
             beforeShow(alertView);
         }
-        [alertView key:@"click" value:[click copy]];
+        if(click)
+        {
+            [alertView key:@"click" value:[click copy]];
+        }
         [alertView show];
     }];
     if(beforeShow)
@@ -204,6 +229,7 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    self.alertView=nil;
     [alertView allowDismiss:YES];
     if(alertView.alertViewStyle==UIAlertViewStyleDefault)
     {
