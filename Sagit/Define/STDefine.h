@@ -9,6 +9,12 @@
 
 @interface STDefine : NSObject
 + (instancetype)share;
+#pragma mark 框架版本
+/// 版本号
+@property (nonatomic,copy) NSString *Version;
+/// 版本发布时间
+@property (nonatomic,copy) NSString *VersionNum;
+
 #pragma mark UI编码规范【重要】
 ///【可更改】选择编码标准：1倍（375*667）、2倍（750*1334）【默认值】、3倍（1125*2001）
 @property (nonatomic,assign) NSInteger StandardScale;

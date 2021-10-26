@@ -27,6 +27,14 @@
     });
     return _share;
 }
+-(NSString *)Version
+{
+    return @"V2.1.0";
+}
+-(NSString *)VersionNum
+{
+    return @"202110261100";
+}
 - (NSInteger)StandardScale
 {
     if(self._StandardScale>0 && self._StandardScale<4)
