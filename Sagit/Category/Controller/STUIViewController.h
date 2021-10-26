@@ -79,13 +79,13 @@ typedef void(^OnControllerDescription)(UIViewController *controller);
 - (void)stPop;
 //!退弹出视图并返回首页(对应stPush方法)
 -(void)stPopToTop;
-//!左侧导航栏的默认长按事件 return YES 则系统调stPopToTop返回方法。
--(BOOL)onLeftNavBarLongPress:(UIBarButtonItem*)view;
-//!设置左侧导航栏的按钮为文字或图片
+//!设置左侧导航栏的按钮为文字或图片(优先)
 -(UIViewController*)leftNav:(NSString*)title img:(id)imgOrName;
 //!左侧导航栏的默认点击事件 return YES 则系统调stPop返回方法。
 -(BOOL)onLeftNavBarClick:(UIBarButtonItem*)view;
-//!设置右侧导航栏的按钮为文字或图片
+//!左侧导航栏的默认长按事件 return YES 则系统调stPopToTop返回方法。
+-(BOOL)onLeftNavBarLongPress:(UIBarButtonItem*)view;
+//!设置右侧导航栏的按钮为文字或图片(优先)
 -(UIViewController*)rightNav:(NSString*)title img:(id)imgOrName;
 //!右侧导航栏的默认点击事件
 -(void)onRightNavBarClick:(UIBarButtonItem*)view;

@@ -168,7 +168,7 @@
            }
     }
     canUseMap=[canUseMap append:@",取消"];
-    [Sagit.MsgBox confirm:nil title:@"选择要跳转的地图类型" click:^void(NSInteger btnIndex, UIAlertView *view) {
+    [Sagit.MsgBox confirm:nil title:@"选择要跳转的地图类型" click:^void(NSInteger btnIndex, id view) {
         NSString* name=[canUseMap split:@","][btnIndex];
         if([name isEqual:@"百度地图"]){[self baiduMap:city];}
         else if([name isEqual:@"高德地图"]){[self iosaMap:city];}

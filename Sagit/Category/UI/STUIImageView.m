@@ -50,7 +50,7 @@
 
 -(void)save
 {
-    [Sagit.MsgBox confirm:@"是否保存图片？" title:@"消息提示" click:^void(NSInteger isOK,UIAlertView* view) {
+    [Sagit.MsgBox confirm:@"是否保存图片？" title:@"消息提示" click:^void(NSInteger isOK,id view) {
         if(isOK>0)
         {
             [self.image save:^(NSError *err) {

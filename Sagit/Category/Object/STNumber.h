@@ -10,3 +10,4 @@
 @interface NSNumber(ST)
 -(NSString*)toString;
 @end
+

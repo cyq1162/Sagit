@@ -15,7 +15,8 @@
 #import "STUserDefaults.h"
 #import "STColor.h"
 #import "STFont.h"
-
+#import "STQueue.h"
+#import "STStack.h"
 //UI
 #import "STUIView.h"
 #import "STUIViewValue.h"
@@ -38,7 +39,6 @@
 #import "STUIImageView.h"
 #import "STUIControl.h"
 #import "STUISwitch.h"
-#import "STUIAlertView.h"
 #import "STUIWindow.h"
 #import "STUIPageControl.h"
 #import "STUIScrollView.h"

@@ -12,7 +12,6 @@
 @property (nonatomic,assign) UIWindow *window;
 @property (nonatomic,retain) UIView *lodingView;
 @property (nonatomic,assign) NSInteger hiddenFlag;
-@property (nonatomic,retain) UIAlertView *alertView;
 
 @end
 
@@ -40,6 +39,14 @@
         //[_dialogController needStatusBar:NO];
     }
     return _dialogController;
+}
+-(STQueue<UIAlertController *> *)alertQueue
+{
+    if(!_alertQueue)
+    {
+        _alertQueue=[STQueue<UIAlertController*> new];
+    }
+    return _alertQueue;
 }
 #pragma mark loding...
 -(void)loading
@@ -134,15 +141,51 @@
 }
 
 -(void)alert:(id)msg{
-    [self confirm:msg title:nil click:nil okText:@"确定" cancelText:nil];
+    [self alert:msg title:nil];
 }
 -(void)alert:(id)msg title:(NSString *)title
 {
-    [self confirm:msg title:title click:nil okText:@"确定" cancelText:nil];
+    [self alert:msg title:title okText:@"确定"];
 }
 -(void)alert:(id)msg title:(NSString *)title okText:(NSString*)okText
 {
-    [self confirm:msg title:title click:nil okText:okText cancelText:nil];
+    if(self.alertQueue.count>0)//合并或重置重复的消息提示。
+    {
+        UIAlertController *alertController=[self.alertQueue peek];
+        NSString *oldMsg=[alertController.message trimEnd:STString(@" X %@",@(alertController.view.tag))];
+        if([oldMsg eq:msg])
+        {
+            alertController.title=title;
+            alertController.view.tag=alertController.view.tag+1;
+            msg=[msg append:STString(@" X %li",alertController.view.tag)];
+            alertController.message=msg;
+            return;
+        }
+    }
+    [Sagit runOnMainThread:^{
+        UIAlertController *alertController= [UIAlertController alertControllerWithTitle:title message:msg preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *action=[UIAlertAction actionWithTitle:okText style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self dismissAlert];
+        }];
+        [alertController addAction:action];
+        alertController.view.tag=1;
+       
+        if(self.alertQueue.count==0)
+        {
+            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+        }
+        [self.alertQueue enqueue: alertController];
+    }];
+}
+-(void)dismissAlert
+{
+    [self.alertQueue dequeue];
+    UIAlertController *alertController=[self.alertQueue peek];
+    if(alertController)
+    {
+        [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+    }
 }
 
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click
@@ -155,71 +198,139 @@
 }
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText cancelText:(NSString*)cancelText
 {
-    if(self.alertView && !click)//合并或重置重复的消息提示。
-    {
-        self.alertView.title=title;
-        NSString *oldMsg=[self.alertView.message trimEnd:STString(@" X %@",@(self.alertView.tag))];
-        if([oldMsg eq:msg])
-        {
-            self.alertView.tag=self.alertView.tag+1;
-            msg=[msg append:STString(@" X %li",self.alertView.tag)];
-           
-        }
-        self.alertView.message=msg;
-        
-        return;
-    }
     [Sagit runOnMainThread:^{
-        STUIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
-                                                            message:msg
-                                                           delegate:self
-                                                  cancelButtonTitle:cancelText
-                                                  otherButtonTitles:nil];
+        UIAlertController *alertController= [UIAlertController alertControllerWithTitle:title message:msg preferredStyle:UIAlertControllerStyleAlert];
         
+        int i=0;
+        if(cancelText)
+        {
+            UIAlertAction *action=[UIAlertAction actionWithTitle:cancelText style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if(click)
+                {
+                    click(i,alertController);
+                }
+                [self dismissAlert];
+            }];
+            [alertController addAction:action];
+            i++;
+        }
         if(okText)
         {
             NSArray<NSString*> *items=[okText split:@","];
             for (NSString *item in items) {
-                [alertView addButtonWithTitle:item];
+                UIAlertAction *action=[UIAlertAction actionWithTitle:item style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    if(click)
+                    {
+                        click(i,alertController);
+                    }
+                    [self dismissAlert];
+                }];
+                [alertController addAction:action];
+                i++;
             }
-        }
-        if(click)
-        {
-            [alertView key:@"click" value:[click copy]];
         }
         else
         {
-            self.alertView=alertView;
-            self.alertView.tag=1;
+            UIAlertAction *action=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if(click)
+                {
+                    click(i,alertController);
+                }
+                [self dismissAlert];
+            }];
+            [alertController addAction:action];
         }
-        [alertView show];
+        if(self.alertQueue.count==0)
+        {
+            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+        }
+        [self.alertQueue enqueue: alertController];
     }];
 }
 -(void)input:(id)title before:(OnBeforeShow)beforeShow click:(OnInputClick)click okText:(NSString *)okText cancelText:(NSString *)cancelText
 {
     [Sagit runOnMainThread:^{
-        STUIAlertView* alertView = [[STUIAlertView alloc] initWithTitle:title
-                                                              message:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:cancelText
-                                                    otherButtonTitles:nil];
+        UIAlertController *alertController= [UIAlertController alertControllerWithTitle:title message:nil preferredStyle:UIAlertControllerStyleAlert];
+
+        //default textfield
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            textField.borderStyle=UITextBorderStyleRoundedRect;
+            textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+            }];
+        if(beforeShow)
+        {
+            beforeShow(alertController);
+        }
+        int i=0;
+        if(cancelText)
+        {
+            UIAlertAction *action=[UIAlertAction actionWithTitle:cancelText style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if(click)
+                {
+                    if(!click(i,alertController))
+                    {
+                        UIAlertController *alertController=[self.alertQueue peek];
+                        if(alertController)
+                        {
+                            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+                        }
+                        return;
+                    }
+                }
+                [self dismissAlert];
+            }];
+            [alertController addAction:action];
+            i++;
+        }
         if(okText)
         {
             NSArray<NSString*> *items=[okText split:@","];
             for (NSString *item in items) {
-                [alertView addButtonWithTitle:item];
+                UIAlertAction *action=[UIAlertAction actionWithTitle:item style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    if(click)
+                    {
+                        if(!click(i,alertController))
+                        {
+                            UIAlertController *alertController=[self.alertQueue peek];
+                            if(alertController)
+                            {
+                                [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+                            }
+                            return;
+                        }
+                    }
+                    [self dismissAlert];
+                }];
+                [alertController addAction:action];
+                i++;
             }
         }
-        alertView.alertViewStyle=UIAlertViewStylePlainTextInput;
-        if(beforeShow)
+        else
         {
-            beforeShow(alertView);
+            UIAlertAction *action=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if(click)
+                {
+                    if(!click(i,alertController))
+                    {
+                        UIAlertController *alertController=[self.alertQueue peek];
+                        if(alertController)
+                        {
+                            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+                        }
+                        return;
+                    }
+                }
+                [self dismissAlert];
+            }];
+            [alertController addAction:action];
         }
-        if(click)
+        if(self.alertQueue.count==0)
         {
-            [alertView key:@"click" value:[click copy]];
+            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
         }
-        [alertView show];
+        [self.alertQueue enqueue: alertController];
+
+        
     }];
     if(beforeShow)
     {
@@ -227,79 +338,87 @@
     }
 }
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+-(void)menu:(OnMenuClick)click names:(id)names, ...
 {
-    self.alertView=nil;
-    [alertView allowDismiss:YES];
-    if(alertView.alertViewStyle==UIAlertViewStyleDefault)
+    NSMutableArray *nameArray=[NSMutableArray new];
+    [nameArray addObject:names];
+    va_list args;
+    va_start(args, names);
+    id otherName;
+    while ((otherName = va_arg(args, id)))
     {
-        OnConfirmClick click=[alertView key:@"click"];
-        if(click!=nil)
+        [nameArray addObject:otherName];
+    }
+    va_end(args);
+    [self menu:nil title:nil click:click names:nameArray,nil];
+}
+-(void)menu:(id)msg title:(NSString *)title click:(OnMenuClick)click names:(id)names, ...
+{
+    UIAlertController *alertController= [UIAlertController alertControllerWithTitle:title message:msg preferredStyle:UIAlertControllerStyleActionSheet];
+    int i=0;
+    if([names isKindOfClass:[NSMutableArray class]] || [names isKindOfClass:[NSArray class]])
+    {
+        NSArray *array=names;
+        for (id item in array)
         {
-            click(buttonIndex,alertView);
-            click=nil;
+            UIAlertAction *action=[UIAlertAction actionWithTitle:item style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if(click)
+                {
+                    click(i,alertController);
+                }
+                [self dismissAlert];
+            }];
+            [alertController addAction:action];
+            i++;
         }
     }
     else
     {
-        OnInputClick click=[alertView key:@"click"];
-        if(click!=nil)
-        {
-            BOOL yesNo=click(buttonIndex,alertView);
-            [alertView allowDismiss:yesNo];
-            if(!yesNo)
+        va_list args;
+        va_start(args, names);
+        UIAlertAction *action=[UIAlertAction actionWithTitle:names style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            if(click)
             {
-                return;
+                click(i,alertController);
             }
-            click=nil;
+            [self dismissAlert];
+        }];
+        [alertController addAction:action];
+        i++;
+        id otherName;
+        while ((otherName = va_arg(args, id)))
+        {
+            UIAlertAction *action=[UIAlertAction actionWithTitle:otherName style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if(click)
+                {
+                    click(i,alertController);
+                }
+                [self dismissAlert];
+            }];
+            [alertController addAction:action];
+            i++;
         }
+        va_end(args);
     }
+    
+    ///添加cancel 按钮
+    UIAlertAction *action=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if(click)
+        {
+            click(i,alertController);
+        }
+        [self dismissAlert];
+    }];
+    [alertController addAction:action];
+    [Sagit runOnMainThread:^{
+        if(self.alertQueue.count==0)
+        {
+            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+        }
+        [self.alertQueue enqueue: alertController];
+    }];
 }
--(void)menu:(OnMenuClick)click names:(id)names, ...
-{
 
-        UIActionSheet * actiongSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil,nil];
-        
-        if([names isKindOfClass:[NSMutableArray class]] || [names isKindOfClass:[NSArray class]])
-        {
-            NSArray *array=names;
-            for (id item in array)
-            {
-                [actiongSheet addButtonWithTitle:item];
-            }
-        }
-        else
-        {
-            va_list args;
-            va_start(args, names);
-            [actiongSheet addButtonWithTitle:names];
-            id otherName;
-            while ((otherName = va_arg(args, id)))
-            {
-                [actiongSheet addButtonWithTitle:otherName];
-            }
-            va_end(args);
-        }
-        [actiongSheet key:@"click" value:[click copy]];
-        /////添加cancel 按钮
-        [actiongSheet addButtonWithTitle:@"取消"];
-        //////设置刚添加的 取消 按钮为系统默认的 cancel 按钮
-        actiongSheet.cancelButtonIndex = actiongSheet.numberOfButtons-1;
-        actiongSheet.actionSheetStyle = UIActionSheetStyleDefault;
-[Sagit runOnMainThread:^{
-        [actiongSheet showInView:self.window];
-  }];
-}
-///////点击触发方法
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-
-        OnMenuClick click=[actionSheet key:@"click"];
-        if(click!=nil)
-        {
-            click(buttonIndex,actionSheet);
-            click=nil;
-        }
-}
 - (void)dialog:(OnDialogShow)dialog
 {
     [self dialog:dialog beforeHide:nil];

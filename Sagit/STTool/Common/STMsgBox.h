@@ -10,11 +10,11 @@
 #import <UIKit/UIKit.h>
 #import "STCategory.h"
 #import "STDefineUI.h"
-typedef void (^OnConfirmClick)(NSInteger btnIndex,UIAlertView* view);
-typedef BOOL (^OnInputClick)(NSInteger btnIndex,UIAlertView* view);
-typedef void (^OnMenuClick)(NSInteger btnIndex,UIActionSheet* view);
+typedef void (^OnConfirmClick)(NSInteger btnIndex,UIAlertController* alertController);
+typedef BOOL (^OnInputClick)(NSInteger btnIndex,UIAlertController* alertController);
+typedef void (^OnMenuClick)(NSInteger btnIndex,UIAlertController* alertController);
 typedef BOOL (^OnBeforeDialogHide)(UIView* winView,UIView* clickView);
-typedef void (^OnBeforeShow)(UIAlertView* view);
+typedef void (^OnBeforeShow)(UIAlertController* alertController);
 typedef void (^OnDialogShow)(UIView* winView);
 //!提供基础的消息弹窗
 @interface STMsgBox : NSObject
@@ -23,6 +23,8 @@ typedef void (^OnDialogShow)(UIView* winView);
 @property (nonatomic,assign) BOOL isDialoging;
 //!dialog 控制器（内部使用）
 @property (nonatomic,strong) STController *dialogController;
+//!alert 控制器（内部使用）
+@property (nonatomic,retain) STQueue<UIAlertController*> *alertQueue;
 #pragma AlertView
 //!提示消息
 -(void)prompt:(id)msg;
@@ -40,6 +42,8 @@ typedef void (^OnDialogShow)(UIView* winView);
 -(void)confirm:(id)msg title:(NSString *)title click:(OnConfirmClick)click okText:(NSString*)okText  cancelText:(NSString*)cancelText;
 //!弹出一个可以(自定义)输入内容的对话框
 -(void)input:(id)title before:(OnBeforeShow)beforeShow click:(OnInputClick)click okText:(NSString*)okText  cancelText:(NSString*)cancelText;
+//!弹出底部菜单
+-(void)menu:(id)msg title:(NSString*)title click:(OnMenuClick)click names:(id)names,...NS_REQUIRES_NIL_TERMINATION;
 //!弹出底部菜单
 -(void)menu:(OnMenuClick)click names:(id)names,...NS_REQUIRES_NIL_TERMINATION;
 //!弹出自定义界面的对话框

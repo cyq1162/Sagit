@@ -358,13 +358,38 @@ static char keyValueChar='k';
         self.hidesBottomBarWhenPushed=!self.needTabBar;//这个要成对出现。。shit~~~
     }
 
-    //检测上一个控制器有没有释放
-    UIViewController *nextController=self.nextController;
-    if(nextController)
+    //递归检测上一个控制器有没有释放
+    [self disposeNextController:self.nextController current:self animated:animated];
+    
+//    UIViewController *nextController=self.nextController;
+//    if(nextController)
+//    {
+//        [nextController dispose];
+//        [self key:@"nextController" valueWeak:nil];
+//        if(animated){nextController=nil;}
+//    }
+}
+-(void)disposeNextController:(UIViewController*)next current:(UIViewController*)current animated:(BOOL)animated
+{
+    if(next)
     {
-        [nextController dispose];
-        [self key:@"nextController" valueWeak:nil];
-        if(animated){nextController=nil;}
+        UIViewController *next2=[next key:@"nextController"];
+        if(next2)
+        {
+            [self disposeNextController:next2 current:nil animated:animated];
+            [next2 key:@"nextController" valueWeak:nil];
+        }
+        [next dispose];
+        next=nil;
+        if(current)
+        {
+            [current key:@"nextController" valueWeak:nil];
+            //if(animated){next=nil;}
+        }
+//        else
+//        {
+//            next=nil;
+//        }
     }
 }
 -(void)stPopToTop
@@ -375,6 +400,12 @@ static char keyValueChar='k';
         NSInteger count=navC.viewControllers.count;
         if(count>1)
         {
+//            for (int i=count-1; i>=1; i--) {
+//                UIViewController *vc=navC.viewControllers[i];
+//                [vc dispose];//释放内存。
+//                [vc key:@"nextController" valueWeak:nil];
+//                vc=nil;
+//            }
             UIViewController *preController=navC.viewControllers[0];
             [preController reSetBarState:NO];
         }
