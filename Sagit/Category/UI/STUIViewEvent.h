@@ -33,10 +33,18 @@ typedef  void(^OnViewDescription)(id view);
 -(UIView*)click;
 //!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name）
 -(UIView*)addClick:(NSString*)event;
+//!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name） enlarge: 扩大点击范围（上下左右）大小。
+-(UIView*)addClick:(NSString*)event enlarge:(CGFloat)value;
+-(UIView*)addClick:(NSString*)event enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom;
 //!绑定事件 并指定target
 -(UIView*)addClick:(NSString *)event target:(UIViewController*)target;
+-(UIView*)addClick:(NSString *)event target:(UIViewController*)target enlarge:(CGFloat)value;
+-(UIView*)addClick:(NSString *)event target:(UIViewController*)target enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom;
 //!绑定事件 用代码块的形式
 -(UIView*)onClick:(OnViewClick)block;
+//!绑定事件 用代码块的形式 enlarge: 扩大点击范围（上下左右）大小。
+-(UIView*)onClick:(OnViewClick)block enlarge:(CGFloat)value;
+-(UIView*)onClick:(OnViewClick)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom;
 //!移除绑定点击事件
 -(UIView*)removeClick;
 #pragma mark 扩展系统事件 - 双击

@@ -517,22 +517,68 @@
 {
     return [self addClick:event target:nil];
 }
+-(UIView *)addClick:(NSString *)event enlarge:(CGFloat)value
+{
+    return [self addClick:event target:nil enlarge:value top:value right:value bottom:value];
+}
+-(UIView *)addClick:(NSString *)event enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
+{
+    return [self addClick:event target:nil enlarge:left top:top right:right bottom:bottom];
+}
 -(UIView*)addClick:(NSString *)event target:(UIViewController*)target
 {
     return [self addEvent:@"click" event:event target:target];
 }
+-(UIView *)addClick:(NSString *)event target:(UIViewController *)target enlarge:(CGFloat)value
+{
+    return [self addClick:event target:target enlarge:value top:value right:value bottom:value];
+}
+-(UIView *)addClick:(NSString *)event target:(UIViewController *)target enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
+{
+    [self addClick:event target:target];
+    if(left>0 || top>0 || right>0 || bottom>0)
+    {
+        [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
+            [view backgroundColor:ColorClear].layer.zPosition=self.layer.zPosition-1;
+            [view onClick:^(id view) {
+                [self click];
+            }];
+        }];
+    }
+    return self;
+}
 -(UIView*)onClick:(OnViewClick)block
+{
+    return [self onClick:block clickView:self];
+}
+-(UIView *)onClick:(OnViewClick)block enlarge:(CGFloat)value
+{
+    return [self onClick:block enlarge:value top:value right:value bottom:value];
+}
+-(UIView *)onClick:(OnViewClick)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
+{
+    [self onClick:block clickView:self];
+    if(left>0 || top>0 || right>0 || bottom>0)
+    {
+        [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
+            [[view backgroundColor:ColorClear] onClick:block clickView:self].layer.zPosition=self.layer.zPosition-1;
+        }];
+    }
+    return self;
+}
+-(UIView*)onClick:(OnViewClick)block clickView:(UIView*)view
 {
     if(block!=nil)
     {
         [self addGesture:@"click"];//内部有清除参数，放在前面
-        [self key:@"clickView" value:self];
+        [self key:@"clickView" value:view];
         [self key:@"onClick" value:block];
         //[self setClickBlock:block];
         
     }
     return self;
 }
+
 -(UIView *)removeClick
 {
     if([self removeGesture:[UITapGestureRecognizer class] flag:9998])
