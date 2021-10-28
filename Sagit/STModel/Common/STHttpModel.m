@@ -9,6 +9,16 @@
 #import "STHttpModel.h"
 
 @implementation STHttpModel
+
+-(BOOL)isIgnore:(NSString *)name
+{
+    if([name eq:@"msgArray"] || [name eq:@"msgDic"] ||[name eq:@"msgString"])
+    {
+        return YES;
+    }
+    return [super isIgnore:name];
+}
+
 -(NSArray*)msgArray
 {
     if(self.msg && [self.msg isKindOfClass:[NSArray class]])

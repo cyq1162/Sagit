@@ -12,12 +12,14 @@
 @property (nonatomic, assign) BOOL success;
 @property (nonatomic, retain) id<NSObject> msg;
 @property (nonatomic, assign) NSInteger code;
-//将msg转成dictionary返回
+//!将msg转成dictionary返回
 @property (retain, nonatomic,readonly) NSDictionary* msgDic;
-//将msg转成Array返回
+//!将msg转成Array返回
 @property (retain, nonatomic,readonly) NSArray* msgArray;
-//将msg转成string返回
+//!将msg转成string返回
 @property (copy, nonatomic,readonly) NSString* msgString;
+//!获取请求返回的原始输出
+@property (copy, nonatomic,readonly) NSString* responseText;
 @end
 
 

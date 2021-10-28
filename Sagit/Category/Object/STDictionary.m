@@ -139,7 +139,7 @@
     }
     NSString *json = nil;
     NSError *error;
-    NSData *jsonData = [self dataWithJSONObject:self options:0 error:&error];
+    NSData *jsonData = [self dataWithJSONObject:dic options:0 error:&error];
     if (jsonData)
     {
         json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];

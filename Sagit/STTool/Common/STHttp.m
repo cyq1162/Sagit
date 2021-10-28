@@ -149,8 +149,10 @@
                 [self onSucess:@{@"success":statusCode==200?@"YES":@"NO",@"msg":@""} success:success];
                 return;
             }
+            NSMutableDictionary *resultDic=[NSMutableDictionary new];
             NSDictionary *dic=nil;
             NSString *result=[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            [resultDic set:@"responseText" value:result];
             if([result startWith:@"{"] && [result endWith:@"}"])
             {
                 dic= [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
@@ -164,7 +166,8 @@
             {
                 dic= @{@"success":statusCode==200?@"YES":@"NO",@"msg":result};
             }
-            [self onSucess:dic success:success];
+            [resultDic addEntriesFromDictionary:dic];
+            [self onSucess:resultDic success:success];
         }
         
         
