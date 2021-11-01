@@ -13,7 +13,16 @@
 {
     NSMutableArray *array=[NSMutableArray new];
     for (NSInteger i=0; i<self.count; i++) {
-        [array addObject:self[i]];
+        id obj=self[i];
+        if([obj isKindOfClass:[NSArray class]])
+        {
+            obj=[(NSMutableArray*)obj toNSMutableArray];
+        }
+        else if([obj isKindOfClass:[NSDictionary class]])
+        {
+            obj=[(NSDictionary*)obj toNSMutableDictionary];
+        }
+        [array addObject:obj];
     }
     return array;
 }
