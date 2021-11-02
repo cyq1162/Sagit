@@ -12,7 +12,7 @@
 
 -(BOOL)isIgnore:(NSString *)name
 {
-    if([name eq:@"msgArray"] || [name eq:@"msgDic"] ||[name eq:@"msgString"] || [name eq:@"responseText"])
+    if([name eq:@"msgArray"] || [name eq:@"msgDic"] ||[name eq:@"msgString"])
     {
         return YES;
     }
