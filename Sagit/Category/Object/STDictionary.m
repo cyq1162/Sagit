@@ -146,4 +146,19 @@
     }
     return json;
 }
++ (NSString *)arrayToJson:(NSArray *)array
+{
+    if(array==nil || array.count==0)
+    {
+        return @"[]";
+    }
+    NSString *json = nil;
+    NSError *error;
+    NSData *jsonData = [self dataWithJSONObject:array options:0 error:&error];
+    if (jsonData)
+    {
+        json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    return json;
+}
 @end

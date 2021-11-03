@@ -130,6 +130,7 @@
 
 //获取UI值
 # define STValue(name) [STUIView(name) stValue]
+# define STGetValue(name) [STUIView(name) stValue]
 # define STSetValue(name,value) [STUIView(name) stValue:value]
 # define STSelectValue(name) [STUIView(name) selectValue]
 # define STSelectText(name) [STUIView(name) selectText]
@@ -145,7 +146,8 @@
 #pragma mark 颜色
 
 //设备颜色
-#define STDeviceColor [UIColor hex:@"#f4f4f4"]//米白
+//#define STDeviceColor [UIColor hex:@"#f4f4f4"]//米白
+#define ColorDevice [UIColor hex:@"#f4f4f4"]//米白
 //颜色
 #define STColor(color) [UIColor hex:color]
 

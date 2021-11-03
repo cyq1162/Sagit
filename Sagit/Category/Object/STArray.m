@@ -26,4 +26,14 @@
     }
     return array;
 }
+-(NSString*)toJson{
+    return [NSJSONSerialization arrayToJson:self];
+}
+@end
+
+@implementation NSMutableArray(ST)
+
+-(NSString*)toJson{
+    return [NSJSONSerialization arrayToJson:self];
+}
 @end

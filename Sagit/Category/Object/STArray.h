@@ -9,4 +9,9 @@
 
 @interface NSArray(ST)
 -(NSMutableArray*)toNSMutableArray;
+-(NSString*)toJson;
+@end
+
+@interface NSMutableArray(ST)
+-(NSString*)toJson;
 @end

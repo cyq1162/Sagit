@@ -27,6 +27,7 @@
 
 @interface NSJSONSerialization(ST)
 +(NSString*)dicToJson:(NSDictionary*)dic;
++(NSString*)arrayToJson:(NSArray*)array;
 @end
 
 
