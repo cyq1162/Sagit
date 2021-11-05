@@ -742,13 +742,14 @@
         UIView *cellActionView=[self getCellActionView:cell];
         if(cellActionView!=nil)
         {
+            [cellActionView backgroundColor:ColorClear];//清空底色。
             for (int i=0; i<cell.action.items.count; i++) {
                 STCellAction *action=cell.action.items[i];
                 if(action.onCustomView!=nil)
                 {
-                    UIView *actionView=cellActionView.subviews[i];
+                    UIView *actionView=cellActionView.subviews[i];//button 无法直接设置背景色。
                     [actionView removeAllSubViews];
-                    action.onCustomView(actionView,indexPath);
+                    action.onCustomView([[actionView addUIView:nil] width:1 height:1],indexPath);//添加全屏子控件，可以设置背景色。
                 }
             }
         }
