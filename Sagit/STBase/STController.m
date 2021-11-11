@@ -558,43 +558,56 @@
 //tableview 加载完成可以调用的方法--因为tableview的cell高度不定，所以在加载完成以后重新计算高度
 -(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(indexPath.row==0 && indexPath.section==0)
+    {
+        [cell y:0];
+    }
     if(indexPath.row == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row)
     {
         //cell.separatorInset = UIEdgeInsetsMake(0, STScreeWidthPt , 0, 0);//去掉最后一条线的
-        if(tableView.autoHeight)
-        {
-            NSInteger relateBottomPx=0;
-            //检测是否有向下的约束
-            STLayoutTracer *tracer= tableView.LayoutTracer[@"relate"];
-            if(tracer && tracer.hasRelateBottom)
+        //兼容IOS系统10.3.1(闪退的情况，所以延时0.05秒处理）
+        //闪退的情况发现生在OS 10.3.1(在此事件中对TextView赋值,同时该TextView自适应高度又引发TableView BeginUpdate/EndUpdate事件时，系统崩溃
+        //报错内容为系统的索引超出范围。
+        //同时：tableView.contentSize 因高度系统修正会延后，需要延时再获取。
+        [Sagit delayExecute:0.05 onMainThread:YES block:^{
+            CGFloat height=0;
+            if(tableView.autoHeight)
             {
-                relateBottomPx=tracer.relateBottomPx;
-                //检测是否高度超过屏
-                NSInteger passValue=tableView.frame.origin.y+tableView.contentSize.height-(tableView.superview.frame.size.height-relateBottomPx*Ypt);
-                if(passValue>0)
+                CGFloat passValue=tableView.frame.origin.y+tableView.contentSize.height-tableView.superview.frame.size.height;
+                if(passValue>0){tableView.scrollEnabled=YES;}
+                NSInteger relateBottomPx=0;
+                //检测是否有向下的约束
+                STLayoutTracer *tracer= tableView.LayoutTracer[@"relate"];
+                if(tracer && tracer.hasRelateBottom)
                 {
-                    tableView.scrollEnabled=YES;
-                    [tableView height:(tableView.contentSize.height-passValue-1)*Ypx];
+                    relateBottomPx=tracer.relateBottomPx;
+                    //检测是否高度超过屏
+                    passValue=passValue+relateBottomPx*Ypt;
+                    if(passValue>0)
+                    {
+                        tableView.scrollEnabled=YES;
+                        height=tableView.contentSize.height-passValue-1;
+                    }
+                    else
+                    {
+                        height=tableView.contentSize.height-1;//减1是去掉最后的线。
+                    }
                 }
                 else
                 {
-                    [tableView height:(tableView.contentSize.height-1)*Ypx];//减1是去掉最后的线。
+                    height=tableView.contentSize.height-1;//减1是去掉最后的线。
                 }
             }
-            else
+
+            if(height!=0)
             {
-                [tableView height:(tableView.contentSize.height-1)*Ypx];//减1是去掉最后的线。
+                [tableView height:height*Ypx];
             }
-        }
-        if(tableView.afterReload)
-        {
-            //兼容IOS系统10.3.1(闪退的情况，所以延时0.05秒处理）
-            //闪退的情况发现生在OS 10.3.1(在此事件中对TextView赋值,同时该TextView自适应高度又引发TableView BeginUpdate/EndUpdate事件时，系统崩溃
-            //报错内容为系统的索引超出范围。
-            [Sagit delayExecute:0.05 onMainThread:YES block:^{
-                 tableView.afterReload(tableView);
-            }];
-        }
+            if(tableView.afterReload)
+            {
+                tableView.afterReload(tableView);
+            }
+        }];
     }
 }
 
@@ -627,14 +640,7 @@
 //{
 //    return 0.01f;
 //}
-// 返回每组的组尾
-//- (UIView *)tableView:(nonnull UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-//    return nil;
-//}
-//-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-//{
-//    return tableView.tableFooterView.frame.size.height;
-//}
+
 //-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForFooterInSection:(NSInteger)section
 //{
 //    return 0.01f;
@@ -653,25 +659,49 @@
 // 设置表头的高度。如果使用自定义表头，该方法必须要实现，否则自定义表头无法执行，也不会报错
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if(tableView.addSectionView)
+    if(tableView.addSectionHeaderView)
     {
-        NSString *key=[@"sectionView" append:STNumString(section)];
+        NSString *key=[@"sectionHeaderView" append:STNumString(section)];
         UIView *view=[tableView key:key];
         if(view==nil)
         {
             view=[[UIView new] width:1 height:40*STStandardScale];
             [tableView key:key value:view];
         }
-        tableView.addSectionView(view, section);
+        tableView.addSectionHeaderView(view, section);
         return view.frame.size.height;
     }
     return 0;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    NSString *key=[@"sectionView" append:STNumString(section)];
+    NSString *key=[@"sectionHeaderView" append:STNumString(section)];
     return [tableView key:key];
 }
+// 返回每组的组尾
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if(tableView.addSectionFooterView)
+    {
+        NSString *key=[@"sectionFooterView" append:STNumString(section)];
+        UIView *view=[tableView key:key];
+        if(view==nil)
+        {
+            view=[[UIView new] width:1 height:40*STStandardScale];
+            [tableView key:key value:view];
+        }
+        tableView.addSectionFooterView(view, section);
+        return view.frame.size.height;
+    }
+    return 0;
+}
+
+- (UIView *)tableView:(nonnull UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    NSString *key=[@"sectionFooterView" append:STNumString(section)];
+    return [tableView key:key];
+}
+
+
 #pragma mark UITableView 编辑删除
 //先要设Cell可编辑
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

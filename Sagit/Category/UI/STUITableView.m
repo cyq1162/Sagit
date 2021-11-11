@@ -83,22 +83,36 @@
     }
 }
 
--(OnAddTableSectionView)addSectionView
+-(OnAddTableSectionHeaderView)addSectionHeaderView
 {
-    return [self key:@"addSectionView"];
+    return [self key:@"addSectionHeaderView"];
 }
--(void)setAddSectionView:(OnAddTableSectionView)addSectionView
+-(void)setAddSectionHeaderView:(OnAddTableSectionHeaderView)addSectionHeaderView
 {
-    if(addSectionView==nil)
+    if(addSectionHeaderView==nil)
     {
-        [self.keyValue remove:@"addSectionView"];
+        [self.keyValue remove:@"addSectionHeaderView"];
     }
     else
     {
-        [self key:@"addSectionView" value:addSectionView];
+        [self key:@"addSectionHeaderView" value:addSectionHeaderView];
     }
 }
-
+-(OnAddTableSectionFooterView)addSectionFooterView
+{
+    return [self key:@"addSectionView"];
+}
+-(void)setAddSectionFooterView:(OnAddTableSectionFooterView)addSectionFooterView
+{
+    if(addSectionFooterView==nil)
+    {
+        [self.keyValue remove:@"addSectionFooterView"];
+    }
+    else
+    {
+        [self key:@"addSectionFooterView" value:addSectionFooterView];
+    }
+}
 -(NSMutableDictionary*)heightForCells
 {
     NSMutableDictionary *heights=[self key:@"heightForCells"];

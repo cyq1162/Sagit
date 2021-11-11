@@ -13,14 +13,16 @@
 typedef void(^OnAddTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 typedef BOOL(^OnDelTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 typedef void(^OnAddTableCellAction)(STUITableViewCellAction *cellAction, NSIndexPath *indexPath);
-typedef void(^OnAddTableSectionView)(UIView *sectionView,NSInteger section);
+typedef void(^OnAddTableSectionHeaderView)(UIView *sectionHeaderView,NSInteger section);
+typedef void(^OnAddTableSectionFooterView)(UIView *sectionFooterView,NSInteger section);
 typedef void(^OnAfterTableReloadData)(UITableView *tableView);
 //!用于为Table追加每一行的Cell
 @property (nonatomic,copy) OnAddTableCell addCell;
 //!用于为Table追加每一行的Cell的滑动菜单
 @property (nonatomic,copy) OnAddTableCellAction addCellAction;
 //!用于为Table追加每一组Section的标题View
-@property (nonatomic,copy) OnAddTableSectionView addSectionView;
+@property (nonatomic,copy) OnAddTableSectionHeaderView addSectionHeaderView;
+@property (nonatomic,copy) OnAddTableSectionFooterView addSectionFooterView;
 //!用于为Table移除行的Cell
 @property (nonatomic,copy) OnDelTableCell delCell;
 //!用于为Table reloadData 加载完数据后触发

@@ -639,15 +639,19 @@
  //   self.stController.automaticallyAdjustsScrollViewInsets=NO;
     ui.delegate=(id)self.stController;
     ui.dataSource=(id)self.stController;
-//    if (STOSVersion>=11) {
+
     if(![self.stController needNavBar])//无导航栏时多了状态栏高度偏移。
     {
+        if (@available(iOS 11.0, *)) {
+            ui.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentAutomatic;
+        } else {
+            self.stController.automaticallyAdjustsScrollViewInsets = YES;
+        }
         ui.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-
-////        ui.contentInset = UIEdgeInsetsMake(64, 0, 49, 0);
-////        ui.scrollIndicatorInsets = ui.contentInset;
-//    }
+    if (@available(iOS 15.0, *)) {
+        ui.sectionHeaderTopPadding = 0;
+    }
     [self addView:ui name:name];
     return ui;
 }
