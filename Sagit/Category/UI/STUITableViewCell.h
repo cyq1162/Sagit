@@ -31,8 +31,10 @@
 //!数据源中的第一个字段，系统自动设置
 -(NSString*)firstValue;
 -(UITableViewCell*)firstValue:(NSString*)value;
-//当Cell的高度在绑定后，需要动态根据子内容高度变化，再次刷新高度时使用。
+//!当Cell的高度在绑定后，需要动态根据子内容高度变化，再次刷新高度时使用。
 -(UITableViewCell*)resetHeightCache;
+//!刷新表格高度
+-(void)refleshTableHeight;
 #pragma mark 扩展属性
 -(UITableViewCell*)accessoryType:(UITableViewCellAccessoryType)type;
 -(UITableViewCell*)selectionStyle:(UITableViewCellSelectionStyle)style;

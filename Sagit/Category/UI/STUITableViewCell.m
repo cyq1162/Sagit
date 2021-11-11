@@ -112,6 +112,92 @@
     }
     return self;
 }
+-(void)refleshTableHeight
+{
+    [self fixHeight];
+    UITableView *tableView= self.table;
+    [tableView beginUpdates];
+    CGFloat fixHeight=0;
+    NSIndexPath *index=self.indexPath;
+    NSMutableArray *array=[tableView.heightForCells get:@(index.section)];
+    if(array && array.count>=index.row)
+    {
+        fixHeight=self.frame.size.height-((NSNumber*)array[index.row]).floatValue;
+        array[index.row]=@(self.frame.size.height);
+    }
+    
+    tableView.contentSize=CGSizeMake(tableView.contentSize.width, tableView.contentSize.height+fixHeight);
+    if(tableView.autoHeight)
+    {
+        NSInteger relateBottomPx=0;
+        //检测是否有向下的约束
+        STLayoutTracer *tracer= tableView.LayoutTracer[@"relate"];
+        if(tracer && tracer.hasRelateBottom)
+        {
+            relateBottomPx=tracer.relateBottomPx;
+        }
+        //检测是否高度超过屏 // 65
+        NSInteger passValue=tableView.frame.origin.y+tableView.contentSize.height-tableView.superview.frame.size.height+relateBottomPx*Ypt;
+        
+        if(passValue>0)
+        {
+            tableView.scrollEnabled=YES;
+            CGFloat passSuperValue=fixHeight-passValue;
+            if(passSuperValue>0)//还能加。
+            {
+                [tableView key:@"passSuperValue" value:@(passSuperValue)];
+                [tableView height:tableView.stHeight+passSuperValue*Ypx];
+            }
+        }
+        else
+        {
+            bool isPassSuper=NO;
+            if(fixHeight<0)
+            {
+                isPassSuper=passValue-fixHeight>0;//是否从超过superview=>退回。
+            }
+            if(!isPassSuper)
+            {
+                [tableView height:tableView.stHeight+fixHeight*Ypx];
+            }
+            else
+            {
+                NSNumber* passSuperValue=[tableView key:@"passSuperValue"];
+                [tableView height:tableView.stHeight-passSuperValue.floatValue*Ypx];
+            }
+        }
+    }
+    [tableView endUpdates];
+}
+-(void)fixHeight
+{
+    //仅遍历一级
+    CGFloat maxHeight=0;
+    if(self.subviews.count>0)
+    {
+        for (NSInteger i=0; i<self.subviews.count; i++)
+        {
+            UIView *view=self.subviews[i];
+            if(i==self.subviews.count-1)
+            {
+                //获取当前的类名
+                NSString* className= NSStringFromClass([view class]);
+                if([className eq:@"_UITableViewCellSeparatorView"])//_UITableViewCellSeparatorView
+                {
+                    maxHeight+=10;//标准默认线距离间隔。
+                    break;
+                }
+            }
+            CGRect subFrame= view.frame;
+            CGFloat subHeight=subFrame.origin.y+subFrame.size.height;
+            if(subHeight>maxHeight)
+            {
+                maxHeight=subHeight;
+            }
+        }
+    }
+    [self height:maxHeight*Ypx];
+}
 #pragma mark 扩展属性
 -(UITableViewCell *)accessoryType:(UITableViewCellAccessoryType)type
 {

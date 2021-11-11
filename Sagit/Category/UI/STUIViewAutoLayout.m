@@ -763,7 +763,7 @@ static NSInteger nullValue=-99999;
         [Sagit delayExecute:0.5 onMainThread:YES block:^{
             if(!CGRectEqualToRect(self.frame, self.OriginFrame))
             {
-                NSLog(@"retry...refleshLayout : %@ ",NSStringFromCGRect(self.frame));
+                NSLog(@"retry...refleshLayout : %@,%@ ",NSStringFromCGRect(self.frame),NSStringFromCGRect(self.OriginFrame));
                 self.OriginFrame=self.frame;
                 //检查设备
                 [UIView animateWithDuration:0.4 animations:^{
