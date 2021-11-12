@@ -18,8 +18,12 @@
 -(UIView*)lastAddView;
 //!当前UI的最后一个子UI
 -(UIView*)lastSubView;
+//!当前UI的最后一个子UI
+-(UIView*)lastSubView:(NSString*)className;
 //!当前UI的第一个子UI
 -(UIView*)firstSubView;
+//!当前UI的第一个子UI
+-(UIView*)firstSubView:(NSString*)className;
 //!当前UI的前一个UI
 - (UIView*)preView;
 //!设置当前UI的前一个UI

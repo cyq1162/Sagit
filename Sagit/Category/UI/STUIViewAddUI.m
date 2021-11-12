@@ -43,6 +43,21 @@
     }
     return self;
 }
+-(UIView *)lastSubView:(NSString *)className
+{
+    if(self.subviews.count>0)
+    {
+        for (int i=self.subviews.count-1;i>=0;i--)
+        {
+            UIView *view=self.subviews[i];
+            if([NSStringFromClass([view class]) isEqualToString:className])
+            {
+                return view;
+            }
+        }
+    }
+    return nil;
+}
 -(UIView *)firstSubView
 {
     if(self.subviews.count>0)
@@ -50,6 +65,20 @@
         return self.subviews[0];
     }
     return self;
+}
+-(UIView *)firstSubView:(NSString *)className
+{
+    if(self.subviews.count>0)
+    {
+        for (UIView *view in self.subviews)
+        {
+            if([NSStringFromClass([view class]) isEqualToString:className])
+            {
+                return view;
+            }
+        }
+    }
+    return nil;
 }
 // Name
 - (BOOL)isFormUI{
