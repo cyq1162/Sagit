@@ -257,12 +257,14 @@ static char keyValueChar='k';
 }
 -(UIView*)layerCornerRadius:(CGFloat)px byRoundingCorners:(UIRectCorner)byRoundingCorners
 {
+    [self key:@"layerMaskPx" value:@(px)];
+    [self key:@"layerMaskCorner" value:@(byRoundingCorners)];
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:byRoundingCorners cornerRadii:STSizeMake(px, px)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
     maskLayer.frame = self.bounds;
     maskLayer.path = maskPath.CGPath;
     self.layer.mask = maskLayer;
-    return self;;
+    return self;
 }
 -(UIView*)layerBorderWidth:(NSInteger)px
 {

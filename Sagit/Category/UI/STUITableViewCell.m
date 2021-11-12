@@ -114,7 +114,7 @@
 }
 -(void)refleshTableHeight
 {
-    [self fixHeight];
+    [self fixHeight:self];
     UITableView *tableView= self.table;
     [tableView beginUpdates];
     CGFloat fixHeight=0;
@@ -166,18 +166,33 @@
                 [tableView height:tableView.stHeight-passSuperValue.floatValue*Ypx];
             }
         }
+        if(tableView.layer.mask)
+        {
+            //高度改变，mask需要刷新
+            NSNumber*px=   [tableView key:@"layerMaskPx"];
+            NSNumber*corner= [tableView key:@"layerMaskCorner"];
+            if(px)
+            {
+                [tableView layerCornerRadius:px.floatValue byRoundingCorners:corner.intValue];
+            }
+        }
     }
     [tableView endUpdates];
 }
--(void)fixHeight
+-(void)fixHeight:(UIView*)fixView
 {
     //仅遍历一级
     CGFloat maxHeight=0;
-    if(self.subviews.count>0)
+    if(fixView.subviews.count>0)
     {
-        for (NSInteger i=0; i<self.subviews.count; i++)
+        
+        for (NSInteger i=0; i<fixView.subviews.count; i++)
         {
-            UIView *view=self.subviews[i];
+            UIView *view=fixView.subviews[i];
+            if(i==0 && [@"UITableViewCellContentView" eq:NSStringFromClass([view class])])
+            {
+                [self fixHeight:view];
+            }
             if(i==self.subviews.count-1)
             {
                 //获取当前的类名
@@ -196,7 +211,7 @@
             }
         }
     }
-    [self height:maxHeight*Ypx];
+    [fixView height:maxHeight*Ypx];
 }
 #pragma mark 扩展属性
 -(UITableViewCell *)accessoryType:(UITableViewCellAccessoryType)type
