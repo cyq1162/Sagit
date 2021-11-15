@@ -540,6 +540,7 @@
         [dic set:@(indexPath.section) value:rows];
     }
     NSNumber *height=@(cell.frame.size.height);
+    [cell key:@"initHeight" value:height];
     if(indexPath.row==rows.count)
     {
         [rows addObject:height];

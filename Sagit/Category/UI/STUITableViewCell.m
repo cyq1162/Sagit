@@ -196,8 +196,15 @@
         {
             UIView *view=fixView.subviews[i];
             NSString*className=NSStringFromClass([view class]);
-            if([@"_UITableViewCellSeparatorView" eq:className])
+            if([@"_UITableViewCellSeparatorView" eq:className] && self.table.separatorStyle)
             {
+                if(self.table.separatorStyle==UITableViewCellSeparatorStyleNone ||
+                   UIEdgeInsetsEqualToEdgeInsets(self.table.separatorInset, UIEdgeInsetsZero) ||
+                   CGColorGetAlpha(self.table.separatorColor.CGColor)==0
+                   )
+                {
+                    continue;;
+                }
                 //获取当前的类名
                 maxHeight+=10;//标准默认线距离间隔。
                 continue;
@@ -212,6 +219,14 @@
             {
                 maxHeight=subHeight;
             }
+        }
+    }
+    if(maxHeight<44 && [fixView isEqual:self])
+    {
+        NSNumber *initHeight=[self key:@"initHeight"];
+        if(initHeight && initHeight>=44)
+        {
+            maxHeight=initHeight.floatValue;
         }
     }
     [fixView height:maxHeight*Ypx];
