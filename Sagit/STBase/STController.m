@@ -511,7 +511,7 @@
 // 设置cell
 - (UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
     UITableViewCell *cell=[UITableViewCell reuseCell:tableView index:indexPath];
-    if(!tableView.reuseCell && cell.contentView.subviews.count>0){return cell;}
+    if(!tableView.reuseCell && (cell.contentView.subviews.count>0 || cell.subviews.count>2)){return cell;}
     if(tableView.addCell)
     {
         NSInteger row=indexPath.row;

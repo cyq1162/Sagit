@@ -36,7 +36,6 @@
     {
         _dialogController=[STController new];
         [_dialogController initView];
-        //[_dialogController needStatusBar:NO];
     }
     return _dialogController;
 }
@@ -435,6 +434,7 @@
     __block OnDialogShow block=dialog;
 
     STView *view=self.dialogController.stView;
+    [view name:@"stDialogView"];
     [statusView alpha:0.1];
     [window addSubview:view];
     [[[view x:0 y:0 width:1 height:1] backgroundColor:[ColorBlack alpha:0.5]] block:nil on:^(UIView* winView) {
@@ -474,6 +474,15 @@
 }
 -(UIView*)getSubClickView:(UIView*)winView allowNil:(BOOL)allowNil
 {
+    if(winView.isSTView)
+    {
+        UIView*eventView=[winView key:@"eventView"];//UIViewEvent 事件:shouldReceiveTouch有对应处理
+        if(eventView)
+        {
+            [winView key:@"eventView" value:nil];
+            return eventView;
+        }
+    }
     UIView *returnView=nil;
     for (int i=0; i<winView.subviews.count; i++) {
         UIView *view=winView.subviews[i];
@@ -483,7 +492,10 @@
             {
                 for (int k=0; k<view.gestureRecognizers.count; k++) {
                     
-                    if(view.gestureRecognizers[k].state!=UIGestureRecognizerStatePossible)
+                    UIGestureRecognizer *gr=view.gestureRecognizers[k];
+
+                    UIGestureRecognizerState state=gr.state;
+                    if(state!=UIGestureRecognizerStatePossible)
                     {
                         returnView=[self getSubClickView:view allowNil:NO];
                         break;

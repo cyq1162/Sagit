@@ -35,15 +35,21 @@
     {
         return cell;
     }
-    
-    if(cell.contentView.subviews.count>0)
-    {
-        [cell.contentView removeAllSubViews];
-        for (NSInteger i=0; i<cell.subviews.count; i++)//恢复分隔线的Y坐标
+    for (int i=cell.subviews.count-1; i>=0; i--) {
+        UIView *view=cell.subviews[i];
+        NSString *className=NSStringFromClass([view class]);
+        if([className eq:@"_UITableViewCellSeparatorView"])
         {
-            UIView*view=cell.subviews[i];
             if(view.stY>88){[view y:88];}
             if(view.stHeight>88){[view height:88];}
+        }
+        else if([className eq:@"UITableViewCellContentView"])
+        {
+            [view removeAllSubViews];
+        }
+        else
+        {
+            [view removeSelf];
         }
     }
     //默认设置
@@ -189,19 +195,16 @@
         for (NSInteger i=0; i<fixView.subviews.count; i++)
         {
             UIView *view=fixView.subviews[i];
-            if(i==0 && [@"UITableViewCellContentView" eq:NSStringFromClass([view class])])
-            {
-                [self fixHeight:view];
-            }
-            if(i==self.subviews.count-1)
+            NSString*className=NSStringFromClass([view class]);
+            if([@"_UITableViewCellSeparatorView" eq:className])
             {
                 //获取当前的类名
-                NSString* className= NSStringFromClass([view class]);
-                if([className eq:@"_UITableViewCellSeparatorView"])//_UITableViewCellSeparatorView
-                {
-                    maxHeight+=10;//标准默认线距离间隔。
-                    break;
-                }
+                maxHeight+=10;//标准默认线距离间隔。
+                continue;
+            }
+            else if([@"UITableViewCellContentView" eq:className])
+            {
+                [self fixHeight:view];
             }
             CGRect subFrame= view.frame;
             CGFloat subHeight=subFrame.origin.y+subFrame.size.height;

@@ -143,8 +143,39 @@
 #pragma mark 处理手势冲突
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    if(![gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){return YES;}
     UIView *view=gestureRecognizer.view;
+    STView *stView=view.stView;
+    if(stView)
+    {
+        //STMsgBox 事件:dialog有对应处理
+        NSString *name=stView.name;
+        if([name eq:@"stDialogView"])
+        {
+            if(![view isEqual:stView])
+            {
+                [stView key:@"eventViewCount" value:@(1)];
+                [stView key:@"eventView" value:view];//Sagit.Msg dialog 获取点击View
+            }
+            else
+            {
+                NSNumber *num=[stView key:@"eventViewCount"];
+                //进来两次。
+                if(!num)
+                {
+                    [stView key:@"eventView" value:nil];
+                }
+                else if(num.intValue==1)
+                {
+                    [stView key:@"eventViewCount" value:@(2)];
+                }
+                else if(num.intValue>1)
+                {
+                    [stView key:@"eventViewCount" value:nil];
+                }
+            }
+        }
+    }
+    if(![gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){return YES;}
     if([view isKindOfClass:[UITextField class]])
     {
         for (NSInteger i=view.gestureRecognizers.count-1; i>=0; i--)
