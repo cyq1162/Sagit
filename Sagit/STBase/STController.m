@@ -530,6 +530,7 @@
             }
         }
         tableView.addCell(cell,indexPath);
+        [cell.contentView stSizeToFit];
         [cell stSizeToFit];//调整高度
     }
     NSMutableDictionary *dic=tableView.heightForCells;
