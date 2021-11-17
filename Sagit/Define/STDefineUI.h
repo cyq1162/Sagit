@@ -109,6 +109,37 @@
 #define STLastCollectoinView ((UICollectionView*)STLastView)
 #define STLastScrollView ((UIScrollView*)STLastView)
 
+//获取子控件
+#define STLastSubUIView [superView lastSubView:@"UIUIView"]
+#define STLastSubControl(superView) ((UIControl*)[superView lastSubView:@"UIControl"])
+#define STLastSubButton(superView) ((UIButton*)[superView lastSubView:@"UIButton"])
+#define STLastSubTextField(superView) ((UITextField*)[superView lastSubView:@"UITextField"])
+#define STLastSubTextView(superView) ((UITextView*)[superView lastSubView:@"UITextView"])
+#define STLastSubImageView(superView) ((UIImageView*)[superView lastSubView:@"UIImageView"])
+#define STLastSubLabel(superView) ((UILabel*)[superView lastSubView:@"UILabel"])
+#define STLastSubSwitch(superView) ((UISwitch*)[superView lastSubView:@"UISwitch"])
+#define STLastSubStepper(superView) ((UIStepper*)[superView lastSubView:@"UIStepper"])
+#define STLastSubSlider(superView) ((UISlider*)[superView lastSubView:@"UISlider"])
+#define STLastSubProgressView(superView) ((UIProgressView*)[superView lastSubView:@"UIProgressView"])
+#define STLastSubTableView(superView) ((UITableView*)[superView lastSubView:@"UITableView"])
+#define STLastSubCollectoinView(superView) ((UICollectionView*)[superView lastSubView:@"UICollectionView"])
+#define STLastSubScrollView(superView) ((UIScrollView*)[superView lastSubView:@"UIScrollView"])
+
+#define STFirstSubUIView [superView firstSubView:@"UIUIView"]
+#define STFirstSubControl(superView) ((UIControl*)[superView firstSubView:@"UIControl"])
+#define STFirstSubButton(superView) ((UIButton*)[superView firstSubView:@"UIButton"])
+#define STFirstSubTextField(superView) ((UITextField*)[superView firstSubView:@"UITextField"])
+#define STFirstSubTextView(superView) ((UITextView*)[superView firstSubView:@"UITextView"])
+#define STFirstSubImageView(superView) ((UIImageView*)[superView firstSubView:@"UIImageView"])
+#define STFirstSubLabel(superView) ((UILabel*)[superView firstSubView:@"UILabel"])
+#define STFirstSubSwitch(superView) ((UISwitch*)[superView firstSubView:@"UISwitch"])
+#define STFirstSubStepper(superView) ((UIStepper*)[superView firstSubView:@"UIStepper"])
+#define STFirstSubSlider(superView) ((UISlider*)[superView firstSubView:@"UISlider"])
+#define STFirstSubProgressView(superView) ((UIProgressView*)[superView firstSubView:@"UIProgressView"])
+#define STFirstSubTableView(superView) ((UITableView*)[superView firstSubView:@"UITableView"])
+#define STFirstSubCollectoinView(superView) ((UICollectionView*)[superView firstSubView:@"UICollectionView"])
+#define STFirstSubScrollView(superView) ((UIScrollView*)[superView firstSubView:@"UIScrollView"])
+
 //获取控件
 #define STUIView(name)    [sagit find:name]
 #define STSTView(name)    ((STView*)STUIView(name))

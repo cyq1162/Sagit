@@ -121,6 +121,8 @@
 -(void)refleshTableHeight
 {
     [self fixHeight:self];
+    [self refleshLayout:NO ignoreSelf:NO];//刷新相对布局的坐标
+    [self fixHeight:self];//刷新后再修正高度。
     UITableView *tableView= self.table;
     [tableView beginUpdates];
     CGFloat fixHeight=0;
