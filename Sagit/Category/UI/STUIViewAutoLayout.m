@@ -152,12 +152,22 @@ static NSInteger nullValue=-99999;
     CGRect uiFrame=[self getUIFrame:ui];
     CGRect frame=[self checkFrameIsEmpty:uiFrame];
     
-    //检测是否有onLeft规则，若有，调整宽度
+    //检测是否有onLeft、relate:Right规则，若有，调整宽度
     if([self.LayoutTracer has:@"onLeft"])
     {
-        frame.size.width=(frame.origin.x+frame.size.width)-uiFrame.origin.x-uiFrame.size.width-x*Xpt;
+        frame.size.width=(self.frame.origin.x+self.frame.size.width)-(uiFrame.origin.x+uiFrame.size.width)-x*Xpt;
+        frame.origin.x=floor(uiFrame.size.width+uiFrame.origin.x+x*Xpt);
     }
-    frame.origin.x=floor(uiFrame.size.width+uiFrame.origin.x+x*Xpt);
+    else
+    {
+        frame.origin.x=floor(uiFrame.size.width+uiFrame.origin.x+x*Xpt);
+        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
+        if(tracer!=nil && tracer.hasRelateRight)
+        {
+            frame.size.width-=(frame.origin.x-self.frame.origin.x);
+        }
+    }
+    
     
     BOOL needSetY=YES;
     if(y==0)
@@ -194,14 +204,23 @@ static NSInteger nullValue=-99999;
     CGRect uiFrame=[self getUIFrame:ui];
     CGRect frame=[self checkFrameIsEmpty:uiFrame];
     
-    //检测是否有onRight规则，若有，调整宽度
+    //检测是否有onRight、relate:Left规则，若有，调整宽度
     if([self.LayoutTracer has:@"onRight"])
     {
-        frame.size.width=uiFrame.origin.x-x*Xpt-frame.origin.x;
+        frame.size.width=uiFrame.origin.x-x*Xpt-self.frame.origin.x;
     }
     else
     {
-        frame.origin.x=floor(uiFrame.origin.x-frame.size.width-x*Xpt);
+        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
+        if(tracer!=nil && tracer.hasRelateLeft)
+        {
+            frame.size.width=uiFrame.origin.x-x*Xpt-self.frame.origin.x;
+        }
+        else
+        {
+            frame.origin.x=floor(uiFrame.origin.x-self.frame.size.width-x*Xpt);
+        }
+       
     }
     BOOL needSetY=YES;
     if(y==0)
@@ -239,14 +258,22 @@ static NSInteger nullValue=-99999;
     CGRect uiFrame=[self getUIFrame:ui];
     CGRect frame=[self checkFrameIsEmpty:uiFrame];
     
-    //检测是否有onBottom规则，若有，调整高度
+    //检测是否有onBottom、relate：Top 规则，若有，调整高度
     if([self.LayoutTracer has:@"onBottom"])
     {
-        frame.size.height=uiFrame.origin.y-y*Ypt-frame.origin.y;
+        frame.size.height=uiFrame.origin.y-y*Ypt-self.frame.origin.y;
     }
     else
     {
-        frame.origin.y=floor(uiFrame.origin.y-frame.size.height-y*Ypt);
+        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
+        if(tracer!=nil && tracer.hasRelateTop)
+        {
+            frame.size.height=uiFrame.origin.y-y*Ypt-self.frame.origin.y;
+        }
+        else
+        {
+            frame.origin.y=floor(uiFrame.origin.y-self.frame.size.height-y*Ypt);
+        }
     }
     
     BOOL needSetX=YES;
@@ -283,12 +310,22 @@ static NSInteger nullValue=-99999;
     [self addTracer:ui method:@"onBottom" v1:y v2:x v3:0 v4:0 location:0 xyFlag:0];
     CGRect uiFrame=[self getUIFrame:ui];
     CGRect frame=[self checkFrameIsEmpty:uiFrame];
-    //检测是否有onTop规则，若有，调整高度
+    //检测是否有onTop、relate：Bottom 规则，若有，调整高度
     if([self.LayoutTracer has:@"onTop"])
     {
-        frame.size.height=(frame.origin.y+frame.size.height)-uiFrame.origin.y-uiFrame.size.height-y*Ypt;
+        frame.size.height=(self.frame.origin.y+self.frame.size.height)-(uiFrame.origin.y+uiFrame.size.height)-y*Ypt;
+        frame.origin.y=floor(uiFrame.origin.y+uiFrame.size.height+y*Ypt);
     }
-    frame.origin.y=floor(uiFrame.origin.y+ui.frame.size.height+y*Ypt);
+    else
+    {
+        frame.origin.y=floor(uiFrame.origin.y+uiFrame.size.height+y*Ypt);
+        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
+        if(tracer!=nil && tracer.hasRelateBottom)
+        {
+            frame.size.height-=(frame.origin.y-self.frame.origin.y);
+        }
+    }
+    
     
     
     BOOL needSetX=YES;
