@@ -139,10 +139,18 @@
     {
         NSInteger relateBottomPx=0;
         //检测是否有向下的约束
-        STLayoutTracer *tracer= tableView.LayoutTracer[@"relate"];
-        if(tracer && tracer.hasRelateBottom)
+        STLayoutTracer *onTop= tableView.LayoutTracer[@"onTop"];
+        if(onTop)
         {
-            relateBottomPx=tracer.relateBottomPx;
+            relateBottomPx=onTop.view.superview.stHeight-onTop.view.stY+onTop.v1;
+        }
+        if(relateBottomPx==0)
+        {
+            STLayoutTracer *tracer= tableView.LayoutTracer[@"relate"];
+            if(tracer && tracer.hasRelateBottom)
+            {
+                relateBottomPx=tracer.relateBottomPx;
+            }
         }
         //检测是否高度超过屏 // 65
         NSInteger passValue=tableView.frame.origin.y+tableView.contentSize.height-tableView.superview.frame.size.height+relateBottomPx*Ypt;

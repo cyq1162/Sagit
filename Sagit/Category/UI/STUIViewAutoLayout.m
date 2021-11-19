@@ -81,11 +81,11 @@ static NSInteger nullValue=-99999;
             UIScrollView *scroll=(UIScrollView*)self.superview;
             if(scroll.direction==X)
             {
-                size.height=scroll.contentSize.height;
+                size.height=scroll.contentSize.height>0?scroll.contentSize.height:scroll.frame.size.height;
             }
             else if(scroll.direction==Y)
             {
-                size.width=scroll.contentSize.width;
+                size.width=scroll.contentSize.width>0?scroll.contentSize.width:scroll.frame.size.width;
             }
         }
         

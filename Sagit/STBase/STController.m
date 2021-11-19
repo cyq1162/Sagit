@@ -579,10 +579,18 @@
                 if(passValue>0){tableView.scrollEnabled=YES;}
                 NSInteger relateBottomPx=0;
                 //检测是否有向下的约束
-                STLayoutTracer *tracer= tableView.LayoutTracer[@"relate"];
-                if(tracer && tracer.hasRelateBottom)
+                STLayoutTracer *onTop= tableView.LayoutTracer[@"onTop"];
+                if(onTop)
                 {
-                    relateBottomPx=tracer.relateBottomPx;
+                    relateBottomPx=onTop.view.superview.stHeight-onTop.view.stY+onTop.v1;
+                }
+                STLayoutTracer *tracer= tableView.LayoutTracer[@"relate"];
+                if(relateBottomPx!=0 || (tracer && tracer.hasRelateBottom))//|| onTop 两个都有：那个是后加的？
+                {
+                    if(relateBottomPx==0)
+                    {
+                        relateBottomPx=tracer.relateBottomPx;
+                    }
                     //检测是否高度超过屏
                     passValue=passValue+relateBottomPx*Ypt;
                     if(passValue>0)
