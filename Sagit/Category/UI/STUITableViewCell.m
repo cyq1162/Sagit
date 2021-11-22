@@ -142,7 +142,8 @@
         STLayoutTracer *onTop= tableView.LayoutTracer[@"onTop"];
         if(onTop)
         {
-            relateBottomPx=onTop.view.superview.stHeight-onTop.view.stY+onTop.v1;
+            CGSize superSize=[onTop.view superSizeWithFix];
+            relateBottomPx=superSize.height*Ypx-onTop.view.stY+onTop.v1;
         }
         if(relateBottomPx==0)
         {

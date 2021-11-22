@@ -19,7 +19,8 @@
 //!当前UI第一次设置的frame，方便以后归位。
 - (CGRect)OriginFrame;
 - (UIView*)setOriginFrame:(CGRect)frame;
-
+//!获取修正后父窗体的宽高。
+-(CGSize)superSizeWithFix;
 //-(CGSize)superSize;
 #pragma mark [相对布局方法] RelativeLayout
 //当前UI将布局于指定UI的右侧

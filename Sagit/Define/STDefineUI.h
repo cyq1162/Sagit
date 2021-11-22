@@ -85,7 +85,6 @@
 //定义两个布局的宽高参数 (用于自动布局时可以刷新约束)
 #define STSameToWidth  -99990
 #define STSameToHeight -99991
-#define STNullPx -99999
 
 #ifndef sagit
 //!定义一个可以在view和Controller中共同使用的布局标识

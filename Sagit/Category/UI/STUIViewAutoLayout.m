@@ -139,11 +139,11 @@ static NSInteger nullValue=-99999;
 //在右边
 -(UIView*)onRight:(id)uiOrName
 {
-    return [self onRight:uiOrName x:0 y:0];
+    return [self onRight:uiOrName x:0 y:nullValue];
 }
 -(UIView*)onRight:(id)uiOrName x:(CGFloat)x
 {
-    return [self onRight:uiOrName x:x y:0];
+    return [self onRight:uiOrName x:x y:nullValue];
 }
 -(UIView*)onRight:(id)uiOrName x:(CGFloat)x y:(CGFloat)y
 {
@@ -153,6 +153,7 @@ static NSInteger nullValue=-99999;
     CGRect frame=[self checkFrameIsEmpty:uiFrame];
     
     //检测是否有onLeft、relate:Right规则，若有，调整宽度
+    STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
     if([self.LayoutTracer has:@"onLeft"])
     {
         frame.size.width=(self.frame.origin.x+self.frame.size.width)-(uiFrame.origin.x+uiFrame.size.width)-x*Xpt;
@@ -161,27 +162,39 @@ static NSInteger nullValue=-99999;
     else
     {
         frame.origin.x=floor(uiFrame.size.width+uiFrame.origin.x+x*Xpt);
-        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
         if(tracer!=nil && tracer.hasRelateRight)
         {
             frame.size.width-=(frame.origin.x-self.frame.origin.x);
         }
     }
-    
-    
-    BOOL needSetY=YES;
-    if(y==0)
-    {
-        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
-        if(tracer!=nil)
-        {
-            NSString *relate=[@(tracer.location) stringValue];
-            needSetY=!([relate contains:@"2"] || [relate contains:@"4"]);//包含左右则不设置
-        }
-    }
-    if(needSetY)//未设置相对时，才设置
+    //y and height
+    if(y!=nullValue)
     {
         frame.origin.y=floor(uiFrame.origin.y+y*Ypt);
+    }
+    else if(!(tracer!=nil && tracer.hasRelateTop))
+    {
+        frame.origin.y=uiFrame.origin.y;
+    }
+    if(((tracer!=nil && tracer.hasRelateBottom) || [self.LayoutTracer has:@"onTop"]))
+    {
+        NSInteger relateBottomPx=0;
+        STLayoutTracer *onTop= self.LayoutTracer[@"onTop"];
+        if(onTop)
+        {
+            CGSize superSize=[onTop.view superSizeWithFix];
+            relateBottomPx=superSize.height*Ypx-onTop.view.stY+onTop.v1;
+        }
+        else if((tracer!=nil && tracer.hasRelateBottom))
+        {
+            relateBottomPx=tracer.relateBottomPx;
+        }
+        if(relateBottomPx!=0)
+        {
+            //已有相对Bottom时，调整高度。
+            CGSize superSize=[self superSizeWithFix];
+            frame.size.height=superSize.height-frame.origin.y-relateBottomPx*Ypt;
+        }
     }
     [self frame:frame];
     return self;
@@ -189,11 +202,11 @@ static NSInteger nullValue=-99999;
 //在左边
 -(UIView*)onLeft:(id)uiOrName
 {
-    return [self onLeft:uiOrName x:0 y:0];
+    return [self onLeft:uiOrName x:0 y:nullValue];
 }
 -(UIView*)onLeft:(id)uiOrName x:(CGFloat)x
 {
-    return [self onLeft:uiOrName x:x y:0];
+    return [self onLeft:uiOrName x:x y:nullValue];
     
 }
 -(UIView*)onLeft:(id)uiOrName x:(CGFloat)x y:(CGFloat)y
@@ -204,6 +217,7 @@ static NSInteger nullValue=-99999;
     CGRect uiFrame=[self getUIFrame:ui];
     CGRect frame=[self checkFrameIsEmpty:uiFrame];
     
+    STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
     //检测是否有onRight、relate:Left规则，若有，调整宽度
     if([self.LayoutTracer has:@"onRight"])
     {
@@ -211,7 +225,6 @@ static NSInteger nullValue=-99999;
     }
     else
     {
-        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
         if(tracer!=nil && tracer.hasRelateLeft)
         {
             frame.size.width=uiFrame.origin.x-x*Xpt-self.frame.origin.x;
@@ -220,36 +233,47 @@ static NSInteger nullValue=-99999;
         {
             frame.origin.x=floor(uiFrame.origin.x-self.frame.size.width-x*Xpt);
         }
-       
     }
-    BOOL needSetY=YES;
-    if(y==0)
-    {
-        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
-        if(tracer!=nil)
-        {
-            NSString *relate=[@(tracer.location) stringValue];
-            needSetY=!([relate contains:@"2"] || [relate contains:@"4"]);//包含左右则不设置
-        }
-    }
-    if(needSetY)//未设置相对时，才设置
+    //y and height
+    if(y!=nullValue)
     {
         frame.origin.y=floor(uiFrame.origin.y+y*Ypt);
     }
-    
-    
-    
+    else if(!(tracer!=nil && tracer.hasRelateTop))
+    {
+        frame.origin.y=uiFrame.origin.y;
+    }
+    if(((tracer!=nil && tracer.hasRelateBottom) || [self.LayoutTracer has:@"onTop"]))
+    {
+        NSInteger relateBottomPx=0;
+        STLayoutTracer *onTop= self.LayoutTracer[@"onTop"];
+        if(onTop)
+        {
+            CGSize superSize=[onTop.view superSizeWithFix];
+            relateBottomPx=superSize.height*Ypx-onTop.view.stY+onTop.v1;
+        }
+        else if((tracer!=nil && tracer.hasRelateBottom))
+        {
+            relateBottomPx=tracer.relateBottomPx;
+        }
+        if(relateBottomPx!=0)
+        {
+            //已有相对Bottom时，调整高度。
+            CGSize superSize=[self superSizeWithFix];
+            frame.size.height=superSize.height-frame.origin.y-relateBottomPx*Ypt;
+        }
+    }
     [self frame:frame];
     return self;
 }
 //在上边
 -(UIView*)onTop:(id)uiOrName
 {
-    return [self onTop:uiOrName y:0 x:0];
+    return [self onTop:uiOrName y:0 x:nullValue];
 }
 -(UIView*)onTop:(id)uiOrName y:(CGFloat)y
 {
-    return [self onTop:uiOrName y:y x:0];
+    return [self onTop:uiOrName y:y x:nullValue];
 }
 -(UIView*)onTop:(id)uiOrName y:(CGFloat)y x:(CGFloat)x
 {
@@ -259,13 +283,13 @@ static NSInteger nullValue=-99999;
     CGRect frame=[self checkFrameIsEmpty:uiFrame];
     
     //检测是否有onBottom、relate：Top 规则，若有，调整高度
+    STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
     if([self.LayoutTracer has:@"onBottom"])
     {
         frame.size.height=uiFrame.origin.y-y*Ypt-self.frame.origin.y;
     }
     else
     {
-        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
         if(tracer!=nil && tracer.hasRelateTop)
         {
             frame.size.height=uiFrame.origin.y-y*Ypt-self.frame.origin.y;
@@ -275,34 +299,46 @@ static NSInteger nullValue=-99999;
             frame.origin.y=floor(uiFrame.origin.y-self.frame.size.height-y*Ypt);
         }
     }
-    
-    BOOL needSetX=YES;
-    if(x==0)
-    {
-        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
-        if(tracer!=nil)
-        {
-            NSString *relate=[@(tracer.location) stringValue];
-            needSetX=!([relate contains:@"1"] || [relate contains:@"3"]);//包含则不设置
-        }
-    }
-    if(needSetX)//未设置相对时，才设置
+    //x and width
+    if(x!=nullValue)
     {
         frame.origin.x=floor(uiFrame.origin.x+x*Xpt);
     }
-    
-    
+    else if(!(tracer!=nil && tracer.hasRelateLeft))
+    {
+        frame.origin.x=uiFrame.origin.x;
+    }
+    if(((tracer!=nil && tracer.hasRelateRight) || [self.LayoutTracer has:@"onLeft"]))
+    {
+        NSInteger relateRightPx=0;
+        STLayoutTracer *onLeft= self.LayoutTracer[@"onLeft"];
+        if(onLeft)
+        {
+            CGSize superSize=[onLeft.view superSizeWithFix];
+            relateRightPx=superSize.width*Xpx-onLeft.view.stX+onLeft.v1;
+        }
+        else if((tracer!=nil && tracer.hasRelateRight))
+        {
+            relateRightPx=tracer.relateRightPx;
+        }
+        if(relateRightPx!=0)
+        {
+            //已有相对Bottom时，调整高度。
+            CGSize superSize=[self superSizeWithFix];
+            frame.size.width=superSize.width-frame.origin.x-relateRightPx*Ypt;
+        }
+    }
     [self frame:frame];
     return self;
 }
 //在下边
 -(UIView *)onBottom:(id)uiOrName
 {
-    return [self onBottom:uiOrName y:0 x:0];
+    return [self onBottom:uiOrName y:0 x:nullValue];
 }
 -(UIView *)onBottom:(id)uiOrName y:(CGFloat)y
 {
-    return [self onBottom:uiOrName y:y x:0];
+    return [self onBottom:uiOrName y:y x:nullValue];
 }
 -(UIView *)onBottom:(id)uiOrName y:(CGFloat)y x:(CGFloat)x
 {
@@ -311,6 +347,7 @@ static NSInteger nullValue=-99999;
     CGRect uiFrame=[self getUIFrame:ui];
     CGRect frame=[self checkFrameIsEmpty:uiFrame];
     //检测是否有onTop、relate：Bottom 规则，若有，调整高度
+    STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
     if([self.LayoutTracer has:@"onTop"])
     {
         frame.size.height=(self.frame.origin.y+self.frame.size.height)-(uiFrame.origin.y+uiFrame.size.height)-y*Ypt;
@@ -319,28 +356,39 @@ static NSInteger nullValue=-99999;
     else
     {
         frame.origin.y=floor(uiFrame.origin.y+uiFrame.size.height+y*Ypt);
-        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
         if(tracer!=nil && tracer.hasRelateBottom)
         {
             frame.size.height-=(frame.origin.y-self.frame.origin.y);
         }
     }
-    
-    
-    
-    BOOL needSetX=YES;
-    if(x==0)
-    {
-        STLayoutTracer *tracer= self.LayoutTracer[@"relate"];
-        if(tracer!=nil)
-        {
-            NSString *relate=[@(tracer.location) stringValue];
-            needSetX=!([relate contains:@"1"] || [relate contains:@"3"]);//包含则不设置
-        }
-    }
-    if(needSetX)//未设置相对时，才设置
+    //x and width
+    if(x!=nullValue)
     {
         frame.origin.x=floor(uiFrame.origin.x+x*Xpt);
+    }
+    else if(!(tracer!=nil && tracer.hasRelateLeft))
+    {
+        frame.origin.x=uiFrame.origin.x;
+    }
+    if(((tracer!=nil && tracer.hasRelateRight) || [self.LayoutTracer has:@"onLeft"]))
+    {
+        NSInteger relateRightPx=0;
+        STLayoutTracer *onLeft= self.LayoutTracer[@"onLeft"];
+        if(onLeft)
+        {
+            CGSize superSize=[onLeft.view superSizeWithFix];
+            relateRightPx=superSize.width*Xpx-onLeft.view.stX+onLeft.v1;
+        }
+        else if((tracer!=nil && tracer.hasRelateRight))
+        {
+            relateRightPx=tracer.relateRightPx;
+        }
+        if(relateRightPx!=0)
+        {
+            //已有相对Bottom时，调整高度。
+            CGSize superSize=[self superSizeWithFix];
+            frame.size.width=superSize.width-frame.origin.x-relateRightPx*Ypt;
+        }
     }
     [self frame:frame];
     return self;

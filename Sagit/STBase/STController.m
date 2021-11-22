@@ -582,7 +582,8 @@
                 STLayoutTracer *onTop= tableView.LayoutTracer[@"onTop"];
                 if(onTop)
                 {
-                    relateBottomPx=onTop.view.superview.stHeight-onTop.view.stY+onTop.v1;
+                    CGSize superSize=[onTop.view superSizeWithFix];
+                    relateBottomPx=superSize.height*Ypx-onTop.view.stY+onTop.v1;
                 }
                 STLayoutTracer *tracer= tableView.LayoutTracer[@"relate"];
                 if(relateBottomPx!=0 || (tracer && tracer.hasRelateBottom))//|| onTop 两个都有：那个是后加的？
