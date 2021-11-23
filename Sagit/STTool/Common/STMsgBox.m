@@ -32,12 +32,7 @@
     return _window;
 }
 -(STController*)dialogController{
-    if(!_dialogController)
-    {
-        _dialogController=[STController new];
-        [_dialogController initView];
-    }
-    return _dialogController;
+    return [self.dialogStack peek];
 }
 -(STQueue<UIAlertController *> *)alertQueue
 {
@@ -46,6 +41,18 @@
         _alertQueue=[STQueue<UIAlertController*> new];
     }
     return _alertQueue;
+}
+-(STStack<STController *> *)dialogStack
+{
+    if(!_dialogStack)
+    {
+        _dialogStack=[STStack<STController*> new];
+    }
+    return _dialogStack;
+}
+-(BOOL)isDialoging
+{
+    return self.dialogStack.count>0;
 }
 #pragma mark loding...
 -(void)loading
@@ -428,12 +435,16 @@
     UIWindow *window=self.window;
     [window endEditing:YES];
     UIView *statusView=window.statusBar;
-    self.isDialoging=YES;
+   // self.isDialoging=YES;
     
     __block OnBeforeDialogHide beforeHideBlock=beforeHide;
     __block OnDialogShow block=dialog;
 
-    STView *view=self.dialogController.stView;
+    STController *dialogController=[STController new];
+    [dialogController initView];
+    [self.dialogStack push:dialogController];
+    
+    STView *view=dialogController.stView;
     [view name:@"stDialogView"];
     [statusView alpha:0.1];
     [window addSubview:view];
@@ -443,9 +454,9 @@
             if(beforeHideBlock)
             {
                 UIView *clickView=[self getSubClickView:view allowNil:NO];
-                self.isDialoging=NO;
+                //self.isDialoging=NO;
                 result=beforeHideBlock(winView,clickView);
-                self.isDialoging=!result;
+               // self.isDialoging=!result;
             }
             else if([winView key:@"clickPoint"]!=nil)//[ImageView show]
             {
@@ -454,11 +465,12 @@
             }
             if(result)
             {
-                self.isDialoging=NO;
-                beforeHideBlock=nil;
-                [winView hidden:YES];
-                [winView removeSelf];//内部有dispose
-                [statusView alpha:1];
+                [self dialogClose:winView];
+               // self.isDialoging=NO;
+//                beforeHideBlock=nil;
+//                [winView hidden:YES];
+//                [winView removeSelf];//内部有dispose
+//                [statusView alpha:1];
             }
         }];
         [winView onDbClick:^(id view) {
@@ -474,13 +486,30 @@
 }
 - (void)dialogClose
 {
+    [self dialogClose:nil];
+}
+- (void)dialogClose:(UIView*)winView
+{
     if(self.isDialoging)
     {
-        STView *winView=self.dialogController.stView;
-        [winView key:@"eventView" value:winView];
-        [winView click];
+        STController*stc=[self.dialogStack peek];
+        while (stc) {
+            bool isBreak=winView && [stc.view isEqual:winView];
+            [stc.view removeSelf];//remove前不能pop掉，因为self.baseView 有Dialog优先级：会造成指向前一个。
+            [stc dismissViewControllerAnimated:YES completion:nil];
+            [self.dialogStack pop];
+            stc=nil;
+            if(isBreak)
+            {
+                break;;
+            }
+            stc=[self.dialogStack peek];
+        }
     }
-    
+    if(!self.isDialoging)
+    {
+        [self.window.statusBar alpha:1];
+    }
 }
 -(UIView*)getSubClickView:(UIView*)winView allowNil:(BOOL)allowNil
 {

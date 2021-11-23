@@ -595,7 +595,7 @@
     UIView* view=[self find:@"for15"];
     if(!view)
     {
-        view=[[[self addUIView:@"for15"] x:2 y:self.stY width:self.stWidth height:self.stHeight] block:^(UIView* view) {
+        view=[[[self addUIView:@"for15"] x:3 y:self.stY width:self.stWidth height:self.stHeight] block:^(UIView* view) {
             [view backgroundColor:ColorClear].layer.zPosition=self.layer.zPosition-1;
         }];
     }

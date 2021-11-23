@@ -25,6 +25,8 @@ typedef void (^OnDialogShow)(UIView* winView);
 @property (nonatomic,strong) STController *dialogController;
 //!alert 控制器（内部使用）
 @property (nonatomic,retain) STQueue<UIAlertController*> *alertQueue;
+//!dialog 控制器（内部使用）
+@property (nonatomic,retain) STStack<STController*> *dialogStack;
 #pragma AlertView
 //!提示消息
 -(void)prompt:(id)msg;
@@ -49,6 +51,8 @@ typedef void (^OnDialogShow)(UIView* winView);
 //!弹出自定义界面的对话框
 - (void)dialog:(OnDialogShow)dialog;
 - (void)dialog:(OnDialogShow)dialog beforeHide:(OnBeforeDialogHide) beforeHide;
-//!手动触发关闭对话框
+//!手动触发关闭所有对话框（包含嵌套）
 - (void)dialogClose;
+//!手动触发关闭指定对话框（嵌套时可能有多个）
+- (void)dialogClose:(UIView*)winView;
 @end
