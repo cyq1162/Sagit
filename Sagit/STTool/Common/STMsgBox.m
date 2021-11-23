@@ -472,6 +472,16 @@
         }
     }];
 }
+- (void)dialogClose
+{
+    if(self.isDialoging)
+    {
+        STView *winView=self.dialogController.stView;
+        [winView key:@"eventView" value:winView];
+        [winView click];
+    }
+    
+}
 -(UIView*)getSubClickView:(UIView*)winView allowNil:(BOOL)allowNil
 {
     if(winView.isSTView)//兼容：IOS13.6 UITableView 点击拿不到点击View
@@ -497,6 +507,7 @@
                     UIGestureRecognizerState state=gr.state;
                     if(state!=UIGestureRecognizerStatePossible)
                     {
+                        //UIGestureRecognizerStateEnded
                         returnView=[self getSubClickView:view allowNil:NO];
                         break;
                     }

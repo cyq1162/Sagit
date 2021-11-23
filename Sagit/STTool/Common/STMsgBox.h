@@ -49,4 +49,6 @@ typedef void (^OnDialogShow)(UIView* winView);
 //!弹出自定义界面的对话框
 - (void)dialog:(OnDialogShow)dialog;
 - (void)dialog:(OnDialogShow)dialog beforeHide:(OnBeforeDialogHide) beforeHide;
+//!手动触发关闭对话框
+- (void)dialogClose;
 @end
