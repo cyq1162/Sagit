@@ -474,7 +474,7 @@
 }
 -(UIView*)getSubClickView:(UIView*)winView allowNil:(BOOL)allowNil
 {
-    if(winView.isSTView)
+    if(winView.isSTView)//兼容：IOS13.6 UITableView 点击拿不到点击View
     {
         UIView*eventView=[winView key:@"eventView"];//UIViewEvent 事件:shouldReceiveTouch有对应处理
         if(eventView)
@@ -515,6 +515,10 @@
     if(allowNil)
     {
         return nil;
+    }
+    if([winView.name startWith:@"for15"])//兼容：ios15 x坐标为0无法触发点击事件。
+    {
+        return winView.superview;
     }
     return winView;
 }
