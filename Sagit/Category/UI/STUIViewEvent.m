@@ -566,7 +566,6 @@
 }
 -(UIView *)addClick:(NSString *)event target:(UIViewController *)target enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
 {
-    [self addEvent:@"click" event:event target:target];
     if(left>0 || top>0 || right>0 || bottom>0)
     {
         [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
@@ -575,6 +574,7 @@
             [view onClick:^(id view) {
                 [self click];
             }];
+            
         }];
     }
     else
@@ -586,9 +586,11 @@
                 [[self ios15View] onClick:^(id view) {
                     [self click];
                 }];
+                return self;
             }
         }
     }
+    [self addEvent:@"click" event:event target:target];
     return self;
 }
 -(UIView*)ios15View
@@ -596,8 +598,26 @@
     UIView* view=[self find:@"for15"];
     if(!view)
     {
-        view=[[[self addUIView:@"for15"] x:3 y:self.stY width:self.stWidth height:self.stHeight] block:^(UIView* view) {
+        CGFloat y=self.stY;
+        CGFloat height=self.stHeight;
+        if(self.stController)
+        {
+            if(self.stController.needNavBar)
+            {
+                height-=STNavHeightPx;
+                //y+=STNavHeightPx;
+            }
+            if(self.stController.needTabBar)
+            {
+                height-=STTabHeightPx;
+            }
+        }
+        view=[[[self addUIView:@"for15"] x:3 y:y width:self.stWidth height:height] block:^(UIView* view) {
+            //[self.superview bringSubviewToFront:view];//系统会自动调整了subviews的索引位置到最后一个。
             [view backgroundColor:ColorClear].layer.zPosition=self.layer.zPosition-1;
+//            [view onDrag:^BOOL(id view, UIPanGestureRecognizer *recognizer) {
+//                return YES;
+//            }];
         }];
     }
     return view;
@@ -612,7 +632,6 @@
 }
 -(UIView *)onClick:(OnViewClick)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
 {
-    [self onClick:block view:self];
     if(left>0 || top>0 || right>0 || bottom>0)
     {
         [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
@@ -629,9 +648,11 @@
             {
                 //兼容：ios15 x坐标为0无法触发点击事件。
                 [[self ios15View]onClick:block view:self];
+                return self;//原始View会触发导航栏，所以返回，不加入事件。
             }
         }
     }
+    [self onClick:block view:self];
     return self;
 }
 -(UIView*)onClick:(OnViewClick)block view:(UIView*)view
@@ -714,7 +735,6 @@
 }
 -(UIView *)addDbClick:(NSString *)event target:(UIViewController *)target enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
 {
-    [self addEvent:@"dbClick" event:event target:target];
     if(left>0 || top>0 || right>0 || bottom>0)
     {
         [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
@@ -734,9 +754,11 @@
                 [[self ios15View] onDbClick:^(id view) {
                     [self dbClick];
                 }];
+                return self;
             }
         }
     }
+    [self addEvent:@"dbClick" event:event target:target];
     return self;
     
 }
@@ -750,7 +772,6 @@
 }
 -(UIView *)onDbClick:(OnViewDbClick)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
 {
-    [self onDbClick:block view:self];
     if(left>0 || top>0 || right>0 || bottom>0)
     {
         [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
@@ -765,9 +786,11 @@
             {
                 //兼容：ios15 x坐标为0无法触发点击事件。
                 [[self ios15View]onDbClick:block view:self];
+                return self;
             }
         }
     }
+    [self onDbClick:block view:self];
     return self;
 }
 -(UIView*)onDbClick:(OnViewDbClick)block view:(UIView*)dbClickView
@@ -834,7 +857,6 @@
 }
 -(UIView *)addLongPress:(NSString *)event target:(UIViewController *)target enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
 {
-    [self addEvent:@"longPress" event:event target:target];
     if(left>0 || top>0 || right>0 || bottom>0)
     {
         [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
@@ -854,9 +876,11 @@
                 [[self ios15View] onLongPress:^(id view) {
                     [self longPress];
                 }];
+                return self;
             }
         }
     }
+    [self addEvent:@"longPress" event:event target:target];
     return self;
 }
 -(UIView*)onLongPress:(OnViewLongPress)block
@@ -869,7 +893,6 @@
 }
 -(UIView *)onLongPress:(OnViewLongPress)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
 {
-    [self onLongPress:block view:self];
     if(left>0 || top>0 || right>0 || bottom>0)
     {
         [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
@@ -885,8 +908,10 @@
                 //兼容：ios15 x坐标为0无法触发点击事件。
                 [[self ios15View] onLongPress:block view:self];
             }
+            return self;
         }
     }
+    [self onLongPress:block view:self];
     return self;
 }
 -(UIView *)onLongPress:(OnViewLongPress)block  view:(UIView*)pressView

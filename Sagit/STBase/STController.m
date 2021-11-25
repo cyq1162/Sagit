@@ -166,13 +166,15 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
-    if(self.nextController)
-    {
-        [self reSetBarState:YES];
-    }
+//    if(self.nextController)
+//    {
+//        [self reSetBarState:YES];
+//    }
+    [self reSetBarState:YES];
     if(self.navigationController)
     {
-        self.navigationController.interactivePopGestureRecognizer.enabled=self.needNavBar;
+        bool isTop=[self.navigationController.viewControllers[0] isEqual:self];
+        self.navigationController.interactivePopGestureRecognizer.enabled=!isTop;
     }
     [super viewDidAppear:animated];
     [self afterViewAppear];
@@ -301,13 +303,7 @@
     [self.stView initData];
 }
 -(void)beforeViewAppear{}
--(void)afterViewAppear
-{
-    if(self.navigationController && !self.needNavBar)
-    {
-        self.navigationController.interactivePopGestureRecognizer.enabled=YES;//默认允许侧滑返回。
-    }
-}
+-(void)afterViewAppear{}
 -(void)beforeViewDisappear{}
 
 -(NSMapTable*)UIList
