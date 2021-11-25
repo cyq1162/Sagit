@@ -55,7 +55,7 @@
     }
     else if([eventType isEqualToString:@"longPress"])
     {
-        OnLongPress event = [self key:@"onLongPress"];//(OnLongPress)objc_getAssociatedObject(self, &longPressChar);
+        OnViewLongPress event = [self key:@"onLongPress"];//(OnLongPress)objc_getAssociatedObject(self, &longPressChar);
         if(event)
         {
             event(view);
@@ -570,7 +570,8 @@
     if(left>0 || top>0 || right>0 || bottom>0)
     {
         [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
-            [view backgroundColor:ColorClear].layer.zPosition=self.layer.zPosition-1;
+            [self.superview bringSubviewToFront:self];//系统会自动调整了subviews的索引位置到最后一个。
+            [view backgroundColor:ColorClear];//.layer.zPosition=self.layer.zPosition-1;
             [view onClick:^(id view) {
                 [self click];
             }];
@@ -611,11 +612,14 @@
 }
 -(UIView *)onClick:(OnViewClick)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
 {
-    [self onClick:block clickView:self];
+    [self onClick:block view:self];
     if(left>0 || top>0 || right>0 || bottom>0)
     {
         [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
-            [[view backgroundColor:ColorClear] onClick:block clickView:self].layer.zPosition=self.layer.zPosition-1;
+            [self.superview bringSubviewToFront:self];//系统会自动调整了subviews的索引位置到最后一个。
+            //[self.superview sendSubviewToBack:view];//用这句IOS15会丢失事件。
+            [[view backgroundColor:ColorClear] onClick:block view:self];//.layer.zPosition=self.layer.zPosition-1;
+          
         }];
     }
     else
@@ -624,20 +628,19 @@
             if(self.isSTView && self.frame.origin.x<=0)
             {
                 //兼容：ios15 x坐标为0无法触发点击事件。
-                [[self ios15View]onClick:block clickView:self];
+                [[self ios15View]onClick:block view:self];
             }
         }
     }
     return self;
 }
--(UIView*)onClick:(OnViewClick)block clickView:(UIView*)view
+-(UIView*)onClick:(OnViewClick)block view:(UIView*)view
 {
     if(block!=nil)
     {
         [self addGesture:@"click"];//内部有清除参数，放在前面
         [self key:@"clickView" value:view];
         [self key:@"onClick" value:block];
-        //[self setClickBlock:block];
         
     }
     return self;
@@ -691,40 +694,89 @@
 }
 -(UIView*)addDbClick:(NSString *)event
 {
-    return [self addDbClick:event target:nil];
+    return [self addDbClick:event target:nil enlarge:0 top:0 right:0 bottom:0];
+}
+-(UIView *)addDbClick:(NSString *)event enlarge:(CGFloat)value
+{
+    return [self addDbClick:event target:nil enlarge:value top:value right:value bottom:value];
+}
+-(UIView *)addDbClick:(NSString *)event enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
+{
+    return [self addDbClick:event target:nil enlarge:left top:top right:right bottom:bottom];
 }
 -(UIView*)addDbClick:(NSString *)event target:(UIViewController*)target
 {
-    if (@available(iOS 15.0, *)) {
-        if(self.isSTView && self.frame.origin.x<=0)
-        {
-            //兼容：ios15 x坐标为0无法触发点击事件。
-            [[self ios15View] addDbClick:event target:target];
+    return [self addDbClick:event target:target enlarge:0 top:0 right:0 bottom:0];
+}
+-(UIView *)addDbClick:(NSString *)event target:(UIViewController *)target enlarge:(CGFloat)value
+{
+    return [self addDbClick:event target:target enlarge:value top:value right:value bottom:value];
+}
+-(UIView *)addDbClick:(NSString *)event target:(UIViewController *)target enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
+{
+    [self addEvent:@"dbClick" event:event target:target];
+    if(left>0 || top>0 || right>0 || bottom>0)
+    {
+        [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
+            [self.superview bringSubviewToFront:self];//系统会自动调整了subviews的索引位置到最后一个。
+            [view backgroundColor:ColorClear];//.layer.zPosition=self.layer.zPosition-1;
+            [view onDbClick:^(id view) {
+                [self dbClick];
+            }];
+        }];
+    }
+    else
+    {
+        if (@available(iOS 15.0, *)) {
+            if(self.isSTView && self.frame.origin.x<=0)
+            {
+                //兼容：ios15 x坐标为0无法触发点击事件。
+                [[self ios15View] onDbClick:^(id view) {
+                    [self dbClick];
+                }];
+            }
         }
     }
-    return [self addEvent:@"dbClick" event:event target:target];
+    return self;
     
 }
 -(UIView*)onDbClick:(OnViewDbClick)block
 {
-    return [self onDbClick:block dbClickView:self];
+    return [self onDbClick:block enlarge:0 top:0 right:0 bottom:0];
 }
--(UIView*)onDbClick:(OnViewDbClick)block dbClickView:(UIView*)dbClickView
+-(UIView *)onDbClick:(OnViewDbClick)block enlarge:(CGFloat)value
+{
+    return [self onDbClick:block enlarge:value top:value right:value bottom:value];
+}
+-(UIView *)onDbClick:(OnViewDbClick)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
+{
+    [self onDbClick:block view:self];
+    if(left>0 || top>0 || right>0 || bottom>0)
+    {
+        [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
+            [self.superview bringSubviewToFront:self];//系统会自动调整了subviews的索引位置到最后一个。
+            [[view backgroundColor:ColorClear] onDbClick:block view:self];//.layer.zPosition=self.layer.zPosition-1;
+        }];
+    }
+    else
+    {
+        if (@available(iOS 15.0, *)) {
+            if(self.isSTView && self.frame.origin.x<=0)
+            {
+                //兼容：ios15 x坐标为0无法触发点击事件。
+                [[self ios15View]onDbClick:block view:self];
+            }
+        }
+    }
+    return self;
+}
+-(UIView*)onDbClick:(OnViewDbClick)block view:(UIView*)dbClickView
 {
     if(block!=nil)
     {
         [self addGesture:@"dbClick"];//内部有清除参数，放在前面
         [self key:@"dbClickView" value:dbClickView];
         [self key:@"onDbClick" value:block];
-        
-        if (@available(iOS 15.0, *)) {
-            if(self.isSTView && self.frame.origin.x<=0)
-            {
-                //兼容：ios15 x坐标为0无法触发点击事件。
-                [[self ios15View] onDbClick:block dbClickView:dbClickView];
-            }
-        }
-        
     }
     return self;
 }
@@ -760,41 +812,90 @@
     }
     return self;
 }
--(UIView *)addLongPress:(NSString *)event
+-(UIView*)addLongPress:(NSString *)event
 {
-    return [self addLongPress:event target:nil];
+    return [self addLongPress:event target:nil enlarge:0 top:0 right:0 bottom:0];
 }
--(UIView *)addLongPress:(NSString *)event target:(UIViewController *)target
+-(UIView *)addLongPress:(NSString *)event enlarge:(CGFloat)value
 {
-    if (@available(iOS 15.0, *)) {
-        if(self.isSTView && self.frame.origin.x<=0)
-        {
-            //兼容：ios15 x坐标为0无法触发点击事件。
-            [[self ios15View] addLongPress:event target:target];
+    return [self addLongPress:event target:nil enlarge:value top:value right:value bottom:value];
+}
+-(UIView *)addLongPress:(NSString *)event enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
+{
+    return [self addLongPress:event target:nil enlarge:left top:top right:right bottom:bottom];
+}
+-(UIView*)addLongPress:(NSString *)event target:(UIViewController*)target
+{
+    return [self addLongPress:event target:target enlarge:0 top:0 right:0 bottom:0];
+}
+-(UIView *)addLongPress:(NSString *)event target:(UIViewController *)target enlarge:(CGFloat)value
+{
+    return [self addLongPress:event target:target enlarge:value top:value right:value bottom:value];
+}
+-(UIView *)addLongPress:(NSString *)event target:(UIViewController *)target enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
+{
+    [self addEvent:@"longPress" event:event target:target];
+    if(left>0 || top>0 || right>0 || bottom>0)
+    {
+        [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
+            [self.superview bringSubviewToFront:self];//系统会自动调整了subviews的索引位置到最后一个。
+            [view backgroundColor:ColorClear];//.layer.zPosition=self.layer.zPosition-1;
+            [view onLongPress:^(id view) {
+                [self longPress];
+            }];
+        }];
+    }
+    else
+    {
+        if (@available(iOS 15.0, *)) {
+            if(self.isSTView && self.frame.origin.x<=0)
+            {
+                //兼容：ios15 x坐标为0无法触发点击事件。
+                [[self ios15View] onLongPress:^(id view) {
+                    [self longPress];
+                }];
+            }
         }
     }
-    return [self addEvent:@"longPress" event:event target:target];
+    return self;
 }
--(UIView *)onLongPress:(OnLongPress)block
+-(UIView*)onLongPress:(OnViewLongPress)block
 {
-    return [self onLongPress:block pressView:self];
+    return [self onLongPress:block enlarge:0 top:0 right:0 bottom:0];
 }
--(UIView *)onLongPress:(OnLongPress)block  pressView:(UIView*)pressView
+-(UIView *)onLongPress:(OnViewLongPress)block enlarge:(CGFloat)value
+{
+    return [self onLongPress:block enlarge:value top:value right:value bottom:value];
+}
+-(UIView *)onLongPress:(OnViewLongPress)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom
+{
+    [self onLongPress:block view:self];
+    if(left>0 || top>0 || right>0 || bottom>0)
+    {
+        [[[self.superview addUIView:nil] x:self.stX-left y:self.stY-top width:self.stWidth+left+right height:self.stHeight+top+bottom] block:^(UIView* view) {
+            [self.superview bringSubviewToFront:self];//系统会自动调整了subviews的索引位置到最后一个。
+            [[view backgroundColor:ColorClear] onLongPress:block view:self];//.layer.zPosition=self.layer.zPosition-1;
+        }];
+    }
+    else
+    {
+        if (@available(iOS 15.0, *)) {
+            if(self.isSTView && self.frame.origin.x<=0)
+            {
+                //兼容：ios15 x坐标为0无法触发点击事件。
+                [[self ios15View] onLongPress:block view:self];
+            }
+        }
+    }
+    return self;
+}
+-(UIView *)onLongPress:(OnViewLongPress)block  view:(UIView*)pressView
 {
     if(block!=nil)
     {
         [self addGesture:@"longPress"];//放在前面，内部有清除参数。
         [self key:@"longPressView" value:pressView];
         [self key:@"onLongPress" value:block];
-        
-        if (@available(iOS 15.0, *)) {
-            if(self.isSTView && self.frame.origin.x<=0)
-            {
-                //兼容：ios15 x坐标为0无法触发点击事件。
-                [[self ios15View] onLongPress:block pressView:pressView];
-            }
-        }
-        
     }
     return self;
 }

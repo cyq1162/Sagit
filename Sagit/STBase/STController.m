@@ -301,7 +301,13 @@
     [self.stView initData];
 }
 -(void)beforeViewAppear{}
--(void)afterViewAppear{}
+-(void)afterViewAppear
+{
+    if(self.navigationController && !self.needNavBar)
+    {
+        self.navigationController.interactivePopGestureRecognizer.enabled=YES;//默认允许侧滑返回。
+    }
+}
 -(void)beforeViewDisappear{}
 
 -(NSMapTable*)UIList
@@ -560,10 +566,6 @@
 //tableview 加载完成可以调用的方法--因为tableview的cell高度不定，所以在加载完成以后重新计算高度
 -(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row==0 && indexPath.section==0)
-    {
-        [cell y:0];
-    }
     if(indexPath.row == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row)
     {
         //cell.separatorInset = UIEdgeInsetsMake(0, STScreeWidthPt , 0, 0);//去掉最后一条线的

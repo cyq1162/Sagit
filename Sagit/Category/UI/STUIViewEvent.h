@@ -19,7 +19,7 @@ typedef  BOOL(^OnViewDrag)(id view,UIPanGestureRecognizer *recognizer);
 typedef  void(^OnViewSlide)(id view,UISwipeGestureRecognizer *recognizer);
 //!屏幕侧滑【只有左右事件】
 typedef  void(^OnScreenEdgeSlide)(id view,UIScreenEdgePanGestureRecognizer *recognizer);
-typedef  void(^OnLongPress)(id view);
+typedef  void(^OnViewLongPress)(id view);
 //!定时器事件。
 typedef  void(^OnTimer)(id view,NSTimer *timer, NSInteger count);
 typedef  void(^OnViewDescription)(id view);
@@ -52,10 +52,18 @@ typedef  void(^OnViewDescription)(id view);
 -(UIView*)dbClick;
 //!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name）
 -(UIView*)addDbClick:(NSString*)event;
+//!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name） enlarge: 扩大点击范围（上下左右）大小。
+-(UIView*)addDbClick:(NSString*)event enlarge:(CGFloat)value;
+-(UIView*)addDbClick:(NSString*)event enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom;
 //!绑定事件 并指定target
 -(UIView*)addDbClick:(NSString *)event target:(UIViewController*)target;
+-(UIView*)addDbClick:(NSString *)event target:(UIViewController*)target enlarge:(CGFloat)value;
+-(UIView*)addDbClick:(NSString *)event target:(UIViewController*)target enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom;
 //!绑定事件 用代码块的形式
--(UIView*)onDbClick:(OnViewClick)block;
+-(UIView*)onDbClick:(OnViewDbClick)block;
+//!绑定事件 用代码块的形式 enlarge: 扩大点击范围（上下左右）大小。
+-(UIView*)onDbClick:(OnViewDbClick)block enlarge:(CGFloat)value;
+-(UIView*)onDbClick:(OnViewDbClick)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom;
 //!移除绑定双击事件
 -(UIView*)removeDbClick;
 #pragma mark 扩展系统事件 - 长按
@@ -63,10 +71,18 @@ typedef  void(^OnViewDescription)(id view);
 -(UIView*)longPress;
 //!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name）
 -(UIView*)addLongPress:(NSString*)event;
+//!绑定事件 event：指定事件名称，也可以是控制器名称，也可以指向其它UI的事件，如：Age.click (Age是其它UI的name） enlarge: 扩大点击范围（上下左右）大小。
+-(UIView*)addLongPress:(NSString*)event enlarge:(CGFloat)value;
+-(UIView*)addLongPress:(NSString*)event enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom;
 //!绑定事件 并指定target
 -(UIView*)addLongPress:(NSString *)event target:(UIViewController*)target;
+-(UIView*)addLongPress:(NSString *)event target:(UIViewController*)target enlarge:(CGFloat)value;
+-(UIView*)addLongPress:(NSString *)event target:(UIViewController*)target enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom;
 //!绑定事件 用代码块的形式
--(UIView*)onLongPress:(OnLongPress)block;
+-(UIView*)onLongPress:(OnViewLongPress)block;
+//!绑定事件 用代码块的形式 enlarge: 扩大点击范围（上下左右）大小。
+-(UIView*)onLongPress:(OnViewLongPress)block enlarge:(CGFloat)value;
+-(UIView*)onLongPress:(OnViewLongPress)block enlarge:(CGFloat)left top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom;
 //!移除绑定长按事件
 -(UIView*)removeLongPress;
 

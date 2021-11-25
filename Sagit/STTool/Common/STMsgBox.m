@@ -476,6 +476,9 @@
         [winView onDbClick:^(id view) {
             //双击事件存在是，屏蔽单击事件触发。
         }];
+        [winView onLongPress:^(id view) {
+            //双击事件存在是，屏蔽单击事件触发。
+        }];
         [winView hidden:NO];
         if(block)
         {
