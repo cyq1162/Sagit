@@ -657,7 +657,14 @@
 }
 -(UITableView*)addTableView:(NSString*)name style:(UITableViewStyle)style
 {
-    if(name==nil){name=@"stFirstTable";}//避免STFirstTable找不到对象。
+    if(name==nil)
+    {
+        if(![self find:@"stFirstTable"])
+        {
+            name=@"stFirstTable";
+        }
+        
+    }//避免STFirstTable找不到对象。
     UITableView *ui=[[UITableView alloc] initWithFrame:STFullRect style:style];
     [ui backgroundColor:ColorWhite];//dark 模式兼容。
     ui.tableHeaderView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];
@@ -682,6 +689,13 @@
         ui.sectionHeaderTopPadding = 0;
     }
     [self addView:ui name:name];
+    if(Sagit.MsgBox.isDialoging)
+    {
+        //对话框时，屏蔽区域点击消失。
+        [ui onClick:^(id view) {
+                    
+        }];
+    }
     return ui;
 }
 -(UICollectionView*)addCollectionView:(NSString*)name

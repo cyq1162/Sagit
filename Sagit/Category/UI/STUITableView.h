@@ -13,6 +13,7 @@
 typedef void(^OnAddTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 typedef BOOL(^OnDelTableCell)(UITableViewCell *cell,NSIndexPath *indexPath);
 typedef void(^OnAddTableCellAction)(STUITableViewCellAction *cellAction, NSIndexPath *indexPath);
+typedef bool(^OnAddTableCellMove)(UITableView *tableView,NSIndexPath *sourceIndexPath,NSIndexPath *destinationIndexPath);
 typedef void(^OnAddTableSectionHeaderView)(UIView *sectionHeaderView,NSInteger section);
 typedef void(^OnAddTableSectionFooterView)(UIView *sectionFooterView,NSInteger section);
 typedef void(^OnAfterTableReloadData)(UITableView *tableView);
@@ -20,6 +21,8 @@ typedef void(^OnAfterTableReloadData)(UITableView *tableView);
 @property (nonatomic,copy) OnAddTableCell addCell;
 //!用于为Table追加每一行的Cell的滑动菜单
 @property (nonatomic,copy) OnAddTableCellAction addCellAction;
+//!用于为Table追加每一行的拖动
+@property (nonatomic,copy) OnAddTableCellMove addCellMove;
 //!用于为Table追加每一组Section的标题View
 @property (nonatomic,copy) OnAddTableSectionHeaderView addSectionHeaderView;
 @property (nonatomic,copy) OnAddTableSectionFooterView addSectionFooterView;

@@ -709,12 +709,39 @@
     NSString *key=[@"sectionFooterView" append:STNumString(section)];
     return [tableView key:key];
 }
+#pragma mark UITableView 移动[没效果]
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(!tableView.isEditing || !tableView.addCellMove)
+    {
+        return NO;
+    }
+    UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
+    if(cell!=nil)
+    {
+        return cell.allowEdit;
+    }
+    return tableView.allowEdit;
+}
 
-
-#pragma mark UITableView 编辑删除
+-(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+{
+    if(tableView.addCellMove && tableView.addCellMove(tableView,sourceIndexPath,destinationIndexPath))
+    {
+        //修改数据源
+        [tableView.source exchangeObjectAtIndex:sourceIndexPath.row withObjectAtIndex:destinationIndexPath.row];
+        //让表视图对应的行进行移动
+        [tableView exchangeSubviewAtIndex:sourceIndexPath.row withSubviewAtIndex:destinationIndexPath.row];
+    }
+}
+#pragma mark UITableView 侧滑：编辑删除
 //先要设Cell可编辑
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(!tableView.delCell && !tableView.addCellAction && !tableView.isEditing)
+    {
+        return NO;
+    }
     UITableViewCell *cell=[tableView cellForRowAtIndexPath:indexPath];
     if(cell!=nil)
     {
@@ -724,7 +751,12 @@
 }
 //定义编辑样式
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewCellEditingStyleDelete;
+   // return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
+    if(!tableView.isEditing && (tableView.delCell || tableView.addCellAction))
+    {
+        return UITableViewCellEditingStyleDelete;
+    }
+    return UITableViewCellEditingStyleNone;
 }
 //设置进入编辑状态时，Cell不会缩进，好像没生效。
 - (BOOL)tableView: (UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -82,7 +82,21 @@
         [self key:@"addCellAction" value:addCellAction];
     }
 }
-
+-(OnAddTableCellAction)addCellMove
+{
+    return [self key:@"addCellMove"];
+}
+- (void)setAddCellMove:(OnAddTableCellAction)addCellMove
+{
+    if(addCellMove==nil)
+    {
+        [self.keyValue remove:@"addCellMove"];
+    }
+    else
+    {
+        [self key:@"addCellMove" value:addCellMove];
+    }
+}
 -(OnAddTableSectionHeaderView)addSectionHeaderView
 {
     return [self key:@"addSectionHeaderView"];
